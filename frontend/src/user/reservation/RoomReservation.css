@@ -1,0 +1,155 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'Roboto', sans-serif; /* Use a modern font */
+  background-color: #e9ecef; /* Light background for the whole page */
+}
+
+.room-reservation-container {
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+  width: 100vw;
+  padding: 20px;
+  box-sizing: border-box;
+  background-color: #f8f9fa; /* Slightly lighter gray */
+}
+
+.left-column {
+  flex: 1;
+  padding: 20px;
+  box-sizing: border-box;
+  background-color: #ffffff; /* White background for left column */
+  border-radius: 8px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); /* Softer shadow */
+  margin: 10px; /* Space between columns */
+}
+
+.calendar-column {
+  flex: 1;
+  padding: 20px;
+  box-sizing: border-box;
+  background-color: #ffffff; /* White background for calendar column */
+  border-radius: 8px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); /* Softer shadow */
+  margin: 10px; /* Space between columns */
+}
+
+.booking-controls {
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.booking-controls h2 {
+  margin-top: 0;
+  font-weight: 700; /* Bold */
+  color: #343a40;
+}
+
+.date-time-picker {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.date-picker {
+  flex: 1;
+  margin-right: 20px;
+}
+
+.date-picker .react-datepicker-wrapper {
+  width: 100%;
+}
+
+.date-picker .react-datepicker-popper {
+  z-index: 1;
+}
+
+.time-pickers {
+  display: flex;
+  flex: 1;
+}
+
+.time-picker {
+  flex: 1;
+  margin-bottom: 20px;
+}
+
+.time-picker h3 {
+  margin-top: 0;
+  font-weight: 600; /* Semi-bold */
+  color: #495057;
+}
+
+.buttons {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.buttons button {
+  margin-left: 10px;
+  background-color: #007bff; /* Primary blue color */
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 4px; /* Rounded corners */
+  transition: background-color 0.3s; /* Smooth transition */
+}
+
+.buttons button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+.calendar-container {
+  height: 100%;
+  overflow: hidden;
+  padding: 20px;
+}
+
+.calendar-container .rbc-calendar {
+  border: none;
+}
+
+.calendar-container .rbc-header {
+  background-color: #f1f3f5; /* Light gray */
+  border-bottom: 1px solid #dee2e6;
+  padding: 10px;
+}
+
+.calendar-container .rbc-header .rbc-btn {
+  background-color: #007bff; /* Primary blue color */
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 4px; /* Rounded corners */
+  transition: background-color 0.3s; /* Smooth transition */
+}
+
+.calendar-container .rbc-header .rbc-btn:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+.calendar-container .rbc-month-view {
+  padding: 20px;
+}
+
+.calendar-container .rbc-event {
+  background-color: #28a745; /* Green color */
+  border-radius: 4px; /* Rounded corners */
+  border: none;
+  padding: 2px 4px;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s; /* Smooth transition */
+}
+
+.calendar-container .rbc-event:hover {
+  background-color: #218838; /* Darker green on hover */
+}
