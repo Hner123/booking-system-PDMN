@@ -1,25 +1,63 @@
 import React, { useState } from 'react';
 import moment from 'moment';
 import './RoomReservation.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faClock, faCalendar } from '@fortawesome/free-solid-svg-icons';
 import DatePicker from 'react-datepicker';
 import TimePicker from 'rc-time-picker';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'rc-time-picker/assets/index.css';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-
+import { useNavigate } from 'react-router-dom';
 
 const RoomReservation = () => {
   const localizer = momentLocalizer(moment);
+  const navigate = useNavigate();
 
   const [startDate, setStartDate] = useState(new Date());
   const [startTime, setStartTime] = useState(moment().hours(9).minutes(0));
   const [endTime, setEndTime] = useState(moment().hours(10).minutes(0));
   const [events, setEvents] = useState([]);
+  const [showAgendaForm, setShowAgendaForm] = useState(false);
+  const [agenda, setAgenda] = useState('');
+  const [expandedEvent, setExpandedEvent] = useState(null);
+  const [feedbackMessage, setFeedbackMessage] = useState('');
+  const [showDiscardModal, setShowDiscardModal] = useState(false);
 
   const handleReserve = () => {
+    const start = moment(startDate).set({
+      hour: startTime.hour(),
+      minute: startTime.minute(),
+    });
+    const end = moment(startDate).set({
+      hour: endTime.hour(),
+      minute: endTime.minute(),
+    });
+
+    const durationHours = moment.duration(end.diff(start)).asHours();
+    if (durationHours <= 0 || start.isSameOrAfter(end)) {
+      setFeedbackMessage('Please select a valid start and end time.');
+      return;
+    }
+
+    const overlap = events.some((event) =>
+      (moment(start).isBetween(event.start, event.end, null, '[]') ||
+       moment(end).isBetween(event.start, event.end, null, '[]')) ||
+      (moment(event.start).isBetween(start, end, null, '[]') ||
+       moment(event.end).isBetween(start, end, null, '[]'))
+    );
+    if (overlap) {
+      setFeedbackMessage('Time slot overlaps with an existing reservation.');
+      return;
+    }
+
+    if (durationHours > 1) {
+      setShowAgendaForm(true);
+    } else {
+      reserveEvent();
+    }
+  };
+
+  const reserveEvent = () => {
     const newEvent = {
       start: moment(startDate).set({
         hour: startTime.hour(),
@@ -29,102 +67,172 @@ const RoomReservation = () => {
         hour: endTime.hour(),
         minute: endTime.minute(),
       }).toDate(),
-      title: 'Reserved'
+      title: 'Reserved',
+      agenda: agenda,
     };
     setEvents([...events, newEvent]);
-    console.log('Appointment reserved:', newEvent);
-    alert('Appointment reserved successfully!');
+    setShowAgendaForm(false);
+    setAgenda('');
+    setFeedbackMessage('Appointment reserved successfully!');
+    navigate('/user/reserveform'); // Navigate to the ReservationFormsDetails page
   };
 
   const handleBlockTime = () => {
-    console.log('Time interval blocked');
-    alert('Time interval blocked!');
+    setShowDiscardModal(true);
+  };
+
+  const handleConfirmDiscard = () => {
+    setShowDiscardModal(false);
+    navigate('/user/dashboard');
+  };
+
+  const handleCancelDiscard = () => {
+    setShowDiscardModal(false);
+  };
+
+  const handleEventClick = (event) => {
+    setExpandedEvent(event);
+  };
+
+  const closeEventDetails = () => {
+    setExpandedEvent(null);
   };
 
   return (
     <div className="room-reservation-container">
-      <div className="left-column">
-        <div className="booking-controls">
-          <h2>
-            <FontAwesomeIcon icon={faCalendar}/>
-            Booking Calendar
-          </h2>
-          <div className="date-time-picker">
-            <div className="date-picker">
-              <DatePicker
-                selected={startDate}
-                minDate={new Date()}
-                maxDate={moment().add(7, 'days').toDate()}
-                onChange={(date) => setStartDate(date)}
-                inline
-                calendarIcon={<FontAwesomeIcon icon={faCalendar}/>}
-              />
-            </div>
-            <div className="time-pickers">
-              <div className="time-picker">
-                <h3>
-                  Start Time <FontAwesomeIcon icon={faClock}/>
-                </h3>
-                <TimePicker
-                  showSecond={false}
-                  defaultValue={startTime}
-                  onChange={setStartTime}
+      <h1>Reserve Room</h1>
+      <div className="main-container">
+        <div className="left-column">
+          <div className="booking-controls">
+            <h2>Book a Room</h2>
+            <div className="date-time-picker">
+              <div className="date-picker">
+                <DatePicker
+                  selected={startDate}
+                  minDate={new Date()}
+                  maxDate={moment().add(7, 'days').toDate()}
+                  onChange={(date) => setStartDate(date)}
+                  inline
+                  calendarClassName="custom-calendar"
                 />
               </div>
-              <div className="time-picker">
-                <h3>
-                  End Time <FontAwesomeIcon icon={faClock} />
-                </h3>
-                <TimePicker
-                  showSecond={false}
-                  defaultValue={endTime}
-                  onChange={setEndTime}
+              <div className="time-pickers">
+                <div className="time-picker">
+                  <h3>Start Time</h3>
+                  <TimePicker
+                    showSecond={false}
+                    defaultValue={startTime}
+                    onChange={setStartTime}
+                  />
+                </div>
+                <div className="time-picker">
+                  <h3>End Time</h3>
+                  <TimePicker
+                    showSecond={false}
+                    defaultValue={endTime}
+                    onChange={setEndTime}
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="buttons">
+              <button className="block-btn" onClick={handleBlockTime}>Cancel</button>
+              <button className="reserve-btn" onClick={handleReserve}>Reserve</button>
+            </div>
+            {showAgendaForm && (
+              <div className="agenda-form">
+                <h2>Provide Agenda</h2>
+                <input
+                  type="text"
+                  value={agenda}
+                  onChange={(e) => setAgenda(e.target.value)}
+                  placeholder="Enter agenda or reason"
                 />
+                <button onClick={reserveEvent}>Submit</button>
+              </div>
+            )}
+            {feedbackMessage && (
+              <div className="feedback-message">
+                {feedbackMessage}
+              </div>
+            )}
+          </div>
+
+          <div className="legend-controls">
+            <div className="legend">
+              <div className="legend-item">
+                <span className="available"></span>
+                <p>Available</p>
+              </div>
+              <div className="legend-item">
+                <span className="unavailable"></span>
+                <p>Unavailable</p>
               </div>
             </div>
           </div>
-          <div className="buttons">
-            <button onClick={handleReserve}>
-              Reserve
-            </button>
-            <button onClick={handleBlockTime}>
-              Block Time
-            </button>
+        </div>
+        <div className="calendar-column">
+          <h3>Meetings For This Week</h3>
+          <div className="calendar-container">
+            <Calendar
+              localizer={localizer}
+              events={events}
+              startAccessor="start"
+              endAccessor="end"
+              style={{ height: '100%' }}
+              eventPropGetter={(event) => ({
+                style: {
+                  backgroundColor: '#45813',
+                  borderRadius: '4px',
+                  border: 'none',
+                  color: '#fff',
+                  padding: '2px 4px',
+                  cursor: 'pointer',
+                  transition: 'background-color 0.3s',
+                },
+              })}
+              components={{
+                event: ({ event }) => (
+                  <div
+                    onClick={() => handleEventClick(event)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <strong>{moment(event.start).format('h:mm a')}</strong>
+                  </div>
+                ),
+              }}
+            />
           </div>
         </div>
       </div>
 
-      <div className="calendar-column">
-        <div className="calendar-container">
-          <Calendar
-            localizer={localizer}
-            events={events}
-            startAccessor="start"
-            endAccessor="end"
-            style={{ height: 'calc(100vh - 40px)' }} // Adjust height to account for padding/margin
-            eventPropGetter={(event, start, end, isSelected) => ({
-              style: {
-                backgroundColor: '#3174ad', // Example background color for events
-                borderRadius: '4px',
-                border: 'none',
-                color: '#fff',
-                padding: '2px 4px',
-                cursor: 'pointer',
-                transition: 'background-color 0.3s',
-              }
-            })}
-            components={{
-              event: ({ event }) => (
-                <div>
-                  <strong>{event.title}</strong>
-                </div>
-              )
-            }}
-          />
+      {expandedEvent && (
+        <div className="event-details-modal">
+          <div className="modal-content">
+            <span className="close" onClick={closeEventDetails}>&times;</span>
+            <h2>{expandedEvent.title}</h2>
+            <p><strong>Start:</strong> {moment(expandedEvent.start).format('MMMM Do YYYY, h:mm a')}</p>
+            <p><strong>End:</strong> {moment(expandedEvent.end).format('MMMM Do YYYY, h:mm a')}</p>
+            {expandedEvent.agenda && (
+              <p><strong>Agenda:</strong> {expandedEvent.agenda}</p>
+            )}
+          </div>
         </div>
-      </div>
+      )}
+
+      {showDiscardModal && (
+        <div className="discard-modal">
+          <div className="modal-content">
+            <h2>Discard Changes</h2>
+            <p>Are you sure you want to discard your changes and go back to the dashboard?</p>
+            <button onClick={handleConfirmDiscard}>Yes, Discard</button>
+            <button onClick={handleCancelDiscard}>No, Keep Working</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
 export default RoomReservation;
+
