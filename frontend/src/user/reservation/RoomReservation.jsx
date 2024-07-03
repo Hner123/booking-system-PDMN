@@ -213,9 +213,6 @@ const RoomReservation = () => {
             <h2>{expandedEvent.title}</h2>
             <p><strong>Start:</strong> {moment(expandedEvent.start).format('MMMM Do YYYY, h:mm a')}</p>
             <p><strong>End:</strong> {moment(expandedEvent.end).format('MMMM Do YYYY, h:mm a')}</p>
-            {expandedEvent.agenda && (
-              <p><strong>Agenda:</strong> {expandedEvent.agenda}</p>
-            )}
           </div>
         </div>
       )}

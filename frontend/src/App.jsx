@@ -7,7 +7,6 @@ import Room from './user/reservation/RoomReservation';
 import ReservationFormsDetails from './user/reservation/ReservationFormsDetails';
 import './App.css';
 
-
 function App() {
   return (
     <Router>
