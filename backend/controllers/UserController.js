@@ -37,6 +37,7 @@ const CreateUser = async (req, res) => {
     const result = await UserModel.create({
       userName: user.userName,
       passWord: user.passWord,
+      email: user.email
     });
 
     // const emailToken = jwt.sign(
@@ -60,6 +61,7 @@ const EditUser = async (req, res) => {
       $set: {
         userName: user.userName,
         passWord: user.passWord,
+        email: user.email
       },
     };
 
