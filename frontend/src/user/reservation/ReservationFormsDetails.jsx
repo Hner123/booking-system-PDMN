@@ -1,115 +1,162 @@
 import React, { useState } from 'react';
+import roomBg from '../../assets/roombg.jpg';
 
 const ReservationFormsDetails = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [meeting, setMeeting] = useState('');
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
   const [room, setRoom] = useState('');
   const [agenda, setAgenda] = useState('');
+  const [pax, setPax] = useState('');
+  const [reason, setReason] = useState('');
 
   const handleSubmit = (event) => {
     event.preventDefault();
     // Add validation and submission logic here
-    console.log('Form submitted:', { name, email, phone, meeting, date, time, room, agenda });
+    console.log('Form submitted:', { phone, meeting, date, time, room, agenda, pax, reason });
   };
 
-  return (
-    <div className="reservation-details-container">
-      <div className="left-column">
-        {/* Left Column Content */}
-        <h2>Reservation Details</h2>
-        <form className="reservation-form" onSubmit={handleSubmit}>
-          <label htmlFor="name">Name:</label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-            placeholder="Enter your name"
-          />
+    return (
+    <div className='form-page'>
+        <h1>Booking Details</h1> 
+        <div className="reservation-details-container" style={{ display: 'flex', justifyContent: 'space-between' }}>
+            
+            <div className="form-column" style={{ flex: 1 }}>
+                {/* Left Column Content */}
+                <div className='form-title'>
+                    <h2>Reservation Details</h2>
+                    <p style={{ fontSize: '12px', color: '#666', textAlign:'left' }}>
 
-          <label htmlFor="email">Email:</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            placeholder="Enter your email"
-          />
+                
+                Please enter the  correct information and check the details before confirming your booking.
+                </p>
+                </div>
+                <form className="reservation-form" onSubmit={handleSubmit} style={{ display: 'grid', gap: '10px' }}>
+                <div style={{ display: 'flex', gap: '10px' }}>
+                    <div style={{ flex: 1 }}>
+                    <label htmlFor="name">Username:</label>
+                    <div id="name" className="read-only" style={{ border: '1px solid #ccc', padding: '8px', borderRadius: '4px', backgroundColor: '#f9f9f9' }}>
+                        John Doe
+                    </div>
+                    </div>
+                    <div style={{ flex: 1 }}>
+                    <label htmlFor="department">Department:</label>
+                    <div id="department" className="read-only" style={{ border: '1px solid #ccc', padding: '8px', borderRadius: '4px', backgroundColor: '#f9f9f9' }}>
+                        IT Department
+                    </div>
+                    </div>
+                </div>
 
-          <label htmlFor="phone">Phone:</label>
-          <input
-            type="tel"
-            id="phone"
-            name="phone"
-            value={phone}
-            onChange={(event) => setPhone(event.target.value)}
-            placeholder="Enter your phone number"
-          />
+                <div>
+                    <label htmlFor="phone">Number of Pax</label>
+                    <div className="radio-group" style={{ display: 'flex' }}>
+                        <div className="radio-option half-width">
+                        <input
+                            type="radio"
+                            id="pax-1-2"
+                            name="pax"
+                            value="1-2"
+                            checked={pax === '1-2'}
+                            onChange={(event) => setPax(event.target.value)}
+                        />
+                        <label htmlFor="pax-1-2" style={{ marginLeft: '5px' }}>1-2 attendees</label>
+                        </div>
+                        <div className="radio-option half-width">
+                        <input
+                            type="radio"
+                            id="pax-3-more"
+                            name="pax"
+                            value="3-more"
+                            checked={pax === '3-more'}
+                            onChange={(event) => setPax(event.target.value)}
+                        />
+                        <label htmlFor="pax-3-more" style={{ marginLeft: '5px' }}>3 or more attendees</label>
+                        </div>
+                    </div>
+                    </div>
 
-          <label htmlFor="meeting">Meeting Title:</label>
-          <input
-            type="text"
-            id="meeting"
-            name="meeting"
-            value={meeting}
-            onChange={(event) => setMeeting(event.target.value)}
-            placeholder="Enter meeting title"
-          />
 
-          <label htmlFor="date">Date:</label>
-          <input
-            type="date"
-            id="date"
-            name="date"
-            value={date}
-            onChange={(event) => setDate(event.target.value)}
-          />
+                {pax === '1-2' && (
+                    <div style={{width: '100%'}}>
+                    <label htmlFor="reason">Reason for 1-2 attendees</label>
+                    <div>
+                        <textarea
+                        type="text"
+                        id="reason"
+                        name="reason"
+                        value={reason}
+                        rows="2"
+                        onChange={(event) => setReason(event.target.value)}
+                        placeholder="Enter reason"
+                        style={{width: '100%'}}
+                        />
+                    </div>
+                    </div>
 
-          <label htmlFor="time">Time:</label>
-          <input
-            type="time"
-            id="time"
-            name="time"
-            value={time}
-            onChange={(event) => setTime(event.target.value)}
-          />
+                    
+                )}
 
-          <label htmlFor="room">Room:</label>
-          <select
-            id="room"
-            name="room"
-            value={room}
-            onChange={(event) => setRoom(event.target.value)}
-          >
-            <option value="roomA">Room A</option>
-            <option value="roomB">Room B</option>
-            <option value="roomC">Room C</option>
-          </select>
+                <label htmlFor="meeting">Meeting Title:</label>
+                <input
+                    type="text"
+                    id="meeting"
+                    name="meeting"
+                    value={meeting}
+                    onChange={(event) => setMeeting(event.target.value)}
+                    placeholder="Enter meeting title"
+                />
 
-          <label htmlFor="agenda">Agenda:</label>
-          <textarea
-            id="agenda"
-            name="agenda"
-            value={agenda}
-            onChange={(event) => setAgenda(event.target.value)}
-            rows="4"
-            placeholder="Enter meeting agenda"
-          ></textarea>
+                <label htmlFor="agenda">Agenda:</label>
+                <textarea
+                    id="agenda"
+                    name="agenda"
+                    value={agenda}
+                    onChange={(event) => setAgenda(event.target.value)}
+                    rows="4"
+                    placeholder="Enter meeting agenda"
+                ></textarea>
 
-          <button type="submit">Submit</button>
-        </form>
-      </div>
-      <div className="right-column">
-        {/* Right Column Content */}
-        <h2>Additional Information</h2>
-        <p>Include any additional information or requirements here.</p>
-      </div>
+                <button type="submit" style={{ alignItems: 'center'}}>Book</button>
+                <p style={{ marginTop: '10px', fontSize: '12px', color: '#666', textAlign:'center' }}>
+                You cannot edit the meeting details once you book. Please check the details before confirming.
+                </p>
+
+                </form>
+            </div>
+
+            <div className="details-column" style={{ flex: '1', position: 'relative' }}>
+                {/* Background Image */}
+                <div className="background-image" style={{backgroundImage: `url(${roomBg})`,}}>
+                    {/* Color Overlay */}
+                    <div className="color-overlay" >
+
+                    </div>
+
+                    {/* Reservation Details */}
+                    <div className="details">
+                    <h1>ROOM NAME</h1>
+                    <div className="separator"></div> {/* Line Separator */}
+                    <p>
+                        <strong>Date:</strong> {date}
+                    </p>
+                    <p>
+                        <strong>Meeting Start:</strong> {time}
+                    </p>
+                    <p>
+                        <strong>Meeting End:</strong> {time}
+                    </p>
+                    {agenda && (
+                        <p>
+                            <strong>Agenda:</strong> {agenda}
+                        </p>
+                    )}
+                </div>
+
+                </div>
+            </div>
+
+        </div>
     </div>
   );
 };
