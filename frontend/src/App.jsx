@@ -9,12 +9,29 @@ import './App.css';
 function App() {
   return (
     <Router>
-      <Routes>
-        <Route path="/user" element={<UserLogin />} />
-        <Route path="/user/dashboard" element={<UserDashboard />} />
-        <Route path="/user/reserve" element={<Room />} />
-        <Route path="/user/reserveform" element={<ReservationFormsDetails />} />
-      </Routes>
+
+      
+        <Routes>
+        <Route path="/user" element={
+            <>
+            <UserLogin />
+            </>
+            } />
+          <Route path="/user/dashboard" element={
+            <>
+            <Header/>
+            <UserDashboard />
+            </>            
+            } />
+          <Route path="/user/reserve" element={
+            <>
+            <Header/>
+            <Room />
+            </>
+            } />
+            <Route path="/user/reserveform" element={<ReservationFormsDetails />} />
+        </Routes>
+
     </Router>
   );
 }
