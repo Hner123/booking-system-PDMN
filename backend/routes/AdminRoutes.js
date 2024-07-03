@@ -10,11 +10,11 @@ const {
   DeleteAdminWithAuth,
 } = require("../controllers/AdminController.js");
 
-router.post("/upload", CreateAdmin);
+router.post("/create", CreateAdmin);
 router.use(requireAuth);
 router.get("/", GetAllAdminWithAuth);
 router.get("/:id", GetSpecificAdminWithAuth);
-router.patch("/update/:id", EditAdminWithAuth);
+router.patch("/edit/:id", EditAdminWithAuth);
 router.delete("/delete/:id", DeleteAdminWithAuth);
 
 module.exports = router;

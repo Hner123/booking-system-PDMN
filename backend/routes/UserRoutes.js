@@ -11,11 +11,11 @@ const {
   DeleteUserWithAuth,
 } = require("../controllers/UserController.js");
 
-router.post("/upload", CreateUser);
+router.post("/create", CreateUser);
 router.use(requireAuth);
 router.get("/", GetAllUsersWithAuth);
 router.get("/:id", GetSpecificUserWithAuth);
-router.patch("/update/:id", EditUserWithAuth);
+router.patch("/edit/:id", EditUserWithAuth);
 router.delete("/delete/:id", DeleteUserWithAuth);
 
 module.exports = router;
