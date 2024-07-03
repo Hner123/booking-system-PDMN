@@ -1,6 +1,5 @@
 const jwt = require("jsonwebtoken");
-const FreelancerModel = require("../models/FreelancerModel.js");
-const ClientModel = require("../models/ClientModel.js");
+const UserModel = require("../models/UserModel.js");
 const AdminModel = require("../models/AdminModel.js");
 
 const requireAuth = async (req, res, next) => {
@@ -17,13 +16,12 @@ const requireAuth = async (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    // Check if the user exists in either FreelancerModel or ClientModel
-    const freelancer = await FreelancerModel.findById(decoded._id);
-    const client = await ClientModel.findById(decoded._id);
+    // Check if the user exists in either FreelancerModel or UserModel
+    const client = await UserModel.findById(decoded._id);
     const admin = await AdminModel.findById(decoded._id);
 
     // If user exists in either model, attach user object to request and proceed to next middleware
-    if (freelancer || client || admin) {
+    if ( client || admin) {
       req.user = decoded; // Attach decoded token payload to request
       next();
     } else {
