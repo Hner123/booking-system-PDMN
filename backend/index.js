@@ -3,7 +3,8 @@ const express = require('express');
 const cors = require('cors');
 const ConnectDB = require("./config/Database");
 
-const ClientRoutes = require("./routes/ClientRoutes");
+const UserRoutes = require("./routes/UserRoutes");
+const AdminRoutes = require("./routes/AdminRoutes");
 
 const app = express();
 
@@ -32,7 +33,8 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/api/client', ClientRoutes)
+app.use('/api/user', UserRoutes)
+app.use('/api/admin', AdminRoutes)
 
 app.listen(process.env.PORT, () =>
   console.log(`Server started on port ${process.env.PORT}`)
