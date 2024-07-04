@@ -89,7 +89,6 @@ const Settings = () => {
                                 id="email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                required
                                 placeholder="Enter your valid e-mail address"
                             />
                         </div>
@@ -99,7 +98,6 @@ const Settings = () => {
                                 id="department"
                                 value={newDepartment}
                                 onChange={(e) => setNewDepartment(e.target.value)}
-                                required
                             >
                                 <option value="">Select your designated department</option>
                                 {departments.map((dept) => (
@@ -118,7 +116,6 @@ const Settings = () => {
                                     id="password"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    required
                                     placeholder="Enter new password"
                                 />
                             </div>
