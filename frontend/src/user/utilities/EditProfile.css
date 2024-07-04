@@ -117,7 +117,6 @@ input, select{
 
 .modal-buttons button {
     margin: 0 10px;
-    padding: 5% 7%;
 }
 
 @media (max-width: 500px){
