@@ -3,24 +3,19 @@ import { FaUserCircle, FaBell, FaEye, FaEyeSlash } from 'react-icons/fa'; // Imp
 import logo from '../../assets/logos/GDSLogo.png';
 import profile from '../../assets/Default Avatar.png';
 import './EditProfile.css';
+import { useNavigate } from 'react-router-dom';
 
 const Settings = () => {
-    const [isNotifOpen, setNotifOpen] = useState(false);
     const [email, setEmail] = useState('');
     const [newDepartment, setNewDepartment] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
-    const [showModal, setShowModal] = useState(false); // State for modal visibility
+    const [showModal, setShowModal] = useState(false); // State to manage modal visibility
     const userName = 'Juan D.C.';
     const department = 'Starlight'; // Assuming this is the current department
     const fileInputRef = useRef(null);
-
-    // Array of departments
     const departments = ['Department A', 'Department B', 'Department C', 'Department D'];
-
-    const handleNotifToggle = () => {
-        setNotifOpen(!isNotifOpen);
-    };
+    const navigate = useNavigate(); // Corrected: useNavigate is a function, so it should be called with ()
 
     const handleFileChange = (event) => {
         const file = event.target.files[0];
@@ -34,19 +29,24 @@ const Settings = () => {
         event.preventDefault();
         console.log('Submitted values:', email, newDepartment, password);
         // Further logic for form submission (e.g., API calls)
-
-        // Reset form fields or perform other actions as needed
-        setEmail('');
-        setNewDepartment('');
-        setPassword('');
     };
 
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
     };
 
-    const toggleModal = () => {
-        setShowModal(!showModal);
+    const handleCancel = () => {
+        setShowModal(true); // Show modal when cancel button is clicked
+    };
+
+    const handleConfirmCancel = () => {
+        // Handle logic when cancel is confirmed
+        setShowModal(false); // Hide modal after handling cancel action
+        navigate('/dashboard'); // Navigate to dashboard after confirmation
+    };
+
+    const closeModal = () => {
+        setShowModal(false); // Close modal without any action
     };
 
     return (
@@ -54,12 +54,6 @@ const Settings = () => {
             <header className="dashboard-header">
                 <div className="logodb">
                     <img src={logo} alt="Logo" />
-                </div>
-                <div className="header-actions">
-                    <div className="notif-icon" onClick={handleNotifToggle}>
-                        <FaBell />
-                        <span className="notif-count">5</span>
-                    </div>
                 </div>
             </header>
             <div>
@@ -116,7 +110,7 @@ const Settings = () => {
                         <div>
                             <label htmlFor="password">Change Password:</label>
                             <span className="password-toggle-icon" onClick={togglePasswordVisibility}>
-                                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                                {showPassword ? <FaEyeSlash /> : <FaEye />}
                             </span>
                             <div className="password-input">
                                 <input
@@ -127,23 +121,25 @@ const Settings = () => {
                                     required
                                     placeholder="Enter new password"
                                 />
-
                             </div>
                         </div>
                         <div className='buttonGroup'>
-                            <button type="button" onClick={toggleModal}>Cancel</button>
+                            <button onClick={handleCancel}>Cancel</button>
                             <button type="submit">Submit Changes</button>
                         </div>
                     </form>
                 </div>
             </div>
+            
+            {/* Modal */}
             {showModal && (
                 <div className="modal">
                     <div className="modal-content">
-                        <span className="close" onClick={toggleModal}>&times;</span>
-                        <p>Are you sure you want to cancel?</p>
-                        <button onClick={toggleModal}>No</button>
-                        <button onClick={toggleModal}>Yes</button>
+                        <p>Are you sure you want to cancel editing and head back to dashboard?</p>
+                        <div className="modal-buttons">
+                            <button onClick={closeModal}>Close</button>
+                            <button onClick={handleConfirmCancel}>Confirm</button>
+                        </div>
                     </div>
                 </div>
             )}

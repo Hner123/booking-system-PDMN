@@ -142,10 +142,50 @@
   }
 
 
-.modal-buttons {
+.headermodal-buttons {
     display: flex;
     justify-content: center; /* Center items horizontally */
     gap: 10px; /* Add spacing between buttons */
+  }
+  .headermodal {
+    position: absolute;
+    top: 40px; /* adjust the top position to place it under the profile tab */
+    right: 0;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: none; /* hide the modal by default */
+    z-index: 1000;
+  }
+  
+  .profile-icon + .headermodal {
+    display: block; /* show the modal when hovering over the profile icon */
+  }
+  
+  .headermodal-content {
+    padding: 20px;
+  }
+  
+  .headermodal-content h2 {
+    margin-top: 0;
+  }
+  
+  .headermodal-content button {
+    text-align: center;
+    width: auto;
+    padding: 10px;
+    color: #58595A;
+    background-color: white;
+    border: #58595A solid 0.1px;
+    border-radius: 6px;
+    box-shadow: 0px 4px 4px 0px #7C8B9D;
+  }
+  
+  .headermodal-content button:hover {
+    color: white;
+    background-color: #EE3E38;
+    border: #EE3E38 solid 0.1px;
   }
 
 .profileCont{
