@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { FaUserCircle, FaBell } from 'react-icons/fa';
 import logo from '../../assets/logos/GDSLogo.png';
 import profile from '../../assets/Default Avatar.png';
-import '../utilities/Header.css';
+import './Header.css';
 
 const Header = () => {
   const [isProfileOpen, setProfileOpen] = useState(false);

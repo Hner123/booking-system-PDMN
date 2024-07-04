@@ -7,6 +7,9 @@ import Room from './user/reservation/RoomReservation';
 import ReservationFormsDetails from './user/reservation/ReservationFormsDetails';
 import Edit from '../src/user/utilities/EditProfile.jsx';
 import Confirmation from './user/reservation/Confirmation';
+
+import AdminLogin from './admin/AdminLogin.jsx';
+
 import './App.css';
 
 function App() {
@@ -43,7 +46,11 @@ function App() {
             <Edit />
           </>
         } />
-
+      <Route path ="/admin/log-in" element={
+        <>
+          <AdminLogin/>
+        </>
+      }/>
       </Routes>
     </Router>
   );
