@@ -366,16 +366,16 @@
   }
   
   .modal-content button {
-    background-color: #007BFF;
-    color: #fff;
+    color: black;
     border: none;
-    border-radius: 20px;
+    border-radius: 4px;
     padding: 10px 20px;
     cursor: pointer;
+    margin: 5% 2% 0%;
   }
   
   .modal-content button:hover {
-    background-color: #0056b3;
+    background-color: #B62626;
   }
 
 

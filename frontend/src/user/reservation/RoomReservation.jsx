@@ -83,7 +83,7 @@ const RoomReservation = () => {
 
   const handleConfirmDiscard = () => {
     setShowDiscardModal(false);
-    navigate('/user/dashboard');
+    navigate('/dashboard');
   };
 
   const handleCancelDiscard = () => {
@@ -243,8 +243,8 @@ const RoomReservation = () => {
           <div className="modal-content">
             <h2>Discard Changes</h2>
             <p>Are you sure you want to discard your changes and go back to the dashboard?</p>
-            <button onClick={handleConfirmDiscard}>Yes, Discard</button>
-            <button onClick={handleCancelDiscard}>No, Keep Working</button>
+            <button className="block-btn" onClick={handleConfirmDiscard}>Yes, Discard</button>
+            <button className="block-btn" onClick={handleCancelDiscard}>No, Keep Working</button>
           </div>
         </div>
       )}
