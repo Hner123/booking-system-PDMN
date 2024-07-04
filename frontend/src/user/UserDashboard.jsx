@@ -3,11 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import roomBg from '../assets/roombg.jpg'; // Adjust path to your room background image
 import './User.css';
 
+const room = ["Palawan", "Boracay", "Palawan and Boracay"];
+
 const Dashboard = () => {
     const navigate = useNavigate();
 
     const handleReserveClick = () => {
-        navigate('/user/reserve');
+        navigate('/reserve');
     };
 
     return (
@@ -16,14 +18,14 @@ const Dashboard = () => {
                 <h1>My Dashboard</h1>
                 <h2>Book a Meeting Room</h2>
                 <div className="card-container">
-                    {[1, 2, 3].map((num) => (
+                    {room.map((place, index) => (
                         <div
-                            key={num}
+                            key={index}
                             className="card"
                             style={{ backgroundImage: `url(${roomBg})` }}
                         >
                             <div className="overlay">
-                                <h3>Card Title {num}</h3>
+                                <h3>{place}</h3>
                                 <button className="reserve-btn" onClick={handleReserveClick}>
                                     Reserve
                                 </button>

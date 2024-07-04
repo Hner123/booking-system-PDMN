@@ -196,13 +196,33 @@
   margin-right: 10px;
 }
 
-.legend-item span.available {
+.legend-item span.strlgt {
+  background-color: #fbff00;
+}
+
+.legend-item span.gds {
+  background-color: #fccd32;
+}
+
+.legend-item span.pdmn {
+  background-color: #dc3545;
+}
+.legend-item span.bvp {
   background-color: #28a745;
 }
 
-.legend-item span.unavailable {
-  background-color: #dc3545;
+.legend-item span.lgl {
+  background-color: #d8a330;
 }
+
+.legend-item span.sn {
+  background-color: #272727;
+}
+
+.legend-item span.cp {
+  background-color: #35bbdc;
+}
+
 
 .legend-item p {
   margin: 0;
@@ -402,4 +422,143 @@
 }
 .form-title {
   margin: 2% 0%;
+}
+.autosuggest-container {
+  position: relative;
+  width: 100%;
+}
+
+.suggestions-container {
+  border: 1px solid #c46464;
+  border-radius: 8px;
+  background-color: #fff;
+  position: absolute;
+  z-index: 1;
+  width: 100%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.suggestions-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.suggestion-chip {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.suggestion-chip:hover {
+  background-color: #f0f0f0;
+}
+
+.attendees-container {
+  display: flex;
+  flex-direction: column;
+
+  border-radius: 8px;
+  width: 100%;
+  position: relative;
+}
+
+.attendees-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.attendee-chip {
+  display: flex; /* Ensures chips are inline */
+  margin-right: 8px; /* Adjust spacing between chips */
+  border: 1px solid #ccc; /* Add border around each chip */
+  border-radius: 4px; /* Optional: Rounded corners for the chip */
+  padding: 4px 8px; /* Optional: Padding inside the chip */
+}
+
+.attendee-text {
+  white-space: nowrap; /* Prevents text from wrapping */
+  width: 100%;
+  align-items: center;
+  text-align: center;
+  align-self: center;
+  margin-right: 5px;
+}
+
+.attendee-chip .remove-button {
+  background-color: #e74c3c; /* Red background */
+  color: white; /* White text color */
+  border: none; /* No border */
+  padding: 4px 8px; /* Padding inside the button */
+  margin-left: 8px; /* Space between text and button */
+  cursor: pointer; /* Pointer cursor on hover */
+  border-radius: 4px; /* Rounded corners */
+}
+
+.attendee-chip .remove-button:hover {
+  background-color: #c0392b; /* Darker red on hover */
+}
+
+.booking-confirmation {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+  background-color: #f9f9f9;
+}
+
+.confirmation-text {
+  flex: 1;
+  padding: 80px;
+  font-family: Arial, sans-serif;
+}
+
+.confirmation-text h1 {
+  font-size: 50px;
+  margin-bottom: 10px;
+  font-weight: bolder;
+}
+
+.confirmation-text p {
+  margin-bottom: 1px;
+  font-size: 18px;
+}
+
+.confirmation-text ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.confirmation-text ul li {
+  margin-bottom: 5px;
+  font-size: 1.1em;
+}
+
+.confirmation-image {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+.confirmation-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Change the color and opacity as needed */
+  z-index: 1;
+}
+
+.confirmation-image img {
+  position: relative;
+  z-index: 0;
 }
