@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Autosuggest from 'react-autosuggest';
+import { useNavigate } from 'react-router-dom';
 import roomBg from '../../assets/roombg.jpg';
-
 
 const ReservationFormsDetails = () => {
   const [phone, setPhone] = useState('');
@@ -15,12 +15,15 @@ const ReservationFormsDetails = () => {
   const [attendees, setAttendees] = useState([]);
   const [attendeeInput, setAttendeeInput] = useState('');
   const [suggestions, setSuggestions] = useState([]);
+  const navigate = useNavigate();
 
   const allAttendees = ['Alice Johnson', 'Bob Smith', 'Charlie Davis', 'Dana Wilson', 'Eli Martinez'];
 
   const handleSubmit = (event) => {
     event.preventDefault();
     console.log('Form submitted:', { attendees });
+    // Navigate to the next page
+    navigate('/user/approved');
   };
 
   const getSuggestions = (value) => {
@@ -139,8 +142,6 @@ const ReservationFormsDetails = () => {
               </div>
             )}
 
-
-
             <label htmlFor="attendees">Attendees:</label>
             <div className="attendees-container">
               <Autosuggest
@@ -150,9 +151,9 @@ const ReservationFormsDetails = () => {
                 getSuggestionValue={getSuggestionValue}
                 renderSuggestion={renderSuggestion}
                 inputProps={{
-                    ...inputProps,
-                    style: { width: '100%' } // Set width to 100%
-                  }}
+                  ...inputProps,
+                  style: { width: '100%' } // Set width to 100%
+                }}
                 onSuggestionSelected={onSuggestionSelected}
                 theme={{
                   container: 'autosuggest-container',
@@ -161,12 +162,12 @@ const ReservationFormsDetails = () => {
                   suggestion: 'suggestion-chip'
                 }}
               />
-                <div className="attendees-row">
+              <div className="attendees-row">
                 {attendees.map((attendee, index) => (
-                    <div key={index} className="attendee-chip">
+                  <div key={index} className="attendee-chip">
                     <span className="attendee-text">{attendee}</span>
                     <button type="button" className="remove-button" onClick={() => removeAttendee(index)}>×</button>
-                    </div>
+                  </div>
                 ))}
               </div>
             </div>
