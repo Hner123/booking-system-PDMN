@@ -23,7 +23,7 @@ const ReservationFormsDetails = () => {
     event.preventDefault();
     console.log('Form submitted:', { attendees });
     // Navigate to the next page
-    navigate('/user/approved');
+    navigate('/confirmation');
   };
 
   const getSuggestions = (value) => {

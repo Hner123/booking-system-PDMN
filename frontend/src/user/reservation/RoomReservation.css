@@ -196,13 +196,33 @@
   margin-right: 10px;
 }
 
-.legend-item span.available {
+.legend-item span.strlgt {
+  background-color: #fbff00;
+}
+
+.legend-item span.gds {
+  background-color: #fccd32;
+}
+
+.legend-item span.pdmn {
+  background-color: #dc3545;
+}
+.legend-item span.bvp {
   background-color: #28a745;
 }
 
-.legend-item span.unavailable {
-  background-color: #dc3545;
+.legend-item span.lgl {
+  background-color: #d8a330;
 }
+
+.legend-item span.sn {
+  background-color: #272727;
+}
+
+.legend-item span.cp {
+  background-color: #35bbdc;
+}
+
 
 .legend-item p {
   margin: 0;

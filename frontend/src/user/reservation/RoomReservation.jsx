@@ -74,7 +74,7 @@ const RoomReservation = () => {
     setShowAgendaForm(false);
     setAgenda('');
     setFeedbackMessage('Appointment reserved successfully!');
-    navigate('/user/reserveform'); // Navigate to the ReservationFormsDetails page
+    navigate('/reserveform'); // Navigate to the ReservationFormsDetails page
   };
 
   const handleBlockTime = () => {
@@ -161,13 +161,34 @@ const RoomReservation = () => {
           <div className="legend-controls">
             <div className="legend">
               <div className="legend-item">
-                <span className="available"></span>
-                <p>Available</p>
+                <span className="pdmn"></span>
+                <p>Philippine Dragon Media Network</p>
               </div>
               <div className="legend-item">
-                <span className="unavailable"></span>
-                <p>Unavailable</p>
+                <span className="gds"></span>
+                <p>GDS Travel Agency</p>
               </div>
+              <div className="legend-item">
+                <span className="lgl"></span>
+                <p>FEILONG Legal</p>
+              </div>
+              <div className="legend-item">
+                <span className="strlgt"></span>
+                <p> STARLIGHT</p>
+              </div>
+              <div className="legend-item">
+                <span className="bvp"></span>
+                <p>BIG VISION PRODS.</p>
+              </div>
+              <div className="legend-item">
+                <span className="sn"></span>
+                <p>SuperNova</p>
+              </div>
+              <div className="legend-item">
+                <span className="cp"></span>
+                <p>ClearPath</p>
+              </div>
+
             </div>
           </div>
         </div>

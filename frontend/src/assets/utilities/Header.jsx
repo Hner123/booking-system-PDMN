@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FaUserCircle, FaBell } from 'react-icons/fa';
 import logo from '../../assets/logos/GDSLogo.png';
 import profile from '../../assets/Default Avatar.png';
@@ -10,6 +11,7 @@ const Header = () => {
   const userName = "John Doe"; // Replace with actual user name
   const department = "Starlight";
   const modalRef = useRef();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleOutsideClick = (event) => {
@@ -33,13 +35,17 @@ const Header = () => {
     setNotifOpen(!isNotifOpen);
   };
 
+  const handleLogoClick = () => {
+    navigate('/'); // Replace with the desired route
+  };
+
   return (
     <header className="dashboard-header">
-      <div className="logodb">
+      <div className="logodb" onClick={handleLogoClick} style={{ cursor: 'pointer' }}>
         <img src={logo} alt="Logo" />
       </div>
       <div className="header-actions">
-        <div className="notif-icon"  onClick={handleNotifToggle}>
+        <div className="notif-icon" onClick={handleNotifToggle}>
           <FaBell />
           <span className="notif-count">5</span>
         </div>
@@ -69,15 +75,15 @@ const Header = () => {
         )}
         {isNotifOpen && (
           <div className="modal" ref={modalRef}>
-            <div className="modal-content ">
+            <div className="modal-content">
               <div>
-              <h1 style={{margin: "0"}}>Your Notifications</h1>
-              <hr style={{ border: "0.5px solid #7C8B9D", margin: "5px"}}></hr>
-              <div className='modal-buttons'>
-              <button onClick={() => console.log("Edit profile")}>
-                  Mark All as Read
-                </button>
-              </div>
+                <h1 style={{ margin: "0" }}>Your Notifications</h1>
+                <hr style={{ border: "0.5px solid #7C8B9D", margin: "5px" }}></hr>
+                <div className='modal-buttons'>
+                  <button onClick={() => console.log("Mark all as read")}>
+                    Mark All as Read
+                  </button>
+                </div>
               </div>
             </div>
           </div>
