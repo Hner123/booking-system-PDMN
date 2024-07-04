@@ -5,6 +5,7 @@ import UserLogin from './user/UserLogin';
 import UserDashboard from './user/UserDashboard';
 import Room from './user/reservation/RoomReservation';
 import ReservationFormsDetails from './user/reservation/ReservationFormsDetails';
+import Approved from './user/reservation/ApprovedConfirmation';
 import './App.css';
 
 function App() {
@@ -28,6 +29,12 @@ function App() {
           <>
             <Header />
             <ReservationFormsDetails />
+          </>
+        } />
+        <Route path="/user/approved" element={
+          <>
+            <Header />
+            <Approved />
           </>
         } />
       </Routes>
