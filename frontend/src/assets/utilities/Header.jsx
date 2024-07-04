@@ -3,6 +3,7 @@ import { FaUserCircle, FaBell } from 'react-icons/fa';
 import logo from '../../assets/logos/GDSLogo.png';
 import profile from '../../assets/Default Avatar.png';
 import '../utilities/Header.css';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 const Header = () => {
   const [isProfileOpen, setProfileOpen] = useState(false);
@@ -10,6 +11,7 @@ const Header = () => {
   const userName = "John Doe"; // Replace with actual user name
   const department = "Starlight";
   const modalRef = useRef();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleOutsideClick = (event) => {
@@ -32,6 +34,9 @@ const Header = () => {
   const handleNotifToggle = () => {
     setNotifOpen(!isNotifOpen);
   };
+  const NavigateEdit  = () => {
+    navigate('/user/edit');
+  }
 
   return (
     <header className="dashboard-header">
@@ -57,12 +62,12 @@ const Header = () => {
               <p style={{ textAlign: "center" }}>Department: {department}</p>
               <hr style={{ border: "0.5px solid #7C8B9D", marginBottom: "20px" }}></hr>
               <div className="modal-buttons">
-                <button onClick={() => console.log("Go to settings")}>
-                  Settings
-                </button>
-                <button onClick={() => console.log("Edit profile")}>
+                <button onClick = {NavigateEdit}>
                   Edit Profile
                 </button>
+                {/* <button onClick={() => console.log("Edit profile")}>
+                  Edit Profile
+                </button> */}
               </div>
             </div>
           </div>

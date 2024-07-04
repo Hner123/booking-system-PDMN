@@ -5,6 +5,7 @@ import UserLogin from './user/UserLogin';
 import UserDashboard from './user/UserDashboard';
 import Room from './user/reservation/RoomReservation';
 import ReservationFormsDetails from './user/reservation/ReservationFormsDetails';
+import Edit from '/src/assets/utilities/EditProfile.jsx';
 import './App.css';
 
 function App() {
@@ -30,6 +31,12 @@ function App() {
             <ReservationFormsDetails />
           </>
         } />
+        <Route path ="/user/edit" element={
+          <>
+            <Edit />
+          </>
+        } />
+
       </Routes>
     </Router>
   );

@@ -1,0 +1,114 @@
+.area{
+    display: flex;
+    flex-direction: column;
+}
+.upload{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    width: auto;
+    height: auto;
+    margin-inline: 30%;
+    padding: 2%;
+    color: #58595A;
+    background-color: white;
+    border-radius: 6px;
+    box-shadow: 0px 4px 4px 0px #7C8B9D;
+}
+
+.upload h2, p{
+    margin: auto;
+}
+.upload h2{
+    font-size: 64px;
+}
+
+
+.profileContain{
+    margin: 1%;
+}
+
+.profileContain img{
+    width: 150px; /* minimal width */
+    height: 150px; /* minimal height */
+    object-fit: cover; /* maintain aspect ratio */
+    border-radius: 50%; /* round the image */
+    border: 2px solid #7C8B9D; /* border color */
+}
+
+.changeFields{
+    display: flex;
+    flex-direction: column;
+    width: auto;
+    height: auto;
+    margin: 3% 30%;
+    padding: 0.1%;
+    color: #58595A;
+    background-color: white;
+    border-radius: 6px;
+    box-shadow: 0px 4px 4px 0px #7C8B9D;
+}
+
+.changeFields form{
+    margin: 2% 5%;
+}
+
+.changeFields form>div{
+    margin: 20px;
+}
+
+input, select{
+    width: 100%;
+}
+
+.buttonGroup {
+    display: flex;
+    justify-content: flex-end; /* Align buttons to the right */
+    margin-top: 20px; /* Adjust top margin as needed */
+  }
+  
+.buttonGroup button {
+    margin-left: 10px; /* Add space between buttons */
+ }
+
+
+button{
+    text-align: center;
+    width: auto;
+    padding: 10px;
+    color: #58595A;
+    background-color: white;
+    border: #58595A solid 0.1px;
+    border-radius: 6px;
+    box-shadow: 0px 4px 4px 0px #7C8B9D;
+}
+
+button:hover{
+    color: white;
+    background-color: #EE3E38;
+    border: #EE3E38 solid 0.1px;
+}
+
+.modal{
+    z-index: 1000;
+}
+
+@media (max-width: 500px){
+    .upload{
+        margin: 10%;
+    }
+    .profileContain img{
+        width: 100px;
+        height: 100px;
+    }
+    .upload h2{
+        font-size: 30px;
+    }
+    .button{
+        padding: 2px;
+    }
+    .changeFields{
+        margin: 1% 10%;
+    }
+}
