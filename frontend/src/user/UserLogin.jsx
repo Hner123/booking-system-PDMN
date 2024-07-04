@@ -29,7 +29,7 @@ const UserLogin = () => {
         setError('');
 
         // Navigate to the dashboard after successful login
-        navigate('/user/dashboard');
+        navigate('/dashboard');
     };
 
     return (
