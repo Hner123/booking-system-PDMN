@@ -39,7 +39,7 @@ const Header = () => {
   }
 
   const handleLogoClick = () => {
-    navigate('/'); // Replace with the desired route
+    navigate('/dashboard'); // Replace with the desired route
   };
 
   return (

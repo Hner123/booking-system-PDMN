@@ -77,7 +77,7 @@ const Settings = () => {
                             accept=".jpg, .png"        // Accept only JPG and PNG files
                             onChange={handleFileChange} // Handle file selection
                         />
-                        <button onClick={() => fileInputRef.current.click()}>Upload</button>
+                        <button className="edit" onClick={() => fileInputRef.current.click()}>Upload</button>
                     </div>
                 </div>
                 <div className='changeFields'>
@@ -121,8 +121,8 @@ const Settings = () => {
                             </div>
                         </div>
                         <div className='buttonGroup'>
-                            <button onClick={handleCancel}>Cancel</button>
-                            <button type="submit">Submit Changes</button>
+                            <button className="edit" onClick={handleCancel}>Cancel</button>
+                            <button className="edit"  type="submit">Submit Changes</button>
                         </div>
                     </form>
                 </div>
@@ -134,8 +134,8 @@ const Settings = () => {
                     <div className="modal-content">
                         <p>Are you sure you want to cancel editing and head back to dashboard?</p>
                         <div className="modal-buttons">
-                            <button onClick={closeModal}>Close</button>
-                            <button onClick={handleConfirmCancel}>Confirm</button>
+                            <button  onClick={closeModal}>Close</button>
+                            <button  onClick={handleConfirmCancel}>Confirm</button>
                         </div>
                     </div>
                 </div>

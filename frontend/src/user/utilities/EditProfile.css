@@ -73,7 +73,7 @@ input, select{
  }
 
 
-button{
+.edit{
     text-align: center;
     width: auto;
     padding: 10px;
@@ -84,7 +84,7 @@ button{
     box-shadow: 0px 4px 4px 0px #7C8B9D;
 }
 
-button:hover{
+.edit:hover{
     color: white;
     background-color: #EE3E38;
     border: #EE3E38 solid 0.1px;
