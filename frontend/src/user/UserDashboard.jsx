@@ -12,7 +12,6 @@ const Dashboard = () => {
 
     return (
         <div className="dashboard">
-
             <main className="dashboard-main">
                 <h1>My Dashboard</h1>
                 <h2>Book a Meeting Room</h2>
