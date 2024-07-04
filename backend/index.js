@@ -5,6 +5,7 @@ const ConnectDB = require("./config/Database");
 
 const UserRoutes = require("./routes/UserRoutes");
 const AdminRoutes = require("./routes/AdminRoutes");
+const ValidateRoutes = require("./routes/ValidateRoutes");
 
 const app = express();
 
@@ -35,6 +36,7 @@ app.use((req, res, next) => {
 
 app.use('/api/user', UserRoutes)
 app.use('/api/admin', AdminRoutes)
+app.use('/api/auth', ValidateRoutes)
 
 app.listen(process.env.PORT, () =>
   console.log(`Server started on port ${process.env.PORT}`)

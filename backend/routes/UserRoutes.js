@@ -9,13 +9,19 @@ const {
   CreateUser,
   EditUserWithAuth,
   DeleteUserWithAuth,
+
+  GetAllUsers,
+  GetSpecificUser,
+  EditUser,
+  DeleteUser,
+
 } = require("../controllers/UserController.js");
 
 router.post("/create", CreateUser);
-router.use(requireAuth);
-router.get("/", GetAllUsersWithAuth);
-router.get("/:id", GetSpecificUserWithAuth);
-router.patch("/edit/:id", EditUserWithAuth);
-router.delete("/delete/:id", DeleteUserWithAuth);
+// router.use(requireAuth);
+router.get("/", GetAllUsers);
+router.get("/:id", GetSpecificUser);
+router.patch("/edit/:id", EditUser);
+router.delete("/delete/:id", DeleteUser);
 
 module.exports = router;

@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const AdminModel = require("../models/AdminModel");
-const requireAuth = require("../utils/requireAuth")
+const bcrypt = require("bcrypt");
+const requireAuth = require("../utils/requireAuth");
 
 const GetAllAdmin = async (req, res) => {
   try {
@@ -32,12 +33,14 @@ const CreateAdmin = async (req, res) => {
   try {
     const admin = req.body
 
+    const hashPassWord = await bcrypt.hash(admin.adminPass, 13)
+
     const result = await AdminModel.create({
       adminUser: admin.adminUser,
-      adminPass: admin.adminPass,
+      adminPass: hashPassWord,
     });
 
-    res.status(201).json({ result, emailToken });
+    res.status(201).json({ result });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -48,10 +51,22 @@ const EditAdmin = async (req, res) => {
     const { id } = req.params;
     const admin = req.body
 
+    const currentAdmin = await AdminModel.findById(id);
+
+    if (!currentAdmin) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Check if the password has changed
+    let hashPassWord = currentAdmin.adminPass;
+    if (admin.adminPass && admin.adminPass !== currentAdmin.adminPass) {
+      hashPassWord = await bcrypt.hash(admin.adminPass, 13);
+    }
+
     let update = {
       $set: {
         adminUser: admin.adminUser,
-        adminPass: admin.adminPass,
+        adminPass: hashPassWord,
       },
     };
 
@@ -108,6 +123,12 @@ const DeleteAdminWithAuth = (req, res) => {
 
 module.exports = {
   CreateAdmin,
+
+  GetAllAdmin,
+  GetSpecificAdmin,
+  EditAdmin,
+  DeleteAdmin,
+
   GetAllAdminWithAuth,
   GetSpecificAdminWithAuth,
   EditAdminWithAuth,

@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const UserModel = require("../models/UserModel");
+const bcrypt = require("bcrypt")
 const DriveService = require("../utils/DriveService");
 const jwt = require("jsonwebtoken");
 const requireAuth = require("../utils/requireAuth")
@@ -34,10 +35,14 @@ const CreateUser = async (req, res) => {
   try {
     const user = req.body
 
+    const hashPassWord = await bcrypt.hash(user.passWord, 13)
+
     const result = await UserModel.create({
       userName: user.userName,
-      passWord: user.passWord,
-      email: user.email
+      passWord: hashPassWord,
+      email: user.email,
+      department: user.department,
+      resetPass: false
     });
 
     // const emailToken = jwt.sign(
@@ -46,7 +51,7 @@ const CreateUser = async (req, res) => {
     //   { expiresIn: "3m" }
     // );
 
-    res.status(201).json({ result, emailToken });
+    res.status(201).json({ result /*emailToken*/ });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -55,17 +60,34 @@ const CreateUser = async (req, res) => {
 const EditUser = async (req, res) => {
   try {
     const { id } = req.params;
-    const user = req.body
+    const user = req.body;
 
+    // Retrieve the current user data
+    const currentUser = await UserModel.findById(id);
+
+    if (!currentUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Check if the password has changed
+    let hashPassWord = currentUser.passWord;
+    if (user.passWord && user.passWord !== currentUser.passWord) {
+      hashPassWord = await bcrypt.hash(user.passWord, 13);
+    }
+
+    // Prepare the update object
     let update = {
       $set: {
         userName: user.userName,
-        passWord: user.passWord,
-        email: user.email
+        passWord: hashPassWord,
+        email: user.email,
+        department: user.department,
       },
     };
 
+    // Update the user in the database
     const result = await UserModel.findByIdAndUpdate(id, update, { new: true });
+
     res.status(201).json(result);
   } catch (err) {
     res.status(400).json({ message: err.message });
@@ -118,6 +140,12 @@ const DeleteUserWithAuth = (req, res) => {
 
 module.exports = {
   CreateUser,
+
+  GetAllUsers,
+  GetSpecificUser,
+  EditUser,
+  DeleteUser,
+
   GetAllUsersWithAuth,
   GetSpecificUserWithAuth,
   EditUserWithAuth,
