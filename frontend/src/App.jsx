@@ -12,6 +12,8 @@ import AdminLogin from './admin/AdminLogin.jsx';
 import Sidebar from './admin/Sidebar.jsx';
 import EmployeeList from './admin/EmployeeList.jsx';
 
+import Tablet from './tablet/tablet';
+
 import './App.css';
 
 function App() {
@@ -57,6 +59,11 @@ function App() {
         <>
         <Sidebar/>
         <EmployeeList/>
+        </>
+      }/>
+      <Route path = "/tablet" element={
+        <>
+        <Tablet/>
         </>
       }/>
       </Routes>

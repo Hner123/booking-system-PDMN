@@ -22,7 +22,6 @@ const RoomReservation = () => {
   const [expandedEvent, setExpandedEvent] = useState(null);
   const [feedbackMessage, setFeedbackMessage] = useState('');
   const [showDiscardModal, setShowDiscardModal] = useState(false);
-
   const handleReserve = () => {
     const start = moment(startDate).set({
       hour: startTime.hour(),
@@ -53,29 +52,18 @@ const RoomReservation = () => {
     if (durationHours > 1) {
       setShowAgendaForm(true);
     } else {
-      reserveEvent();
+      const newEvent = {
+        start: start.toDate(),
+        end: end.toDate(),
+        title: 'Reserved',
+        agenda: '',
+      };
+      setEvents([...events, newEvent]);
+      setFeedbackMessage('Appointment reserved successfully!');
+      // navigate('/reserveform'); // Navigate to the ReservationFormsDetails page
     }
   };
 
-  const reserveEvent = () => {
-    const newEvent = {
-      start: moment(startDate).set({
-        hour: startTime.hour(),
-        minute: startTime.minute(),
-      }).toDate(),
-      end: moment(startDate).set({
-        hour: endTime.hour(),
-        minute: endTime.minute(),
-      }).toDate(),
-      title: 'Reserved',
-      agenda: agenda,
-    };
-    setEvents([...events, newEvent]);
-    setShowAgendaForm(false);
-    setAgenda('');
-    setFeedbackMessage('Appointment reserved successfully!');
-    navigate('/reserveform'); // Navigate to the ReservationFormsDetails page
-  };
 
   const handleBlockTime = () => {
     setShowDiscardModal(true);
@@ -102,7 +90,7 @@ const RoomReservation = () => {
     <div className="room-reservation-container">
       <h1>Reserve Room</h1>
       <div className="main-container">
-        <div className="left-column">
+        <div className="rsrv-column">
           <div className="booking-controls">
             <h2>Book a Room</h2>
             <div className="date-time-picker">
@@ -113,7 +101,7 @@ const RoomReservation = () => {
                   maxDate={moment().add(7, 'days').toDate()}
                   onChange={(date) => setStartDate(date)}
                   inline
-                  calendarClassName="custom-calendar"
+                  ClassName="custom-calendar"
                 />
               </div>
               <div className="time-pickers">
