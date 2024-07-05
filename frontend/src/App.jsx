@@ -12,6 +12,9 @@ import AdminLogin from './admin/AdminLogin.jsx';
 import Sidebar from './admin/Sidebar.jsx';
 import EmployeeList from './admin/EmployeeList.jsx';
 
+import 'react-datepicker/dist/react-datepicker.css';
+import 'rc-time-picker/assets/index.css';
+import 'react-big-calendar/lib/css/react-big-calendar.css';
 import './App.css';
 
 function App() {
