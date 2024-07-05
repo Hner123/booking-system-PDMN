@@ -15,6 +15,8 @@ import EmployeeList from './admin/EmployeeList.jsx';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'rc-time-picker/assets/index.css';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
+import Tablet from './tablet/tablet';
+
 import './App.css';
 
 function App() {
@@ -60,6 +62,11 @@ function App() {
         <>
         <Sidebar/>
         <EmployeeList/>
+        </>
+      }/>
+      <Route path = "/tablet" element={
+        <>
+        <Tablet/>
         </>
       }/>
       </Routes>
