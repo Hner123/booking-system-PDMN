@@ -3,12 +3,11 @@ import { useNavigate } from 'react-router-dom'; // Corrected import statement
 import roomBg from '../assets/roombg.jpg'; // Adjust path to your room background image
 import './User.css';
 
-const room = ["Palawan", "Boracay", "Palawan and Boracay"];
-
 const Dashboard = () => {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   const [selectedMeeting, setSelectedMeeting] = useState(null);
+  const room = ["Palawan", "Boracay", "Palawan and Boracay"];
 
   const handleReserveClick = () => {
     navigate('/reserve');

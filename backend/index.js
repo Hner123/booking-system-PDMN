@@ -5,6 +5,7 @@ const ConnectDB = require("./config/Database");
 
 const UserRoutes = require("./routes/UserRoutes");
 const AdminRoutes = require("./routes/AdminRoutes");
+const ReserveRoutes = require("./routes/ReserveRoutes");
 const ValidateRoutes = require("./routes/ValidateRoutes");
 
 const app = express();
@@ -36,6 +37,7 @@ app.use((req, res, next) => {
 
 app.use('/api/user', UserRoutes)
 app.use('/api/admin', AdminRoutes)
+app.use('/api/book', ReserveRoutes)
 app.use('/api/auth', ValidateRoutes)
 
 app.listen(process.env.PORT, () =>

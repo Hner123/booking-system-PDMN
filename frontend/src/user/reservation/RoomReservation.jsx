@@ -23,6 +23,8 @@ const RoomReservation = () => {
   const [feedbackMessage, setFeedbackMessage] = useState('');
   const [showDiscardModal, setShowDiscardModal] = useState(false);
 
+  console.log(startDate)
+  
   const handleReserve = () => {
     const start = moment(startDate).set({
       hour: startTime.hour(),

@@ -1,27 +1,62 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import './User.css';
 import logo from '../assets/logos/GDSLogo.png';
 import mascot from '../assets/mascot.png';
 
 const UserLogin = () => {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+    const [userName, setUsername] = useState('');
+    const [passWord, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState('');
     const navigate = useNavigate();
+
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        try {
+          const trimmedUserName = userName.trim();
+          const trimmedPassWord = passWord.trim();
+    
+          setLoading(true);
+    
+          const response = await axios.post(
+            "http://localhost:8800/api/auth/login/user",
+            {
+              userName: trimmedUserName,
+              passWord: trimmedPassWord,
+            }
+          );
+    
+          if (response.status === 200) {
+            const { authToken, emailToken } = response.data;
+            const { _id, accType } = response.data.user;
+
+            setLoading(false);
+            // localStorage.setItem("authToken", authToken);
+            // localStorage.setItem("verifyToken", emailToken);
+            navigate('/dashboard');
+
+          }
+          // Here you can handle the successful login, such as setting user data in state or redirecting the user
+        } catch (error) {
+          setLoading(false);
+          setError(error.response.data.message)
+        }
+      };
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
         // Basic validation
-        if (!username || !password) {
+        if (!userName || !passWord) {
             setError('Please enter both username and password.');
             return;
         }
 
         // Here you would typically handle the login logic, like calling an API
         // For demonstration, we'll just log the username and password
-        console.log(`Username: ${username}, Password: ${password}`);
+        console.log(`Username: ${userName}, Password: ${passWord}`);
 
         // Clear form fields
         setUsername('');
@@ -36,16 +71,16 @@ const UserLogin = () => {
         <div className="login-page">
             <div className="login-form-column">
                 <img src={logo} alt="Logo" className="logo" />
-                <form className="login-form" onSubmit={handleSubmit}>
+                <form className="login-form" onSubmit={handleLogin}>
                     <h2>Log In</h2>
                     {error && <div className="error">{error}</div>}
-                    <label htmlFor="username">Username</label>
+                    <label htmlFor="userName">Username</label>
                     <input
                         type="text"
-                        id="username"
-                        name="username"
+                        id="userName"
+                        name="userName"
                         required
-                        value={username}
+                        value={userName}
                         onChange={(e) => setUsername(e.target.value)}
                         placeholder="Enter your username"
                     />
@@ -55,7 +90,7 @@ const UserLogin = () => {
                         id="password"
                         name="password"
                         required
-                        value={password}
+                        value={passWord}
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="Enter your password"
                     />
