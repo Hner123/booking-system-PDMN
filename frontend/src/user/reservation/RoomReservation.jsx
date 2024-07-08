@@ -23,6 +23,8 @@ const RoomReservation = () => {
   const [feedbackMessage, setFeedbackMessage] = useState('');
   const [showDiscardModal, setShowDiscardModal] = useState(false);
 
+  console.log(startDate)
+  
   const handleReserve = () => {
     const start = moment(startDate).set({
       hour: startTime.hour(),
@@ -74,7 +76,7 @@ const RoomReservation = () => {
     setShowAgendaForm(false);
     setAgenda('');
     setFeedbackMessage('Appointment reserved successfully!');
-    navigate('/reserveform'); // Navigate to the ReservationFormsDetails page
+
   };
 
   const handleBlockTime = () => {
@@ -102,7 +104,7 @@ const RoomReservation = () => {
     <div className="room-reservation-container">
       <h1>Reserve Room</h1>
       <div className="main-container">
-        <div className="left-column">
+        <div className="rsrv-column">
           <div className="booking-controls">
             <h2>Book a Room</h2>
             <div className="date-time-picker">

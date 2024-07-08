@@ -18,7 +18,7 @@ const ReserveSchema = new Schema({
   },
   scheduleDate: {
     type: Date,
-    default: Date.now(),
+    default: "",
   },
   startTime: {
     type: Date,
