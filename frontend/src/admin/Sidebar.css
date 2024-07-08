@@ -432,3 +432,37 @@ li a{
     }
 }
 
+/*approval*/
+.listCont2{
+    margin:0px 100px;
+    font-size: 30px;
+}
+.approvalGroup{
+    display: flex;
+    flex-direction: column;
+    gap:20px;
+    justify-content: center;
+    align-items: center;
+
+}
+.approvalMeets{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.approvalDeets{
+    width:30em;
+    padding: 20px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+.approvalGrp{
+    display: flex;
+    flex-direction: column;
+    width:100px;
+}
+
+@media (max-width:500px) {
+    .approvalMeets{
+        margin:0px 1000px;
+    }
+}

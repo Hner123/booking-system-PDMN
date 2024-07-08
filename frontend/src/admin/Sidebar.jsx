@@ -51,12 +51,12 @@ const SidebarComponent = () => {
                         </Link>
                     </li>
                     <li>
-                        <Link to="/add-employee">
+                        <Link to="/admin/add-employee">
                             <HiUserAdd /> Add Employee
                         </Link>
                     </li>
                     <li>
-                        <Link to="/for-approval">
+                        <Link to="/admin/approval">
                             <FaCalendarCheck /> For Approval
                         </Link>
                     </li>
