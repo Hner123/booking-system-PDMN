@@ -35,8 +35,8 @@
     margin: 50px 0px;
 }
 
-.tempContainer{
-    margin-left:1000px;
+.listCont{
+    margin:100px 0px;
 }
 
 .notifCount{
@@ -90,11 +90,210 @@ li a{
 .menu {
     padding: 0;
 }
+
+/*EMPLOYEE LIST*/
+
+
+.listButtonG{
+    display: flex;
+    gap:20px;
+    justify-content: flex-end;
+    margin: 30px 100px;
+}
+
+.listButtonG button{
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+    width: 300px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+
+}
+.listButtonG button:hover{
+    background-color: #B62626;
+    color: white;
+}
+
+.editBtn{
+    background-color: #B62626;
+    color: white;
+}
+
+.mainBtn {
+    background-color: #B62626;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+    width: auto;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.mainBtn:hover {
+    background-color: #8c1d1d; 
+    color: white;
+}
+
+
+  /* TABLE */
+
+  .tableContainer {
+    width: 100%;
+    overflow-x: auto;
+    
+}
+  .listTable {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    border-collapse: collapse;
+  }
+  
+  .listTable th, .listTable td {
+    padding: 15px 20px;
+    text-align: left;
+  }
+
+  
+  .listTable th {
+    background-color: #f8f8f8;
+    font-weight: bold;
+    border-bottom: 2px solid #eee;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  
+  .listTable td {
+    border-bottom: 1px solid #eee;
+  }
+  
+  .listTable tr:last-child td {
+    border-bottom: none;
+  }
+
+  .listTable tbody{
+    overflow: auto;
+  }
+
+
+.listMod{
+    display: flex;
+    flex-direction: row;
+    gap:20px;
+    justify-content: center;
+    margin: 10px 0px;
+    width: 20px;
+}
+.listMod button{
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+    width: 100px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.listMod button:hover{
+    background-color: #B62626;
+    color: white;
+}
+/* Sidebar.css */
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+    width: 100%; /* Ensure the dropdown takes full width available */
+    max-width: 300px; 
+}
+
+.dropdown button {
+    background-color: #ffffff;
+    color: black;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+    width: 100%; /* Button takes full width of parent .dropdown */
+    text-align: center; /* Align text to the left */
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown-content button {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    background-color: white;
+    border: none;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+}
+
+.dropdown-content button:hover {background-color: #f1f1f1;}
+
+.dropdown:hover .dropdown-content {display: block;}
+
+
 @media (max-width:500px){
     .profileDetail > div{
         margin:30px 0px;
     }
     .notifCount{
         top: 400px;
+    }
+    .listCont h1{
+        text-align: center;
+    }
+    .listButtonG{
+     justify-content: center;   
+    }
+    .tableContainer{
+        padding: 0px 30px;
+    }
+    .listTable th, .listTable td {
+        padding: 5px 10px;
+        font-size: 12px;
+    }
+    .listMod {
+        flex-direction: column;  
+    }
+    .listTable td:last-child{
+        padding: 0px 100px;
+    }
+
+}
+@media (min-width:1900px) {
+    .listCont{
+        padding: 0px 20px;
+    }
+
+    .tableContainer{
+        padding: 0px 100px;
+    }
+
+    .listCont h1{
+        margin:0px 100px;
+        font-size: 50px;
     }
 }

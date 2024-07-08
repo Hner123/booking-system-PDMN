@@ -61,7 +61,7 @@ function App() {
       }/>
       <Route path = "/admin/employee-list" element={
         <>
-        <Sidebar/>
+        {/* <Sidebar/> */}
         <EmployeeList/>
         </>
       }/>
