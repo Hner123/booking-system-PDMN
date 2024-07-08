@@ -11,6 +11,7 @@ import Confirmation from './user/reservation/Confirmation';
 import AdminLogin from './admin/AdminLogin.jsx';
 import Sidebar from './admin/Sidebar.jsx';
 import EmployeeList from './admin/EmployeeList.jsx';
+import AddEmployee from './admin/AddEmployee.jsx';
 
 import './App.css';
 
@@ -48,7 +49,7 @@ function App() {
             <Edit />
           </>
         } />
-      <Route path ="/admin/log-in" element={
+      <Route path ="/admin" element={
         <>
           <AdminLogin/>
         </>
@@ -57,6 +58,12 @@ function App() {
         <>
         <Sidebar/>
         <EmployeeList/>
+        </>
+      }/>
+      <Route path = "/admin/add-employee" element={
+        <>
+        <Sidebar/>
+        <AddEmployee/>
         </>
       }/>
       </Routes>

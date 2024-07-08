@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './AdminLogin.css';
 import logo from '../assets/logos/GDSLogo.png';
 import mascot from '../assets/mascot.png';
 
@@ -29,7 +28,7 @@ const AdminLogin = () => {
         setError('');
 
         // Navigate to the dashboard after successful login
-        navigate('/user/dashboard');
+        navigate('/admin/employee-list');
     };
 
     return (

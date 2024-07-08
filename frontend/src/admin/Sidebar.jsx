@@ -1,29 +1,69 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { FaUserCircle, FaBell, FaCalendarCheck } from 'react-icons/fa';
+import { MdGroups } from "react-icons/md";
+import { HiUserAdd } from 'react-icons/hi';
 import logo from '../assets/logos/GDSLogo.png';
-import './Sidebar.css'; // Import your CSS file for styling
+import profile from '../assets/Default Avatar.png';
+import './Sidebar.css';
 
-const Sidebar = () => {
-    const [isExpanded, setIsExpanded] = useState(false);
+const SidebarComponent = () => {
+    const userName = "Juan D.C.";
+    const department = "Starlight";
 
-    const toggleSidebar = () => {
-        setIsExpanded(!isExpanded);
-    };
-
-    return (
-        <div className={`sidebar ${isExpanded ? 'expanded' : ''}`}>
-            <div className="logo-container" onClick={toggleSidebar}>
-                <img src={logo} alt="Logo" className="logo" />
+    return (  
+        <nav className="navbar">
+            <div className="sidebar-logo">
+                <img src={logo} alt="Logo" className="logo-img" />
             </div>
-            <div className="sidebar-content">
-                {/* Your sidebar content goes here */}
-                <ul>
-                    <li>Menu Item 1</li>
-                    <li>Menu Item 2</li>
-                    <li>Menu Item 3</li>
-                </ul>
+            <div className='profileDetail'>
+                <div className="profileSide">
+                    <img src={profile} alt="profile" />
+                    <div>
+                        <h2 style={{margin:'0'}}>{userName}</h2>
+                        <p>{department}</p>
+                    </div>
+                </div>
             </div>
-        </div>
+
+            <ul className="menu">
+                <li className='profileMenu'>
+                    <h1>Profile Menu</h1>
+                    <hr />
+                    <li>
+                        <Link to="/profile-settings">
+                            <FaUserCircle /> Profile Settings
+                        </Link>
+                    </li>
+                    <li>
+                        <Link to="/notifications">
+                            <span className="notifCount">5</span>
+                            <FaBell /> Notifications
+                        </Link>
+                    </li>
+                </li>
+                <li className='adminMenu'>
+                    <h1>Admin Menu</h1>
+                    <hr />
+                    <li>
+                        <Link to="/employee-list">
+                        <MdGroups/> Employee List
+                        </Link>
+                    </li>
+                    <li>
+                        <Link to="/add-employee">
+                            <HiUserAdd /> Add Employee
+                        </Link>
+                    </li>
+                    <li>
+                        <Link to="/for-approval">
+                            <FaCalendarCheck /> For Approval
+                        </Link>
+                    </li>
+                </li>
+            </ul>
+        </nav>
     );
 };
 
-export default Sidebar;
+export default SidebarComponent;

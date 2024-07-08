@@ -69,9 +69,6 @@ const Header = () => {
                 <button onClick = {NavigateEdit}>
                   Edit Profile
                 </button>
-                {/* <button onClick={() => console.log("Edit profile")}>
-                  Edit Profile
-                </button> */}
               </div>
             </div>
           </div>
