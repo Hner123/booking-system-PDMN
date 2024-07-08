@@ -121,80 +121,11 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
   
-  .logodb {
-    font-size: 24px;
-    font-weight: bold;
-    margin-right: 20px;
-    background-color: #fff;
-    padding: 10px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-  }
-  
-  .logodb img {
-    height: 40px;
-    margin-right: 10px;
-  }
-  
-  .profile-icon {
-    font-size: 24px;
-    cursor: pointer;
-    color: #9e2424;
-    display: flex;
-    align-items: center;
-    background-color: #fff;
-    padding: 10px;
-    border-radius: 10px;
-    transition: background-color 0.3s;
-  }
-  
-  .profile-icon:hover {
-    color: #ccc;
-    background-color: #f7f7f7;
-  }
-  
-  .user-name {
-    font-size: 16px;
-    margin-left: 10px;
-    color: #9e2424;
-  }
-  
   .dashboard-main {
     flex: 1;
     padding: 2rem;
     overflow-y: auto;
     background-color: #f4f6f8;
-  }
-  
-  .notif-icon {
-    font-size: 24px;
-    cursor: pointer;
-    color: #000;
-    display: flex;
-    align-items: center;
-    background-color: #fff;
-    padding: 10px;
-    border-radius: 10px;
-    position: relative;
-    transition: background-color 0.3s;
-  }
-  
-  .notif-icon:hover {
-    color: #ccc;
-  }
-  
-  .notif-count {
-    font-size: 12px;
-    font-weight: bold;
-    color: #fff;
-    position: absolute;
-    top: 2px;
-    right: 2px;
-    background-color: #9c0b0b;
-    border-radius: 50%;
-    padding: 2px 6px;
-    border: 1px solid #fff;
   }
   
   .card-container {
@@ -274,128 +205,8 @@
     display: flex;
     align-items: center;
     margin-right: 10px;
-  }
-  
-  /* TABLE */
-  .reservation-table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    margin-top: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    overflow: hidden;
-  }
-  
-  .reservation-table th, .reservation-table td {
-    padding: 15px 20px;
-    text-align: left;
-  }
-  
-  .reservation-table th {
-    background-color: #f8f8f8;
-    font-weight: bold;
-    border-bottom: 2px solid #eee;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-  }
-  
-  .reservation-table td {
-    border-bottom: 1px solid #eee;
-  }
-  
-  .reservation-table tr:last-child td {
-    border-bottom: none;
-  }
-  
-  .status {
-    display: inline-block;
-    padding: 5px 15px;
-    border-radius: 20px;
-    color: white;
-    font-size: 12px;
+  } 
 
-    text-align: center;
-  }
-  
-  .status.pending {
-    background-color: #e74c3c;
-  }
-  
-  .status.approved {
-    background-color: #2ecc71;
-  }
-  
-  .info-btn {
-    padding: 8px 16px;
-    background-color: #007BFF;
-    color: white;
-    border: none;
-    border-radius: 20px;
-    cursor: pointer;
-    font-size: 12px;
-    transition: background-color 0.3s;
-  }
-  
-  .info-btn:hover {
-    background-color: #0056b3;
-  }
-
-/* Profile tab */
-  .modal {
-    position: absolute;
-    top: 40px; /* adjust the top position to place it under the profile tab */
-    right: 0;
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    display: none; /* hide the modal by default */
-  }
-  
-  .profile-icon:hover + .modal {
-    display: block; /* show the modal when hovering over the profile icon */
-  }
-  
-  .modal-content {
-    padding: 20px;
-  }
-  
-  .modal-content h2 {
-    margin-top: 0;
-  }
-  
-  .modal-content button {
-    color: black;
-    border: none;
-    border-radius: 4px;
-    padding: 10px 20px;
-    cursor: pointer;
-    margin: 5% 2% 0%;
-  }
-  
-  .modal-content button:hover {
-    background-color: #B62626;
-  }
-
-
-  .timeline {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
-  
-  .timeline-slot {
-    padding: 10px;
-    border-radius: 5px;
-    color: #333;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 14px;
-    font-weight: bold;
-  }
-  
   .details-modal {
     position: fixed;
     top: 0;
@@ -406,6 +217,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    
   }
 
   .details-modal h2{
@@ -422,6 +234,7 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     width: 100%;
     max-width: 600px;
+    position: relative;
   }
   
   .modal-columns {
@@ -445,20 +258,158 @@
   }
   
   .close-btn {
-    background-color: #fff;
-    border: none;
-    padding: 10px 20px;
-    font-size: 16px;
+    background-color: #ffff;
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    font-size: 20px;
     cursor: pointer;
-    margin-top: 20px;
+    border: none;
+    height: auto;
+}
+  
+  .full-btn, .delete-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5em 1em;
+    margin-right: 0.5em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.3s ease;
+    justify-content: center;
   }
   
-  .close-btn:hover {
-    background-color: #ccc;
+  .full-btn {
+    background-color: #007bff;
+    color: white;
+
   }
   
-  @media (max-width: 600px) {
-    .modal-columns {
-      flex-direction: column;
-    }
+  .full-btn:hover {
+    background-color: #0056b3;
   }
+  
+  .delete-btn {
+    background-color: #dc3545;
+    color: white;
+  }
+  
+  .delete-btn:hover {
+    background-color: #c82333;
+  }
+  
+  .full-btn i, .delete-btn i {
+    margin-right: 0px;
+  }
+
+  
+  .reservation-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+    margin: 20px 0;
+  }
+  
+  .reservation-table th,
+  .reservation-table td {
+    padding: 8px;
+    border: 1px solid #ddd;
+  }
+  
+  .reservation-table th {
+    background-color: #f2f2f2;
+    text-align: center;
+  }
+  
+  /* Set specific widths for each column */
+  .reservation-table th:nth-child(1),
+  .reservation-table td:nth-child(1) {
+    width: 20%; /* Adjust as needed */
+  }
+  
+  .reservation-table th:nth-child(2),
+  .reservation-table td:nth-child(2) {
+    width: 20%; /* Adjust as needed */
+  }
+  
+  /* Continue for other columns */
+  .reservation-table th:nth-child(3),
+  .reservation-table td:nth-child(3) {
+    width: 20%; /* Adjust as needed */
+  }
+
+  .reservation-table th:nth-child(4),
+  .reservation-table td:nth-child(4) {
+    width: 10%; /* Adjust as needed */
+  }
+
+  .reservation-table th:nth-child(5),
+  .reservation-table td:nth-child(5) {
+    width: 10%; /* Adjust as needed */
+  }
+  
+  .status {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 5px;
+  }
+  
+  .status.pending {
+    background-color: orange;
+    color: white;
+    border-radius: 50px;
+  }
+  
+  .status.approved {
+    background-color: green;
+    color: white;
+    border-radius: 50px;
+  }
+  
+  .reservation-table1 {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+    margin: 20px 0;
+  }
+  
+  .reservation-table1 th,
+  .reservation-table1 td {
+    padding: 8px;
+    border: 1px solid #ddd;
+  }
+  
+  .reservation-table1 th {
+    background-color: #f2f2f2;
+    text-align: center;
+  }
+  
+  /* Set specific widths for each column */
+  .reservation-table1 th:nth-child(1),
+  .reservation-table1 td:nth-child(1) {
+    width: 20%; /* Adjust as needed */
+  }
+  
+  .reservation-table1 th:nth-child(2),
+  .reservation-table1 td:nth-child(2) {
+    width: 20%; /* Adjust as needed */
+  }
+  
+  /* Continue for other columns */
+  .reservation-table1 th:nth-child(3),
+  .reservation-table1 td:nth-child(3) {
+    width: 20%; /* Adjust as needed */
+  }
+
+  .reservation-table1 th:nth-child(4),
+  .reservation-table1 td:nth-child(4) {
+    width: 10%; /* Adjust as needed */
+  }
+  
+  .reservation-table1 th:nth-child(5),
+  .reservation-table1 td:nth-child(5) {
+    width: 10%; /* Adjust as needed */
+  }
+  

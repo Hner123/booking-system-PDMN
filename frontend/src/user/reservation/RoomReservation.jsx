@@ -13,6 +13,7 @@ const RoomReservation = () => {
   const localizer = momentLocalizer(moment);
   const navigate = useNavigate();
 
+  // State variables
   const [startDate, setStartDate] = useState(new Date());
   const [startTime, setStartTime] = useState(moment().hours(9).minutes(0));
   const [endTime, setEndTime] = useState(moment().hours(10).minutes(0));
@@ -23,8 +24,6 @@ const RoomReservation = () => {
   const [feedbackMessage, setFeedbackMessage] = useState('');
   const [showDiscardModal, setShowDiscardModal] = useState(false);
 
-  console.log(startDate)
-  
   const handleReserve = () => {
     const start = moment(startDate).set({
       hour: startTime.hour(),
@@ -43,9 +42,9 @@ const RoomReservation = () => {
 
     const overlap = events.some((event) =>
       (moment(start).isBetween(event.start, event.end, null, '[]') ||
-       moment(end).isBetween(event.start, event.end, null, '[]')) ||
+        moment(end).isBetween(event.start, event.end, null, '[]')) ||
       (moment(event.start).isBetween(start, end, null, '[]') ||
-       moment(event.end).isBetween(start, end, null, '[]'))
+        moment(event.end).isBetween(start, end, null, '[]'))
     );
     if (overlap) {
       setFeedbackMessage('Time slot overlaps with an existing reservation.');
@@ -71,15 +70,22 @@ const RoomReservation = () => {
       }).toDate(),
       title: 'Reserved',
       agenda: agenda,
+      status: 'pending', // Add a status field to mark the event as pending
     };
+  
+    // Assuming events and setEvents are managed in your component's state
     setEvents([...events, newEvent]);
     setShowAgendaForm(false);
     setAgenda('');
-    setFeedbackMessage('Appointment reserved successfully!');
-
+    setFeedbackMessage('Appointment request submitted for approval.');
+  
+    // Optionally, you might want to clear or reset your form fields here
+  
+    // navigate('/reserveform'); // Navigate to the ReservationFormsDetails page
   };
+  
 
-  const handleBlockTime = () => {
+  const handleCancelTime = () => {
     setShowDiscardModal(true);
   };
 
@@ -118,32 +124,34 @@ const RoomReservation = () => {
                   calendarClassName="custom-calendar"
                 />
               </div>
-              <div className="time-pickers">
-                <div className="time-picker">
-                  <h3>Start Time</h3>
-                  <TimePicker
-                    showSecond={false}
-                    defaultValue={startTime}
-                    onChange={setStartTime}
-                  />
-                </div>
-                <div className="time-picker">
-                  <h3>End Time</h3>
-                  <TimePicker
-                    showSecond={false}
-                    defaultValue={endTime}
-                    onChange={setEndTime}
-                  />
-                </div>
+              <div className="time-picker">
+                <h3>Start Time</h3>
+                <TimePicker
+                  showSecond={false}
+                  defaultValue={startTime}
+                  onChange={setStartTime}
+                  minuteStep={10}
+                  className="rc-time-picker"
+                />
+              </div>
+              <div className="time-picker">
+                <h3>End Time</h3>
+                <TimePicker
+                  showSecond={false}
+                  defaultValue={endTime}
+                  onChange={setEndTime}
+                  minuteStep={10}
+                  className="rc-time-picker"
+                />
               </div>
             </div>
-            <div className="buttons">
-              <button className="block-btn" onClick={handleBlockTime}>Cancel</button>
+            <div className="rsrv-buttons">
+              <button className="cancel-btn" onClick={handleCancelTime}>Cancel</button>
               <button className="reserve-btn" onClick={handleReserve}>Reserve</button>
             </div>
             {showAgendaForm && (
               <div className="agenda-form">
-                <h2>Provide Agenda</h2>
+                <label>Provide Agenda</label>
                 <input
                   type="text"
                   value={agenda}
@@ -158,6 +166,7 @@ const RoomReservation = () => {
                 {feedbackMessage}
               </div>
             )}
+            <p> Please enter the correct information and check the details before confirming your booking.</p>
           </div>
 
           <div className="legend-controls">
@@ -190,10 +199,11 @@ const RoomReservation = () => {
                 <span className="cp"></span>
                 <p>ClearPath</p>
               </div>
-
             </div>
           </div>
+
         </div>
+
         <div className="calendar-column">
           <h3>Meetings For This Week</h3>
           <div className="calendar-container">
@@ -242,11 +252,13 @@ const RoomReservation = () => {
 
       {showDiscardModal && (
         <div className="discard-modal">
-          <div className="modal-content">
+          <div className="discard-content">
             <h2>Discard Changes</h2>
             <p>Are you sure you want to discard your changes and go back to the dashboard?</p>
-            <button className="block-btn" onClick={handleConfirmDiscard}>Yes, Discard</button>
-            <button className="block-btn" onClick={handleCancelDiscard}>No, Keep Working</button>
+            <div className="rsrv-buttons">  
+              <button className="reserve-btn" onClick={handleConfirmDiscard}>Yes, Discard</button>
+              <button className="cancel-btn" onClick={handleCancelDiscard}>No, Keep Working</button>
+            </div>  
           </div>
         </div>
       )}
@@ -255,4 +267,3 @@ const RoomReservation = () => {
 };
 
 export default RoomReservation;
-

@@ -90,7 +90,7 @@ input, select{
     border: #EE3E38 solid 0.1px;
 }
 
-.modal {
+.profilemodal {
     position: fixed;
     top: 0;
     left: 0;
@@ -103,7 +103,7 @@ input, select{
     z-index: 1000;
 }
 
-.modal-content {
+.profilemodal-content {
     background-color: white;
     padding: 20px;
     border-radius: 5px;
@@ -111,11 +111,11 @@ input, select{
     text-align: center;
 }
 
-.modal-buttons {
+.profilemodal-buttons {
     margin-top: 20px;
 }
 
-.modal-buttons button {
+.profilemodal-buttons button {
     margin: 0 10px;
 }
 

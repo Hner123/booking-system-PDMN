@@ -130,10 +130,10 @@ const Settings = () => {
             
             {/* Modal */}
             {showModal && (
-                <div className="modal">
-                    <div className="modal-content">
+                <div className="profilemodal">
+                    <div className="profilemodal-content">
                         <p>Are you sure you want to cancel editing and head back to dashboard?</p>
-                        <div className="modal-buttons">
+                        <div className="profilemodal-buttons">
                             <button  onClick={closeModal}>Close</button>
                             <button  onClick={handleConfirmCancel}>Confirm</button>
                         </div>

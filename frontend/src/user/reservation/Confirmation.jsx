@@ -1,21 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import roomBg from '../../assets/roombg.jpg';
 
 const BookingConfirmation = () => {
   const [showModal, setShowModal] = useState(false);
-  const [selectedMeeting, setSelectedMeeting] = useState({ room: 'Meeting Room' }); // Example state for selected meeting
+  const [selectedMeeting, setSelectedMeeting] = useState({ room: 'Meeting Room' });
   const navigate = useNavigate();
 
   const handleViewDetails = () => {
-    setShowModal(true); // Show the modal when "View Details" is clicked
+    setShowModal(true);
   };
 
   const handleCloseModal = () => {
-    setShowModal(false); // Close the modal when "Close" button is clicked
+    setShowModal(false);
   };
 
   const handleReturnToDashboard = () => {
-    navigate('/dashboard'); // Navigate to dashboard
+    navigate('/dashboard');
   };
 
   useEffect(() => {
@@ -23,9 +24,9 @@ const BookingConfirmation = () => {
       const timer = setTimeout(() => {
         setShowModal(false);
         handleReturnToDashboard();
-      }, 5000); // Close modal after 10 seconds
+      }, 5000); // Close modal after 5 seconds
 
-      return () => clearTimeout(timer); // Cleanup timer if modal is closed early
+      return () => clearTimeout(timer);
     }
   }, [showModal]);
 
@@ -41,7 +42,7 @@ const BookingConfirmation = () => {
       </div>
       <div className="confirmation-image">
         <div className="confirmation-overlay"></div>
-        <img src="path/to/your/image.jpg" alt="Room" />
+        <img src={roomBg} alt="Room" />
       </div>
 
       {showModal && (
@@ -50,12 +51,12 @@ const BookingConfirmation = () => {
             <h2>MEETING TITLE</h2>
             <div className="modal-columns">
               <div className="left-content">
-                <p><strong>Username:</strong> </p>
+                <p><strong>Username:</strong></p>
                 <p><strong>Department:</strong></p>
                 <p><strong>Number of PAX:</strong></p>
-                <p><strong>Attendees:</strong> </p>
-                <p><strong>Purpose of the Meeting:</strong> </p>
-                <p className="members"><strong>Members:</strong> </p>
+                <p><strong>Attendees:</strong></p>
+                <p><strong>Purpose of the Meeting:</strong></p>
+                <p className="members"><strong>Members:</strong></p>
               </div>
               <div className="right-content">
                 <h3>{selectedMeeting.room}</h3>

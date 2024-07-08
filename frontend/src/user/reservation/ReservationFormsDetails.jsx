@@ -22,7 +22,6 @@ const ReservationFormsDetails = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     console.log('Form submitted:', { attendees });
-    // Navigate to the next page
     navigate('/confirmation');
   };
 
@@ -54,12 +53,6 @@ const ReservationFormsDetails = () => {
     setAttendeeInput(newValue);
   };
 
-  const inputProps = {
-    placeholder: "Type attendee names",
-    value: attendeeInput,
-    onChange: onAttendeeInputChange
-  };
-
   const onSuggestionSelected = (event, { suggestion }) => {
     setAttendees([...attendees, suggestion]);
     setAttendeeInput('');
@@ -69,28 +62,34 @@ const ReservationFormsDetails = () => {
     setAttendees(attendees.filter((_, i) => i !== index));
   };
 
+  const inputProps = {
+    placeholder: "Type attendee names",
+    value: attendeeInput,
+    onChange: onAttendeeInputChange,
+    style: { width: '100%' }
+  };
+
   return (
     <div className='form-page'>
       <h1>Booking Details</h1>
-      <div className="reservation-details-container" style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <div className="form-column" style={{ flex: 1 }}>
+      <div className="reservation-details-container">
+        <div className="form-column">
           <div className='form-title'>
             <h2>Reservation Details</h2>
-            <p style={{ fontSize: '12px', color: '#666', textAlign: 'left' }}>
-              Please enter the correct information and check the details before confirming your booking.
-            </p>
+            <p>Please enter the correct information and check the details before confirming your booking.</p>
           </div>
-          <form className="reservation-form" onSubmit={handleSubmit} style={{ display: 'grid', gap: '10px' }}>
-            <div style={{ display: 'flex', gap: '10px' }}>
+          
+          <form className="reservation-form" onSubmit={handleSubmit}>
+            <div className='read-only-group'>
               <div style={{ flex: 1 }}>
                 <label htmlFor="name">Username:</label>
-                <div id="name" className="read-only" style={{ border: '1px solid #ccc', padding: '8px', borderRadius: '4px', backgroundColor: '#f9f9f9' }}>
+                <div id="name" className="read-only">
                   John Doe
                 </div>
               </div>
               <div style={{ flex: 1 }}>
                 <label htmlFor="department">Department:</label>
-                <div id="department" className="read-only" style={{ border: '1px solid #ccc', padding: '8px', borderRadius: '4px', backgroundColor: '#f9f9f9' }}>
+                <div id="department" className="read-only">
                   IT Department
                 </div>
               </div>
@@ -107,8 +106,9 @@ const ReservationFormsDetails = () => {
                     value="1-2"
                     checked={pax === '1-2'}
                     onChange={(event) => setPax(event.target.value)}
+                    style={{ width: 'auto' }}
                   />
-                  <label htmlFor="pax-1-2" style={{ marginLeft: '5px' }}>1-2 attendees</label>
+                  <label htmlFor="pax-1-2">1-2 attendees</label>
                 </div>
                 <div className="radio-option half-width">
                   <input
@@ -118,27 +118,24 @@ const ReservationFormsDetails = () => {
                     value="3-more"
                     checked={pax === '3-more'}
                     onChange={(event) => setPax(event.target.value)}
+                    style={{ width: 'auto' }}
                   />
-                  <label htmlFor="pax-3-more" style={{ marginLeft: '5px' }}>3 or more attendees</label>
+                  <label htmlFor="pax-3-more">3 or more attendees</label>
                 </div>
               </div>
             </div>
 
             {pax === '1-2' && (
-              <div style={{ width: '100%' }}>
+              <div>
                 <label htmlFor="reason">Reason for 1-2 attendees</label>
-                <div>
-                  <textarea
-                    type="text"
-                    id="reason"
-                    name="reason"
-                    value={reason}
-                    rows="2"
-                    onChange={(event) => setReason(event.target.value)}
-                    placeholder="Enter reason"
-                    style={{ width: '100%' }}
-                  />
-                </div>
+                <input
+                  type="text"
+                  id="reason"
+                  name="reason"
+                  value={reason}
+                  onChange={(event) => setReason(event.target.value)}
+                  placeholder="Enter reason"
+                />
               </div>
             )}
 
@@ -150,10 +147,7 @@ const ReservationFormsDetails = () => {
                 onSuggestionsClearRequested={onSuggestionsClearRequested}
                 getSuggestionValue={getSuggestionValue}
                 renderSuggestion={renderSuggestion}
-                inputProps={{
-                  ...inputProps,
-                  style: { width: '100%' } // Set width to 100%
-                }}
+                inputProps={inputProps}
                 onSuggestionSelected={onSuggestionSelected}
                 theme={{
                   container: 'autosuggest-container',
@@ -181,16 +175,6 @@ const ReservationFormsDetails = () => {
               onChange={(event) => setMeeting(event.target.value)}
               placeholder="Enter meeting title"
             />
-
-            <label htmlFor="agenda">Agenda:</label>
-            <textarea
-              id="agenda"
-              name="agenda"
-              value={agenda}
-              onChange={(event) => setAgenda(event.target.value)}
-              rows="4"
-              placeholder="Enter meeting agenda"
-            ></textarea>
 
             <button type="submit" style={{ alignItems: 'center' }}>Book</button>
             <p style={{ marginTop: '10px', fontSize: '12px', color: '#666', textAlign: 'center' }}>
