@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaUserCircle, FaBell } from 'react-icons/fa';
+import { FaUserCircle, FaBell, FaUsers, FaBars } from 'react-icons/fa';
 import logo from '../../assets/logos/GDSLogo.png';
 import profile from '../../assets/Default Avatar.png';
 import './Header.css';
@@ -8,15 +8,19 @@ import './Header.css';
 const Header = () => {
   const [isProfileOpen, setProfileOpen] = useState(false);
   const [isNotifOpen, setNotifOpen] = useState(false);
-  const userName = "John Doe"; // Replace with actual user name
+  const [isMenuOpen, setMenuOpen] = useState(false);
+  const userName = "John Doe";
   const department = "Starlight";
-  const modalRef = useRef();
   const navigate = useNavigate();
+  const profileModalRef = useRef(null);
+  const notifModalRef = useRef(null);
 
   useEffect(() => {
     const handleOutsideClick = (event) => {
-      if (modalRef.current && !modalRef.current.contains(event.target)) {
+      if (profileModalRef.current && !profileModalRef.current.contains(event.target)) {
         setProfileOpen(false);
+      }
+      if (notifModalRef.current && !notifModalRef.current.contains(event.target)) {
         setNotifOpen(false);
       }
     };
@@ -30,16 +34,30 @@ const Header = () => {
 
   const handleModalToggle = () => {
     setProfileOpen(!isProfileOpen);
+    setNotifOpen(false);
   };
+
   const handleNotifToggle = () => {
     setNotifOpen(!isNotifOpen);
+    setProfileOpen(false);
   };
-  const NavigateEdit  = () => {
+
+  const navigateEdit = () => {
     navigate('/user/edit');
-  }
+  };
+
+  const navigateUserList = () => {
+    navigate('/users');
+  };
 
   const handleLogoClick = () => {
-    navigate('/dashboard'); // Replace with the desired route
+    navigate('/dashboard');
+  };
+
+  const toggleMenu = () => {
+    setProfileOpen(false);
+    setNotifOpen(false);
+    setMenuOpen(!isMenuOpen);
   };
 
   return (
@@ -48,16 +66,46 @@ const Header = () => {
         <img src={logo} alt="Logo" />
       </div>
       <div className="header-actions">
+        <div className="user-list-icon" onClick={navigateUserList}>
+          <FaUsers />
+          <span className="tooltip-text">User List</span>
+        </div>
         <div className="notif-icon" onClick={handleNotifToggle}>
           <FaBell />
           <span className="notif-count">5</span>
+          <span className="tooltip-text">Notifications</span>
         </div>
         <div className="profile-icon" onClick={handleModalToggle}>
           <FaUserCircle />
           <span className="user-name">{userName}</span>
         </div>
+
+        {/* Burger Menu Icon for mobile */}
+        <div className="burger-menu" onClick={toggleMenu}>
+          <FaBars />
+        </div>
+
+        {/* Burger Menu Content */}
+        {isMenuOpen && (
+          <div className="burger-menu-content">
+            <div className="user-list-icon" onClick={navigateUserList}>
+              <FaUsers />
+              <span className="user-name">User List</span>
+            </div>
+            <div className="notif-icon" onClick={handleNotifToggle}>
+              <FaBell />
+              <span className="user-name">Notifications</span>
+            </div>
+            <div className="profile-icon" onClick={navigateEdit}>
+              <FaUserCircle />
+              <span className="user-name">{userName}</span>
+            </div>
+          </div>
+        )}
+
+        {/* Profile Modal */}
         {isProfileOpen && (
-          <div className="headermodal" ref={modalRef}>
+          <div className="headermodal" ref={profileModalRef}>
             <div className="headermodal-content text-center">
               <div className="profileCont">
                 <img src={profile} alt="profile" />
@@ -66,15 +114,17 @@ const Header = () => {
               <p style={{ textAlign: "center" }}>Department: {department}</p>
               <hr style={{ border: "0.5px solid #7C8B9D", marginBottom: "20px" }}></hr>
               <div className="headermodal-buttons">
-                <button onClick = {NavigateEdit}>
+                <button onClick={navigateEdit}>
                   Edit Profile
                 </button>
               </div>
             </div>
           </div>
         )}
+
+        {/* Notification Modal */}
         {isNotifOpen && (
-          <div className="headermodal" ref={modalRef}>
+          <div className="headermodal" ref={notifModalRef}>
             <div className="headermodal-content">
               <div>
                 <h1 style={{ margin: "0" }}>Your Notifications</h1>
