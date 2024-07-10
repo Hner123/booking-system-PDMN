@@ -1,11 +1,12 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Header from '../src/user/utilities/Header.jsx';
+import Header from './user/utilities/Header.jsx';
 import UserLogin from './user/UserLogin';
 import UserDashboard from './user/UserDashboard';
 import Room from './user/reservation/RoomReservation';
 import ReservationFormsDetails from './user/reservation/ReservationFormsDetails';
-import Edit from '../src/user/utilities/EditProfile.jsx';
+import Edit from './user/utilities/EditProfile.jsx';
+import UserList from './user/utilities/UserList.jsx';
 import Confirmation from './user/reservation/Confirmation';
 
 import AdminLogin from './admin/AdminLogin.jsx';
@@ -51,44 +52,43 @@ function App() {
             <Confirmation />
           </>
         } />
-        <Route path ="/user/edit" element={
+        <Route path="/user/edit" element={
           <>
             <Edit />
           </>
         } />
-      <Route path ="/admin" element={
-        <>
-          <AdminLogin/>
-        </>
-      }/>
-      <Route path = "/admin/employee-list" element={
-        <>
-        <Sidebar/>
-        <EmployeeList/>
-        </>
-      }/>
-      <Route path = "/tablet" element={
-        <>
-        <Tablet/>
-        </>
-      }/>
-      <Route path = "/admin/add-employee" element={
-        <>
-        {/* <Sidebar/> */}
-        <AddEmployee/>
-        </>
-      }/>
-      <Route path ="/admin/approval-room" element={
-        <>
-          {/* <Sidebar/> */}
-          <AddEmployee/>
-        </>
-      }/>
-      < Route path="/admin/approval" element={
-        <>
-          <Approval/>
-        </>
-      }/>
+        <Route path="/admin" element={
+          <>
+            <AdminLogin />
+          </>
+        } />
+        <Route path="/admin/employee-list" element={
+          <>
+            <Sidebar />
+            <EmployeeList />
+          </>
+        } />
+        <Route path="/tablet" element={
+          <>
+            <Tablet />
+          </>
+        } />
+        <Route path="/admin/add-employee" element={
+          <>
+            <AddEmployee />
+          </>
+        } />
+        <Route path="/admin/approval" element={
+          <>
+            <Approval />
+          </>
+        } />
+        <Route path="/employee-list" element={
+          <>
+            <Header/>
+            <UserList />
+          </>
+        } />
       </Routes>
     </Router>
   );

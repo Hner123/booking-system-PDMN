@@ -3,12 +3,17 @@ import { useNavigate } from 'react-router-dom';
 import roomBg from '../assets/roombg.jpg';
 import './User.css';
 import { useTable } from 'react-table';
+import { FaChevronDown, FaChevronRight } from 'react-icons/fa'; // Importing icons from react-icons
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
-  const [showDiscardModal, setShowDiscardModal] = useState(false); // Added state for discard modal
   const [selectedMeeting, setSelectedMeeting] = useState(null);
+  const [showMyReservations, setShowMyReservations] = useState(true);
+  const [showOtherMeetings, setShowOtherMeetings] = useState(true);
+  const userName = "John Doe"; // Replace with actual user name
+  const department = "Starlight";
+
   const [reservations, setReservations] = useState([
     {
       title: 'Team Sync',
@@ -16,6 +21,7 @@ const Dashboard = () => {
       date: '2024-07-03',
       time: '10:00 AM',
       room: 'Palawan',
+      creator: userName,
       members: ['John Doe', 'Jane Smith', 'Alex Johnson'],
       details: 'This is a team sync meeting',
     },
@@ -25,14 +31,56 @@ const Dashboard = () => {
       date: '2024-07-04',
       time: '02:00 PM',
       room: 'Boracay',
+      creator: userName,
+      members: ['Client A', 'Client B'],
+      details: 'This is a client meeting',
+    },
+    {
+      title: 'New Project',
+      status: 'Approved',
+      date: '2024-07-03',
+      time: '11:00 AM',
+      room: 'Palawan',
+      creator: userName,
+      members: ['John Doe', 'Jane Smith', 'Alex Johnson'],
+      details: 'This is a team sync meeting',
+    },
+    {
+      title: 'Business Meeting',
+      status: 'Approved',
+      date: '2024-07-04',
+      time: '05:00 PM',
+      room: 'Boracay',
+      creator: userName,
       members: ['Client A', 'Client B'],
       details: 'This is a client meeting',
     },
   ]);
 
+  const otherMeetings = [
+    {
+      title: 'Project Kickoff',
+      status: 'Approved',
+      date: '2024-07-05',
+      time: '09:00 AM',
+      room: 'Palawan',
+      creator: 'John Smith',
+      members: ['John Smith', 'Jane Doe'],
+      details: 'Starting a new project',
+    },
+    {
+      title: 'Training Session',
+      status: 'Pending',
+      date: '2024-07-06',
+      time: '11:00 AM',
+      room: 'Boracay',
+      creator: 'Alex Johnson',
+      members: ['Alex Johnson', 'Emily Brown'],
+      details: 'Training on new software tools',
+    },
+  ];
+
   const rooms = ["Palawan", "Boracay", "Palawan and Boracay"];
-  const userName = "John Doe"; // Replace with actual user name
-  const department = "Starlight";
 
   const handleReserveClick = () => {
     navigate('/reserve');
@@ -53,17 +101,12 @@ const Dashboard = () => {
     );
   };
 
-  const handleCancelTime = () => {
-    setShowDiscardModal(true);
+  const toggleMyReservations = () => {
+    setShowMyReservations(!showMyReservations);
   };
 
-  const handleConfirmDiscard = () => {
-    setShowDiscardModal(false);
-    navigate('/dashboard');
-  };
-
-  const handleCancelDiscard = () => {
-    setShowDiscardModal(false);
+  const toggleOtherMeetings = () => {
+    setShowOtherMeetings(!showOtherMeetings);
   };
 
   const myReservationsColumns = React.useMemo(
@@ -79,12 +122,13 @@ const Dashboard = () => {
       { Header: 'Date', accessor: 'date' },
       { Header: 'Time', accessor: 'time' },
       { Header: 'Meeting Room', accessor: 'room' },
+      { Header: 'Meeting Creator', accessor: 'creator' },
       {
         Header: '',
         accessor: 'actions',
         Cell: ({ row }) => (
           <>
-            <button className="full-btn" onClick={handleCancelTime}>
+            <button className="full-btn" onClick={() => handleMeetingClick(row.original)}>
               <i className="fas fa-info-circle"></i> Details
             </button>
             <button className="delete-btn" onClick={() => handleDeleteReservation(row.index)}>
@@ -110,6 +154,7 @@ const Dashboard = () => {
       { Header: 'Date', accessor: 'date' },
       { Header: 'Time', accessor: 'time' },
       { Header: 'Meeting Room', accessor: 'room' },
+      { Header: 'Meeting Creator', accessor: 'creator' },
       {
         Header: '',
         accessor: 'actions',
@@ -124,7 +169,7 @@ const Dashboard = () => {
   );
 
   const myReservationsTable = useTable({ columns: myReservationsColumns, data: reservations });
-  const otherMeetingsTable = useTable({ columns: otherMeetingsColumns, data: reservations });
+  const otherMeetingsTable = useTable({ columns: otherMeetingsColumns, data: otherMeetings });
 
   return (
     <div className="dashboard">
@@ -144,78 +189,78 @@ const Dashboard = () => {
           ))}
         </div>
 
-        <div className="table-container">
-          <h2>My Reservations</h2>
-          <table className="reservation-table" {...myReservationsTable.getTableProps()}>
-            <thead>
-              {myReservationsTable.headerGroups.map(headerGroup => (
-                <tr {...headerGroup.getHeaderGroupProps()}>
-                  {headerGroup.headers.map(column => (
-                    <th {...column.getHeaderProps()}>{column.render('Header')}</th>
-                  ))}
-                </tr>
-              ))}
-            </thead>
-            <tbody {...myReservationsTable.getTableBodyProps()}>
-              {myReservationsTable.rows.map(row => {
-                myReservationsTable.prepareRow(row);
-                return (
-                  <tr {...row.getRowProps()}>
-                    {row.cells.map(cell => (
-                      <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+        <div className="toggle-header" onClick={toggleMyReservations}>
+          <h2>
+            My Reservations ({reservations.length}){' '}
+            {showMyReservations ? <FaChevronDown /> : <FaChevronRight />}
+          </h2>
+        </div>
+        {showMyReservations && (
+          <div className="table-container">
+            <table className="reservation-table" {...myReservationsTable.getTableProps()}>
+              <thead>
+                {myReservationsTable.headerGroups.map(headerGroup => (
+                  <tr {...headerGroup.getHeaderGroupProps()}>
+                    {headerGroup.headers.map(column => (
+                      <th {...column.getHeaderProps()}>{column.render('Header')}</th>
                     ))}
                   </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+                ))}
+              </thead>
+              <tbody {...myReservationsTable.getTableBodyProps()}>
+                {myReservationsTable.rows.map(row => {
+                  myReservationsTable.prepareRow(row);
+                  return (
+                    <tr {...row.getRowProps()}>
+                      {row.cells.map(cell => (
+                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                      ))}
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
 
-        <div className="table-container">
-          <h2>Other Meetings</h2>
-          <table className="reservation-table1" {...otherMeetingsTable.getTableProps()}>
-            <thead>
-              {otherMeetingsTable.headerGroups.map(headerGroup => (
-                <tr {...headerGroup.getHeaderGroupProps()}>
-                  {headerGroup.headers.map(column => (
-                    <th {...column.getHeaderProps()}>{column.render('Header')}</th>
-                  ))}
-                </tr>
-              ))}
-            </thead>
-            <tbody {...otherMeetingsTable.getTableBodyProps()}>
-              {otherMeetingsTable.rows.map(row => {
-                otherMeetingsTable.prepareRow(row);
-                return (
-                  <tr {...row.getRowProps()}>
-                    {row.cells.map(cell => (
-                      <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+        <div className="toggle-header" onClick={toggleOtherMeetings}>
+          <h2>
+            Other Meetings ({otherMeetings.length}){' '}
+            {showOtherMeetings ? <FaChevronDown /> : <FaChevronRight />}
+          </h2>
+        </div>
+        {showOtherMeetings && (
+          <div className="table-container">
+            <table className="reservation-table1" {...otherMeetingsTable.getTableProps()}>
+              <thead>
+                {otherMeetingsTable.headerGroups.map(headerGroup => (
+                  <tr {...headerGroup.getHeaderGroupProps()}>
+                    {headerGroup.headers.map(column => (
+                      <th {...column.getHeaderProps()}>{column.render('Header')}</th>
                     ))}
                   </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+                ))}
+              </thead>
+              <tbody {...otherMeetingsTable.getTableBodyProps()}>
+                {otherMeetingsTable.rows.map(row => {
+                  otherMeetingsTable.prepareRow(row);
+                  return (
+                    <tr {...row.getRowProps()}>
+                      {row.cells.map(cell => (
+                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                      ))}
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
 
         {showModal && selectedMeeting && (
           <DetailsModal meeting={selectedMeeting} onClose={handleCloseModal} userName={userName} department={department} />
         )}
       </main>
-
-      {showDiscardModal && (
-        <div className="discard-modal">
-          <div className="discard-content">
-            <h2>Discard Changes</h2>
-            <p>Are you sure you want to discard your changes and go back to the dashboard?</p>
-            <div className="rsrv-buttons">
-              <button className="reserve-btn" onClick={handleConfirmDiscard}>Yes, Discard</button>
-              <button className="cancel-btn" onClick={handleCancelDiscard}>No, Keep Working</button>
-            </div>
-          </div>
-        </div>
-      )}
-
     </div>
   );
 };

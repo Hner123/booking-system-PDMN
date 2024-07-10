@@ -9,41 +9,39 @@ const UserLogin = () => {
     const [userName, setUsername] = useState('');
     const [passWord, setPassword] = useState('');
     const [error, setError] = useState('');
-    const [loading, setLoading] = useState('');
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-          const trimmedUserName = userName.trim();
-          const trimmedPassWord = passWord.trim();
-    
-          setLoading(true);
-    
-          const response = await axios.post(
-            "http://localhost:8800/api/auth/login/user",
-            {
-              userName: trimmedUserName,
-              passWord: trimmedPassWord,
+            const trimmedUserName = userName.trim();
+            const trimmedPassWord = passWord.trim();
+
+            setLoading(true);
+
+            const response = await axios.post(
+                "http://localhost:8800/api/auth/login/user",
+                {
+                    userName: trimmedUserName,
+                    passWord: trimmedPassWord,
+                }
+            );
+
+            if (response.status === 200) {
+                const { authToken, emailToken } = response.data;
+                const { _id, accType } = response.data.user;
+
+                // localStorage.setItem("authToken", authToken);
+                // localStorage.setItem("verifyToken", emailToken);
+                setLoading(false);
+                navigate('/dashboard');
             }
-          );
-    
-          if (response.status === 200) {
-            const { authToken, emailToken } = response.data;
-            const { _id, accType } = response.data.user;
-
-            setLoading(false);
-            // localStorage.setItem("authToken", authToken);
-            // localStorage.setItem("verifyToken", emailToken);
-            navigate('/dashboard');
-
-          }
-          // Here you can handle the successful login, such as setting user data in state or redirecting the user
         } catch (error) {
-          setLoading(false);
-          setError(error.response.data.message)
+            setLoading(false);
+            setError(error.response.data.message);
         }
-      };
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
