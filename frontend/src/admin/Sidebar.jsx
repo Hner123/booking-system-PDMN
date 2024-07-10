@@ -5,7 +5,7 @@ import { MdGroups } from "react-icons/md";
 import { HiUserAdd } from 'react-icons/hi';
 import logo from '../assets/logos/GDSLogo.png';
 import profile from '../assets/Default Avatar.png';
-import './Sidebar.css';
+import './AdminPages.css';
 
 const SidebarComponent = () => {
     const userName = "Juan D.C.";

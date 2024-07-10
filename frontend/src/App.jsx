@@ -83,6 +83,11 @@ function App() {
             <Approval />
           </>
         } />
+        <Route path="/admin/room-approval" element={
+          <>
+            <ApprovalRoom />
+          </>
+        } />
         <Route path="/employee-list" element={
           <>
             <Header/>
