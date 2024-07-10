@@ -12,6 +12,7 @@ import AdminLogin from './admin/AdminLogin.jsx';
 import Sidebar from './admin/Sidebar.jsx';
 import EmployeeList from './admin/EmployeeList.jsx';
 import AddEmployee from './admin/AddEmployee.jsx';
+import ApprovalRoom from './admin/ApprovalRooms.jsx';
 import Approval from './admin/Approval.jsx';
 
 import 'react-datepicker/dist/react-datepicker.css';
@@ -75,6 +76,12 @@ function App() {
         <>
         {/* <Sidebar/> */}
         <AddEmployee/>
+        </>
+      }/>
+      <Route path ="/admin/approval-room" element={
+        <>
+          {/* <Sidebar/> */}
+          <AddEmployee/>
         </>
       }/>
       < Route path="/admin/approval" element={
