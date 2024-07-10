@@ -46,7 +46,7 @@ const SidebarComponent = () => {
                     <h1>Admin Menu</h1>
                     <hr />
                     <li>
-                        <Link to="/employee-list">
+                        <Link to="/admin/employee-list">
                         <MdGroups/> Employee List
                         </Link>
                     </li>

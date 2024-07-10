@@ -12,24 +12,27 @@ const Approval =()=>{
                     <p>Date and Time: 09:00 A.M.-10:00 A.M.</p>
                     <p>Reserved By: Jona K.</p>
                     <p> Members: Employee 1, Employee 2 </p>
-                    </div>
+                    <hr/>
                     <div className='approvalGrp'>
                         <button type='reject' >Reject</button>
                         <button type = 'approve'>Approve</button>
                     </div>
+                    </div>
+
                 </div>
                 <div className='approvalMeets'>
                     <div className='approvalDeets'>
-                    <h2 style={{margin:"auto"}}>Palawan Room</h2>
+                    <h2>Palawan Room</h2>
                     <p>Meeting Title: Meeting With Client</p>
                     <p>Date and Time: 09:00 A.M.-10:00 A.M.</p>
                     <p>Reserved By: Jona K.</p>
                     <p>Members: Employee 1, Employee 2 </p>
+                        <div className='approvalGrp'>
+                            <button type='reject' >Reject</button>
+                            <button type = 'approve'>Approve</button>
+                        </div>
                     </div>
-                    <div className='approvalGrp'>
-                        <button type='reject' >Reject</button>
-                        <button type = 'approve'>Approve</button>
-                    </div>
+
                 </div>
                 <div className='approvalMeets'>
 
