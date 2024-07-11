@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import roomBg from '../assets/roombg.jpg';
 import './User.css';
 import { useTable } from 'react-table';
-import { FaChevronDown, FaChevronRight } from 'react-icons/fa'; // Importing icons from react-icons
+import { FaChevronDown, FaChevronRight } from 'react-icons/fa';
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -11,9 +11,13 @@ const Dashboard = () => {
   const [selectedMeeting, setSelectedMeeting] = useState(null);
   const [showMyReservations, setShowMyReservations] = useState(true);
   const [showOtherMeetings, setShowOtherMeetings] = useState(true);
+  const [firstLogin, setFirstLogin] = useState(true); // Track first login state
+  const [isPasswordChangeChecked, setIsPasswordChangeChecked] = useState(false); // Track password change checkbox state
+
   const userName = "John Doe"; // Replace with actual user name
   const department = "Starlight";
 
+  // Mock data for reservations and other meetings
   const [reservations, setReservations] = useState([
     {
       title: 'Team Sync',
@@ -171,124 +175,180 @@ const Dashboard = () => {
   const myReservationsTable = useTable({ columns: myReservationsColumns, data: reservations });
   const otherMeetingsTable = useTable({ columns: otherMeetingsColumns, data: otherMeetings });
 
+  const handleRegistrationSubmit = (event) => {
+    event.preventDefault();
+    // Handle registration form submission here
+    // For example, you can update user state to indicate registration completion
+    setFirstLogin(false);
+  };
+
+  const handleCheckboxChange = (event) => {
+    setIsPasswordChangeChecked(event.target.checked);
+  };
+
   return (
     <div className="dashboard">
+      {firstLogin && (
+        <div className="modal-overlay">
+          <div className="registration-form-modal">
+            <h2>Welcome, {userName}!</h2>
+            <form onSubmit={handleRegistrationSubmit}>
+              <div className="form-section">
+                <label htmlFor="email">Email Address</label>
+                <p>*Please enter your email address so we can notify you about confirmations, advisory, etc.</p>
+                <input type="email" id="email" placeholder="Placeholder" required />
+              </div>
+              <div className="form-section">
+                <label htmlFor="department">Department</label>
+                <p>*Please enter your designated department for specification of the meeting.</p>
+                <select id="department" required>
+                  <option value="" disabled selected>Placeholder</option>
+                  <option value="Starlight">Starlight</option>
+                  <option value="Moonlight">Moonlight</option>
+                </select>
+              </div>
+              <div className="form-section-divider"></div>
+              <div className="pass-section">
+                <p>Would you like to change the password that was provided?<br />
+                  If yes, please check the box to set a new password. If not, leave the box empty.</p>
+                <div className="form-check">
+                  <input
+                    type="checkbox"
+                    id="change-password"
+                    checked={isPasswordChangeChecked}
+                    onChange={handleCheckboxChange}
+                  />
+                  <label htmlFor="change-password">Yes, I want to change my initial password.</label>
+                </div>
+                {isPasswordChangeChecked && (
+                  <>
+                  <div className="newpass-section">
+                    <label htmlFor="new-password">*Please enter your new password.</label>
+                    <input
+                      type="password"
+                      id="new-password"
+                      placeholder="Placeholder"
+                      required
+                    />
+                  </div>
+                  </>
+                )}
+              </div>
+              <button type="submit">Log In</button>
+            </form>
+          </div>
+        </div>
+      )}
       <main className="dashboard-main">
         <h1>My Dashboard</h1>
-        <h2>Book a Meeting Room</h2>
-        <div className="card-container">
-          {rooms.map((place, index) => (
-            <div key={`room-${index}`} className="card" style={{ backgroundImage: `url(${roomBg})` }}>
-              <div className="overlay">
-                <h3>{place}</h3>
-                <button className="reserve-btn" onClick={handleReserveClick}>
-                  Reserve
-                </button>
-              </div>
+        
+        {!firstLogin && ( // Render meeting rooms cards if it's not the first login
+          <>
+            <h2>Book a Meeting Room</h2>
+            <div className="card-container">
+              {rooms.map((place, index) => (
+                <div key={`room-${index}`} className="card" style={{ backgroundImage: `url(${roomBg})` }}>
+                  <div className="overlay">
+                    <h3>{place}</h3>
+                    <button className="reserve-btn" onClick={handleReserveClick}>
+                      Reserve
+                    </button>
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
 
-        <div className="toggle-header" onClick={toggleMyReservations}>
-          <h2>
-            My Reservations ({reservations.length}){' '}
-            {showMyReservations ? <FaChevronDown /> : <FaChevronRight />}
-          </h2>
-        </div>
-        {showMyReservations && (
-          <div className="table-container">
-            <table className="reservation-table" {...myReservationsTable.getTableProps()}>
-              <thead>
-                {myReservationsTable.headerGroups.map(headerGroup => (
-                  <tr {...headerGroup.getHeaderGroupProps()}>
-                    {headerGroup.headers.map(column => (
-                      <th {...column.getHeaderProps()}>{column.render('Header')}</th>
+            {/* Render my reservations table */}
+            <div className="toggle-header" onClick={toggleMyReservations}>
+              <h2>
+                My Reservations ({reservations.length}){' '}
+                {showMyReservations ? <FaChevronDown /> : <FaChevronRight />}
+              </h2>
+            </div>
+            {showMyReservations && (
+              <div className="table-container">
+                <table className="reservation-table" {...myReservationsTable.getTableProps()}>
+                  <thead>
+                    {myReservationsTable.headerGroups.map(headerGroup => (
+                      <tr {...headerGroup.getHeaderGroupProps()}>
+                        {headerGroup.headers.map(column => (
+                          <th {...column.getHeaderProps()}>{column.render('Header')}</th>
+                        ))}
+                      </tr>
                     ))}
-                  </tr>
-                ))}
-              </thead>
-              <tbody {...myReservationsTable.getTableBodyProps()}>
-                {myReservationsTable.rows.map(row => {
-                  myReservationsTable.prepareRow(row);
-                  return (
-                    <tr {...row.getRowProps()}>
-                      {row.cells.map(cell => (
-                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                      ))}
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        )}
+                  </thead>
+                  <tbody {...myReservationsTable.getTableBodyProps()}>
+                    {myReservationsTable.rows.map(row => {
+                      myReservationsTable.prepareRow(row);
+                      return (
+                        <tr {...row.getRowProps()}>
+                          {row.cells.map(cell => (
+                            <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                          ))}
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
 
-        <div className="toggle-header" onClick={toggleOtherMeetings}>
-          <h2>
-            Other Meetings ({otherMeetings.length}){' '}
-            {showOtherMeetings ? <FaChevronDown /> : <FaChevronRight />}
-          </h2>
-        </div>
-        {showOtherMeetings && (
-          <div className="table-container">
-            <table className="reservation-table1" {...otherMeetingsTable.getTableProps()}>
-              <thead>
-                {otherMeetingsTable.headerGroups.map(headerGroup => (
-                  <tr {...headerGroup.getHeaderGroupProps()}>
-                    {headerGroup.headers.map(column => (
-                      <th {...column.getHeaderProps()}>{column.render('Header')}</th>
+            {/* Render other meetings table */}
+            <div className="toggle-header" onClick={toggleOtherMeetings}>
+              <h2>
+                Other Meetings ({otherMeetings.length}){' '}
+                {showOtherMeetings ? <FaChevronDown /> : <FaChevronRight />}
+              </h2>
+            </div>
+            {showOtherMeetings && (
+              <div className="table-container">
+                <table className="reservation-table1" {...otherMeetingsTable.getTableProps()}>
+                  <thead>
+                    {otherMeetingsTable.headerGroups.map(headerGroup => (
+                      <tr {...headerGroup.getHeaderGroupProps()}>
+                        {headerGroup.headers.map(column => (
+                          <th {...column.getHeaderProps()}>{column.render('Header')}</th>
+                        ))}
+                      </tr>
                     ))}
-                  </tr>
-                ))}
-              </thead>
-              <tbody {...otherMeetingsTable.getTableBodyProps()}>
-                {otherMeetingsTable.rows.map(row => {
-                  otherMeetingsTable.prepareRow(row);
-                  return (
-                    <tr {...row.getRowProps()}>
-                      {row.cells.map(cell => (
-                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                      ))}
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        )}
+                  </thead>
+                  <tbody {...otherMeetingsTable.getTableBodyProps()}>
+                    {otherMeetingsTable.rows.map(row => {
+                      otherMeetingsTable.prepareRow(row);
+                      return (
+                        <tr {...row.getRowProps()}>
+                          {row.cells.map(cell => (
+                            <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                          ))}
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
 
-        {showModal && selectedMeeting && (
-          <DetailsModal meeting={selectedMeeting} onClose={handleCloseModal} userName={userName} department={department} />
+            {/* Meeting Details Modal */}
+            {showModal && selectedMeeting && (
+              <div className="modal-overlay">
+                <div className="modal-content">
+                  <h2>{selectedMeeting.title}</h2>
+                  <p><strong>Status:</strong> {selectedMeeting.status}</p>
+                  <p><strong>Date:</strong> {selectedMeeting.date}</p>
+                  <p><strong>Time:</strong> {selectedMeeting.time}</p>
+                  <p><strong>Room:</strong> {selectedMeeting.room}</p>
+                  <p><strong>Creator:</strong> {selectedMeeting.creator}</p>
+                  <p><strong>Members:</strong> {selectedMeeting.members.join(', ')}</p>
+                  <p><strong>Details:</strong> {selectedMeeting.details}</p>
+                  <button className="close-btn" onClick={handleCloseModal}>
+                    Close
+                  </button>
+                </div>
+              </div>
+            )}
+          </>
         )}
       </main>
-    </div>
-  );
-};
-
-const DetailsModal = ({ meeting, onClose, userName, department }) => {
-  return (
-    <div className="details-modal">
-      <div className="details-content">
-        <div className="closetab">
-          <button className="close-btn" onClick={onClose}>&times;</button>
-        </div>
-        <h2>{meeting.title}</h2>
-        <div className="modal-columns">
-          <div className="left-content">
-            <p><strong>Username:</strong> {userName}</p>
-            <p><strong>Department:</strong> {department}</p>
-            <p><strong>Number of PAX:</strong></p>
-            <p><strong>Purpose of the Meeting:</strong> {meeting.details}</p>
-            <p className="members"><strong>Members:</strong> {meeting.members.join(', ')}</p>
-          </div>
-          <div className="right-content">
-            <h3>{meeting.room}</h3>
-            <p><strong>Date:</strong> {meeting.date}</p>
-            <p><strong>Meeting Start:</strong> {meeting.time}</p>
-            <p><strong>Meeting End:</strong> </p>
-          </div>
-        </div>
-      </div>
     </div>
   );
 };
