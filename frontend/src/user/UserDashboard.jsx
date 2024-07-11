@@ -19,7 +19,7 @@ const Dashboard = () => {
   const [userData, setUsers] = useState(null);
   const [loading, setLoading] = useState(true)
 
-  const userName = "John Doe"; // Replace with actual user name
+  const userName = "John Doe";
   const department = "Starlight";
 
   useEffect(() => {
@@ -49,7 +49,6 @@ const Dashboard = () => {
     fetchUsers();
   }, []);
 
-  // Mock data for reservations and other meetings
   const [reservations, setReservations] = useState([
     {
       title: 'Team Sync',
@@ -209,8 +208,6 @@ const Dashboard = () => {
 
   const handleRegistrationSubmit = (event) => {
     event.preventDefault();
-    // Handle registration form submission here
-    // For example, you can update user state to indicate registration completion
     setFirstLogin(false);
   };
 
@@ -221,7 +218,7 @@ const Dashboard = () => {
   return (
     <div className="dashboard">
       {firstLogin && (
-        <div className="modal-overlay">
+        <div className="reg-overlay">
           <div className="registration-form-modal">
             {userData && (
               <h2>Welcome, {userData.userName}!</h2>
@@ -237,8 +234,13 @@ const Dashboard = () => {
                 <p>*Please enter your designated department for specification of the meeting.</p>
                 <select id="department" required>
                   <option value="" disabled selected>Placeholder</option>
-                  <option value="Starlight">Starlight</option>
-                  <option value="Moonlight">Moonlight</option>
+                  <option value="Starlight">Philippine Dragon Media Network</option>
+                  <option value="Moonlight">GDS Travel Agency</option>
+                  <option value="Moonlight">FEILONG Legal</option>
+                  <option value="Moonlight">STARLIGHT</option>
+                  <option value="Moonlight">BIG VISION PRODS.</option>
+                  <option value="Moonlight">SuperNova</option>
+                  <option value="Moonlight">ClearPath</option>
                 </select>
               </div>
               <div className="form-section-divider"></div>
@@ -255,7 +257,6 @@ const Dashboard = () => {
                   <label htmlFor="change-password">Yes, I want to change my initial password.</label>
                 </div>
                 {isPasswordChangeChecked && (
-                  <>
                   <div className="newpass-section">
                     <label htmlFor="new-password">*Please enter your new password.</label>
                     <input
@@ -265,7 +266,6 @@ const Dashboard = () => {
                       required
                     />
                   </div>
-                  </>
                 )}
               </div>
               <button type="submit">Log In</button>
@@ -276,8 +276,7 @@ const Dashboard = () => {
       <main className="dashboard-main">
         <h1>My Dashboard</h1>
         
-        {!firstLogin && ( // Render meeting rooms cards if it's not the first login
-          <>
+
             <h2>Book a Meeting Room</h2>
             <div className="card-container">
               {rooms.map((place, index) => (
@@ -292,7 +291,6 @@ const Dashboard = () => {
               ))}
             </div>
 
-            {/* Render my reservations table */}
             <div className="toggle-header" onClick={toggleMyReservations}>
               <h2>
                 My Reservations ({reservations.length}){' '}
@@ -327,7 +325,6 @@ const Dashboard = () => {
               </div>
             )}
 
-            {/* Render other meetings table */}
             <div className="toggle-header" onClick={toggleOtherMeetings}>
               <h2>
                 Other Meetings ({otherMeetings.length}){' '}
@@ -362,24 +359,33 @@ const Dashboard = () => {
               </div>
             )}
 
-            {/* Meeting Details Modal */}
             {showModal && selectedMeeting && (
-              <div className="modal-overlay">
-                <div className="modal-content">
+              <div className="details-modal">
+                <div className="details-content">
+                  <div className="closetab">
+                    <button className="close-btn" onClick={handleCloseModal}>&times;</button>
+                  </div>
                   <h2>{selectedMeeting.title}</h2>
-                  <p><strong>Status:</strong> {selectedMeeting.status}</p>
-                  <p><strong>Date:</strong> {selectedMeeting.date}</p>
-                  <p><strong>Time:</strong> {selectedMeeting.time}</p>
-                  <p><strong>Room:</strong> {selectedMeeting.room}</p>
-                  <p><strong>Creator:</strong> {selectedMeeting.creator}</p>
-                  <p><strong>Members:</strong> {selectedMeeting.members.join(', ')}</p>
-                  <p><strong>Details:</strong> {selectedMeeting.details}</p>
-                  <button className="close-btn" onClick={handleCloseModal}>
-                    Close
-                  </button>
+                  <div className="modal-columns">
+                    <div className="left-content">
+                      <p><strong>Username:</strong> {userName}</p>
+                      <p><strong>Department:</strong> {department}</p>
+                      <p><strong>Number of PAX:</strong></p>
+                      <p><strong>Purpose of the Meeting:</strong> {selectedMeeting.details}</p>
+                      <p className="members"><strong>Members:</strong> {selectedMeeting.members.join(', ')}</p>
+                    </div>
+                    <div className="right-content">
+                      <h3>{selectedMeeting.room}</h3>
+                      <p><strong>Date:</strong> {selectedMeeting.date}</p>
+                      <p><strong>Meeting Start:</strong> {selectedMeeting.time}</p>
+                      <p><strong>Meeting End:</strong></p>
+                    </div>
+                  </div>
                 </div>
               </div>
             )}
+          {!firstLogin && (
+          <>
           </>
         )}
       </main>

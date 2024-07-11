@@ -75,16 +75,19 @@ function App() {
         } />
         <Route path="/admin/add-employee" element={
           <>
+            <Sidebar />
             <AddEmployee />
           </>
         } />
         <Route path="/admin/approval" element={
           <>
+            <Sidebar />
             <Approval />
           </>
         } />
         <Route path="/admin/room-approval" element={
           <>
+            <Sidebar />
             <ApprovalRoom />
           </>
         } />

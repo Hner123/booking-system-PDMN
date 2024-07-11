@@ -30,11 +30,11 @@
 }
 
 .profileContain img{
-    width: 150px; /* minimal width */
-    height: 150px; /* minimal height */
-    object-fit: cover; /* maintain aspect ratio */
-    border-radius: 50%; /* round the image */
-    border: 2px solid #7C8B9D; /* border color */
+    width: 150px;
+    height: 150px; 
+    object-fit: cover; 
+    border-radius: 50%; 
+    border: 2px solid #7C8B9D; 
 }
 
 .changeFields{
@@ -64,12 +64,12 @@ input, select{
 
 .buttonGroup {
     display: flex;
-    justify-content: flex-end; /* Align buttons to the right */
-    margin-top: 20px; /* Adjust top margin as needed */
+    justify-content: flex-end; 
+    margin-top: 20px; 
   }
   
 .buttonGroup button {
-    margin-left: 10px; /* Add space between buttons */
+    margin-left: 10px; 
  }
 
 

@@ -69,13 +69,12 @@ const Settings = () => {
                         <p>{department}</p>
                     </div>
                     <div>
-                        {/* File input for uploading images */}
                         <input
                             type="file"
                             ref={fileInputRef}
-                            style={{ display: 'none' }} // Hide the input visually
-                            accept=".jpg, .png"        // Accept only JPG and PNG files
-                            onChange={handleFileChange} // Handle file selection
+                            style={{ display: 'none' }} 
+                            accept=".jpg, .png"        
+                            onChange={handleFileChange} 
                         />
                         <button className="edit" onClick={() => fileInputRef.current.click()}>Upload</button>
                     </div>

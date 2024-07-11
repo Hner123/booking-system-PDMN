@@ -5,53 +5,73 @@
 
 // Override styles or add custom styles here
 .rbc-header {
-    color: rgb(0, 0, 0);
-    font-size: 14px !important;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 36px !important;
-    background: #ffffff;
-  }
-  
-  .rbc-allday-cell {
-    display: none;
-  }
-  
-  .rbc-time-header-cell .rbc-today {
-    background-color: #DC3545 !important;
-    color: rgb(255, 255, 255);
-  }
-  
-  .rbc-time-slot {
-    color: #000000;
-    z-index: 1;
-  }
-  
-  .rbc-time-slot:not(.rbc-today .rbc-time-slot) {
-    background-color: #ffffff;
-  }
-  
-  /*Event Styles*/
-  .rbc-event,
-  .rbc-background-event {
-    z-index: 2;
-    padding: 0px !important;
-    border: none !important;
-  }
-  
-  .rbc-event-label {
-    display: none !important;
-  }
-  
-  .rbc-events-container {
-    width: 100% !important;
-  }
-  
-//   /*Timeslots Customization*/
-//   .rbc-day-slot .rbc-time-slot:after {
-//     content: "";
-//     width: 100%;
-//     border-top: 1px solid #1b0216;
-//     display: block;
+  color: rgb(0, 0, 0);
+  font-size: 14px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px !important;
+  background: #ffffff;
+}
+
+.rbc-allday-cell {
+  display: none;
+}
+
+.rbc-time-header-cell .rbc-today {
+  background-color: #DC3545 !important;
+  color: rgb(255, 255, 255);
+}
+
+.rbc-time-slot {
+  color: #000000;
+  z-index: 1;
+}
+
+.rbc-time-slot:not(.rbc-today .rbc-time-slot) {
+  background-color: #ffffff;
+}
+
+/* Event Styles */
+.rbc-event,
+.rbc-background-event {
+  z-index: 2;
+  padding: 0px !important;
+  border: none !important;
+}
+
+.rbc-event-label {
+  display: none !important;
+}
+
+.rbc-events-container {
+  width: 100% !important;
+}
+
+// Mobile Styles
+// @media (max-width: 768px) {
+//   .rbc-header {
+//     font-size: 12px !important;
+//     height: 30px !important;
 //   }
+
+//   .rbc-time-header-cell .rbc-today {
+//     background-color: #DC3545 !important;
+//     color: rgb(255, 255, 255);
+//     font-size: 12px !important;
+//   }
+
+//   .rbc-time-slot {
+//     font-size: 12px !important;
+//   }
+
+//   .rbc-event,
+//   .rbc-background-event {
+//     padding: 0px !important;
+//     font-size: 12px !important;
+//   }
+
+//   .rbc-events-container {
+//     font-size: 12px !important;
+//   }
+// }
