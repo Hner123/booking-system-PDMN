@@ -4,11 +4,12 @@ import * as FaIcons from 'react-icons/fa';
 import * as MdIcons from "react-icons/md";
 import { HiUserAdd } from 'react-icons/hi';
 import logo from '../assets/logos/GDSLogo.png';
+import logosmall from '../assets/logos/GDSLoog2.png'
 import profile from '../assets/Default Avatar.png';
 import './AdminPages.css';
 
 const SidebarComponent = () => {
-    const [sidebar, setSidebar] = useState(false);
+    const [sidebar, setSidebar] = useState(true);
     const userName = "Juan D.C.";
     const department = "Starlight";
 
@@ -23,22 +24,36 @@ const SidebarComponent = () => {
     return (
         <>
         {/* state icons */}
-        <div className='nav-icon'>
-            <Link to='#' className='menu-logo'>
-                <FaIcons.FaBars onClick={showSidebar}/>
-            </Link>
+        <div className='sidebar-collapsed'>
+            <div className="logodb" style={{padding:'0'}} onClick={showSidebar}>
+                <img src={logosmall} alt="Logo" />
+            </div>
+            <div className='nav-icons'>
+                <div className='profile-navicons'>
+                    <hr></hr>
+                    <div><FaIcons.FaUserCircle /></div>
+                    <div><FaIcons.FaBell /></div>
+                </div>
+                <div className='admin-provicons'>
+                    <hr></hr>
+                    <div><MdIcons.MdGroups/></div>
+                    <div><HiUserAdd /></div>
+                    <div><FaIcons.FaCalendarCheck /> </div>
+                </div>
+            </div>
         </div>
         
         <nav className={sidebar ? 'menu active' : 'menu'} >
-        <ul>
         <div className='nav-icon'>
             <Link to='#' className='menu-logo'>
                 <MdIcons.MdClose  onClick={hideSidebar}/>
             </Link>
         </div>
-        <div className="sidebar-logo">
-            <img src={logo} alt="Logo" className="logo-img" />
-        </div>
+            <div className='sidebar-logo'>
+            <img src={logo} alt="Logo" />
+            </div>
+        <ul>
+
         <div className='profileDetail'>
             <div className="profileSide">
                 <img src={profile} alt="profile" />
