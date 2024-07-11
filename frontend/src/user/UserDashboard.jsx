@@ -201,8 +201,13 @@ const Dashboard = () => {
                 <p>*Please enter your designated department for specification of the meeting.</p>
                 <select id="department" required>
                   <option value="" disabled selected>Placeholder</option>
-                  <option value="Starlight">Starlight</option>
-                  <option value="Moonlight">Moonlight</option>
+                  <option value="Starlight">Philippine Dragon Media Network</option>
+                  <option value="Moonlight">GDS Travel Agency</option>
+                  <option value="Moonlight">FEILONG Legal</option>
+                  <option value="Moonlight">STARLIGHT</option>
+                  <option value="Moonlight">BIG VISION PRODS.</option>
+                  <option value="Moonlight">SuperNova</option>
+                  <option value="Moonlight">ClearPath</option>
                 </select>
               </div>
               <div className="form-section-divider"></div>
