@@ -63,8 +63,10 @@ const Header = () => {
   return (
     <header className="dashboard-header">
       <div className="logodb" onClick={handleLogoClick} style={{ cursor: 'pointer' }}>
+        <span className="tooltip-text">Home</span>
         <img src={logo} alt="Logo" />
       </div>
+
       <div className="header-actions">
         <div className="user-list-icon" onClick={navigateUserList}>
           <FaUsers />

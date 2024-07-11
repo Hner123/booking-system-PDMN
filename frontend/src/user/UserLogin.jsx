@@ -52,8 +52,6 @@ const UserLogin = () => {
             return;
         }
 
-        // Here you would typically handle the login logic, like calling an API
-        // For demonstration, we'll just log the username and password
         console.log(`Username: ${userName}, Password: ${passWord}`);
 
         // Clear form fields

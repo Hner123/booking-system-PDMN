@@ -305,7 +305,7 @@
   
   .agenda-form button {
     padding: 10px 20px;
-    background-color: #007bff;
+    background-color: #EE3E38;
     color: #fff;
     border: none;
     border-radius: 4px;
@@ -313,10 +313,10 @@
   }
   
   .agenda-form button:hover {
-    background-color: #0056b3;
+    background-color: #B62626;
   }
   
-  /* feddback-message */
+  /* feedback-message */
   .feedback-message {
     width: 100%;
     text-align: center;
@@ -328,8 +328,80 @@
     margin: 20px 0px;
   }
   
+  /* Mobile Styles */
+@media (max-width: 768px) {
+  .room-reservation-container {
+    padding: 20px; 
+    text-align: center;
+  }
 
-  
+  .room-reservation-container h1 {
+    margin: 0% 0 10px 0;
+  }
+
+  .main-container {
+    flex-direction: column; 
+  }
+
+  .rsrv-column {
+    flex: 1; /* Full width for reservation controls */
+    margin: 0; /* Remove margin for full width */
+  }
+
+  .calendar-column {
+    flex: 1; /* Take full width on mobile */
+    margin: 16px 0 0 0; /* Add space between reservation and calendar */
+    padding: 20px; /* Add padding for better spacing */
+    overflow-x: auto; /* Enable horizontal scroll if necessary */
+  }
+
+  .booking-controls {
+    padding: 16px; /* Reduce padding */
+    text-align: center; /* Center content */
+  }
+
+  .time-picker {
+    flex-direction: row; 
+    gap: 15px; 
+  }
+
+  .legend {
+    margin: 10px auto; /* Adjust margin */
+  }
+
+  .legend-item {
+    margin: 5px; /* Adjust margin */
+  }
+
+  .legend-item span {
+    width: 16px;
+    height: 16px; /* Adjust size for smaller screens */
+  }
+
+  .legend-item p {
+    font-size: 12px; /* Decrease font size */
+  }
+
+  .legend-controls {
+    padding: 16px; /* Reduce padding */
+    margin-top: 10px; /* Adjust margin */
+  }
+
+  .agenda-form {
+    padding: 16px; /* Reduce padding */
+    margin: 10px 0; /* Adjust margin */
+  }
+
+  .agenda-form h2 {
+    font-size: 1.2rem; /* Decrease font size */
+  }
+
+  .agenda-form input {
+    font-size: 14px; /* Decrease font size */
+  }
+}
+
+
   /* form for reservationformdetails*/
   .form-page h1 {
     align-items: center;
@@ -348,7 +420,7 @@
   }
 
   .form-column {
-    width: 60%; /* Adjust width as needed */
+    width: 60%; 
     background-color: #ffffff;
     margin-right: 10px;
     padding: 20px;
@@ -408,7 +480,7 @@
     width: 50%;
     align-items: center;
     align-self: center;
-    margin: 0 auto; /* Center the button horizontally */
+    margin: 0 auto; 
   }
 
   .read-only-group {
@@ -485,15 +557,15 @@
   }
 
   .attendee-chip {
-    display: flex; /* Ensures chips are inline */
-    margin-right: 8px; /* Adjust spacing between chips */
-    border: 1px solid #ccc; /* Add border around each chip */
-    border-radius: 4px; /* Optional: Rounded corners for the chip */
-    padding: 4px 8px; /* Optional: Padding inside the chip */
+    display: flex; 
+    margin-right: 8px; 
+    border: 1px solid #ccc; 
+    border-radius: 4px; 
+    padding: 4px 8px; 
   }
 
   .attendee-text {
-    white-space: nowrap; /* Prevents text from wrapping */
+    white-space: nowrap;
     width: 100%;
     align-items: center;
     text-align: center;
@@ -531,24 +603,24 @@
   }
 
   .details h1 {
-    font-size: 64px; /* Adjust font size as needed */
-    margin-bottom: 0px; /* Add space below the heading */
-    color: #ffffff; /* Text color */
-    text-shadow: 1px 4px 4px rgba(0, 0, 0, 0.8); /* Optional text shadow */
+    font-size: 64px;
+    margin-bottom: 0px; 
+    color: #ffffff; 
+    text-shadow: 1px 4px 4px rgba(0, 0, 0, 0.8); 
   }
 
   .details p {
-    font-size: 32px; /* Adjust font size as needed */
-    margin: 0px; /* Add space below the heading */
-    color: #ffffff; /* Text color */
+    font-size: 32px; 
+    margin: 0px; 
+    color: #ffffff; 
     width: max-content;
   }
 
   .separator {
-    width: 100%; /* Full width */
-    height: 2px; /* Height of the line */
-    background-color: #ffffff; /* Color of the line */
-    margin-bottom: 10px; /* Space below the line */
+    width: 100%;
+    height: 2px; 
+    background-color: #ffffff; 
+    margin-bottom: 10px;
   }
 
   .background-image {
@@ -567,7 +639,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: #6b000c4d; /* Adjust the color and opacity here */
+    background-color: #6b000c4d; 
     z-index: 1;
   }
 
@@ -578,6 +650,38 @@
     height: 90vh; 
     background-color: #f9f9f9;
     padding: 20px;
+  }
+
+  /* Mobile styles */
+  @media (max-width: 768px) {
+    .reservation-details-container {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .details-column {
+      order: 1;
+      width: 100%;
+      margin: 0 0 20px 0;
+    }
+  
+    .form-column {
+      order: 2;
+      width: 100%;
+      margin: 0 0 20px 0;
+    }
+  
+    .reservation-form button {
+      width: 80%;
+    }
+  
+    .details h1 {
+      font-size: 32px; 
+    }
+  
+    .details p {
+      font-size: 18px; 
+    }
   }
 
 
@@ -619,14 +723,14 @@
     flex: 1;
     position: relative;
     overflow: hidden;
-    height: 100%; /* Ensure image container stretches vertically */
+    height: 100%; 
   }
   
   .confirmation-image img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Ensures the image covers the container without distortion */
-    object-position: center; /* Centers the image within the container */
+    object-fit: cover; 
+    object-position: center; 
   }
   
 
@@ -636,7 +740,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(255, 135, 135, 0.5); /* Change the color and opacity as needed */
+    background-color: rgba(255, 135, 135, 0.5); 
     z-index: 0;
   }
 
@@ -668,3 +772,33 @@
     margin: 0px;
   }
 
+  /* Media Query for Mobile View */
+@media (max-width: 768px) {
+  .confirmation-content {
+    flex-direction: column; /* Stack items vertically */
+    padding: 20px; /* Adjust padding for better spacing */
+  }
+
+  .confirmation-text {
+    padding: 50px 20px; /* Reduce padding for smaller screens */
+    text-align: center; /* Center text */
+  }
+
+  .confirmation-text h1 {
+    font-size: 36px; /* Decrease font size */
+  }
+
+  .confirmation-text .buttons {
+    margin-top: 20px; /* Adjust margin */
+  }
+
+  .confirmation-image {
+    display: none;
+  }
+
+  .dashboard-btn,
+  .details-btn {
+    width: 100%; /* Full width buttons */
+    margin: 10px 0; /* Adjust margin */
+  }
+}
