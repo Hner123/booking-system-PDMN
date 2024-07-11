@@ -1,4 +1,26 @@
 
+.menu {
+    width: 280px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: -100%;
+    background-color: white;
+    color: black;
+    padding: 20px;
+    overflow-y: auto;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition:850ms;
+    z-index: 1;
+}
+.menu.active{
+    left: 0;
+    transition: 350ms;
+}
+
+ul{
+    padding:0px;
+}
 .sidebar-logo{
     display: flex;
     align-items: center;
@@ -12,7 +34,6 @@
 
 .profileSide{
     text-align: left;
-    margin: 50px 10px 0px;
     padding: 20px 0px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -32,7 +53,7 @@
     justify-content: space-evenly;
     width: auto;
     height: auto;
-    margin: 50px 0px;
+    margin: 30px 0px;
 }
 
 .listCont{
@@ -43,18 +64,15 @@
     font-size: 12px;
     font-weight: bold;
     position: absolute;
-    top: 431px;
-    left: 50px;
+    top: 402px;
+    left: 48px;
     background-color: #9c0b0b;
+    color: #9c0b0b;
     border-radius: 50%;
-    padding: 0.5px 4px;
+    padding: 0.1px 4px;
     border: 1px solid #fff;
 }
  
-.notifCount p{
-    font-size: 100px;
-}
-
 .profileMenu, .adminMenu{
     margin: 40px 0px ;
 }
@@ -63,19 +81,6 @@
     margin: 10px 0px;
 }
 
-.navbar {
-    width: 280px;
-    height: 100vh;
-    position: fixed;
-    top: 0;
-    left: 0;
-    background-color: white;
-    color: black;
-    padding: 20px;
-    overflow-y: auto;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    z-index: 1;
-}
 
 li {
     list-style: none;
@@ -85,11 +90,7 @@ li a{
     text-decoration: none;
     color: black;
     font-size: 20px;
-    margin-left: 20px;
-}
-
-.menu {
-    padding: 0;
+    margin: 20px;
 }
 
 /*EMPLOYEE LIST*/
@@ -581,9 +582,6 @@ button[type='appr']:hover{
   @media (max-width:500px){
     .profileDetail > div{
         margin:30px 0px;
-    }
-    .notifCount{
-        top: 400px;
     }
     .listCont h1{
         text-align: center;
