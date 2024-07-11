@@ -47,7 +47,7 @@ const Header = () => {
   };
 
   const navigateUserList = () => {
-    navigate('/users');
+    navigate('/employee-list');
   };
 
   const handleLogoClick = () => {
