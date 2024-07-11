@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaUserCircle, FaBell, FaUsers, FaBars } from 'react-icons/fa';
+import * as FaIcons from 'react-icons/fa';
 import logo from '../../assets/logos/GDSLogo.png';
 import profile from '../../assets/Default Avatar.png';
 import './Header.css';
@@ -67,37 +67,37 @@ const Header = () => {
       </div>
       <div className="header-actions">
         <div className="user-list-icon" onClick={navigateUserList}>
-          <FaUsers />
+          <FaIcons.FaUsers />
           <span className="tooltip-text">User List</span>
         </div>
         <div className="notif-icon" onClick={handleNotifToggle}>
-          <FaBell />
+          <FaIcons.FaBell />
           <span className="notif-count">5</span>
           <span className="tooltip-text">Notifications</span>
         </div>
         <div className="profile-icon" onClick={handleModalToggle}>
-          <FaUserCircle />
+          <FaIcons.FaUserCircle />
           <span className="user-name">{userName}</span>
         </div>
 
         {/* Burger Menu Icon for mobile */}
         <div className="burger-menu" onClick={toggleMenu}>
-          <FaBars />
+          <FaIcons.FaBars />
         </div>
 
         {/* Burger Menu Content */}
         {isMenuOpen && (
           <div className="burger-menu-content">
             <div className="user-list-icon" onClick={navigateUserList}>
-              <FaUsers />
+              <FaIcons.FaUsers />
               <span className="user-name">User List</span>
             </div>
             <div className="notif-icon" onClick={handleNotifToggle}>
-              <FaBell />
+              <FaIcons.FaBell />
               <span className="user-name">Notifications</span>
             </div>
             <div className="profile-icon" onClick={navigateEdit}>
-              <FaUserCircle />
+              <FaIcons.FaUserCircle />
               <span className="user-name">{userName}</span>
             </div>
           </div>
