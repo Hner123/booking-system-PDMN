@@ -29,11 +29,12 @@ const UserLogin = () => {
             );
 
             if (response.status === 200) {
-                const { authToken, emailToken } = response.data;
-                const { _id, accType } = response.data.user;
+                const { authToken } = response.data;
+                const { _id } = response.data.user;
 
-                // localStorage.setItem("authToken", authToken);
-                // localStorage.setItem("verifyToken", emailToken);
+                localStorage.setItem("authToken", authToken);
+                localStorage.setItem("userId", _id)
+
                 setLoading(false);
                 navigate('/dashboard');
             }
@@ -41,28 +42,6 @@ const UserLogin = () => {
             setLoading(false);
             setError(error.response.data.message);
         }
-    };
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-
-        // Basic validation
-        if (!userName || !passWord) {
-            setError('Please enter both username and password.');
-            return;
-        }
-
-        // Here you would typically handle the login logic, like calling an API
-        // For demonstration, we'll just log the username and password
-        console.log(`Username: ${userName}, Password: ${passWord}`);
-
-        // Clear form fields
-        setUsername('');
-        setPassword('');
-        setError('');
-
-        // Navigate to the dashboard after successful login
-        navigate('/dashboard');
     };
 
     return (

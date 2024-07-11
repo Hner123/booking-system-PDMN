@@ -128,7 +128,7 @@ const LoginUser = async (req, res) => {
       { _id: foundUser._id },
       process.env.JWT_SECRET,
       {
-        expiresIn: "1h",
+        // expiresIn: "1h",
       }
     );
 

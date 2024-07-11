@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import roomBg from '../assets/roombg.jpg';
 import './User.css';
 import { useTable } from 'react-table';
 import { FaChevronDown, FaChevronRight } from 'react-icons/fa';
+
+import axios from 'axios'
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -14,8 +16,38 @@ const Dashboard = () => {
   const [firstLogin, setFirstLogin] = useState(true); // Track first login state
   const [isPasswordChangeChecked, setIsPasswordChangeChecked] = useState(false); // Track password change checkbox state
 
+  const [userData, setUsers] = useState(null);
+  const [loading, setLoading] = useState(true)
+
   const userName = "John Doe"; // Replace with actual user name
   const department = "Starlight";
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const userId = localStorage.getItem("userId");
+        const token = localStorage.getItem("authToken");
+        const headers = {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        };
+
+        const response = await axios.get(
+          `http://localhost:8800/api/user/${userId}`,
+          { headers }
+        );
+        if (response.status === 200) {
+          setUsers(response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUsers();
+  }, []);
 
   // Mock data for reservations and other meetings
   const [reservations, setReservations] = useState([
@@ -191,7 +223,9 @@ const Dashboard = () => {
       {firstLogin && (
         <div className="modal-overlay">
           <div className="registration-form-modal">
-            <h2>Welcome, {userName}!</h2>
+            {userData && (
+              <h2>Welcome, {userData.userName}!</h2>
+            )}
             <form onSubmit={handleRegistrationSubmit}>
               <div className="form-section">
                 <label htmlFor="email">Email Address</label>
