@@ -1,7 +1,10 @@
 import {React, useState} from 'react';
+import { useNavigate } from 'react-router-dom';
 import './AdminPages.css'
 
+
 const EmployeeList =()=>{
+    const navigate = useNavigate();
     const [showDropdown, setShowDropdown] = useState(false);
 
     const toggleDropdown = () => {
@@ -16,6 +19,9 @@ const EmployeeList =()=>{
         </div>
     );
 
+    const goAdd=()=>{
+        navigate('/admin/add-employee')
+    }
     const handleSort = (criteria) => {
         // Implement sorting logic here based on criteria (name, department, etc.)
         console.log(`Sorting by ${criteria}`);
@@ -25,7 +31,8 @@ const EmployeeList =()=>{
         <div className='listCont'>
             <h1>Employee List</h1>
             <div className='listButtonG'>
-                <button className='mainBtn'> Add New Employee</button>
+                <button className='mainBtn' onClick={goAdd}> Add New Employee</button>
+
                 <div className="dropdown">
                     <button onClick={toggleDropdown} className="dropbtn">Sort Company</button>
                     {showDropdown && dropdownMenu}

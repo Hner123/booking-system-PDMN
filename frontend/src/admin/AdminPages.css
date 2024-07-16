@@ -22,6 +22,22 @@
 ul{
     padding:0px;
 }
+
+.nav-icons{
+    display: flex;
+    flex-direction: column;
+    font-size: 30px;
+    color: #B62626;
+    align-items: center;
+}
+
+.profile-navicons, .admin-navicons{
+    margin:20px;
+}
+.profile-navicons >div, .admin-navicons>div{
+    margin:30px;
+}
+
 .sidebar-logo{
     display: flex;
     align-items: center;
@@ -315,7 +331,7 @@ li a{
     margin-top: 50px;
 }
 
-.listCont1{
+.listCont1, .listCont3{
     margin:100px 100px 50px;
     font-size: 30px;
     text-align: center;
@@ -435,11 +451,6 @@ li a{
     color: white;
 }
 
-.listCont3{
-    margin:50px 50px;
-    font-size: 30px;
-    
-}
  
 .approval-card-container {
     display: flex;
@@ -569,6 +580,9 @@ button[type='appr']:hover{
 }
 
   @media (max-width:500px){
+    .nav-icons{
+        display: none;
+    }
     .profileDetail > div{
         margin:0px 0px;
     }
@@ -639,10 +653,12 @@ button[type='appr']:hover{
         }
         /*APPROVAL ROOMS*/
         .listCont3{
-            margin-inline: 20px;
+            margin:50px 20px 0px;
+            
         }
 
         .listCont3 h1{
+            margin-bottom: 50px ;
             font-size: 30px;
             text-align: center;
         }
@@ -681,7 +697,9 @@ button[type='appr']:hover{
         left: 0;
         top: 0; 
         bottom: 0; 
-        width: 75px; 
+        width: 75px;
+        gap:170px;
+        transition: width 0.3s ease; 
     }
 
 }
