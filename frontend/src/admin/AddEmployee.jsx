@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { useNavigate } from 'react-router-dom';
 
 const AddEmployee = () => {
     const [name, setName] = useState('');
@@ -11,7 +12,11 @@ const AddEmployee = () => {
     const [showPassword, setShowPassword] = useState(false);
 
     const departments = ['HR', 'IT', 'Finance', 'Operations', 'Marketing'];
+    const navigate = useNavigate();
 
+    const returnPage =()=>{
+        navigate('/admin/employee-list')
+    }
     const handleSubmit = (event) => {
         event.preventDefault();
         // Handle form submission logic here
@@ -102,8 +107,8 @@ const AddEmployee = () => {
                             />
                         </div>
                         <div className='addGroup'>
-                            <button type='submit' className='mainBtn'>Submit</button>
-                            <button type='button' className='secondBtn'>Cancel</button>
+                            <button type='submit'  className='mainBtn'>Submit</button>
+                            <button type='button' onClick={returnPage} className='secondBtn'>Cancel</button>
                         </div>
                     </form>
                 </div>

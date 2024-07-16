@@ -19,8 +19,7 @@ const Approval =()=>{
     }
     return(
         <div className='listCont1'>
-            <h1>For Approval</h1>
-            <h2 style={{textAlign: 'center'}}>PALAWAN ROOM</h2>
+            <h1>For Approval - PALAWAN ROOM</h1>
             <div className='approvalGroup'>
                 <div className='approvalMeets'>
                     <div className='approvalDeets'>
