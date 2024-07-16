@@ -72,18 +72,36 @@ const RoomReservation = () => {
       agenda: agenda,
       status: 'pending', // Add a status field to mark the event as pending
     };
-  
+
     // Assuming events and setEvents are managed in your component's state
     setEvents([...events, newEvent]);
     setShowAgendaForm(false);
     setAgenda('');
     setFeedbackMessage('Appointment request submitted for approval.');
-  
+
+    // Create FormData object
+    const formData = new FormData();
+    formData.append('scheduleDate', moment(startDate).format('YYYY-MM-DD'));
+    formData.append('startTime', moment(startDate).set({
+      hour: startTime.hour(),
+      minute: startTime.minute(),
+    }).format('HH:mm'));
+    formData.append('endTime', moment(startDate).set({
+      hour: endTime.hour(),
+      minute: endTime.minute(),
+    }).format('HH:mm'));
+
+    console.log("FormData:", formData);
+
+    // Example of iterating through formData entries (remove in production):
+    for (let pair of formData.entries()) {
+      console.log(pair[0], pair[1]);
+    };
+
     // Optionally, you might want to clear or reset your form fields here
-  
+
     // navigate('/reserveform'); // Navigate to the ReservationFormsDetails page
   };
-  
 
   const handleCancelTime = () => {
     setShowDiscardModal(true);
@@ -91,6 +109,7 @@ const RoomReservation = () => {
 
   const handleConfirmDiscard = () => {
     setShowDiscardModal(false);
+    localStorage.removeItem("reserveToken")
     navigate('/dashboard');
   };
 
@@ -166,7 +185,7 @@ const RoomReservation = () => {
                 {feedbackMessage}
               </div>
             )}
-            <p> Please enter the correct information and check the details before confirming your booking.</p>
+            <p>Please enter the correct information and check the details before confirming your booking.</p>
           </div>
 
           <div className="legend-controls">
@@ -239,9 +258,21 @@ const RoomReservation = () => {
         </div>
       </div>
 
+      {/* Display Sample Reservation Data */}
+      {events.length > 0 && (
+        <div className="sample-reservation">
+          <h3>Sample Reservation</h3>
+          <p>Date: {moment(events[events.length - 1].start).format('MMMM Do YYYY')}</p>
+          <p>Time: {moment(events[events.length - 1].start).format('h:mm A')} - {moment(events[events.length - 1].end).format('h:mm A')}</p>
+          {/* Add more details as needed */}
+        </div>
+      )}
+
+      {/* Expanded Event Modal */}
       {expandedEvent && (
         <div className="event-details-modal">
           <div className="modal-content">
+            {/* Event details */}
             <span className="close" onClick={closeEventDetails}>&times;</span>
             <h2>{expandedEvent.title}</h2>
             <p><strong>Start:</strong> {moment(expandedEvent.start).format('MMMM Do YYYY, h:mm a')}</p>
@@ -250,15 +281,16 @@ const RoomReservation = () => {
         </div>
       )}
 
+      {/* Discard Changes Modal */}
       {showDiscardModal && (
         <div className="discard-modal">
           <div className="discard-content">
             <h2>Discard Changes</h2>
             <p>Are you sure you want to discard your changes and go back to the dashboard?</p>
-            <div className="rsrv-buttons">  
+            <div className="rsrv-buttons">
               <button className="reserve-btn" onClick={handleConfirmDiscard}>Yes, Discard</button>
               <button className="cancel-btn" onClick={handleCancelDiscard}>No, Keep Working</button>
-            </div>  
+            </div>
           </div>
         </div>
       )}

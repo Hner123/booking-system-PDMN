@@ -82,6 +82,7 @@ const EditUser = async (req, res) => {
         passWord: hashPassWord,
         email: user.email,
         department: user.department,
+        resetPass: user.resetPass
       },
     };
 

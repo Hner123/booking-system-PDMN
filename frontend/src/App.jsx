@@ -1,5 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+
 import Header from './user/utilities/Header.jsx';
 import UserLogin from './user/UserLogin';
 import UserDashboard from './user/UserDashboard';
@@ -16,6 +18,7 @@ import AddEmployee from './admin/AddEmployee.jsx';
 import ApprovalRoom from './admin/ApprovalRooms.jsx';
 import Approval from './admin/Approval.jsx';
 
+import "react-toastify/dist/ReactToastify.css";
 import 'react-datepicker/dist/react-datepicker.css';
 import 'rc-time-picker/assets/index.css';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
@@ -25,7 +28,8 @@ import './App.css';
 
 function App() {
   return (
-    <Router>
+    <div>
+      <ToastContainer/>
       <Routes>
         <Route path="/" element={<UserLogin />} />
         <Route path="/dashboard" element={
@@ -98,7 +102,7 @@ function App() {
           </>
         } />
       </Routes>
-    </Router>
+    </div>
   );
 }
 
