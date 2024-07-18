@@ -97,7 +97,7 @@ const ValidateUserData = async (req, res) => {
         exists: !!userNameUser,
         userId: userNameUser ? userNameUser._id : null,
       },
-      eMail: {
+      email: {
         exists: !!emailUser,
         userId: emailUser ? emailUser._id : null,
       },

@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import roomBg from '../assets/roombg.jpg';
-import './User.css';
-import { useTable } from 'react-table';
-import { FaChevronDown, FaChevronRight } from 'react-icons/fa';
+import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import roomBg from "../assets/roombg.jpg";
+import "./User.css";
+import { useTable } from "react-table";
+import { FaChevronDown, FaChevronRight } from "react-icons/fa";
 
-import axios from 'axios'
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -13,14 +14,26 @@ const Dashboard = () => {
   const [selectedMeeting, setSelectedMeeting] = useState(null);
   const [showMyReservations, setShowMyReservations] = useState(true);
   const [showOtherMeetings, setShowOtherMeetings] = useState(true);
-  const [firstLogin, setFirstLogin] = useState(true); // Track first login state
-  const [isPasswordChangeChecked, setIsPasswordChangeChecked] = useState(false); // Track password change checkbox state
+  const [firstLogin, setFirstLogin] = useState(false); // Track first login state
+  const formRef = useRef();
+
+  const [formData, setFormData] = useState({
+    passWord: "",
+    email: "",
+    department: "",
+  });
 
   const [userData, setUsers] = useState(null);
-  const [loading, setLoading] = useState(true)
+  const [roomData, setRoomName] = useState("");
+  const [loading, setLoading] = useState(true);
 
   const userName = "John Doe";
   const department = "Starlight";
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -38,6 +51,9 @@ const Dashboard = () => {
         );
         if (response.status === 200) {
           setUsers(response.data);
+          if (response.data.resetPass === false) {
+            setFirstLogin(true);
+          }
         }
       } catch (error) {
         console.error("Error fetching users:", error);
@@ -51,75 +67,71 @@ const Dashboard = () => {
 
   const [reservations, setReservations] = useState([
     {
-      title: 'Team Sync',
-      status: 'Pending',
-      date: '2024-07-03',
-      time: '10:00 AM',
-      room: 'Palawan',
+      title: "Team Sync",
+      status: "Pending",
+      date: "2024-07-03",
+      time: "10:00 AM",
+      room: "Palawan",
       creator: userName,
-      members: ['John Doe', 'Jane Smith', 'Alex Johnson'],
-      details: 'This is a team sync meeting',
+      members: ["John Doe", "Jane Smith", "Alex Johnson"],
+      details: "This is a team sync meeting",
     },
     {
-      title: 'Client Meeting',
-      status: 'Approved',
-      date: '2024-07-04',
-      time: '02:00 PM',
-      room: 'Boracay',
+      title: "Client Meeting",
+      status: "Approved",
+      date: "2024-07-04",
+      time: "02:00 PM",
+      room: "Boracay",
       creator: userName,
-      members: ['Client A', 'Client B'],
-      details: 'This is a client meeting',
+      members: ["Client A", "Client B"],
+      details: "This is a client meeting",
     },
     {
-      title: 'New Project',
-      status: 'Approved',
-      date: '2024-07-03',
-      time: '11:00 AM',
-      room: 'Palawan',
+      title: "New Project",
+      status: "Approved",
+      date: "2024-07-03",
+      time: "11:00 AM",
+      room: "Palawan",
       creator: userName,
-      members: ['John Doe', 'Jane Smith', 'Alex Johnson'],
-      details: 'This is a team sync meeting',
+      members: ["John Doe", "Jane Smith", "Alex Johnson"],
+      details: "This is a team sync meeting",
     },
     {
-      title: 'Business Meeting',
-      status: 'Approved',
-      date: '2024-07-04',
-      time: '05:00 PM',
-      room: 'Boracay',
+      title: "Business Meeting",
+      status: "Approved",
+      date: "2024-07-04",
+      time: "05:00 PM",
+      room: "Boracay",
       creator: userName,
-      members: ['Client A', 'Client B'],
-      details: 'This is a client meeting',
+      members: ["Client A", "Client B"],
+      details: "This is a client meeting",
     },
   ]);
 
   const otherMeetings = [
     {
-      title: 'Project Kickoff',
-      status: 'Approved',
-      date: '2024-07-05',
-      time: '09:00 AM',
-      room: 'Palawan',
-      creator: 'John Smith',
-      members: ['John Smith', 'Jane Doe'],
-      details: 'Starting a new project',
+      title: "Project Kickoff",
+      status: "Approved",
+      date: "2024-07-05",
+      time: "09:00 AM",
+      room: "Palawan",
+      creator: "John Smith",
+      members: ["John Smith", "Jane Doe"],
+      details: "Starting a new project",
     },
     {
-      title: 'Training Session',
-      status: 'Pending',
-      date: '2024-07-06',
-      time: '11:00 AM',
-      room: 'Boracay',
-      creator: 'Alex Johnson',
-      members: ['Alex Johnson', 'Emily Brown'],
-      details: 'Training on new software tools',
+      title: "Training Session",
+      status: "Pending",
+      date: "2024-07-06",
+      time: "11:00 AM",
+      room: "Boracay",
+      creator: "Alex Johnson",
+      members: ["Alex Johnson", "Emily Brown"],
+      details: "Training on new software tools",
     },
   ];
 
   const rooms = ["Palawan", "Boracay", "Palawan and Boracay"];
-
-  const handleReserveClick = () => {
-    navigate('/reserve');
-  };
 
   const handleMeetingClick = (meeting) => {
     setSelectedMeeting(meeting);
@@ -146,27 +158,33 @@ const Dashboard = () => {
 
   const myReservationsColumns = React.useMemo(
     () => [
-      { Header: 'Meeting Title', accessor: 'title' },
+      { Header: "Meeting Title", accessor: "title" },
       {
-        Header: 'Status',
-        accessor: 'status',
+        Header: "Status",
+        accessor: "status",
         Cell: ({ value }) => (
           <span className={`status ${value.toLowerCase()}`}>{value}</span>
         ),
       },
-      { Header: 'Date', accessor: 'date' },
-      { Header: 'Time', accessor: 'time' },
-      { Header: 'Meeting Room', accessor: 'room' },
-      { Header: 'Meeting Creator', accessor: 'creator' },
+      { Header: "Date", accessor: "date" },
+      { Header: "Time", accessor: "time" },
+      { Header: "Meeting Room", accessor: "room" },
+      { Header: "Meeting Creator", accessor: "creator" },
       {
-        Header: '',
-        accessor: 'actions',
+        Header: "",
+        accessor: "actions",
         Cell: ({ row }) => (
           <>
-            <button className="full-btn" onClick={() => handleMeetingClick(row.original)}>
+            <button
+              className="full-btn"
+              onClick={() => handleMeetingClick(row.original)}
+            >
               <i className="fas fa-info-circle"></i> Details
             </button>
-            <button className="delete-btn" onClick={() => handleDeleteReservation(row.index)}>
+            <button
+              className="delete-btn"
+              onClick={() => handleDeleteReservation(row.index)}
+            >
               <i className="fas fa-trash-alt"></i> Cancel Meeting
             </button>
           </>
@@ -178,23 +196,26 @@ const Dashboard = () => {
 
   const otherMeetingsColumns = React.useMemo(
     () => [
-      { Header: 'Meeting Title', accessor: 'title' },
+      { Header: "Meeting Title", accessor: "title" },
       {
-        Header: 'Status',
-        accessor: 'status',
+        Header: "Status",
+        accessor: "status",
         Cell: ({ value }) => (
           <span className={`status ${value.toLowerCase()}`}>{value}</span>
         ),
       },
-      { Header: 'Date', accessor: 'date' },
-      { Header: 'Time', accessor: 'time' },
-      { Header: 'Meeting Room', accessor: 'room' },
-      { Header: 'Meeting Creator', accessor: 'creator' },
+      { Header: "Date", accessor: "date" },
+      { Header: "Time", accessor: "time" },
+      { Header: "Meeting Room", accessor: "room" },
+      { Header: "Meeting Creator", accessor: "creator" },
       {
-        Header: '',
-        accessor: 'actions',
+        Header: "",
+        accessor: "actions",
         Cell: ({ row }) => (
-          <button className="full-btn" onClick={() => handleMeetingClick(row.original)}>
+          <button
+            className="full-btn"
+            onClick={() => handleMeetingClick(row.original)}
+          >
             <i className="fas fa-info-circle"></i> Details
           </button>
         ),
@@ -203,16 +224,97 @@ const Dashboard = () => {
     []
   );
 
-  const myReservationsTable = useTable({ columns: myReservationsColumns, data: reservations });
-  const otherMeetingsTable = useTable({ columns: otherMeetingsColumns, data: otherMeetings });
+  const myReservationsTable = useTable({
+    columns: myReservationsColumns,
+    data: reservations,
+  });
+  const otherMeetingsTable = useTable({
+    columns: otherMeetingsColumns,
+    data: otherMeetings,
+  });
 
-  const handleRegistrationSubmit = (event) => {
-    event.preventDefault();
-    setFirstLogin(false);
+  const handleRegistrationSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const validationResponse = await axios.post(
+        `http://localhost:8800/api/auth/validate`,
+        {
+          email: formData.email,
+        }
+      );
+
+      if (validationResponse.data.email.exists === true) {
+        toast.error("Email is already registered");
+        return;
+      }
+    } catch (error) {
+      toast.error("Failed to validate email");
+      return;
+    }
+
+    const updatedUser = {
+      passWord: formData.passWord,
+      email: formData.email,
+      department: formData.department,
+      resetPass: true,
+    };
+
+    try {
+      const userId = localStorage.getItem("userId");
+      const token = localStorage.getItem("authToken");
+
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      };
+
+      const updateResponse = await axios.patch(
+        `http://localhost:8800/api/user/edit/${userId}`,
+        updatedUser,
+        { headers }
+      );
+
+      if (updateResponse.status === 201) {
+        toast.success("Successfully changed info.");
+        setFirstLogin(false);
+      }
+    } catch (error) {
+      console.error("Error during patch:", error);
+    }
   };
 
-  const handleCheckboxChange = (event) => {
-    setIsPasswordChangeChecked(event.target.checked);
+  const handleReserveClick = async (room) => {
+    setRoomName(room);
+
+    const reserveRoom = {
+      roomName: room
+    };
+
+    try {
+      const userId = localStorage.getItem("userId");
+      const token = localStorage.getItem("authToken");
+
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      };
+
+      const updateResponse = await axios.post(
+        `http://localhost:8800/api/book/create`,
+        reserveRoom,
+        { headers }
+      );
+
+      if (updateResponse.status === 201) {
+        toast.success(`Reserved Room: ${room}`);
+        console.log(updateResponse.data.result._id)
+        localStorage.setItem("reserveToken", updateResponse.data.result._id)
+        navigate("/reserve");
+      }
+    } catch (error) {
+      console.error("Error during patch:", error);
+    }
   };
 
   return (
@@ -220,174 +322,219 @@ const Dashboard = () => {
       {firstLogin && (
         <div className="reg-overlay">
           <div className="registration-form-modal">
-            {userData && (
-              <h2>Welcome, {userData.userName}!</h2>
-            )}
-            <form onSubmit={handleRegistrationSubmit}>
+            {userData && <h2>Welcome, {userData.userName}!</h2>}
+            <form ref={formRef} onSubmit={handleRegistrationSubmit}>
               <div className="form-section">
                 <label htmlFor="email">Email Address</label>
-                <p>*Please enter your email address so we can notify you about confirmations, advisory, etc.</p>
-                <input type="email" id="email" placeholder="Placeholder" required />
+                <p>
+                  *Please enter your email address so we can notify you about
+                  confirmations, advisory, etc.
+                </p>
+                <input
+                  type="text"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder="Email Address"
+                  required
+                />
               </div>
               <div className="form-section">
                 <label htmlFor="department">Department</label>
-                <p>*Please enter your designated department for specification of the meeting.</p>
-                <select id="department" required>
-                  <option value="" disabled selected>Placeholder</option>
-                  <option value="Starlight">Philippine Dragon Media Network</option>
-                  <option value="Moonlight">GDS Travel Agency</option>
-                  <option value="Moonlight">FEILONG Legal</option>
-                  <option value="Moonlight">STARLIGHT</option>
-                  <option value="Moonlight">BIG VISION PRODS.</option>
-                  <option value="Moonlight">SuperNova</option>
-                  <option value="Moonlight">ClearPath</option>
+                <p>
+                  *Please enter your designated department for specification of
+                  the meeting.
+                </p>
+                <select
+                  id="department"
+                  name="department"
+                  value={formData.department}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="">Select Department</option>
+                  <option value="Philippine Dragon Media Network">
+                    Philippine Dragon Media Network
+                  </option>
+                  <option value="GDS Travel Agency">GDS Travel Agency</option>
+                  <option value="FEILONG Legal">FEILONG Legal</option>
+                  <option value="STARLIGHT">STARLIGHT</option>
+                  <option value="BIG VISION PRODS.">BIG VISION PRODS.</option>
+                  <option value="SuperNova">SuperNova</option>
+                  <option value="ClearPath">ClearPath</option>
+                  <option value="Dragon AI">Dragon AI</option>
                 </select>
               </div>
-              <div className="form-section-divider"></div>
-              <div className="pass-section">
-                <p>Would you like to change the password that was provided?<br />
-                  If yes, please check the box to set a new password. If not, leave the box empty.</p>
-                <div className="form-check">
-                  <input
-                    type="checkbox"
-                    id="change-password"
-                    checked={isPasswordChangeChecked}
-                    onChange={handleCheckboxChange}
-                  />
-                  <label htmlFor="change-password">Yes, I want to change my initial password.</label>
-                </div>
-                {isPasswordChangeChecked && (
-                  <div className="newpass-section">
-                    <label htmlFor="new-password">*Please enter your new password.</label>
-                    <input
-                      type="password"
-                      id="new-password"
-                      placeholder="Placeholder"
-                      required
-                    />
-                  </div>
-                )}
+              <div className="form-section">
+                <label htmlFor="new-password">
+                  Please enter your new password.
+                </label>
+                <p>
+                  *Please enter your new password to for your security and
+                  privacy.
+                </p>
+                <input
+                  type="password"
+                  id="passWord"
+                  name="passWord"
+                  value={formData.passWord}
+                  onChange={handleChange}
+                  placeholder="New Password"
+                  required
+                />
               </div>
-              <button type="submit">Log In</button>
+              <button type="submit">Confirm</button>
             </form>
           </div>
         </div>
       )}
       <main className="dashboard-main">
+        <ToastContainer />
         <h1>My Dashboard</h1>
-        
 
-            <h2>Book a Meeting Room</h2>
-            <div className="card-container">
-              {rooms.map((place, index) => (
-                <div key={`room-${index}`} className="card" style={{ backgroundImage: `url(${roomBg})` }}>
-                  <div className="overlay">
-                    <h3>{place}</h3>
-                    <button className="reserve-btn" onClick={handleReserveClick}>
-                      Reserve
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
+        <h2>Book a Meeting Room</h2>
+        <div className="card-container">
+      {rooms.map((place, index) => (
+        <div
+          key={`room-${index}`}
+          className="card"
+          style={{ backgroundImage: `url(${roomBg})` }}
+        >
+          <div className="overlay">
+            <h3>{place}</h3>
+            <button className="reserve-btn" onClick={() => handleReserveClick(place)}>
+              Reserve
+            </button>
+          </div>
+        </div>
+      ))}
+    </div>
 
-            <div className="toggle-header" onClick={toggleMyReservations}>
-              <h2>
-                My Reservations ({reservations.length}){' '}
-                {showMyReservations ? <FaChevronDown /> : <FaChevronRight />}
-              </h2>
-            </div>
-            {showMyReservations && (
-              <div className="table-container">
-                <table className="reservation-table" {...myReservationsTable.getTableProps()}>
-                  <thead>
-                    {myReservationsTable.headerGroups.map(headerGroup => (
-                      <tr {...headerGroup.getHeaderGroupProps()}>
-                        {headerGroup.headers.map(column => (
-                          <th {...column.getHeaderProps()}>{column.render('Header')}</th>
-                        ))}
-                      </tr>
+        <div className="toggle-header" onClick={toggleMyReservations}>
+          <h2>
+            My Reservations ({reservations.length}){" "}
+            {showMyReservations ? <FaChevronDown /> : <FaChevronRight />}
+          </h2>
+        </div>
+        {showMyReservations && (
+          <div className="table-container">
+            <table
+              className="reservation-table"
+              {...myReservationsTable.getTableProps()}
+            >
+              <thead>
+                {myReservationsTable.headerGroups.map((headerGroup) => (
+                  <tr {...headerGroup.getHeaderGroupProps()}>
+                    {headerGroup.headers.map((column) => (
+                      <th {...column.getHeaderProps()}>
+                        {column.render("Header")}
+                      </th>
                     ))}
-                  </thead>
-                  <tbody {...myReservationsTable.getTableBodyProps()}>
-                    {myReservationsTable.rows.map(row => {
-                      myReservationsTable.prepareRow(row);
-                      return (
-                        <tr {...row.getRowProps()}>
-                          {row.cells.map(cell => (
-                            <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                          ))}
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            )}
-
-            <div className="toggle-header" onClick={toggleOtherMeetings}>
-              <h2>
-                Other Meetings ({otherMeetings.length}){' '}
-                {showOtherMeetings ? <FaChevronDown /> : <FaChevronRight />}
-              </h2>
-            </div>
-            {showOtherMeetings && (
-              <div className="table-container">
-                <table className="reservation-table1" {...otherMeetingsTable.getTableProps()}>
-                  <thead>
-                    {otherMeetingsTable.headerGroups.map(headerGroup => (
-                      <tr {...headerGroup.getHeaderGroupProps()}>
-                        {headerGroup.headers.map(column => (
-                          <th {...column.getHeaderProps()}>{column.render('Header')}</th>
-                        ))}
-                      </tr>
-                    ))}
-                  </thead>
-                  <tbody {...otherMeetingsTable.getTableBodyProps()}>
-                    {otherMeetingsTable.rows.map(row => {
-                      otherMeetingsTable.prepareRow(row);
-                      return (
-                        <tr {...row.getRowProps()}>
-                          {row.cells.map(cell => (
-                            <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                          ))}
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            )}
-
-            {showModal && selectedMeeting && (
-              <div className="details-modal">
-                <div className="details-content">
-                  <div className="closetab">
-                    <button className="close-btn" onClick={handleCloseModal}>&times;</button>
-                  </div>
-                  <h2>{selectedMeeting.title}</h2>
-                  <div className="modal-columns">
-                    <div className="left-content">
-                      <p><strong>Username:</strong> {userName}</p>
-                      <p><strong>Department:</strong> {department}</p>
-                      <p><strong>Number of PAX:</strong></p>
-                      <p><strong>Purpose of the Meeting:</strong> {selectedMeeting.details}</p>
-                      <p className="members"><strong>Members:</strong> {selectedMeeting.members.join(', ')}</p>
-                    </div>
-                    <div className="right-content">
-                      <h3>{selectedMeeting.room}</h3>
-                      <p><strong>Date:</strong> {selectedMeeting.date}</p>
-                      <p><strong>Meeting Start:</strong> {selectedMeeting.time}</p>
-                      <p><strong>Meeting End:</strong></p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-          {!firstLogin && (
-          <>
-          </>
+                  </tr>
+                ))}
+              </thead>
+              <tbody {...myReservationsTable.getTableBodyProps()}>
+                {myReservationsTable.rows.map((row) => {
+                  myReservationsTable.prepareRow(row);
+                  return (
+                    <tr {...row.getRowProps()}>
+                      {row.cells.map((cell) => (
+                        <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                      ))}
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
         )}
+
+        <div className="toggle-header" onClick={toggleOtherMeetings}>
+          <h2>
+            Other Meetings ({otherMeetings.length}){" "}
+            {showOtherMeetings ? <FaChevronDown /> : <FaChevronRight />}
+          </h2>
+        </div>
+        {showOtherMeetings && (
+          <div className="table-container">
+            <table
+              className="reservation-table1"
+              {...otherMeetingsTable.getTableProps()}
+            >
+              <thead>
+                {otherMeetingsTable.headerGroups.map((headerGroup) => (
+                  <tr {...headerGroup.getHeaderGroupProps()}>
+                    {headerGroup.headers.map((column) => (
+                      <th {...column.getHeaderProps()}>
+                        {column.render("Header")}
+                      </th>
+                    ))}
+                  </tr>
+                ))}
+              </thead>
+              <tbody {...otherMeetingsTable.getTableBodyProps()}>
+                {otherMeetingsTable.rows.map((row) => {
+                  otherMeetingsTable.prepareRow(row);
+                  return (
+                    <tr {...row.getRowProps()}>
+                      {row.cells.map((cell) => (
+                        <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                      ))}
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {showModal && selectedMeeting && (
+          <div className="details-modal">
+            <div className="details-content">
+              <div className="closetab">
+                <button className="close-btn" onClick={handleCloseModal}>
+                  &times;
+                </button>
+              </div>
+              <h2>{selectedMeeting.title}</h2>
+              <div className="modal-columns">
+                <div className="left-content">
+                  <p>
+                    <strong>Username:</strong> {userName}
+                  </p>
+                  <p>
+                    <strong>Department:</strong> {department}
+                  </p>
+                  <p>
+                    <strong>Number of PAX:</strong>
+                  </p>
+                  <p>
+                    <strong>Purpose of the Meeting:</strong>{" "}
+                    {selectedMeeting.details}
+                  </p>
+                  <p className="members">
+                    <strong>Members:</strong>{" "}
+                    {selectedMeeting.members.join(", ")}
+                  </p>
+                </div>
+                <div className="right-content">
+                  <h3>{selectedMeeting.room}</h3>
+                  <p>
+                    <strong>Date:</strong> {selectedMeeting.date}
+                  </p>
+                  <p>
+                    <strong>Meeting Start:</strong> {selectedMeeting.time}
+                  </p>
+                  <p>
+                    <strong>Meeting End:</strong>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+        {!firstLogin && <></>}
       </main>
     </div>
   );
