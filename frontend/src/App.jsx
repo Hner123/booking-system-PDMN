@@ -18,6 +18,8 @@ import AddEmployee from './admin/AddEmployee.jsx';
 import ApprovalRoom from './admin/ApprovalRooms.jsx';
 import Approval from './admin/Approval.jsx';
 
+import Sidebaree from './admin/sidebarex.jsx'
+
 import "react-toastify/dist/ReactToastify.css";
 import 'react-datepicker/dist/react-datepicker.css';
 import 'rc-time-picker/assets/index.css';
@@ -68,7 +70,7 @@ function App() {
         } />
         <Route path="/admin/employee-list" element={
           <>
-            <Sidebar />
+            {/* <Sidebar /> */}
             <EmployeeList />
           </>
         } />
@@ -79,7 +81,7 @@ function App() {
         } />
         <Route path="/admin/add-employee" element={
           <>
-            <Sidebar />
+            <Sidebaree />
             <AddEmployee />
           </>
         } />
@@ -91,7 +93,7 @@ function App() {
         } />
         <Route path="/admin/room-approval" element={
           <>
-            <Sidebar />
+            {/* <Sidebar /> */}
             <ApprovalRoom />
           </>
         } />
@@ -101,6 +103,11 @@ function App() {
             <UserList />
           </>
         } />
+        <Route path ="/example" element={
+          <>
+          <Sidebaree/>
+          </>
+        }/>
       </Routes>
     </div>
   );

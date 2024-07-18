@@ -149,9 +149,12 @@ const Header = () => {
                 </>
               }           
               <hr style={{ border: "0.5px solid #7C8B9D", marginBottom: "20px" }}></hr>
-              <div className="headermodal-buttons">
+              <div className="headermodal-buttons" style={{display: 'flex', gap:'10px'}}>
                 <button onClick={navigateEdit}>
                   Edit Profile
+                </button>
+                <button>
+                  Log Out
                 </button>
               </div>
             </div>
