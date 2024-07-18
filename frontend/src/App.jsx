@@ -12,7 +12,6 @@ import UserList from './user/utilities/UserList.jsx';
 import Confirmation from './user/reservation/Confirmation';
 
 import AdminLogin from './admin/AdminLogin.jsx';
-import Sidebar from './admin/Sidebar.jsx';
 import EmployeeList from './admin/EmployeeList.jsx';
 import AddEmployee from './admin/AddEmployee.jsx';
 import ApprovalRoom from './admin/ApprovalRooms.jsx';
@@ -66,6 +65,11 @@ function App() {
             <Edit />
           </>
         } />
+         <Route path="/employee-list" element={
+          <>
+            <UserList />
+          </>
+        } />
         <Route path="/admin" element={
           <>
             <AdminLogin />
@@ -73,7 +77,7 @@ function App() {
         } />
         <Route path="/admin/employee-list" element={
           <>
-            {/* <Sidebar /> */}
+            <Sidebaree/>
             <EmployeeList />
           </>
         } />
@@ -90,27 +94,17 @@ function App() {
         } />
         <Route path="/admin/approval" element={
           <>
-            <Sidebar />
+            <Sidebaree />
             <Approval />
           </>
         } />
         <Route path="/admin/room-approval" element={
           <>
-            {/* <Sidebar /> */}
+            <Sidebaree />
             <ApprovalRoom />
           </>
         } />
-        <Route path="/employee-list" element={
-          <>
-            <Header/>
-            <UserList />
-          </>
-        } />
-        <Route path ="/example" element={
-          <>
-          <Sidebaree/>
-          </>
-        }/>
+
       </Routes>
     </div>
   );
