@@ -68,29 +68,27 @@ const BookingConfirmation = () => {
     return (end - start) / (1000 * 60 * 60); // Convert milliseconds to hours
   };
 
-  const isConfirmed =
-    bookData.caps?.pax === "1-2" ||
-    calculateDuration(bookData.startTime, bookData.endTime) > 1;
+  const isConfirmed = bookData.confirmation === true
 
   return (
     <div className="booking-confirmation">
       <div className="confirmation-text">
         {bookData && isConfirmed ? (
           <>
-            <h1>
-              Your {bookData.roomName} Room reservation has yet to be confirmed.
-            </h1>
-            <p>
-              Your booking for the dedicated room has been successfully
-              confirmed. You can now rest assured that your reservation is
-              locked in and ready for your upcoming event. You can view the
-              details of your meeting, or head back to the dashboard.
-            </p>
-          </>
+          <h1>
+            Your {bookData.roomName} Room reservation has been confirmed.
+          </h1>
+          <p>
+            Your booking for the dedicated room has been successfully
+            confirmed. You can now rest assured that your reservation is
+            locked in and ready for your upcoming event. You can view the
+            details of your meeting, or head back to the dashboard.
+          </p>
+        </>
         ) : (
           <>
             <h1>
-              Your {bookData.roomName} Room reservation has been confirmed.
+              Your {bookData.roomName} Room reservation has yet to be confirmed.
             </h1>
             <p>
               Your booking for the dedicated room has been successfully

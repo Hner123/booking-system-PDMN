@@ -92,10 +92,15 @@ const Dashboard = () => {
 
   useEffect(() => {
     const initialReservations = bookData
-      .filter((book) => book.user._id === userId)
+      .filter((book) => 
+        book.user._id === userId && 
+        book.title && 
+        book.scheduleDate !== null && 
+        book.startTime !== null
+      )
       .map((book) => ({
         title: book.title,
-        status: "Pending",
+        status: book.confirmation ? "Approved" : "Pending",
         date: new Date(book.scheduleDate).toLocaleDateString(),
         time: new Date(book.startTime).toLocaleTimeString(),
         room: book.roomName,
@@ -104,14 +109,20 @@ const Dashboard = () => {
         userName: book.user.userName,
         department: book.user.department,
         pax: book.caps.pax,
+        agenda: book.agenda
       }));
     setReservations(initialReservations);
-
+  
     const initialOtherMeetings = bookData
-      .filter((book) => book.user._id !== userId)
+      .filter((book) => 
+        book.user._id !== userId && 
+        book.title && 
+        book.scheduleDate !== null && 
+        book.startTime !== null
+      )
       .map((book) => ({
         title: book.title,
-        status: "Approved",
+        status: book.confirmation ? "Approved" : "Pending",
         date: new Date(book.scheduleDate).toLocaleDateString(),
         time: new Date(book.startTime).toLocaleTimeString(),
         room: book.roomName,
@@ -120,9 +131,11 @@ const Dashboard = () => {
         userName: book.user.userName,
         department: book.user.department,
         pax: book.caps.pax,
+        agenda: book.agenda
       }));
     setOtherMeetings(initialOtherMeetings);
   }, [bookData]);
+  
 
   const [reservations, setReservations] = useState([]);
   const [otherMeetings, setOtherMeetings] = useState([]);
@@ -510,8 +523,7 @@ const Dashboard = () => {
                     <strong>Number of PAX:</strong> {selectedMeeting.pax}
                   </p>
                   <p>
-                    <strong>Purpose of the Meeting:</strong>{" "}
-                    {selectedMeeting.details}
+                    <strong>Purpose of the Meeting:</strong>{" "} {selectedMeeting.agenda}
                   </p>
                   <p className="members">
                     <strong>Members:</strong>{" "}

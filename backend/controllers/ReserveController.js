@@ -41,8 +41,8 @@ const CreateReserve = async (req, res) => {
       endTime: reserve.endTime,
       user: reserve.user,
       caps: {
-        pax: reserve.pax,
-        reason: reserve.reason
+        pax: '',
+        reason: ''
       },
       attendees: reserve.attendees,
       confirmation: true,
@@ -73,7 +73,6 @@ const EditReserve = async (req, res) => {
         scheduleDate: reserve.scheduleDate,
         startTime: reserve.startTime,
         endTime: reserve.endTime,
-        user: reserve.user,
         caps: {
           pax: reserve.caps.pax,
           reason: reserve.caps.reason

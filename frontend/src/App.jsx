@@ -17,6 +17,7 @@ import EmployeeList from './admin/EmployeeList.jsx';
 import AddEmployee from './admin/AddEmployee.jsx';
 import ApprovalRoom from './admin/ApprovalRooms.jsx';
 import Approval from './admin/Approval.jsx';
+import NotFoundPage from './auth/NotFoundPage.jsx';
 
 import Sidebaree from './admin/sidebarex.jsx'
 
@@ -28,12 +29,14 @@ import Tablet from './tablet/tablet';
 
 import './App.css';
 
+
 function App() {
   return (
     <div>
       <ToastContainer/>
       <Routes>
         <Route path="/" element={<UserLogin />} />
+        <Route path='/page-not-found' element={<NotFoundPage/>}/>
         <Route path="/dashboard" element={
           <>
             <Header />

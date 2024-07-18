@@ -84,6 +84,11 @@ const Header = () => {
     navigate('/dashboard');
   };
 
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate('/');
+  };
+
   const toggleMenu = () => {
     setProfileOpen(false);
     setNotifOpen(false);
@@ -153,7 +158,7 @@ const Header = () => {
                 <button onClick={navigateEdit}>
                   Edit Profile
                 </button>
-                <button>
+                <button onClick={handleLogout}>
                   Log Out
                 </button>
               </div>

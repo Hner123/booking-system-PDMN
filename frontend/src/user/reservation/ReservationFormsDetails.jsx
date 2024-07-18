@@ -176,11 +176,9 @@ const ReservationFormsDetails = () => {
         reason: formData.caps.reason
       },
       attendees: formData.attendees,
-      title: formData.title
+      title: formData.title,
+      confirmation: bookData.confirmation === false ? false : true
     };
-
-    console.log('Form Data:', formData); // Check all form data including caps
-    console.log('Updated Reserve:', updatedReserve);
   
     try {
       const reserveId = localStorage.getItem("reserveToken");

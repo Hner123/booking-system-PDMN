@@ -130,12 +130,16 @@ const RoomReservation = () => {
     setAgenda('');
     setFeedbackMessage('Appointment request submitted for approval.');
 
-    // Prepare data for the API request
     const reserveData = {
       scheduleDate: moment(startDate).format('YYYY-MM-DD'),
       startTime: startDateTime.toISOString(),
       endTime: endDateTime.toISOString(),
       agenda: agenda,
+      caps: {
+        pax: "",
+        reason: ""
+      },
+      confirmation: agenda ? false : true
     };
 
     try {
@@ -158,13 +162,6 @@ const RoomReservation = () => {
       }
     } catch (error) {
       console.error("Error during patch:", error);
-
-      // Log the full error response
-      if (error.response) {
-        console.error("Error response data:", error.response.data);
-        console.error("Error response status:", error.response.status);
-        console.error("Error response headers:", error.response.headers);
-      }
     }
   };
 

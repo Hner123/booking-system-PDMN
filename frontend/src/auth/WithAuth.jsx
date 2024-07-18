@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from 'axios'; 
 
 const WithAuth = (WrappedComponent) => {
@@ -34,15 +34,16 @@ const WithAuth = (WrappedComponent) => {
             console.error("Failed to fetch users from one or both endpoints");
           }
         } catch (error) {
-          console.error("Error fetching users");
+          console.error("Error fetching users:", error);
         }
       };
 
       fetchUser();
-    }, [userId]);
+    }, [userId, token]);
 
     useEffect(() => {
-      if (!userData) {
+      if (!userId) {
+        navigate("/");
         return;
       }
 
@@ -58,25 +59,13 @@ const WithAuth = (WrappedComponent) => {
         } 
       }
 
-    }, [userData, navigate]);
-
-    // useEffect(() => {
-    //   const token = localStorage.getItem("emailToken");
-    
-    //   if (token) {
-    //     const decodedToken = decodeToken(token);
-    //     const isExpired = isTokenExpired(decodedToken.exp);
-    //     if (isExpired) {
-    //       localStorage.removeItem("emailToken");
-    //     }
-    //   }
-    // }, []);
+    }, [userId, navigate]);
 
     const decodeToken = (token) => {
       try {
         return JSON.parse(atob(token.split(".")[1]));
       } catch (error) {
-        console.error("Error decoding token:");
+        console.error("Error decoding token:", error);
         return null;
       }
     };
