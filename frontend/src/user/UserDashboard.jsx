@@ -103,6 +103,7 @@ const Dashboard = () => {
         status: book.confirmation ? "Approved" : "Pending",
         date: new Date(book.scheduleDate).toLocaleDateString(),
         time: new Date(book.startTime).toLocaleTimeString(),
+        end: new Date(book.endTime).toLocaleTimeString(),
         room: book.roomName,
         creator: book.user.userName,
         members: book.attendees,
@@ -125,6 +126,7 @@ const Dashboard = () => {
         status: book.confirmation ? "Approved" : "Pending",
         date: new Date(book.scheduleDate).toLocaleDateString(),
         time: new Date(book.startTime).toLocaleTimeString(),
+        end: new Date(book.endTime).toLocaleTimeString(),
         room: book.roomName,
         creator: book.user.userName,
         members: book.attendees,
@@ -539,7 +541,7 @@ const Dashboard = () => {
                     <strong>Meeting Start:</strong> {selectedMeeting.time}
                   </p>
                   <p>
-                    <strong>Meeting End:</strong>
+                    <strong>Meeting End:</strong> {selectedMeeting.end}
                   </p>
                 </div>
               </div>

@@ -177,7 +177,7 @@ const ReservationFormsDetails = () => {
       },
       attendees: formData.attendees,
       title: formData.title,
-      confirmation: bookData.confirmation === false ? false : true
+      confirmation: bookData.confirmation === false || (formData.caps.pax === "1-2") || bookData.agenda ? false : true
     };
   
     try {

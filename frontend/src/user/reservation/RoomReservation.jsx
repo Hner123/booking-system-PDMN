@@ -27,6 +27,18 @@ const RoomReservation = () => {
   const [showDiscardModal, setShowDiscardModal] = useState(false);
   const [bookData, setBookData] = useState(null);
 
+  console.log(events)
+
+  const departmentColors = {
+    'Philippine Dragon Media Network': '#dc3545',
+    'GDS Travel Agency': '#fccd32',
+    'FEILONG Legal': '#d8a330',
+    'STARLIGHT': '#fbff00',
+    'BIG VISION PRODS.': '#28a745',
+    'SuperNova': '#272727',
+    'ClearPath': '#35bbdc',
+  };
+
   useEffect(() => {
     const fetchBookData = async () => {
       try {
@@ -49,7 +61,8 @@ const RoomReservation = () => {
             end: new Date(event.endTime),
             title: 'Booked',
             agenda: event.agenda,
-            status: event.status,
+            status: event.confirmation,
+            department: event.user.department, // Include department
           }));
 
           setEvents(fetchedEvents);
@@ -195,8 +208,6 @@ const RoomReservation = () => {
     } catch (error) {
       console.error("Error during delete:", error);
     }
-
-    
   };
 
   const handleCancelDiscard = () => {
@@ -213,7 +224,7 @@ const RoomReservation = () => {
 
   return (
     <div className="room-reservation-container">
-      <ToastContainer/>
+      <ToastContainer />
       <h1>Reserve Room</h1>
       <div className="main-container">
         <div className="rsrv-column">
@@ -291,7 +302,7 @@ const RoomReservation = () => {
               </div>
               <div className="legend-item">
                 <span className="strlgt"></span>
-                <p> STARLIGHT</p>
+                <p>STARLIGHT</p>
               </div>
               <div className="legend-item">
                 <span className="bvp"></span>
@@ -321,7 +332,7 @@ const RoomReservation = () => {
               style={{ height: '100%' }}
               eventPropGetter={(event) => ({
                 style: {
-                  backgroundColor: '#45813',
+                  backgroundColor: departmentColors[event.department] || '#45813',
                   borderRadius: '4px',
                   border: 'none',
                   color: '#fff',
@@ -344,20 +355,6 @@ const RoomReservation = () => {
           </div>
         </div>
       </div>
-
-      {/* Display Sample Reservation Data */}
-      {events.length > 0 && (
-        <div className="sample-reservation">
-          <h3>Sample Reservation</h3>
-          {events.map((event, index) => (
-            <div key={index}>
-              <p>Date: {moment(event.start).format('MMMM Do YYYY')}</p>
-              <p>Time: {moment(event.start).format('h:mm A')} - {moment(event.end).format('h:mm A')}</p>
-              {/* Display more details as needed */}
-            </div>
-          ))}
-        </div>
-      )}
 
       {/* Expanded Event Modal */}
       {expandedEvent && (
