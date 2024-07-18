@@ -4,7 +4,7 @@ const requireAuth = require("../utils/requireAuth");
 
 const GetAllReserve = async (req, res) => {
   try {
-    const result = await ReserveModel.find({});
+    const result = await ReserveModel.find({}).populate("user");
 
     res.status(200).json(result);
   } catch (err) {
@@ -20,7 +20,7 @@ const GetSpecificReserve = async (req, res) => {
       res.status(400).json("No such user");
     }
 
-    const result = await ReserveModel.findById(id);
+    const result = await ReserveModel.findById(id).populate("user");;
 
     res.status(200).json(result);
   } catch (err) {
@@ -39,13 +39,13 @@ const CreateReserve = async (req, res) => {
       scheduleDate: reserve.scheduleDate,
       startTime: reserve.startTime,
       endTime: reserve.endTime,
-      userName: reserve.userName,
-      department: reserve.department,
+      user: reserve.user,
       caps: {
         pax: reserve.pax,
         reason: reserve.reason
       },
-      attendees: reserve.attendees
+      attendees: reserve.attendees,
+      confirmation: true,
     });
 
     res.status(201).json({ result });
@@ -73,13 +73,13 @@ const EditReserve = async (req, res) => {
         scheduleDate: reserve.scheduleDate,
         startTime: reserve.startTime,
         endTime: reserve.endTime,
-        userName: reserve.userName,
-        department: reserve.department,
+        user: reserve.user,
         caps: {
-          pax: reserve.pax,
-          reason: reserve.reason
+          pax: reserve.caps.pax,
+          reason: reserve.caps.reason
         },
-        attendees: reserve.attendees
+        attendees: reserve.attendees,
+        confirmation: reserve.confirmation
       },
     };
 

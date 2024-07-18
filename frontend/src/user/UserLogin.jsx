@@ -4,6 +4,7 @@ import axios from 'axios';
 import './User.css';
 import logo from '../assets/logos/GDSLogo.png';
 import mascot from '../assets/mascot.png';
+import WithoutAuth from '../auth/WithoutAuth';
 
 const UserLogin = () => {
     const [userName, setUsername] = useState('');
@@ -84,4 +85,4 @@ const UserLogin = () => {
     );
 };
 
-export default UserLogin;
+export default WithoutAuth(UserLogin);

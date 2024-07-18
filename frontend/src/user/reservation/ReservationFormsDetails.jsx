@@ -1,35 +1,118 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Autosuggest from 'react-autosuggest';
 import { useNavigate } from 'react-router-dom';
 import roomBg from '../../assets/roombg.jpg';
+import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
 
 const ReservationFormsDetails = () => {
-  const [phone, setPhone] = useState('');
-  const [meeting, setMeeting] = useState('');
-  const [date, setDate] = useState('');
-  const [time, setTime] = useState('');
-  const [room, setRoom] = useState('');
-  const [agenda, setAgenda] = useState('');
+  const formRef = useRef();
   const [pax, setPax] = useState('');
-  const [reason, setReason] = useState('');
   const [attendees, setAttendees] = useState([]);
   const [attendeeInput, setAttendeeInput] = useState('');
   const [suggestions, setSuggestions] = useState([]);
+  const [bookData, setBookData] = useState('');
+  const [userData, setUserData] = useState([]);
+
   const navigate = useNavigate();
 
-  const allAttendees = ['Alice Johnson', 'Bob Smith', 'Charlie Davis', 'Dana Wilson', 'Eli Martinez'];
+  const [formData, setFormData] = useState({
+    caps: {
+      pax: "",
+      reason: ""
+    },
+    attendees: [],
+    title: ""
+  });
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    console.log('Form submitted:', { attendees });
-    navigate('/confirmation');
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    if (name === 'reason') {
+      setFormData({
+        ...formData,
+        caps: {
+          ...formData.caps,
+          reason: value
+        }
+      });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
+
+  const handlePaxChange = (event) => {
+    const { value } = event.target;
+    setPax(value);
+    setFormData({
+      ...formData,
+      caps: {
+        ...formData.caps,
+        pax: value,
+        reason: ''
+      }
+    });
+  };
+
+  useEffect(() => {
+    const fetchBookData = async () => {
+      try {
+        const reserveId = localStorage.getItem("reserveToken");
+        const token = localStorage.getItem("authToken");
+        const headers = {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        };
+
+        const response = await axios.get(
+          `http://localhost:8800/api/book/${reserveId}`,
+          { headers }
+        );
+        if (response.status === 200) {
+          setBookData(response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching book data:", error);
+      }
+    };
+
+    fetchBookData();
+  }, []);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const token = localStorage.getItem("authToken");
+        const headers = {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        };
+
+        const response = await axios.get(
+          `http://localhost:8800/api/user/`,
+          { headers }
+        );
+        if (response.status === 200) {
+          // Exclude the active user from suggestions
+          const users = response.data.filter(user => user._id !== bookData.user._id);
+          // Add disabled property to each user
+          const usersWithDisabled = users.map(user => ({ ...user, disabled: false }));
+          setUserData(usersWithDisabled);
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    if (bookData) {
+      fetchUserData();
+    }
+  }, [bookData]);
 
   const getSuggestions = (value) => {
     const inputValue = value.trim().toLowerCase();
     const inputLength = inputValue.length;
-    return inputLength === 0 ? [] : allAttendees.filter(attendee =>
-      attendee.toLowerCase().includes(inputValue)
+    return inputLength === 0 ? [] : userData.filter(user =>
+      user.userName.toLowerCase().includes(inputValue) && !user.disabled
     );
   };
 
@@ -41,11 +124,11 @@ const ReservationFormsDetails = () => {
     setSuggestions([]);
   };
 
-  const getSuggestionValue = (suggestion) => suggestion;
+  const getSuggestionValue = (suggestion) => suggestion.userName;
 
   const renderSuggestion = (suggestion) => (
     <div className="suggestion-chip">
-      {suggestion}
+      {suggestion.userName}
     </div>
   );
 
@@ -54,12 +137,27 @@ const ReservationFormsDetails = () => {
   };
 
   const onSuggestionSelected = (event, { suggestion }) => {
-    setAttendees([...attendees, suggestion]);
+    const updatedAttendees = [...attendees, suggestion.userName];
+    setAttendees(updatedAttendees);
+    
+    // Update formData with the new list of attendees
+    setFormData({
+      ...formData,
+      attendees: updatedAttendees,
+    });
+
+    // Disable the selected user
+    setUserData(userData.map(user => user._id === suggestion._id ? { ...user, disabled: true } : user));
+  
     setAttendeeInput('');
   };
 
   const removeAttendee = (index) => {
+    const removedAttendee = attendees[index];
     setAttendees(attendees.filter((_, i) => i !== index));
+    
+    // Re-enable the removed user
+    setUserData(userData.map(user => user.userName === removedAttendee ? { ...user, disabled: false } : user));
   };
 
   const inputProps = {
@@ -69,8 +167,51 @@ const ReservationFormsDetails = () => {
     style: { width: '100%' }
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    const updatedReserve = {
+      caps: {
+        pax: formData.caps.pax,
+        reason: formData.caps.reason
+      },
+      attendees: formData.attendees,
+      title: formData.title
+    };
+
+    console.log('Form Data:', formData); // Check all form data including caps
+    console.log('Updated Reserve:', updatedReserve);
+  
+    try {
+      const reserveId = localStorage.getItem("reserveToken");
+      const token = localStorage.getItem("authToken");
+  
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      };
+  
+      const updateResponse = await axios.patch(
+        `http://localhost:8800/api/book/edit/${reserveId}`,
+        updatedReserve,
+        { headers }
+      );
+  
+      if (updateResponse.status === 201) {
+        toast.success("Successfully updated information.");
+        navigate('/confirmation')
+      } else {
+        toast.error("Failed to update information.");
+      }
+    } catch (error) {
+      console.error("Error during patch:", error);
+      toast.error("Error updating information. Please try again later.");
+    }
+  };
+
   return (
     <div className='form-page'>
+      <ToastContainer/>
       <h1>Booking Details</h1>
       <div className="reservation-details-container">
         <div className="form-column">
@@ -79,19 +220,23 @@ const ReservationFormsDetails = () => {
             <p>Please enter the correct information and check the details before confirming your booking.</p>
           </div>
           
-          <form className="reservation-form" onSubmit={handleSubmit}>
+          <form className="reservation-form" ref={formRef} onSubmit={handleSubmit}>
             <div className='read-only-group'>
               <div style={{ flex: 1 }}>
                 <label htmlFor="name">Username:</label>
-                <div id="name" className="read-only">
-                  John Doe
-                </div>
+                {bookData && 
+                  <div id="name" className="read-only">
+                    {bookData.user.userName}
+                  </div>
+                }
               </div>
               <div style={{ flex: 1 }}>
-                <label htmlFor="department">Department:</label>
-                <div id="department" className="read-only">
-                  IT Department
-                </div>
+                <label htmlFor="department">Department:</label>          
+                {bookData && 
+                  <div id="department" className="read-only">
+                    {bookData.user.department}
+                  </div>
+                }
               </div>
             </div>
 
@@ -104,8 +249,8 @@ const ReservationFormsDetails = () => {
                     id="pax-1-2"
                     name="pax"
                     value="1-2"
-                    checked={pax === '1-2'}
-                    onChange={(event) => setPax(event.target.value)}
+                    checked={formData.caps.pax === "1-2"}
+                    onChange={handlePaxChange}
                     style={{ width: 'auto' }}
                   />
                   <label htmlFor="pax-1-2">1-2 attendees</label>
@@ -115,9 +260,9 @@ const ReservationFormsDetails = () => {
                     type="radio"
                     id="pax-3-more"
                     name="pax"
-                    value="3-more"
-                    checked={pax === '3-more'}
-                    onChange={(event) => setPax(event.target.value)}
+                    value="3-More"
+                    checked={formData.caps.pax === "3-More"}
+                    onChange={handlePaxChange}
                     style={{ width: 'auto' }}
                   />
                   <label htmlFor="pax-3-more">3 or more attendees</label>
@@ -132,8 +277,8 @@ const ReservationFormsDetails = () => {
                   type="text"
                   id="reason"
                   name="reason"
-                  value={reason}
-                  onChange={(event) => setReason(event.target.value)}
+                  value={formData.caps.reason}
+                  onChange={handleChange}
                   placeholder="Enter reason"
                 />
               </div>
@@ -151,7 +296,7 @@ const ReservationFormsDetails = () => {
                 onSuggestionSelected={onSuggestionSelected}
                 theme={{
                   container: 'autosuggest-container',
-                  suggestionsContainerOpen: 'suggestions-container',
+                  suggestionsContainerOpen: 'suggestions-container', 
                   suggestionsList: 'suggestions-list',
                   suggestion: 'suggestion-chip'
                 }}
@@ -166,13 +311,13 @@ const ReservationFormsDetails = () => {
               </div>
             </div>
 
-            <label htmlFor="meeting">Meeting Title:</label>
+            <label htmlFor="title">Meeting Title:</label>
             <input
               type="text"
-              id="meeting"
-              name="meeting"
-              value={meeting}
-              onChange={(event) => setMeeting(event.target.value)}
+              id="title"
+              name="title"
+              value={formData.title}
+              onChange={handleChange}
               placeholder="Enter meeting title"
             />
 
@@ -186,24 +331,24 @@ const ReservationFormsDetails = () => {
         <div className="details-column" style={{ flex: '1', position: 'relative' }}>
           <div className="background-image" style={{ backgroundImage: `url(${roomBg})` }}>
             <div className="color-overlay"></div>
-            <div className="details">
-              <h1>ROOM NAME</h1>
-              <div className="separator"></div>
-              <p>
-                <strong>Date:</strong> {date}
-              </p>
-              <p>
-                <strong>Meeting Start:</strong> {time}
-              </p>
-              <p>
-                <strong>Meeting End:</strong> {time}
-              </p>
-              {meeting && (
+            {bookData && <>
+              <div className="details">
+                <h1>{bookData.roomName}</h1>
+                <div className="separator"></div>
                 <p>
-                  <strong>Meeting Title:</strong> {meeting}
+                  <strong>Date: </strong> {new Date(bookData.scheduleDate).toLocaleDateString()}
                 </p>
-              )}
-            </div>
+                <p>
+                  <strong>Meeting Start: </strong> {new Date(bookData.startTime).toLocaleTimeString()}
+                </p>
+                <p>
+                  <strong>Meeting End: </strong> {new Date(bookData.endTime).toLocaleTimeString()}
+                </p>
+                  <p>
+                    <strong>Meeting Title: </strong> {formData.title}
+                  </p>
+              </div>
+            </>}
           </div>
         </div>
       </div>

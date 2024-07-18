@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import moment from 'moment';
 import './RoomReservation.css';
 import DatePicker from 'react-datepicker';
@@ -8,6 +8,8 @@ import 'rc-time-picker/assets/index.css';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
 
 const RoomReservation = () => {
   const localizer = momentLocalizer(moment);
@@ -23,6 +25,43 @@ const RoomReservation = () => {
   const [expandedEvent, setExpandedEvent] = useState(null);
   const [feedbackMessage, setFeedbackMessage] = useState('');
   const [showDiscardModal, setShowDiscardModal] = useState(false);
+  const [bookData, setBookData] = useState(null);
+
+  useEffect(() => {
+    const fetchBookData = async () => {
+      try {
+        const token = localStorage.getItem("authToken");
+        const headers = {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        };
+
+        const response = await axios.get(
+          `http://localhost:8800/api/book/`,
+          { headers }
+        );
+
+        if (response.status === 200) {
+          // Map fetched events to the format required by react-big-calendar
+          const fetchedEvents = response.data.map(event => ({
+            id: event._id, // Include an ID if available
+            start: new Date(event.startTime),
+            end: new Date(event.endTime),
+            title: 'Booked',
+            agenda: event.agenda,
+            status: event.status,
+          }));
+
+          setEvents(fetchedEvents);
+          setBookData(response.data); // Optionally, set bookData state
+        }
+      } catch (error) {
+        console.error("Error fetching book data:", error);
+      }
+    };
+
+    fetchBookData();
+  }, []); // Empty dependency array to run once on mount
 
   const handleReserve = () => {
     const start = moment(startDate).set({
@@ -58,59 +97,109 @@ const RoomReservation = () => {
     }
   };
 
-  const reserveEvent = () => {
+  const reserveEvent = async (e) => {
+    if (e && e.preventDefault) {
+      e.preventDefault();
+    }
+
+    // Create start and end dates with exact times
+    const startDateTime = moment(startDate).set({
+      hour: startTime.hour(),
+      minute: startTime.minute(),
+      second: 0,
+      millisecond: 0,
+    }).toDate();
+
+    const endDateTime = moment(startDate).set({
+      hour: endTime.hour(),
+      minute: endTime.minute(),
+      second: 0,
+      millisecond: 0,
+    }).toDate();
+
     const newEvent = {
-      start: moment(startDate).set({
-        hour: startTime.hour(),
-        minute: startTime.minute(),
-      }).toDate(),
-      end: moment(startDate).set({
-        hour: endTime.hour(),
-        minute: endTime.minute(),
-      }).toDate(),
+      start: startDateTime,
+      end: endDateTime,
       title: 'Reserved',
       agenda: agenda,
-      status: 'pending', // Add a status field to mark the event as pending
+      status: 'pending',
     };
 
-    // Assuming events and setEvents are managed in your component's state
     setEvents([...events, newEvent]);
     setShowAgendaForm(false);
     setAgenda('');
     setFeedbackMessage('Appointment request submitted for approval.');
 
-    // Create FormData object
-    const formData = new FormData();
-    formData.append('scheduleDate', moment(startDate).format('YYYY-MM-DD'));
-    formData.append('startTime', moment(startDate).set({
-      hour: startTime.hour(),
-      minute: startTime.minute(),
-    }).format('HH:mm'));
-    formData.append('endTime', moment(startDate).set({
-      hour: endTime.hour(),
-      minute: endTime.minute(),
-    }).format('HH:mm'));
-
-    console.log("FormData:", formData);
-
-    // Example of iterating through formData entries (remove in production):
-    for (let pair of formData.entries()) {
-      console.log(pair[0], pair[1]);
+    // Prepare data for the API request
+    const reserveData = {
+      scheduleDate: moment(startDate).format('YYYY-MM-DD'),
+      startTime: startDateTime.toISOString(),
+      endTime: endDateTime.toISOString(),
+      agenda: agenda,
     };
 
-    // Optionally, you might want to clear or reset your form fields here
+    try {
+      const reserveId = localStorage.getItem("reserveToken");
+      const token = localStorage.getItem("authToken");
 
-    // navigate('/reserveform'); // Navigate to the ReservationFormsDetails page
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      };
+
+      const updateResponse = await axios.patch(
+        `http://localhost:8800/api/book/edit/${reserveId}`,
+        reserveData,
+        { headers }
+      );
+
+      if (updateResponse.status === 201) {
+        navigate('/reserveform')
+      }
+    } catch (error) {
+      console.error("Error during patch:", error);
+
+      // Log the full error response
+      if (error.response) {
+        console.error("Error response data:", error.response.data);
+        console.error("Error response status:", error.response.status);
+        console.error("Error response headers:", error.response.headers);
+      }
+    }
   };
 
   const handleCancelTime = () => {
     setShowDiscardModal(true);
   };
 
-  const handleConfirmDiscard = () => {
+  const handleConfirmDiscard = async (e) => {
     setShowDiscardModal(false);
-    localStorage.removeItem("reserveToken")
-    navigate('/dashboard');
+
+    try {
+      const reserveId = localStorage.getItem("reserveToken");
+      const token = localStorage.getItem("authToken");
+
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      };
+
+      const updateResponse = await axios.delete(
+        `http://localhost:8800/api/book/delete/${reserveId}`,
+        { headers }
+      );
+
+      console.log(updateResponse.status)
+
+      if (updateResponse.status === 200) {
+        localStorage.removeItem("reserveToken");
+        navigate('/dashboard');
+      }
+    } catch (error) {
+      console.error("Error during delete:", error);
+    }
+
+    
   };
 
   const handleCancelDiscard = () => {
@@ -127,6 +216,7 @@ const RoomReservation = () => {
 
   return (
     <div className="room-reservation-container">
+      <ToastContainer/>
       <h1>Reserve Room</h1>
       <div className="main-container">
         <div className="rsrv-column">
@@ -262,9 +352,13 @@ const RoomReservation = () => {
       {events.length > 0 && (
         <div className="sample-reservation">
           <h3>Sample Reservation</h3>
-          <p>Date: {moment(events[events.length - 1].start).format('MMMM Do YYYY')}</p>
-          <p>Time: {moment(events[events.length - 1].start).format('h:mm A')} - {moment(events[events.length - 1].end).format('h:mm A')}</p>
-          {/* Add more details as needed */}
+          {events.map((event, index) => (
+            <div key={index}>
+              <p>Date: {moment(event.start).format('MMMM Do YYYY')}</p>
+              <p>Time: {moment(event.start).format('h:mm A')} - {moment(event.end).format('h:mm A')}</p>
+              {/* Display more details as needed */}
+            </div>
+          ))}
         </div>
       )}
 

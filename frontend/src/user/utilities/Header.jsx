@@ -5,15 +5,45 @@ import logo from '../../assets/logos/GDSLogo.png';
 import profile from '../../assets/Default Avatar.png';
 import './Header.css';
 
+import axios from 'axios'
+
 const Header = () => {
   const [isProfileOpen, setProfileOpen] = useState(false);
   const [isNotifOpen, setNotifOpen] = useState(false);
   const [isMenuOpen, setMenuOpen] = useState(false);
-  const userName = "John Doe";
-  const department = "Starlight";
   const navigate = useNavigate();
   const profileModalRef = useRef(null);
   const notifModalRef = useRef(null);
+
+  const [userData, setUsers] = useState(null);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const userId = localStorage.getItem("userId");
+        const token = localStorage.getItem("authToken");
+        const headers = {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        };
+
+        const response = await axios.get(
+          `http://localhost:8800/api/user/${userId}`,
+          { headers }
+        );
+        if (response.status === 200) {
+          setUsers(response.data);
+          if (response.data.resetPass === false) {
+            setFirstLogin(true);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
+
+    fetchUsers();
+  }, []);
 
   useEffect(() => {
     const handleOutsideClick = (event) => {
@@ -79,7 +109,7 @@ const Header = () => {
         </div>
         <div className="profile-icon" onClick={handleModalToggle}>
           <FaIcons.FaUserCircle />
-          <span className="user-name">{userName}</span>
+          {userData && <span className="user-name">{userData.userName}</span>}
         </div>
 
         {/* Burger Menu Icon for mobile */}
@@ -112,8 +142,12 @@ const Header = () => {
               <div className="profileCont">
                 <img src={profile} alt="profile" />
               </div>
-              <h2 style={{ textAlign: "center" }}>Hello! {userName}</h2>
-              <p style={{ textAlign: "center" }}>Department: {department}</p>
+              {userData && 
+                <>
+                  <h2 style={{ textAlign: "center" }}>Hello! {userData.userName}</h2>
+                  <p style={{ textAlign: "center" }}>Department: {userData.department}</p>
+                </>
+              }           
               <hr style={{ border: "0.5px solid #7C8B9D", marginBottom: "20px" }}></hr>
               <div className="headermodal-buttons">
                 <button onClick={navigateEdit}>

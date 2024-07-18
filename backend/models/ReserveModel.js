@@ -28,11 +28,7 @@ const ReserveSchema = new Schema({
     type: Date,
     default: ""
   },
-  userName: {
-    type: Schema.Types.ObjectId,
-    ref: "user"
-  },
-  department: {
+  user: {
     type: Schema.Types.ObjectId,
     ref: "user"
   },
@@ -49,7 +45,11 @@ const ReserveSchema = new Schema({
   attendees: [{
     type: String,
     default: ""
-  }]
+  }],
+  confirmation:{
+    type: Boolean,
+    default: true
+  },
 
 });
 
