@@ -155,8 +155,8 @@ const LoginAdmin = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Check if the password is correct
-    if (foundAdmin.adminPass !== adminPass) {
+    const isPasswordValid = await bcrypt.compare(adminPass, foundAdmin.adminPass);
+    if (!isPasswordValid) {
       return res.status(401).json({ message: "Invalid password" });
     }
 
@@ -165,7 +165,7 @@ const LoginAdmin = async (req, res) => {
       { _id: foundAdmin._id },
       process.env.JWT_SECRET,
       {
-        expiresIn: "1h",
+        // expiresIn: "1h",
       }
     );
 
@@ -180,9 +180,6 @@ const LoginAdmin = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
-
-
 
 module.exports = {
   LogChangePass,

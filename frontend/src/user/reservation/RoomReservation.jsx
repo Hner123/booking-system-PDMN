@@ -27,8 +27,6 @@ const RoomReservation = () => {
   const [showDiscardModal, setShowDiscardModal] = useState(false);
   const [bookData, setBookData] = useState(null);
 
-  console.log(events)
-
   const departmentColors = {
     'Philippine Dragon Media Network': '#dc3545',
     'GDS Travel Agency': '#fccd32',
