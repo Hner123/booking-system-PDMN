@@ -2,59 +2,71 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logo from '../assets/logos/GDSLogo.png';
 import mascot from '../assets/mascot.png';
+import axios from 'axios';
 
 const AdminLogin = () => {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+    const [adminUser, setUsername] = useState('');
+    const [adminPass, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
+        try {
+            const trimmedUserName = adminUser.trim();
+            const trimmedPassWord = adminPass.trim();
 
-        // Basic validation
-        if (!username || !password) {
-            setError('Please enter both username and password.');
-            return;
+            setLoading(true);
+
+            const response = await axios.post(
+                "http://localhost:8800/api/auth/login/admin",
+                {
+                    adminUser: trimmedUserName,
+                    adminPass: trimmedPassWord,
+                }
+            );
+
+            if (response.status === 200) {
+                const { authToken } = response.data;
+                const { _id } = response.data.user;
+
+                localStorage.setItem("authToken", authToken);
+                localStorage.setItem("userId", _id)
+
+                setLoading(false);
+                navigate('/admin/employee-list');
+            }
+        } catch (error) {
+            setLoading(false);
+            setError(error.response.data.message);
         }
-
-        // Here you would typically handle the login logic, like calling an API
-        // For demonstration, we'll just log the username and password
-        console.log(`Username: ${username}, Password: ${password}`);
-
-        // Clear form fields
-        setUsername('');
-        setPassword('');
-        setError('');
-
-        // Navigate to the dashboard after successful login
-        navigate('/admin/employee-list');
     };
 
     return (
         <div className="login-page">
             <div className="login-form-column">
                 <img src={logo} alt="Logo" className="logo" />
-                <form className="login-form" onSubmit={handleSubmit}>
+                <form className="login-form" onSubmit={handleLogin}>
                     <h2>ADMIN - Log In</h2>
                     {error && <div className="error">{error}</div>}
-                    <label htmlFor="username">Username</label>
+                    <label htmlFor="adminUser">Username</label>
                     <input
                         type="text"
-                        id="username"
-                        name="username"
+                        id="adminUser"
+                        name="adminUser"
                         required
-                        value={username}
+                        value={adminUser}
                         onChange={(e) => setUsername(e.target.value)}
                         placeholder="Enter your username"
                     />
-                    <label htmlFor="password">Password</label>
+                    <label htmlFor="adminPass">Password</label>
                     <input
                         type="password"
-                        id="password"
-                        name="password"
+                        id="adminPass"
+                        name="adminPass"
                         required
-                        value={password}
+                        value={adminPass}
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="Enter your password"
                     />
