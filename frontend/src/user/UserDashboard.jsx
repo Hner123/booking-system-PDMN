@@ -7,6 +7,7 @@ import { FaChevronDown, FaChevronRight } from "react-icons/fa";
 
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
+import WithAuth from "../auth/WithAuth";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -16,6 +17,7 @@ const Dashboard = () => {
   const [showOtherMeetings, setShowOtherMeetings] = useState(true);
   const [firstLogin, setFirstLogin] = useState(false); // Track first login state
   const formRef = useRef();
+  const userId = localStorage.getItem("userId");
 
   const [formData, setFormData] = useState({
     passWord: "",
@@ -24,6 +26,7 @@ const Dashboard = () => {
   });
 
   const [userData, setUsers] = useState(null);
+  const [bookData, setBookData] = useState([]);
   const [roomData, setRoomName] = useState("");
   const [loading, setLoading] = useState(true);
 
@@ -38,7 +41,6 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const userId = localStorage.getItem("userId");
         const token = localStorage.getItem("authToken");
         const headers = {
           Authorization: `Bearer ${token}`,
@@ -65,72 +67,65 @@ const Dashboard = () => {
     fetchUsers();
   }, []);
 
-  const [reservations, setReservations] = useState([
-    {
-      title: "Team Sync",
-      status: "Pending",
-      date: "2024-07-03",
-      time: "10:00 AM",
-      room: "Palawan",
-      creator: userName,
-      members: ["John Doe", "Jane Smith", "Alex Johnson"],
-      details: "This is a team sync meeting",
-    },
-    {
-      title: "Client Meeting",
-      status: "Approved",
-      date: "2024-07-04",
-      time: "02:00 PM",
-      room: "Boracay",
-      creator: userName,
-      members: ["Client A", "Client B"],
-      details: "This is a client meeting",
-    },
-    {
-      title: "New Project",
-      status: "Approved",
-      date: "2024-07-03",
-      time: "11:00 AM",
-      room: "Palawan",
-      creator: userName,
-      members: ["John Doe", "Jane Smith", "Alex Johnson"],
-      details: "This is a team sync meeting",
-    },
-    {
-      title: "Business Meeting",
-      status: "Approved",
-      date: "2024-07-04",
-      time: "05:00 PM",
-      room: "Boracay",
-      creator: userName,
-      members: ["Client A", "Client B"],
-      details: "This is a client meeting",
-    },
-  ]);
+  useEffect(() => {
+    const fetchBookData = async () => {
+      try {
+        const token = localStorage.getItem("authToken");
+        const headers = {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        };
 
-  const otherMeetings = [
-    {
-      title: "Project Kickoff",
-      status: "Approved",
-      date: "2024-07-05",
-      time: "09:00 AM",
-      room: "Palawan",
-      creator: "John Smith",
-      members: ["John Smith", "Jane Doe"],
-      details: "Starting a new project",
-    },
-    {
-      title: "Training Session",
-      status: "Pending",
-      date: "2024-07-06",
-      time: "11:00 AM",
-      room: "Boracay",
-      creator: "Alex Johnson",
-      members: ["Alex Johnson", "Emily Brown"],
-      details: "Training on new software tools",
-    },
-  ];
+        const response = await axios.get(`http://localhost:8800/api/book/`, {
+          headers,
+        });
+        if (response.status === 200) {
+          setBookData(response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching book data:", error);
+      }
+    };
 
+    fetchBookData();
+  }, []);
+
+  useEffect(() => {
+    const initialReservations = bookData
+      .filter((book) => book.user._id === userId)
+      .map((book) => ({
+        title: book.title,
+        status: "Pending",
+        date: new Date(book.scheduleDate).toLocaleDateString(),
+        time: new Date(book.startTime).toLocaleTimeString(),
+        room: book.roomName,
+        creator: book.user.userName,
+        members: book.attendees,
+        userName: book.user.userName,
+        department: book.user.department,
+        pax: book.caps.pax,
+      }));
+    setReservations(initialReservations);
+
+    const initialOtherMeetings = bookData
+      .filter((book) => book.user._id !== userId)
+      .map((book) => ({
+        title: book.title,
+        status: "Approved",
+        date: new Date(book.scheduleDate).toLocaleDateString(),
+        time: new Date(book.startTime).toLocaleTimeString(),
+        room: book.roomName,
+        creator: book.user.userName,
+        members: book.attendees,
+        userName: book.user.userName,
+        department: book.user.department,
+        pax: book.caps.pax,
+      }));
+    setOtherMeetings(initialOtherMeetings);
+  }, [bookData]);
+
+  const [reservations, setReservations] = useState([]);
+  const [otherMeetings, setOtherMeetings] = useState([]);
   const rooms = ["Palawan", "Boracay", "Palawan and Boracay"];
 
   const handleMeetingClick = (meeting) => {
@@ -261,7 +256,6 @@ const Dashboard = () => {
     };
 
     try {
-      const userId = localStorage.getItem("userId");
       const token = localStorage.getItem("authToken");
 
       const headers = {
@@ -288,11 +282,11 @@ const Dashboard = () => {
     setRoomName(room);
 
     const reserveRoom = {
-      roomName: room
+      roomName: room,
+      user: userData._id,
     };
 
     try {
-      const userId = localStorage.getItem("userId");
       const token = localStorage.getItem("authToken");
 
       const headers = {
@@ -308,14 +302,17 @@ const Dashboard = () => {
 
       if (updateResponse.status === 201) {
         toast.success(`Reserved Room: ${room}`);
-        console.log(updateResponse.data.result._id)
-        localStorage.setItem("reserveToken", updateResponse.data.result._id)
+        localStorage.setItem("reserveToken", updateResponse.data.result._id);
         navigate("/reserve");
       }
     } catch (error) {
       console.error("Error during patch:", error);
     }
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="dashboard">
@@ -395,21 +392,24 @@ const Dashboard = () => {
 
         <h2>Book a Meeting Room</h2>
         <div className="card-container">
-      {rooms.map((place, index) => (
-        <div
-          key={`room-${index}`}
-          className="card"
-          style={{ backgroundImage: `url(${roomBg})` }}
-        >
-          <div className="overlay">
-            <h3>{place}</h3>
-            <button className="reserve-btn" onClick={() => handleReserveClick(place)}>
-              Reserve
-            </button>
-          </div>
+          {rooms.map((place, index) => (
+            <div
+              key={`room-${index}`}
+              className="card"
+              style={{ backgroundImage: `url(${roomBg})` }}
+            >
+              <div className="overlay">
+                <h3>{place}</h3>
+                <button
+                  className="reserve-btn"
+                  onClick={() => handleReserveClick(place)}
+                >
+                  Reserve
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
-      ))}
-    </div>
 
         <div className="toggle-header" onClick={toggleMyReservations}>
           <h2>
@@ -425,9 +425,9 @@ const Dashboard = () => {
             >
               <thead>
                 {myReservationsTable.headerGroups.map((headerGroup) => (
-                  <tr {...headerGroup.getHeaderGroupProps()}>
+                  <tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
                     {headerGroup.headers.map((column) => (
-                      <th {...column.getHeaderProps()}>
+                      <th key={column.id} {...column.getHeaderProps()}>
                         {column.render("Header")}
                       </th>
                     ))}
@@ -440,7 +440,7 @@ const Dashboard = () => {
                   return (
                     <tr {...row.getRowProps()}>
                       {row.cells.map((cell) => (
-                        <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                        <td key={cell.getCellProps().key} {...cell.getCellProps()}>{cell.render("Cell")}</td>
                       ))}
                     </tr>
                   );
@@ -464,9 +464,9 @@ const Dashboard = () => {
             >
               <thead>
                 {otherMeetingsTable.headerGroups.map((headerGroup) => (
-                  <tr {...headerGroup.getHeaderGroupProps()}>
+                  <tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
                     {headerGroup.headers.map((column) => (
-                      <th {...column.getHeaderProps()}>
+                      <th key={column.id} {...column.getHeaderProps()}>
                         {column.render("Header")}
                       </th>
                     ))}
@@ -479,7 +479,7 @@ const Dashboard = () => {
                   return (
                     <tr {...row.getRowProps()}>
                       {row.cells.map((cell) => (
-                        <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                        <td key={cell.getCellProps().key} {...cell.getCellProps()}>{cell.render("Cell")}</td>
                       ))}
                     </tr>
                   );
@@ -501,13 +501,13 @@ const Dashboard = () => {
               <div className="modal-columns">
                 <div className="left-content">
                   <p>
-                    <strong>Username:</strong> {userName}
+                    <strong>Username:</strong> {selectedMeeting.userName}
                   </p>
                   <p>
-                    <strong>Department:</strong> {department}
+                    <strong>Department:</strong> {selectedMeeting.department}
                   </p>
                   <p>
-                    <strong>Number of PAX:</strong>
+                    <strong>Number of PAX:</strong> {selectedMeeting.pax}
                   </p>
                   <p>
                     <strong>Purpose of the Meeting:</strong>{" "}
@@ -540,4 +540,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default WithAuth(Dashboard);
