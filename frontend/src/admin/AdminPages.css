@@ -1,38 +1,6 @@
-/* .content{
-    padding: 1rem;
-}
+
 .sidebar{
-    color: black;
-    padding: 20px 10px;
-}
-.sidebar-logo{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 20px 0px;
-}
-
-.sidebar-logo img{
-    width: 70%;
-}
-
-.menu-bar{
-    height: 88vh;
-    margin-top: 2rem;
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-    position: relative;    
-} */
-
-ul{
-    list-style-type: none;
-}
-a{
-    text-decoration: none;
-}
-.sidebar{
-    background-color: gray;
+    background-color: white;
     position: absolute;
     top: 0;
     left: 0;
@@ -40,8 +8,52 @@ a{
     width: 15rem;
     height: 100vh;
     justify-content: center;
-    z-index: 1000;
+    z-index: 5;
+}
 
+ul{
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-direction: column;
+    list-style-type: none;
+    padding: 0;
+    margin:20px;
+    font-size: 18px;
+}
+.line, .line2{
+    content: '';
+    position: absolute;
+    right: 10px;
+    z-index: 0;
+    width: 5.5rem;
+    background-color: gray;
+    height: 1px;
+}
+.line{
+    top:247px;
+}
+.line2{
+    top:390px;
+}
+li{
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    flex-direction: column;
+    margin: 0.75rem 0;
+    width: 100%;
+    border-radius: 1rem;
+}
+a{
+    text-decoration: none;
+    color: black;
+    font-size:15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin:  0 0 0 0.5rem;
+    gap:15px;
 }
 
 .logodbs{
@@ -54,6 +66,7 @@ a{
         height: 40px;
         margin-right: 10px;
 }
+
 .profileDetail{
     margin: 10px;
     padding: 10px;
@@ -81,6 +94,16 @@ a{
     border-radius: 2rem;
     z-index: 1;
 }
+/* .Contain::after{
+    content: '';
+    position: absolute;
+    right: 35px;
+    top: (35px/2);
+    z-index: 0;
+    width: 6rem;
+    background-color: gray;
+    height: 1px;
+} */
 .ContTrigger{
     content: "";
     width: 35px;
@@ -122,6 +145,45 @@ a{
     border-radius: 2rem;
     top:-0.4rem;
     transform: translateY(0.4rem) rotate(-45deg);
+}
+
+.menuContainer{
+    margin:3rem 0 0 0;
+}
+
+.sidebar.active{
+    width: 5rem;
+    p.hed{
+        opacity: 0;
+    }
+}
+.sidebar.active img{
+    display: none;
+}
+
+.Contain.active{
+    .ContMenu{
+        background-color: #F9F6EE;
+    }
+    .ContMenu::before{
+        transform:translateY(0rem) rotate(0deg);
+    }
+    .ContMenu::after{
+        transform: translateY(0rem) rotate(0deg);
+    }
+}
+.profileDetail.active{
+    .profileSide{
+        display: none;
+    }
+}
+.menuContainer.active{
+    a{
+        display: none;
+    }
+}
+p.hed{
+    margin:0;
 }
 /*EMPLOYEE LIST*/
 
