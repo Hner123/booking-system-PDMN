@@ -62,6 +62,7 @@ function App() {
         } />
         <Route path="/user/edit" element={
           <>
+            <Header/>
             <Edit />
           </>
         } />

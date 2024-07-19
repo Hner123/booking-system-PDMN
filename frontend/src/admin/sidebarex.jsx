@@ -54,7 +54,7 @@ const Sidebar=()=>{
                 </ul>
             </div>
             <div className="last">
-            <a href="#">
+            <a href="/admin">
             <FaIcons.FaSignOutAlt/>
             <p style={{margin:'0'}}>Log-Out</p></a>
             </div>

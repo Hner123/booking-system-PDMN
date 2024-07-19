@@ -11,19 +11,13 @@ const Settings = () => {
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
     const [showModal, setShowModal] = useState(false); // State to manage modal visibility
+    const [isValidEmail, setIsValidEmail] = useState(false); // State to track valid email input
+    const fullName = 'Juan Dela Cruz';
     const userName = 'Juan D.C.';
+    const eMail = 'juandelacruz69@gmail.com';
     const department = 'Starlight'; // Assuming this is the current department
-    const fileInputRef = useRef(null);
     const departments = ['Department A', 'Department B', 'Department C', 'Department D'];
     const navigate = useNavigate(); // Corrected: useNavigate is a function, so it should be called with ()
-
-    const handleFileChange = (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            // Handle the selected file here (e.g., upload to server or display preview)
-            console.log('Selected file:', file);
-        }
-    };
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -49,49 +43,56 @@ const Settings = () => {
         setShowModal(false); // Close modal without any action
     };
 
+    const validateEmail = (email) => {
+        // Simple email validation logic (you can use a more robust library or regex)
+        const re = /\S+@\S+\.\S+/;
+        return re.test(email);
+    };
+
+    const handleEmailChange = (e) => {
+        const inputValue = e.target.value;
+        setEmail(inputValue);
+        setIsValidEmail(validateEmail(inputValue));
+    };
+
     return (
         <div>
-            <header className="dashboard-header">
-                <div className="logodb">
-                    <img src={logo} alt="Logo" />
-                </div>
-            </header>
             <div>
                 <h1 style={{ margin: '1% 3%' }}>Edit Profile Account</h1>
             </div>
             <div className='area'>
                 <div className='upload'>
-                    <div className='profileContain'>
-                        <img src={profile} alt="Profile" />
-                    </div>
-                    <div style={{ marginInline: '3%' }}>
-                        <h2>{userName}</h2>
-                        <p>{department}</p>
+                    <div>
+                        <h2>{fullName}</h2>
+                        <h3>({userName})</h3>
                     </div>
                     <div>
-                        <input
-                            type="file"
-                            ref={fileInputRef}
-                            style={{ display: 'none' }} 
-                            accept=".jpg, .png"        
-                            onChange={handleFileChange} 
-                        />
-                        <button className="edit" onClick={() => fileInputRef.current.click()}>Upload</button>
+                        <h4>Department: {department}</h4>
+                        <h4>Email: {eMail}</h4>
                     </div>
                 </div>
                 <div className='changeFields'>
                     <form onSubmit={handleSubmit}>
-                        <div>
-                            <label htmlFor="email">Change E-mail Address:</label>
+                        <div className='formGroup1'>
+                            <label htmlFor="email">Change E-mail Address: 
+                            {isValidEmail && (
+                                <button
+                                    type='button'
+                                    className='verifyemail'
+                                >
+                                    Verify
+                                </button>
+                            )}</label>
                             <input
                                 type="email"
                                 id="email"
                                 value={email}
-                                onChange={(e) => setEmail(e.target.value)}
+                                onChange={handleEmailChange}
                                 placeholder="Enter your valid e-mail address"
                             />
+
                         </div>
-                        <div>
+                        <div className='formGroup1'>
                             <label htmlFor="department">Change Department / Company:</label>
                             <select
                                 id="department"
@@ -104,37 +105,43 @@ const Settings = () => {
                                 ))}
                             </select>
                         </div>
-                        <div>
-                            <label htmlFor="password">Change Password:</label>
-                            <span className="password-toggle-icon" onClick={togglePasswordVisibility}>
-                                {showPassword ? <FaEyeSlash /> : <FaEye />}
-                            </span>
-                            <div className="password-input">
+                        <div className='formGroup1'>
+                            <label htmlFor='password'>Password:</label>
+                            <div className='passwordInputContainer'>
                                 <input
                                     type={showPassword ? 'text' : 'password'}
-                                    id="password"
+                                    id='password'
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    placeholder="Enter new password"
+                                    placeholder='Enter password'
+                                    required
+                                    className='passwordInput' // Apply a custom class for styling
                                 />
+                                <button
+                                    type='button'
+                                    onClick={togglePasswordVisibility}
+                                    className='togglePasswordBtn' // Apply a custom class for styling
+                                >
+                                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                                </button>
                             </div>
                         </div>
                         <div className='buttonGroup'>
-                            <button className="edit" onClick={handleCancel}>Cancel</button>
-                            <button className="edit"  type="submit">Submit Changes</button>
+                            <button type='cancel' onClick={handleCancel}>Cancel</button>
+                            <button type="submit">Submit Changes</button>
                         </div>
                     </form>
                 </div>
             </div>
-            
+
             {/* Modal */}
             {showModal && (
                 <div className="profilemodal">
                     <div className="profilemodal-content">
                         <p>Are you sure you want to cancel editing and head back to dashboard?</p>
                         <div className="profilemodal-buttons">
-                            <button  onClick={closeModal}>Close</button>
-                            <button  onClick={handleConfirmCancel}>Confirm</button>
+                            <button onClick={closeModal}>Close</button>
+                            <button onClick={handleConfirmCancel}>Confirm</button>
                         </div>
                     </div>
                 </div>
