@@ -250,6 +250,7 @@ const ReservationFormsDetails = () => {
                     checked={formData.caps.pax === "1-2"}
                     onChange={handlePaxChange}
                     style={{ width: 'auto' }}
+                    required
                   />
                   <label htmlFor="pax-1-2">1-2 attendees</label>
                 </div>
@@ -262,6 +263,7 @@ const ReservationFormsDetails = () => {
                     checked={formData.caps.pax === "3-More"}
                     onChange={handlePaxChange}
                     style={{ width: 'auto' }}
+                    required
                   />
                   <label htmlFor="pax-3-more">3 or more attendees</label>
                 </div>
@@ -278,6 +280,7 @@ const ReservationFormsDetails = () => {
                   value={formData.caps.reason}
                   onChange={handleChange}
                   placeholder="Enter reason"
+                  required={pax === '1-2'}
                 />
               </div>
             )}
@@ -317,6 +320,7 @@ const ReservationFormsDetails = () => {
               value={formData.title}
               onChange={handleChange}
               placeholder="Enter meeting title"
+              required
             />
 
             <button type="submit" style={{ alignItems: 'center' }}>Book</button>
@@ -342,9 +346,9 @@ const ReservationFormsDetails = () => {
                 <p>
                   <strong>Meeting End: </strong> {new Date(bookData.endTime).toLocaleTimeString()}
                 </p>
-                  <p>
-                    <strong>Meeting Title: </strong> {formData.title}
-                  </p>
+                <p>
+                  <strong>Meeting Title: </strong> {formData.title}
+                </p>
               </div>
             </>}
           </div>

@@ -1,57 +1,105 @@
 .user-list {
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    max-width: 100%;
-    margin: 0 auto;
-  }
-  
-  .user-list h2 {
-    font-size: 24px;
-    margin-bottom: 20px;
-    color: #333;
-    text-align: center;
-  }
-  
-  .department-section {
-    margin-bottom: 30px;
-  }
-  
-  .department-section h3 {
-    font-size: 20px;
-    margin-bottom: 15px;
-    color: #333;
-    border-bottom: 2px solid #ccc;
-    padding-bottom: 5px;
-  }
-  
-  .user-table {
-    width: 100%;
-    border-collapse: collapse;
-    background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    border-radius: 5px;
-    overflow: hidden;
-  }
-  
-  .user-table th, .user-table td {
+  padding: 20px;
+  background-color: #f4f4f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.user-list h2 {
+  font-size: 28px;
+  margin-bottom: 20px;
+  color: #333;
+  text-align: center;
+  font-weight: 700;
+}
+
+.department-section {
+  margin-bottom: 40px;
+}
+
+.department-section h3 {
+  font-size: 25px;
+  margin-bottom: 15px;
+  border-bottom: 2px solid #ddd;
+  padding-bottom: 10px;
+  font-weight: bolder;
+  text-shadow: 2px 2px 3px #00000059;
+}
+
+.user-table-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  overflow-x: auto;
+}
+
+.user-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  overflow: hidden;
+  table-layout: fixed; /* Ensure columns have consistent width */
+}
+
+.user-table th,
+.user-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+  word-wrap: break-word; /* Ensure long text breaks into multiple lines */
+}
+
+.user-table th {
+  background-color: #f7f7f7;
+  font-weight: bold;
+  color: #333;
+}
+
+.user-table td {
+  color: #555;
+}
+
+.user-table tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+.user-table tbody tr td:first-child {
+  font-weight: bold;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+}
+
+.loading-gif {
+  height: 50px;
+  width: auto;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@media (max-width: 768px) {
+  .user-list {
     padding: 15px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
   }
-  
-  .user-table th {
-    background-color: #f2f2f2;
-    font-weight: bold;
-    color: #333;
+
+  .department-section {
+    margin-bottom: 20px;
   }
-  
+
+  .user-table th,
   .user-table td {
-    color: #555;
+    padding: 10px;
   }
-  
-  .user-table tbody tr:hover {
-    background-color: #f5f5f5;
-  }
-  
+}

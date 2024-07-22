@@ -5,7 +5,7 @@ import DatePicker from 'react-datepicker';
 import TimePicker from 'rc-time-picker';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'rc-time-picker/assets/index.css';
-import { Calendar, momentLocalizer } from 'react-big-calendar';
+import { Calendar, momentLocalizer, Views } from 'react-big-calendar'; // Import Views
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -281,7 +281,7 @@ const RoomReservation = () => {
                 {feedbackMessage}
               </div>
             )}
-            <p>Please enter the correct information and check the details before confirming your booking.</p>
+            <p>The maximum meeting duration is 1 hour. If it exceeds this limit, please state your reason.</p>
           </div>
 
           <div className="legend-controls">
@@ -328,6 +328,7 @@ const RoomReservation = () => {
               startAccessor="start"
               endAccessor="end"
               style={{ height: '100%' }}
+              view={Views.WEEK} // Set the default view to week
               eventPropGetter={(event) => ({
                 style: {
                   backgroundColor: departmentColors[event.department] || '#45813',
