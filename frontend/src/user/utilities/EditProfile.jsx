@@ -1,7 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { FaUserCircle, FaBell, FaEye, FaEyeSlash } from 'react-icons/fa'; // Import eye icons
-import logo from '../../assets/logos/GDSLogo.png';
-import profile from '../../assets/Default Avatar.png';
+import {FaEye, FaEyeSlash } from 'react-icons/fa'; // Import eye icons
 import './EditProfile.css';
 import { useNavigate } from 'react-router-dom';
 
@@ -105,7 +103,7 @@ const Settings = () => {
                                 ))}
                             </select>
                         </div>
-                        <div className='formGroup1'>
+                        <div className='formGroup1' style={{position:'relative'}}>
                             <label htmlFor='password'>Password:</label>
                             <div className='passwordInputContainer'>
                                 <input
@@ -120,7 +118,7 @@ const Settings = () => {
                                 <button
                                     type='button'
                                     onClick={togglePasswordVisibility}
-                                    className='togglePasswordBtn' // Apply a custom class for styling
+                                    className='togglePasswordBtn_user' // Apply a custom class for styling
                                 >
                                     {showPassword ? <FaEyeSlash /> : <FaEye />}
                                 </button>

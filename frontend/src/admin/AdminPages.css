@@ -702,6 +702,94 @@ button[type='appr']:hover{
     color: white;
 }
 
+/* edit profile */
+.upload_edit{
+    width: auto;
+    height: auto;
+    margin-inline: 2%;
+    padding: 2%;
+    color: #58595A;
+    background-color: white;
+    border-radius: 6px;
+    box-shadow: 0px 4px 4px 0px #7C8B9D;
+    text-align: center;
+    color: #9c0b0b;
+    width: auto;
+}
+.togglePasswordBtn_admin {
+    position: absolute;
+    right: 5px;
+    top: 71%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    padding: 0;
+    font-size: 1rem;
+    color: #333; /* Adjust color as needed */
+}
+.upload_edit{
+    display: flex;
+    flex-direction: column;
+
+    h2{
+         font-size: 64px;
+        margin: auto;
+    }
+    h3{
+        margin: auto;
+        font-size: 20px;
+    }
+    h4{
+        margin-inline:40px;
+        margin-bottom: 10px;
+        margin-top: 40px;
+    }
+}
+
+.upload_edit div:last-child{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.changeFields_admin{
+    display: flex;
+    flex-direction: column;
+    width: auto;
+    height: auto;
+    margin: 20px;
+    padding: 50px;
+    color: #58595A;
+    background-color: white;
+    border-radius: 6px;
+    box-shadow: 0px 4px 4px 0px #7C8B9D;
+}
+
+.formGroup_admin{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 30px;
+}
+
+ input, option, select{
+    flex: 2;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    width: 650px;
+}
+
+.changeFields_admin form{
+    margin: 2% 6%;
+}
+
+.changeFields_admin form>div{
+    margin: 20px;
+}
   @media (max-width:500px){
     .nav-icons{
         display: none;
