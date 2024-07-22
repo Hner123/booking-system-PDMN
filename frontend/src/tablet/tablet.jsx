@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import './tablet.css'
 
-const MeetingRoomSchedule = () => {
+const MeetingRoomSchedule = ({ reserveId }) => {
   const [meetings, setMeetings] = useState([]);
   const [currentMeeting, setCurrentMeeting] = useState(null);
   const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
-    // Fetch meetings data from your API or data source
     fetchMeetings();
     const interval = setInterval(() => {
       fetchMeetings();
@@ -25,12 +24,15 @@ const MeetingRoomSchedule = () => {
 
   const fetchMeetings = async () => {
     try {
-      const response = await fetch('/api/meetings'); // Replace with your API endpoint
+      const response = await fetch(`http://localhost:8800/api/book/${reserveId}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch meetings');
+      }
       const data = await response.json();
       setMeetings(data);
       updateCurrentMeeting(data);
     } catch (error) {
-      console.error('Error fetching meetings:', error);
+      console.error('Error fetching meetings:', error.message);
     }
   };
 
@@ -73,45 +75,23 @@ const MeetingRoomSchedule = () => {
 
   return (
     <div className="meeting-room-schedule">
-        <div className='first-column'>
+      <div className="first-column">
         <div className="room-info">
           <h1>Palawan</h1>
         </div>
-        </div>
-        <div className='second-column'>
+      </div>
+      <div className="second-column">
         <div className="clock">
           <h1>{getCurrentTime()}</h1>
         </div>
         <div className="date-info">
-        <p>Friday, 28 June 2024</p>
-      </div>
-      <div className="upcoming-meetings">
-        <h2>Upcoming Meetings</h2>
-        {renderUpcomingMeetings()}
-      </div> 
+          <p>Friday, 28 June 2024</p>
         </div>
-      
-      
-      {/* <div className="header">
-        <div className="room-info">
-          <h1>Palawan</h1>
-          <p>Lorem Ipsum</p>
-        </div>
-        <div className="clock">
-          <h1>{getCurrentTime()}</h1>
+        <div className="upcoming-meetings">
+          <h2>Upcoming Meetings</h2>
+          {renderUpcomingMeetings()}
         </div>
       </div>
-      <div className="date-info">
-        <p>Friday, 28 June 2024</p>
-      </div>
-      <div className="current-meeting-info">
-        {renderCurrentMeeting()}
-      </div>
-      <div className="upcoming-meetings">
-        <h2>Upcoming Meetings</h2>
-        {renderUpcomingMeetings()}
-      </div> */}
-
     </div>
   );
 };

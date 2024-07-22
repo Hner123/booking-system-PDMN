@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import roomBg from "../assets/roombg.jpg";
+import loadingGif from "../assets/7.gif"; // Import loading gif
 import "./User.css";
 import { useTable } from "react-table";
 import { FaChevronDown, FaChevronRight } from "react-icons/fa";
-
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import WithAuth from "../auth/WithAuth";
@@ -16,6 +16,9 @@ const Dashboard = () => {
   const [showMyReservations, setShowMyReservations] = useState(true);
   const [showOtherMeetings, setShowOtherMeetings] = useState(true);
   const [firstLogin, setFirstLogin] = useState(false); // Track first login state
+  const [showConfirmModal, setShowConfirmModal] = useState(false); // Confirmation modal state
+  const [meetingToDelete, setMeetingToDelete] = useState(null); // Meeting to delete
+  const [showDiscardModal, setShowDiscardModal] = useState(false); // Discard modal state
   const formRef = useRef();
   const userId = localStorage.getItem("userId");
 
@@ -137,7 +140,6 @@ const Dashboard = () => {
       }));
     setOtherMeetings(initialOtherMeetings);
   }, [bookData]);
-  
 
   const [reservations, setReservations] = useState([]);
   const [otherMeetings, setOtherMeetings] = useState([]);
@@ -152,11 +154,44 @@ const Dashboard = () => {
     setShowModal(false);
   };
 
-  const handleDeleteReservation = (index) => {
-    setReservations((prevReservations) =>
-      prevReservations.filter((_, i) => i !== index)
-    );
+  const handleShowConfirmModal = (index) => {
+    setMeetingToDelete(index);
+    setShowConfirmModal(true);
   };
+
+
+  const handleCancelDelete = () => {
+    setShowConfirmModal(false);
+  };
+
+  const handleConfirmDiscard = async (e) => {
+    setShowDiscardModal(false); // Hide the discard modal
+  
+    try {
+      const reserveId = localStorage.getItem("reserveToken");
+      const token = localStorage.getItem("authToken");
+  
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      };
+  
+      const updateResponse = await axios.delete(
+        `http://localhost:8800/api/book/delete/${reserveId}`,
+        { headers }
+      );
+  
+      console.log(updateResponse.status);
+  
+      if (updateResponse.status === 200) {
+        localStorage.removeItem("reserveToken");
+        navigate('/dashboard'); // Navigate back to the dashboard
+      }
+    } catch (error) {
+      console.error("Error during delete:", error);
+    }
+  };
+  
 
   const toggleMyReservations = () => {
     setShowMyReservations(!showMyReservations);
@@ -193,7 +228,7 @@ const Dashboard = () => {
             </button>
             <button
               className="delete-btn"
-              onClick={() => handleDeleteReservation(row.index)}
+              onClick={() => handleShowConfirmModal(row.index)}
             >
               <i className="fas fa-trash-alt"></i> Cancel Meeting
             </button>
@@ -326,7 +361,11 @@ const Dashboard = () => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="loading-container">
+        <img src={loadingGif} alt="Loading..." className="loading-gif" />
+      </div>
+    );
   }
 
   return (
@@ -548,6 +587,22 @@ const Dashboard = () => {
             </div>
           </div>
         )}
+
+        {showConfirmModal && (
+          <div className="discard-modal">
+            <div className="discard-content">
+              <h2>Confirm Cancellation</h2>
+              <p>Are you sure you want to cancel this meeting?</p>
+              <button onClick={handleConfirmDiscard} className="reserve-btn">
+                Yes, Cancel
+              </button>
+              <button onClick={handleCancelDelete} className="cancel-btn">
+                No, Go Back
+              </button>
+            </div>
+          </div>
+        )}
+        
         {!firstLogin && <></>}
       </main>
     </div>

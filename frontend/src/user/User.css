@@ -85,6 +85,7 @@
     margin: auto;
     padding: 5%;
     color: #fff;
+    text-align: center;
   }
   
   .right-column .overlay {
@@ -99,8 +100,9 @@
   
   .mascot {
     position: absolute;
-    right: 0;
+    right: 5%;
     bottom: 0;
+    height: 80%;
   }
   
   /* For mobile devices (up to 7  ,68px wide) */
@@ -570,4 +572,16 @@
   .reservation-table1 td {
     font-size: 14px;
   }
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Adjust as needed for your layout */
+}
+
+.loading-gif {
+  height: 30%; /* Adjust the height to make it smaller */
+  width: auto; /* Maintain aspect ratio */
 }

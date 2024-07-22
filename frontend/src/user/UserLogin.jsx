@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './User.css';
 import logo from '../assets/logos/GDSLogo.png';
-import mascot from '../assets/mascot.png';
+import mascot from '../assets/33.gif';
 import WithoutAuth from '../auth/WithoutAuth';
 
 const UserLogin = () => {

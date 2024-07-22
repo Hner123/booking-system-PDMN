@@ -4,13 +4,13 @@ import * as FaIcons from 'react-icons/fa';
 import logo from '../../assets/logos/GDSLogo.png';
 import profile from '../../assets/Default Avatar.png';
 import './Header.css';
-
-import axios from 'axios'
+import axios from 'axios';
 
 const Header = () => {
   const [isProfileOpen, setProfileOpen] = useState(false);
   const [isNotifOpen, setNotifOpen] = useState(false);
   const [isMenuOpen, setMenuOpen] = useState(false);
+  const [notifications, setNotifications] = useState([]);
   const navigate = useNavigate();
   const profileModalRef = useRef(null);
   const notifModalRef = useRef(null);
@@ -43,6 +43,31 @@ const Header = () => {
     };
 
     fetchUsers();
+  }, []);
+
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        const userId = localStorage.getItem("userId");
+        const token = localStorage.getItem("authToken");
+        const headers = {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        };
+
+        const response = await axios.get(
+          `http://localhost:8800/api/notifications/${userId}`,
+          { headers }
+        );
+        if (response.status === 200) {
+          setNotifications(response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching notifications:", error);
+      }
+    };
+
+    fetchNotifications();
   }, []);
 
   useEffect(() => {
@@ -95,6 +120,32 @@ const Header = () => {
     setMenuOpen(!isMenuOpen);
   };
 
+  const markAllAsRead = async () => {
+    try {
+      const userId = localStorage.getItem("userId");
+      const token = localStorage.getItem("authToken");
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      };
+
+      const response = await axios.post(
+        `http://localhost:8800/api/notifications/${userId}/mark-all-read`,
+        {},
+        { headers }
+      );
+
+      if (response.status === 200) {
+        setNotifications(notifications.map(notification => ({
+          ...notification,
+          read: true
+        })));
+      }
+    } catch (error) {
+      console.error("Error marking notifications as read:", error);
+    }
+  };
+
   return (
     <header className="dashboard-header">
       <div className="logodb" onClick={handleLogoClick} style={{ cursor: 'pointer' }}>
@@ -109,7 +160,7 @@ const Header = () => {
         </div>
         <div className="notif-icon" onClick={handleNotifToggle}>
           <FaIcons.FaBell />
-          <span className="notif-count">5</span>
+          <span className="notif-count">{notifications.filter(n => !n.read).length}</span>
           <span className="tooltip-text">Notifications</span>
         </div>
         <div className="profile-icon" onClick={handleModalToggle}>
@@ -135,7 +186,7 @@ const Header = () => {
             </div>
             <div className="profile-icon" onClick={navigateEdit}>
               <FaIcons.FaUserCircle />
-              <span className="user-name">{userName}</span>
+              <span className="user-name">{userData ? userData.userName : 'Profile'}</span>
             </div>
           </div>
         )}
@@ -173,8 +224,16 @@ const Header = () => {
               <div>
                 <h1 style={{ margin: "0" }}>Your Notifications</h1>
                 <hr style={{ border: "0.5px solid #7C8B9D", margin: "5px" }}></hr>
+                <ul className="notifications-list">
+                  {notifications.map((notification, index) => (
+                    <li key={index} className={`notification-item ${notification.read ? 'read' : 'unread'}`}>
+                      <p>{notification.message}</p>
+                      <span>{new Date(notification.date).toLocaleString()}</span>
+                    </li>
+                  ))}
+                </ul>
                 <div className='headermodal-buttons'>
-                  <button onClick={() => console.log("Mark all as read")}>
+                  <button onClick={markAllAsRead}>
                     Mark All as Read
                   </button>
                 </div>
