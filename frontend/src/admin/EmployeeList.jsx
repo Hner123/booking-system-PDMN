@@ -1,7 +1,7 @@
 import {React, useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import './AdminPages.css'
-
+import { IoMdArrowDropdown } from "react-icons/io";
 
 const EmployeeList =()=>{
     const navigate = useNavigate();
@@ -28,13 +28,15 @@ const EmployeeList =()=>{
         // You can modify this function to actually sort your employee list
     }
     return(
-        <div className='listCont'>
+        <div className='listCont' style={{margin:'100px 0px'}}>
             <h1>Employee List</h1>
+
             <div className='listButtonG'>
                 <button className='mainBtn' onClick={goAdd}> Add New Employee</button>
 
                 <div className="dropdown">
-                    <button onClick={toggleDropdown} className="dropbtn">Sort Company</button>
+                    <button onClick={toggleDropdown} className="dropbtn" style={{textAlign: 'center'}}>
+                        Sort Company<IoMdArrowDropdown style={{fontSize:'20px', margin:'0'}}/></button>
                     {showDropdown && dropdownMenu}
                 </div>
             </div>
@@ -45,7 +47,6 @@ const EmployeeList =()=>{
                             <th>Name</th>
                             <th>Username</th>
                             <th>Department</th>
-                            <th>Role</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -54,7 +55,6 @@ const EmployeeList =()=>{
                             <td>Juan Dela Cruz</td>
                             <td>Juan D.C.</td>
                             <td>Starlight</td>
-                            <td>Accountant</td>
                             <td>
                                 <div className='listMod'>
                                     <button className='editBtn'>Edit</button>
@@ -66,7 +66,6 @@ const EmployeeList =()=>{
                             <td>Jona Kasimsiman</td>
                             <td>Jona K.</td>
                             <td>GDS Department</td>
-                            <td></td>
                             <td>
                                 <div className='listMod'>
                                     <button className='editBtn'>Edit</button>
@@ -74,18 +73,11 @@ const EmployeeList =()=>{
                                 </div>
                             </td>
                         </tr>
-                        <tr>
-                            <td> </td>
-                            <td> </td>
-                            <td> </td>
-                            <td> </td>
-                            <td> </td>
-                        </tr>
+
  
                     </tbody>
                 </table>
             </div>
-            
         </div>
     );
 }

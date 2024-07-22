@@ -1,4 +1,6 @@
-
+html body{
+    height: 0%;
+}
 .sidebar{
     background-color: white;
     position: absolute;
@@ -9,6 +11,8 @@
     height: 100vh;
     justify-content: center;
     z-index: 5;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    transition: width 0.2s cubic-bezier(0.18, 0.89, 0.32, 1.28), opacity 0.3s ease
 }
 
 ul{
@@ -31,12 +35,12 @@ ul{
     height: 1px;
 }
 .line{
-    top:247px;
+    top:280px;
 }
 .line2{
-    top:390px;
+    top:435px;
 }
-li{
+li .li{
     display: flex;
     align-items: flex-start;
     justify-content: center;
@@ -45,6 +49,7 @@ li{
     width: 100%;
     border-radius: 1rem;
 }
+
 a{
     text-decoration: none;
     color: black;
@@ -63,24 +68,26 @@ a{
 
 }
 .logodbs img{
-        height: 40px;
-        margin-right: 10px;
+    height: 40px;
+    margin-right: 10px;
+}
+
+.logodbss{
+    display: none;
+}
+.logodbss img{
+    height: 50px;
 }
 
 .profileDetail{
-    margin: 10px;
+    margin: 35px 20px;
     padding: 10px;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 
-}
-
-.profileDetail img{
-    width: auto;
-    height: 4rem;
-    margin: 10px;
 }
 
 .Contain{
@@ -88,22 +95,13 @@ a{
     background-color: #9c0b0b;
     position: absolute;
     right:-20px;
-    top: calc(9rem/1.15);
+    /* top: calc(9rem/1.15); */
+    top:20px;
     width: 35px;
     height: 35px;
     border-radius: 2rem;
     z-index: 1;
 }
-/* .Contain::after{
-    content: '';
-    position: absolute;
-    right: 35px;
-    top: (35px/2);
-    z-index: 0;
-    width: 6rem;
-    background-color: gray;
-    height: 1px;
-} */
 .ContTrigger{
     content: "";
     width: 35px;
@@ -150,15 +148,35 @@ a{
 .menuContainer{
     margin:3rem 0 0 0;
 }
+.last{
+    position:relative;
+    bottom:-300px;
+    left:0px;
+}
 
 .sidebar.active{
     width: 5rem;
     p.hed{
         opacity: 0;
     }
-}
-.sidebar.active img{
-    display: none;
+    .logodbs{
+        display: none;
+    }
+    .logodbss{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 83px 0px;
+    }
+    .last{
+        bottom: -150px;
+    }
+    .last a{
+        font-size: 25px;
+    }
+    .last p{
+        display: none;
+    }
 }
 
 .Contain.active{
@@ -173,15 +191,37 @@ a{
     }
 }
 .profileDetail.active{
-    .profileSide{
-        display: none;
-    }
+    display: none;
 }
 .menuContainer.active{
+    p{
+        font-size: 0px;
+        opacity: 0;
+    }
     a{
-        display: none;
+        margin-top:10px;
+        font-size: 30px;
+    }
+    li{
+        margin:20px 0px;
+    }
+
+    ul:first-child{
+        margin-top:100px;
+        margin-inline: 15px;
+    }
+    ul:last-child{
+        margin-inline: 15px;
+    }
+    .line{
+        top:260px;
+    }
+    .line2{
+        top:440px;
     }
 }
+
+
 p.hed{
     margin:0;
 }
@@ -250,11 +290,15 @@ p.hed{
   /* TABLE */
 
   .tableContainer {
-    width: 100%;
+    width: 75%;
+    justify-self: fle;
     overflow-x: auto;
+    margin: auto;
     
 }
   .listTable {
+    align-items: center;
+    justify-content: center;
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
@@ -278,12 +322,19 @@ p.hed{
     letter-spacing: 0.1em;
   }
   
+  .dropbtn{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
   .listTable td {
     border-bottom: 1px solid #eee;
   }
   
   .listTable tr:last-child td {
-    border-bottom: none;
+    background-color: #f8f8f8;
+    border-radius: 10px;
   }
 
   .listTable tbody{
@@ -340,7 +391,7 @@ p.hed{
     display: none;
     position: absolute;
     background-color: #f9f9f9;
-    min-width: 160px;
+    width: 100%;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
 }
@@ -357,7 +408,9 @@ p.hed{
     cursor: pointer;
 }
 
-.dropdown-content button:hover {background-color: #f1f1f1;}
+.dropdown-content button:hover {
+    background-color: #f1f1f1;
+    color: #9c0b0b;}
 
 .dropdown:hover .dropdown-content {display: block;}
 
@@ -376,25 +429,23 @@ p.hed{
     box-shadow: 0px 4px 4px 0px #7c8b9d;
 }
 
-.formGroup {
+.formGroup{
     display: flex;
     align-items: center;
     margin-bottom: 30px;
 }
 
-.formGroup label {
+.formGroup label{
     flex: 1;
     margin-right: 10px;
 }
 
-.formGroup input {
+.formGroup input{
     flex: 2;
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 16px;
-    width: 500px;
-
 }
 
 .addGroup{
@@ -404,10 +455,14 @@ p.hed{
     margin-top: 50px;
 }
 
-.listCont1, .listCont3{
+.listCont h1, .listCont1 h1, .listCont3 h1{
     font-size: 30px;
     text-align: center;
 }
+.listCont3{
+    margin: 100px;
+}
+
 
 /* Example CSS for customizing select element */
 .formControl {
@@ -437,24 +492,6 @@ p.hed{
     color: #fff;
 }
 
-.passwordInputContainer {
-    position: relative;
-}
-
-.passwordInput {
-    width: 50px; /* Adjust based on the width of the toggle button */
-    padding-right: 50px; /* Space for the icon */
-    height: 40px; /* Adjust as needed */
-    font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background-color: #fff;
-    transition: border-color 0.2s ease-in-out;
-}
-
-.passwordInput:focus {
-    border-color: #007bff; /* Example focus style */
-}
 
 .togglePasswordBtn {
     position: absolute;
@@ -658,19 +695,8 @@ button[type='appr']:hover{
     .profileDetail > div{
         margin:0px 0px;
     }
-    .sidebar-logo img{
-        content: url("src/assets/logos/GDSLoog2.png"); /* Use mobile logo */
-    }
-    .sidebar-collapsed{
-        background-color: #f9fbfd;
-        color: #333;
-        padding: 1rem;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border-bottom: solid 1px #d1d9e2;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        position: relative;
+    .sidebar{
+        display:none;
     }
     .listCont {
         margin: 50px 10px ;
@@ -757,7 +783,6 @@ button[type='appr']:hover{
     }
 
     .listCont h1{
-        margin:70px 0px;
         font-size: 50px;
     }
     .sidebar-collapsed {
@@ -775,6 +800,9 @@ button[type='appr']:hover{
         width: 75px;
         gap:170px;
         transition: width 0.3s ease; 
+    }
+    .formGroup input{
+        width: 650px;
     }
 
 }
