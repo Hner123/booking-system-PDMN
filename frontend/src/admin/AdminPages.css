@@ -1,6 +1,20 @@
 html body{
     height: 0%;
 }
+
+button[type="redirect"]{
+    padding: 0px;
+    background-color: white;
+    color: black;
+    border: none;
+    text-decoration: underline;
+    margin: 2ch 0px;
+
+}
+button[type="redirect"]:hover{
+    color: #9c0b0b;
+    background-color: white;
+}
 .sidebar{
     background-color: white;
     position: absolute;

@@ -43,6 +43,12 @@ const AdminLogin = () => {
         }
     };
 
+    const handleNotAdminClick = (e) => {
+        e.preventDefault();
+        // Handle redirection or other logic for non-admin users
+        navigate('/');
+    };
+
     return (
         <div className="login-page">
             <div className="login-form-column">
@@ -71,6 +77,11 @@ const AdminLogin = () => {
                         placeholder="Enter your password"
                     />
                     <button type="submit">Log In</button>
+                    {/* Use a simple anchor tag for "Not an Admin?" */}
+                    <button type="redirect">
+                       <a href="/" onClick={handleNotAdminClick}>Not an Admin?</a> 
+                    </button>
+                    
                 </form>
             </div>
             <div className="right-column">
