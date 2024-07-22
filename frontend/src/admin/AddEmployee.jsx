@@ -7,7 +7,6 @@ const AddEmployee = () => {
     const [name, setName] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [role, setRole] = useState('');
     const [department, setDepartment] = useState('');
     const [showPassword, setShowPassword] = useState(false);
 
@@ -28,7 +27,7 @@ const AddEmployee = () => {
     };
 
     return (
-        <div>
+        <div style={{margin:'150px 0px'}}>
             <div className='listCont1'>
                 <h1>Add Employee</h1>
             </div>
@@ -57,9 +56,8 @@ const AddEmployee = () => {
                                 required
                             />
                         </div>
-                        <div className='formGroup'>
+                        <div className='formGroup' style={{position:'relative'}}>
                             <label htmlFor='password'>Password:</label>
-                            <div className='passwordInputContainer'>
                                 <input
                                     type={showPassword ? 'text' : 'password'}
                                     id='password'
@@ -70,13 +68,12 @@ const AddEmployee = () => {
                                     className='passwordInput' // Apply a custom class for styling
                                 />
                                 <button
-                                    type='button'
+                                    type='view'
                                     onClick={togglePasswordVisibility}
                                     className='togglePasswordBtn' // Apply a custom class for styling
                                 >
                                     <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
                                 </button>
-                            </div>
                         </div>
                         <div className='formGroup'>
                             <label htmlFor='department'>Department:</label>
@@ -94,17 +91,6 @@ const AddEmployee = () => {
                                     </option>
                                 ))}
                             </select>
-                        </div>
-                        <div className='formGroup'>
-                            <label htmlFor='role'>Role:</label>
-                            <input
-                                type='text'
-                                id='role'
-                                value={role}
-                                onChange={(e) => setRole(e.target.value)}
-                                placeholder='Enter role'
-                                required
-                            />
                         </div>
                         <div className='addGroup'>
                             <button type='submit'  className='mainBtn'>Submit</button>

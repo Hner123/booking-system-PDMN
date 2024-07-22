@@ -34,21 +34,23 @@ const Sidebar=()=>{
             </div>
             <div className={closeMenu === false ? "menuContainer" : "menuContainer active"}>
                 <ul> <p className="hed">Profile Menu</p> <div className="line"/>
-                    <li><a href="/profile-settings">
+                    <li className="li">
+                    <a href="/admin/profile-settings">
                     <FaIcons.FaUserCircle /> 
-                    <p>Profile Settings</p></a></li>
-                    <li><a href="/notifications">
+                    <p>Profile Settings</p></a>
+                    </li>
+                    <li className="li"><a href="/notifications">
                     <FaIcons.FaBell />
                     <p>Notifications</p></a></li>
                 </ul>
                 <ul> <p className="hed">Admin Menu</p> <div className="line2"/>
-                    <li><a href="/admin/employee-list">
+                    <li className="li"><a href="/admin/employee-list">
                     <MdIcons.MdGroups /> 
                     <p>Employee List</p></a></li>
-                    <li><a href="/admin/add-employee">
+                    <li className="li"><a href="/admin/add-employee">
                     <HiUserAdd /> 
                     <p>Add Employee</p></a></li>
-                    <li><a href="/admin/room-approval">
+                    <li className="li"><a href="/admin/room-approval">
                     <FaIcons.FaCalendarCheck /> 
                     <p>For Approval</p></a></li>
                 </ul>

@@ -1,3 +1,6 @@
+html body{
+    height: 0%;
+}
 .sidebar{
     background-color: white;
     position: absolute;
@@ -32,12 +35,12 @@ ul{
     height: 1px;
 }
 .line{
-    top:247px;
+    top:280px;
 }
 .line2{
-    top:390px;
+    top:435px;
 }
-li{
+li .li{
     display: flex;
     align-items: flex-start;
     justify-content: center;
@@ -288,6 +291,7 @@ p.hed{
 
   .tableContainer {
     width: 75%;
+    justify-self: fle;
     overflow-x: auto;
     margin: auto;
     
@@ -442,8 +446,6 @@ p.hed{
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 16px;
-    width: 650px;
-
 }
 
 .addGroup{
@@ -490,24 +492,6 @@ p.hed{
     color: #fff;
 }
 
-.passwordInputContainer {
-    position: relative;
-}
-
-.passwordInput {
-    width: 50px; /* Adjust based on the width of the toggle button */
-    padding-right: 50px; /* Space for the icon */
-    height: 40px; /* Adjust as needed */
-    font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background-color: #fff;
-    transition: border-color 0.2s ease-in-out;
-}
-
-.passwordInput:focus {
-    border-color: #007bff; /* Example focus style */
-}
 
 .togglePasswordBtn {
     position: absolute;
@@ -817,6 +801,8 @@ button[type='appr']:hover{
         gap:170px;
         transition: width 0.3s ease; 
     }
-    
+    .formGroup input{
+        width: 650px;
+    }
 
 }

@@ -28,7 +28,7 @@ const EmployeeList =()=>{
         // You can modify this function to actually sort your employee list
     }
     return(
-        <div className='listCont'>
+        <div className='listCont' style={{margin:'100px 0px'}}>
             <h1>Employee List</h1>
 
             <div className='listButtonG'>
@@ -73,12 +73,7 @@ const EmployeeList =()=>{
                                 </div>
                             </td>
                         </tr>
-                        <tr>
-                            <td> </td>
-                            <td> </td>
-                            <td> </td>
-                            <td> </td>
-                        </tr>
+
  
                     </tbody>
                 </table>
