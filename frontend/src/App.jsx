@@ -69,6 +69,7 @@ function App() {
         } />
          <Route path="/employee-list" element={
           <>
+            <Header/>
             <UserList />
           </>
         } />

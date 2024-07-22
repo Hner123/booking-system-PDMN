@@ -113,6 +113,12 @@ const RoomReservation = () => {
       e.preventDefault();
     }
 
+    // Ensure agenda is provided for meetings longer than 1 hour
+    if (!agenda && moment.duration(moment(endTime).diff(moment(startTime))).asHours() > 1) {
+      setFeedbackMessage('Please provide an agenda for meetings longer than 1 hour.');
+      return;
+    }
+
     // Create start and end dates with exact times
     const startDateTime = moment(startDate).set({
       hour: startTime.hour(),
@@ -169,7 +175,7 @@ const RoomReservation = () => {
       );
 
       if (updateResponse.status === 201) {
-        navigate('/reserveform')
+        navigate('/reserveform');
       }
     } catch (error) {
       console.error("Error during patch:", error);
@@ -197,7 +203,7 @@ const RoomReservation = () => {
         { headers }
       );
 
-      console.log(updateResponse.status)
+      console.log(updateResponse.status);
 
       if (updateResponse.status === 200) {
         localStorage.removeItem("reserveToken");
@@ -219,7 +225,6 @@ const RoomReservation = () => {
   const closeEventDetails = () => {
     setExpandedEvent(null);
   };
-
   return (
     <div className="room-reservation-container">
       <ToastContainer />

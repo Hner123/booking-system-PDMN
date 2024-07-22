@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import './UserList.css';
+import loadingGif from "../../assets/7.gif"; // Import loading gif
+
 
 // const departmentColors = {
 //   'Philippine Dragon Media Network': '#dc3545',
@@ -60,7 +62,7 @@ const UserList = () => {
   if (loading) {
     return (
       <div className="loading-container">
-        <img src="/loading.gif" alt="Loading..." className="loading-gif" />
+        <img src={loadingGif} alt="Loading..." className="loading-gif" />
       </div>
     );
   }

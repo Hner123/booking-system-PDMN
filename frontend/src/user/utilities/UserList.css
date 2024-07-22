@@ -71,18 +71,6 @@
   font-weight: bold;
 }
 
-.loading-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 50vh;
-}
-
-.loading-gif {
-  height: 50px;
-  width: auto;
-  animation: spin 1s linear infinite;
-}
 
 @keyframes spin {
   0% { transform: rotate(0deg); }
