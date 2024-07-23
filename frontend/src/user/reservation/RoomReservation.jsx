@@ -5,12 +5,13 @@ import DatePicker from 'react-datepicker';
 import TimePicker from 'rc-time-picker';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'rc-time-picker/assets/index.css';
-import { Calendar, momentLocalizer, Views } from 'react-big-calendar'; // Import Views
+import { Calendar, momentLocalizer, Views } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import '../../user/reservation/CustomBigCalendar.scss'
+import WithoutAuthReserve from '../../auth/WithAuthReserve';
 
 const RoomReservation = () => {
   const localizer = momentLocalizer(moment);
@@ -27,6 +28,7 @@ const RoomReservation = () => {
   const [feedbackMessage, setFeedbackMessage] = useState('');
   const [showDiscardModal, setShowDiscardModal] = useState(false);
   const [bookData, setBookData] = useState(null);
+  const [origData, setOrigData] = useState();
 
   const departmentColors = {
     'Philippine Dragon Media Network': '#dc3545',
@@ -39,6 +41,30 @@ const RoomReservation = () => {
   };
 
   useEffect(() => {
+    const fetchOrigData = async () => {
+      try {
+        const reserveToken = localStorage.getItem("reserveToken");
+        const token = localStorage.getItem("authToken");
+        const headers = {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        };
+  
+        const response = await axios.get(`http://localhost:8800/api/book/${reserveToken}`, {
+          headers,
+        });
+        if (response.status === 200) {
+          setOrigData(response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching book data:", error);
+      }
+    };
+  
+    fetchOrigData();
+  }, []);
+
+  useEffect(() => {
     const fetchBookData = async () => {
       try {
         const token = localStorage.getItem("authToken");
@@ -46,34 +72,38 @@ const RoomReservation = () => {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         };
-
-        const response = await axios.get(
-          `http://localhost:8800/api/book/`,
-          { headers }
-        );
-
+  
+        const response = await axios.get(`http://localhost:8800/api/book/`, { headers });
+  
         if (response.status === 200) {
-          // Map fetched events to the format required by react-big-calendar
-          const fetchedEvents = response.data.map(event => ({
-            id: event._id, // Include an ID if available
-            start: new Date(event.startTime),
-            end: new Date(event.endTime),
-            title: event.title,
-            agenda: event.agenda,
-            status: event.confirmation,
-            department: event.user.department, // Include department
-          }));
-
-          setEvents(fetchedEvents);
-          setBookData(response.data); // Optionally, set bookData state
+          if (origData && origData.roomName) {
+            const filteredData = response.data.filter(event => event.roomName === origData.roomName);
+            const fetchedEvents = filteredData.map(event => ({
+              id: event._id,
+              start: new Date(event.startTime),
+              end: new Date(event.endTime),
+              title: event.title,
+              agenda: event.agenda,
+              status: event.confirmation,
+              department: event.user.department,
+            }));
+            setEvents(fetchedEvents);
+            setBookData(filteredData);
+          } else {
+            console.error("origData or roomName is not available");
+          }
         }
       } catch (error) {
         console.error("Error fetching book data:", error);
       }
     };
-
-    fetchBookData();
-  }, []); // Empty dependency array to run once on mount
+  
+    // Call fetchBookData only if origData is available
+    if (origData) {
+      fetchBookData();
+    }
+  }, [origData]);
+  
 
   const handleReserve = () => {
     const start = moment(startDate).set({
@@ -114,13 +144,11 @@ const RoomReservation = () => {
       e.preventDefault();
     }
 
-    // Ensure agenda is provided for meetings longer than 1 hour
     if (!agenda && moment.duration(moment(endTime).diff(moment(startTime))).asHours() > 1) {
       setFeedbackMessage('Please provide an agenda for meetings longer than 1 hour.');
       return;
     }
 
-    // Create start and end dates with exact times
     const startDateTime = moment(startDate).set({
       hour: startTime.hour(),
       minute: startTime.minute(),
@@ -204,8 +232,6 @@ const RoomReservation = () => {
         { headers }
       );
 
-      console.log(updateResponse.status);
-
       if (updateResponse.status === 200) {
         localStorage.removeItem("reserveToken");
         navigate('/dashboard');
@@ -247,7 +273,6 @@ const RoomReservation = () => {
                 />
                 <p>Reservation of meeting can't be made prior 1 week ahead.</p>
               </div>
-              
               <div className="time-picker">
                 <h3>Start Time</h3>
                 <TimePicker
@@ -399,4 +424,4 @@ const RoomReservation = () => {
   );
 };
 
-export default RoomReservation;
+export default WithoutAuthReserve(RoomReservation);

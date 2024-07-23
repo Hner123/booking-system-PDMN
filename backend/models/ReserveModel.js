@@ -46,6 +46,10 @@ const ReserveSchema = new Schema({
     type: String,
     default: ""
   }],
+  guest: [{
+    type: String,
+    default: ""
+  }],
   confirmation:{
     type: Boolean,
     default: true

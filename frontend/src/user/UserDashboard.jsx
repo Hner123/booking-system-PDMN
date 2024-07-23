@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import roomBg from "../assets/roombg.jpg";
-import loadingGif from "../assets/7.gif"; // Import loading gif
+import Loader from "../assets/7.gif";
+
 import "./User.css";
 import { useTable } from "react-table";
 import { FaChevronDown, FaChevronRight } from "react-icons/fa";
@@ -31,7 +32,7 @@ const Dashboard = () => {
   const [userData, setUsers] = useState(null);
   const [bookData, setBookData] = useState([]);
   const [roomData, setRoomName] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const userName = "John Doe";
   const department = "Starlight";
@@ -62,8 +63,6 @@ const Dashboard = () => {
         }
       } catch (error) {
         console.error("Error fetching users:", error);
-      } finally {
-        setLoading(false);
       }
     };
 
@@ -95,13 +94,15 @@ const Dashboard = () => {
 
   useEffect(() => {
     const initialReservations = bookData
-      .filter((book) => 
-        book.user._id === userId && 
-        book.title && 
-        book.scheduleDate !== null && 
-        book.startTime !== null
+      .filter(
+        (book) =>
+          book.user._id === userId &&
+          book.title &&
+          book.scheduleDate !== null &&
+          book.startTime !== null
       )
       .map((book) => ({
+        id: book._id,
         title: book.title,
         status: book.confirmation ? "Approved" : "Pending",
         date: new Date(book.scheduleDate).toLocaleDateString(),
@@ -113,18 +114,20 @@ const Dashboard = () => {
         userName: book.user.userName,
         department: book.user.department,
         pax: book.caps.pax,
-        agenda: book.agenda
+        agenda: book.agenda,
       }));
     setReservations(initialReservations);
-  
+
     const initialOtherMeetings = bookData
-      .filter((book) => 
-        book.user._id !== userId && 
-        book.title && 
-        book.scheduleDate !== null && 
-        book.startTime !== null
+      .filter(
+        (book) =>
+          book.user._id !== userId &&
+          book.title &&
+          book.scheduleDate !== null &&
+          book.startTime !== null
       )
       .map((book) => ({
+        id: book._id,
         title: book.title,
         status: book.confirmation ? "Approved" : "Pending",
         date: new Date(book.scheduleDate).toLocaleDateString(),
@@ -136,7 +139,7 @@ const Dashboard = () => {
         userName: book.user.userName,
         department: book.user.department,
         pax: book.caps.pax,
-        agenda: book.agenda
+        agenda: book.agenda,
       }));
     setOtherMeetings(initialOtherMeetings);
   }, [bookData]);
@@ -159,42 +162,36 @@ const Dashboard = () => {
     setShowConfirmModal(true);
   };
 
-
-
   const handleCancelDelete = () => {
     setShowConfirmModal(false);
   };
 
   const handleConfirmDiscard = async (e) => {
-    e.preventDefault(); // Prevent default form behavior if used in a form
-  
-    setShowDiscardModal(false); // Hide the discard modal
-  
+    setLoading(true);
     try {
-      const reserveId = localStorage.getItem("reserveToken");
       const token = localStorage.getItem("authToken");
-  
+
       const headers = {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       };
-  
+
       const updateResponse = await axios.delete(
-        `http://localhost:8800/api/book/delete/${reserveId}`,
+        `http://localhost:8800/api/book/delete/${meetingToDelete.id}`,
         { headers }
       );
   
+      console.log(updateResponse.status);
+  
       if (updateResponse.status === 200) {
         localStorage.removeItem("reserveToken");
-        setMeetingToDelete(null); // Reset the meeting to delete state
-        setShowConfirmModal(false); // Hide the confirmation modal
-        navigate('/dashboard'); // Navigate back to the dashboard
+        setShowConfirmModal(false);
+        setLoading(false);
       }
     } catch (error) {
       console.error("Error during delete:", error);
     }
   };
-  
   
 
   const toggleMyReservations = () => {
@@ -232,7 +229,7 @@ const Dashboard = () => {
             </button>
             <button
               className="delete-btn"
-              onClick={() => handleShowConfirmModal(row.index)}
+              onClick={() => handleShowConfirmModal(row.original)}
             >
               <i className="fas fa-trash-alt"></i> Cancel Meeting
             </button>
@@ -364,13 +361,13 @@ const Dashboard = () => {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="loading-container">
-        <img src={loadingGif} alt="Loading..." className="loading-gif" />
-      </div>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <div className="loading-container">
+  //       <img src={loadingGif} alt="Loading..." className="loading-gif" />
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="dashboard">
@@ -475,6 +472,7 @@ const Dashboard = () => {
             {showMyReservations ? <FaChevronDown /> : <FaChevronRight />}
           </h2>
         </div>
+
         {showMyReservations && (
           <div className="table-container">
             <table
@@ -483,7 +481,10 @@ const Dashboard = () => {
             >
               <thead>
                 {myReservationsTable.headerGroups.map((headerGroup) => (
-                  <tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
+                  <tr
+                    key={headerGroup.id}
+                    {...headerGroup.getHeaderGroupProps()}
+                  >
                     {headerGroup.headers.map((column) => (
                       <th key={column.id} {...column.getHeaderProps()}>
                         {column.render("Header")}
@@ -492,18 +493,35 @@ const Dashboard = () => {
                   </tr>
                 ))}
               </thead>
-              <tbody {...myReservationsTable.getTableBodyProps()}>
-                {myReservationsTable.rows.map((row) => {
-                  myReservationsTable.prepareRow(row);
-                  return (
-                    <tr {...row.getRowProps()}>
-                      {row.cells.map((cell) => (
-                        <td key={cell.getCellProps().key} {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                      ))}
-                    </tr>
-                  );
-                })}
-              </tbody>
+              {loading ? (
+                <div className="flex justify-center items-center h-screen">
+                  <img
+                    src={Loader}
+                    alt="Loading..."
+                    style={{ height: "100px" }}
+                  />
+                </div>
+              ) : (
+                <>
+                  <tbody {...myReservationsTable.getTableBodyProps()}>
+                    {myReservationsTable.rows.map((row) => {
+                      myReservationsTable.prepareRow(row);
+                      return (
+                        <tr {...row.getRowProps()}>
+                          {row.cells.map((cell) => (
+                            <td
+                              key={cell.getCellProps().key}
+                              {...cell.getCellProps()}
+                            >
+                              {cell.render("Cell")}
+                            </td>
+                          ))}
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </>
+              )}
             </table>
           </div>
         )}
@@ -522,7 +540,10 @@ const Dashboard = () => {
             >
               <thead>
                 {otherMeetingsTable.headerGroups.map((headerGroup) => (
-                  <tr key={headerGroup.id} {...headerGroup.getHeaderGroupProps()}>
+                  <tr
+                    key={headerGroup.id}
+                    {...headerGroup.getHeaderGroupProps()}
+                  >
                     {headerGroup.headers.map((column) => (
                       <th key={column.id} {...column.getHeaderProps()}>
                         {column.render("Header")}
@@ -537,7 +558,12 @@ const Dashboard = () => {
                   return (
                     <tr {...row.getRowProps()}>
                       {row.cells.map((cell) => (
-                        <td key={cell.getCellProps().key} {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                        <td
+                          key={cell.getCellProps().key}
+                          {...cell.getCellProps()}
+                        >
+                          {cell.render("Cell")}
+                        </td>
                       ))}
                     </tr>
                   );
@@ -568,7 +594,8 @@ const Dashboard = () => {
                     <strong>Number of PAX:</strong> {selectedMeeting.pax}
                   </p>
                   <p>
-                    <strong>Purpose of the Meeting:</strong>{" "} {selectedMeeting.agenda}
+                    <strong>Purpose of the Meeting:</strong>{" "}
+                    {selectedMeeting.agenda}
                   </p>
                   <p className="members">
                     <strong>Members:</strong>{" "}
@@ -606,7 +633,6 @@ const Dashboard = () => {
             </div>
           </div>
         )}
-
         
         {!firstLogin && <></>}
       </main>

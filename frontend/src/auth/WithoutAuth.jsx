@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
-// import Loader from '../assets/quircomloading.gif';
+import Loader from "../assets/7.gif";
 
 const WithoutAuth = (WrappedComponent) => {
   const WrapperComponent = (props) => {
@@ -51,11 +51,11 @@ const WithoutAuth = (WrappedComponent) => {
     };
 
     if (isLoading) {
-      // return (
-      //   <div className='flex justify-center items-center h-screen'>
-      //     <img src={Loader} className="w-[80px]" alt="Loading..." />
-      //   </div>
-      // );
+      return (
+        <div className='flex justify-center items-center h-screen'>
+          <img src={Loader} className="w-[80px]" alt="Loading..." />
+        </div>
+      );
     }
 
     return <WrappedComponent {...props} />;

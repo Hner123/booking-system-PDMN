@@ -38,6 +38,8 @@ const CreateUser = async (req, res) => {
     const hashPassWord = await bcrypt.hash(user.passWord, 13)
 
     const result = await UserModel.create({
+      firstName: user.firstName,
+      surName: user.surName,
       userName: user.userName,
       passWord: hashPassWord,
       email: user.email,
@@ -78,6 +80,8 @@ const EditUser = async (req, res) => {
     // Prepare the update object
     let update = {
       $set: {
+        firstName: user.firstName,
+        surName: user.surName,
         userName: user.userName,
         passWord: hashPassWord,
         email: user.email,

@@ -45,30 +45,30 @@ const Header = () => {
     fetchUsers();
   }, []);
 
-  useEffect(() => {
-    const fetchNotifications = async () => {
-      try {
-        const userId = localStorage.getItem("userId");
-        const token = localStorage.getItem("authToken");
-        const headers = {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        };
+  // useEffect(() => {
+  //   const fetchNotifications = async () => {
+  //     try {
+  //       const userId = localStorage.getItem("userId");
+  //       const token = localStorage.getItem("authToken");
+  //       const headers = {
+  //         Authorization: `Bearer ${token}`,
+  //         "Content-Type": "application/json",
+  //       };
 
-        const response = await axios.get(
-          `http://localhost:8800/api/notifications/${userId}`,
-          { headers }
-        );
-        if (response.status === 200) {
-          setNotifications(response.data);
-        }
-      } catch (error) {
-        console.error("Error fetching notifications:", error);
-      }
-    };
+  //       const response = await axios.get(
+  //         `http://localhost:8800/api/notifications/${userId}`,
+  //         { headers }
+  //       );
+  //       if (response.status === 200) {
+  //         setNotifications(response.data);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching notifications:", error);
+  //     }
+  //   };
 
-    fetchNotifications();
-  }, []);
+  //   fetchNotifications();
+  // }, []);
 
   useEffect(() => {
     const handleOutsideClick = (event) => {
@@ -165,7 +165,7 @@ const Header = () => {
         </div>
         <div className="profile-icon" onClick={handleModalToggle}>
           <FaIcons.FaUserCircle />
-          {userData && <span className="user-name">{userData.userName}</span>}
+          {userData && <span className="user-name">{userData.firstName} {userData.surName}</span>}
         </div>
 
         {/* Burger Menu Icon for mobile */}
@@ -186,7 +186,7 @@ const Header = () => {
             </div>
             <div className="profile-icon" onClick={navigateEdit}>
               <FaIcons.FaUserCircle />
-              <span className="user-name">{userData ? userData.userName : 'Profile'}</span>
+              <span className="user-name">{userData.firstName} {userData.surName}</span>
             </div>
           </div>
         )}
@@ -200,7 +200,7 @@ const Header = () => {
               </div>
               {userData && 
                 <>
-                  <h2 style={{ textAlign: "center" }}>Hello! {userData.userName}</h2>
+                  <h2 style={{ textAlign: "center" }}>Hello! {userData.firstName} {userData.surName}</h2>
                   <p style={{ textAlign: "center" }}>Department: {userData.department}</p>
                 </>
               }           

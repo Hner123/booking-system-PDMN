@@ -4,6 +4,14 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
+  firstName:{
+    type: String,
+    default: ""
+  },
+  surName: {
+    type: String,
+    default: ""
+  },
   userName: {
     type: String,
     default: "",
@@ -18,12 +26,10 @@ const UserSchema = new Schema({
   email: {
     type: String,
     default: "",
-    required: true,
   },
   department: {
     type: String,
     default: "",
-    required: true
   },
   resetPass: {
     type: Boolean,

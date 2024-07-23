@@ -45,6 +45,7 @@ const CreateReserve = async (req, res) => {
         reason: ''
       },
       attendees: reserve.attendees,
+      guest: reserve.guest,
       confirmation: true,
     });
 
@@ -78,6 +79,7 @@ const EditReserve = async (req, res) => {
           reason: reserve.caps.reason
         },
         attendees: reserve.attendees,
+        guest: reserve.guest,
         confirmation: reserve.confirmation
       },
     };
@@ -100,7 +102,7 @@ const DeleteReserve = async (req, res) => {
     const reserve = await ReserveModel.findById(id);
   
     if (!reserve) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: "Reservation not found" });
     }
 
     // Delete the reserve document from the database

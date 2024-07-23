@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import roomBg from '../../assets/roombg.jpg';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
+import WithoutAuthReserve from '../../auth/WithAuthReserve';
 
 const ReservationFormsDetails = () => {
   const formRef = useRef();
@@ -358,4 +359,4 @@ const ReservationFormsDetails = () => {
   );
 };
 
-export default ReservationFormsDetails;
+export default WithoutAuthReserve(ReservationFormsDetails);
