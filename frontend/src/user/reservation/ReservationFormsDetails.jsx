@@ -27,6 +27,7 @@ const ReservationFormsDetails = () => {
     },
     attendees: [],
     title: "",
+    guest: "",
   });
 
   const handleChange = (e) => {
@@ -50,14 +51,14 @@ const ReservationFormsDetails = () => {
     const { value } = event.target;
     setPax(value);
     setFormData({
-     ...formData,
+      ...formData,
       caps: {
-       ...formData.caps,
+        ...formData.caps,
         pax: value,
         reason: "",
       },
     });
-  
+
     if (value === "1-2") {
       setAttendees([]);
       setAttendeeInput("");
@@ -128,9 +129,9 @@ const ReservationFormsDetails = () => {
     return inputLength === 0
       ? []
       : userData.filter(
-          (user) =>
-            user.userName.toLowerCase().includes(inputValue) && !user.disabled
-        );
+        (user) =>
+          user.userName.toLowerCase().includes(inputValue) && !user.disabled
+      );
   };
 
   const onSuggestionsFetchRequested = ({ value }) => {
@@ -156,21 +157,21 @@ const ReservationFormsDetails = () => {
       toast.error("You can only select up to 2 attendees for 1-2 pax.");
       return;
     }
-  
+
     const updatedAttendees = [...attendees, suggestion.userName];
     setAttendees(updatedAttendees);
-  
+
     setFormData({
-     ...formData,
+      ...formData,
       attendees: updatedAttendees,
     });
-  
+
     setUserData(
       userData.map((user) =>
-        user._id === suggestion._id? {...user, disabled: true } : user
+        user._id === suggestion._id ? { ...user, disabled: true } : user
       )
     );
-  
+
     setAttendeeInput("");
   };
 
@@ -194,17 +195,17 @@ const ReservationFormsDetails = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (selectedRoom === "Palawan and Boracay" && attendees.length < 8) {
       toast.error("For 'Palawan and Boracay', you must have at least 8 attendees.");
       return;
     }
-  
+
     if (formData.caps.pax === "3-More" && attendees.length < 3) {
       toast.error("You must have at least 3 attendees for 3-More pax.");
       return;
     }
-    
+
     const additionalAttendees = guestNames
       .split(",")
       .map((name) => name.trim())
@@ -213,14 +214,15 @@ const ReservationFormsDetails = () => {
     const updatedReserve = {
       caps: {
         pax: formData.caps.pax,
-        reason: formData.caps.reason,
+        reason: formData.caps.reason
       },
-      attendees: [...formData.attendees, ...additionalAttendees],
+      attendees: formData.attendees,
+      guest: additionalAttendees,
       title: formData.title,
       confirmation:
         bookData.confirmation === false ||
-        formData.caps.pax === "1-2" ||
-        bookData.agenda
+          formData.caps.pax === "1-2" ||
+          bookData.agenda
           ? false
           : true,
     };
@@ -312,7 +314,7 @@ const ReservationFormsDetails = () => {
                     value="1-2"
                     checked={formData.caps.pax === "1-2"}
                     onChange={handlePaxChange}
-                    disabled={selectedRoom !== "Palawan"}
+                    disabled={selectedRoom !== "Boracay" && selectedRoom !== "Palawan"}
                     style={{ width: "auto" }}
                   />
                   <label htmlFor="pax-1-2">1-2 attendees</label>
@@ -325,7 +327,7 @@ const ReservationFormsDetails = () => {
                     value="3-More"
                     checked={formData.caps.pax === "3-More"}
                     onChange={handlePaxChange}
-                    disabled={selectedRoom !== "Palawan"}
+                    disabled={selectedRoom !== "Boracay" && selectedRoom !== "Palawan"}
                     style={{ width: "auto" }}
                   />
                   <label htmlFor="pax-3-more">3 - 8 attendees</label>

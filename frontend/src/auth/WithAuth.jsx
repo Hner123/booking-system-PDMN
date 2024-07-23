@@ -84,12 +84,10 @@ const WithAuth = (WrappedComponent) => {
       return currentTime > exp;
     };
 
-    // Render nothing or a loading indicator while fetching
-    if (isLoading) {
-      return <div>Loading...</div>;
-    }
+    // if (isLoading) {
+    //   return <div>Loading...</div>;
+    // }
 
-    // Render the wrapped component if not loading
     return <WrappedComponent {...props} />;
   };
 

@@ -110,6 +110,7 @@ const Dashboard = () => {
         room: book.roomName,
         creator: book.user.userName,
         members: book.attendees,
+        guests: book.guest,
         userName: book.user.userName,
         department: book.user.department,
         pax: book.caps.pax,
@@ -135,6 +136,7 @@ const Dashboard = () => {
         room: book.roomName,
         creator: book.user.userName,
         members: book.attendees,
+        guests: book.guest,
         userName: book.user.userName,
         department: book.user.department,
         pax: book.caps.pax,
@@ -610,6 +612,10 @@ const Dashboard = () => {
                   <p className="members">
                     <strong>Members:</strong>{" "}
                     {selectedMeeting.members.join(", ")}
+                  </p>
+                  <p>
+                    <strong>Guests:</strong>{" "}
+                    {selectedMeeting.guests.join(", ")}
                   </p>
                 </div>
                 <div className="right-content">
