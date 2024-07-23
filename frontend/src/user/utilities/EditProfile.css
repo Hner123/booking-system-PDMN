@@ -1,8 +1,9 @@
-.area{
+.area {
     display: flex;
     flex-direction: column;
 }
-.upload{
+
+.upload {
     width: auto;
     height: auto;
     margin-inline: 30%;
@@ -16,30 +17,33 @@
     width: auto;
 }
 
-.upload{
+.upload {
     display: flex;
     flex-direction: column;
 
-    h2{
-         font-size: 64px;
+    h2 {
+        font-size: 64px;
         margin: auto;
     }
-    h3{
+
+    h3 {
         margin: auto;
         font-size: 20px;
     }
-    h4{
-        margin-inline:40px;
+
+    h4 {
+        margin-inline: 40px;
         margin-bottom: 10px;
         margin-top: 40px;
     }
 }
 
-.upload div:last-child{
+.upload div:last-child {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
 }
+
 .togglePasswordBtn_user {
     position: absolute;
     right: 5px;
@@ -51,22 +55,23 @@
     outline: none;
     padding: 0;
     font-size: 1rem;
-    color: #333; /* Adjust color as needed */
+    color: #333;
+    /* Adjust color as needed */
 }
 
-.profileContain{
+.profileContain {
     margin: 1%;
 }
 
-.profileContain img{
+.profileContain img {
     width: 150px;
-    height: 150px; 
-    object-fit: cover; 
-    border-radius: 50%; 
-    border: 2px solid #7C8B9D; 
+    height: 150px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid #7C8B9D;
 }
 
-.changeFields{
+.changeFields {
     display: flex;
     flex-direction: column;
     width: auto;
@@ -78,14 +83,18 @@
     border-radius: 6px;
     box-shadow: 0px 4px 4px 0px #7C8B9D;
 }
+
 .formGroup1 {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     margin-bottom: 30px;
-    
+
 }
-.formGroup1 input, option, select{
+
+.formGroup1 input,
+option,
+select {
     flex: 2;
     padding: 8px;
     border: 1px solid #ccc;
@@ -94,65 +103,70 @@
     width: 650px;
 }
 
-.verifyemail{
-    border:none;
-    background-color:white;
-    text-decoration:underline;
+.verifyemail {
+    border: none;
+    background-color: white;
+    text-decoration: underline;
     color: #9c0b0b;
 }
-.verifyemail:hover{
+
+.verifyemail:hover {
     color: gray;
 }
 
-.changeFields form{
+.changeFields form {
     margin: 2% 5%;
 }
 
-.changeFields form>div{
+.changeFields form>div {
     margin: 20px;
 }
 
-input, select{
+input,
+select {
     width: 100%;
 }
 
 .buttonGroup {
     display: flex;
-    justify-content: flex-end; 
-    margin-top: 20px; 
-  }
-  
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
 .buttonGroup button {
-    margin-left: 10px; 
+    margin-left: 10px;
     text-align: center;
     width: auto;
     padding: 10px;
     border: #58595A solid 0.1px;
     border-radius: 6px;
     box-shadow: 0px 4px 4px 0px #7C8B9D;
- }
- .buttonGroup button[type='cancel']{
+}
+
+.buttonGroup button[type='cancel'] {
     color: #58595A;
     background-color: white;
- }
- 
- .buttonGroup button[type='submit']:hover{
-    transform: scale(1.1)
- }
+}
 
-.buttonGroup button[type='submit'], .buttonGroup button[type='cancel']:hover{
+.buttonGroup button[type='submit']:hover {
+    transform: scale(1.1)
+}
+
+.buttonGroup button[type='submit'],
+.buttonGroup button[type='cancel']:hover {
     color: white;
     background-color: #EE3E38;
     border: #EE3E38 solid 0.1px;
     transition: transform 0.2s ease-out;
 }
+
 .profilemodal {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); 
+    background-color: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -175,30 +189,39 @@ input, select{
     margin: 0 10px;
 }
 
-@media (max-width: 500px){
-    .upload{
+@media (max-width: 500px) {
+    .upload {
         margin: 10%;
     }
-    .profileContain img{
+
+    .profileContain img {
         width: 100px;
         height: 100px;
     }
-    .upload h2{
+
+    .upload h2 {
         font-size: 30px;
     }
-    .upload h3{
+
+    .upload h3 {
         font-size: 20px;
     }
-    .upload h4{
+
+    .upload h4 {
         font-size: 10px;
     }
-    .button{
+
+    .button {
         padding: 2px;
     }
-    .changeFields{
+
+    .changeFields {
         margin: 1% 10%;
     }
-    .formGroup1 input, option, select{
+
+    .formGroup1 input,
+    option,
+    select {
         width: 270px;
     }
 }

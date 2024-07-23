@@ -180,19 +180,19 @@ const Dashboard = () => {
         `http://localhost:8800/api/book/delete/${meetingToDelete.id}`,
         { headers }
       );
-  
+
       console.log(updateResponse.status);
-  
+
       if (updateResponse.status === 200) {
         localStorage.removeItem("reserveToken");
         setShowConfirmModal(false);
         setLoading(false);
+        window.location.reload();
       }
     } catch (error) {
       console.error("Error during delete:", error);
     }
   };
-  
 
   const toggleMyReservations = () => {
     setShowMyReservations(!showMyReservations);
@@ -493,35 +493,24 @@ const Dashboard = () => {
                   </tr>
                 ))}
               </thead>
-              {loading ? (
-                <div className="flex justify-center items-center h-screen">
-                  <img
-                    src={Loader}
-                    alt="Loading..."
-                    style={{ height: "100px" }}
-                  />
-                </div>
-              ) : (
-                <>
-                  <tbody {...myReservationsTable.getTableBodyProps()}>
-                    {myReservationsTable.rows.map((row) => {
-                      myReservationsTable.prepareRow(row);
-                      return (
-                        <tr {...row.getRowProps()}>
-                          {row.cells.map((cell) => (
-                            <td
-                              key={cell.getCellProps().key}
-                              {...cell.getCellProps()}
-                            >
-                              {cell.render("Cell")}
-                            </td>
-                          ))}
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </>
-              )}
+
+              <tbody {...myReservationsTable.getTableBodyProps()}>
+                {myReservationsTable.rows.map((row) => {
+                  myReservationsTable.prepareRow(row);
+                  return (
+                    <tr {...row.getRowProps()}>
+                      {row.cells.map((cell) => (
+                        <td
+                          key={cell.getCellProps().key}
+                          {...cell.getCellProps()}
+                        >
+                          {cell.render("Cell")}
+                        </td>
+                      ))}
+                    </tr>
+                  );
+                })}
+              </tbody>
             </table>
           </div>
         )}
@@ -633,7 +622,7 @@ const Dashboard = () => {
             </div>
           </div>
         )}
-        
+
         {!firstLogin && <></>}
       </main>
     </div>
