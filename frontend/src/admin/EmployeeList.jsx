@@ -1,84 +1,126 @@
-import {React, useState} from 'react';
-import { useNavigate } from 'react-router-dom';
-import './AdminPages.css'
+import { React, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import "./AdminPages.css";
 import { IoMdArrowDropdown } from "react-icons/io";
+import WithAuthAdmin from "../auth/WithAuthAdmin";
+import axios from "axios";
 
-const EmployeeList =()=>{
-    const navigate = useNavigate();
-    const [showDropdown, setShowDropdown] = useState(false);
+const EmployeeList = () => {
+	const navigate = useNavigate();
+	const [showDropdown, setShowDropdown] = useState(false);
+	const [users, setUsers] = useState([]);
+	const [sortedUsers, setSortedUsers] = useState([]);
+	const [sortCriteria, setSortCriteria] = useState('');
 
-    const toggleDropdown = () => {
-        setShowDropdown(!showDropdown);
-    };
+	const toggleDropdown = () => {
+		setShowDropdown(!showDropdown);
+	};
 
-    const dropdownMenu = (
-        <div className="dropdown-content">
-            <button onClick={() => handleSort("Starlight")}>Starlight</button>
-            <button onClick={() => handleSort("GDS Department")}>GDS Department</button>
-            {/* Add more sorting options as needed */}
-        </div>
-    );
+	const goAdd = () => {
+		navigate("/admin/add-employee");
+	};
 
-    const goAdd=()=>{
-        navigate('/admin/add-employee')
-    }
-    const handleSort = (criteria) => {
-        // Implement sorting logic here based on criteria (name, department, etc.)
-        console.log(`Sorting by ${criteria}`);
-        // You can modify this function to actually sort your employee list
-    }
-    return(
-        <div className='listCont' style={{margin:'100px 0px'}}>
-            <h1>Employee List</h1>
+	const dropdownMenu = (
+		<div className="dropdown-content">
+			<button onClick={() => handleSort("Philippine Dragon Media Network")}>Philippine Dragon Media Network</button>
+			<button onClick={() => handleSort("GDS Travel Agency")}>GDS Travel Agency</button>
+			<button onClick={() => handleSort("FEILONG Legal")}>FEILONG Legal</button>
+			<button onClick={() => handleSort("STARLIGHT")}>STARLIGHT</button>
+			<button onClick={() => handleSort("BIG VISION PRODS.")}>BIG VISION PRODS.</button>
+			<button onClick={() => handleSort("SuperNova")}>SuperNova</button>
+			<button onClick={() => handleSort("ClearPath")}>ClearPath</button>
+			<button onClick={() => handleSort("Dragon AI")}>Dragon AI</button>
+		</div>
+	);
 
-            <div className='listButtonG'>
-                <button className='mainBtn' onClick={goAdd}> Add New Employee</button>
+	const handleSort = (criteria) => {
+		setSortCriteria(criteria);
+	};
 
-                <div className="dropdown">
-                    <button onClick={toggleDropdown} className="dropbtn" style={{textAlign: 'center'}}>
-                        Sort Company<IoMdArrowDropdown style={{fontSize:'20px', margin:'0'}}/></button>
-                    {showDropdown && dropdownMenu}
-                </div>
-            </div>
-            <div className="tableContainer">
-                <table className='listTable'>
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Username</th>
-                            <th>Department</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Juan Dela Cruz</td>
-                            <td>Juan D.C.</td>
-                            <td>Starlight</td>
-                            <td>
-                                <div className='listMod'>
-                                    <button className='editBtn'>Edit</button>
-                                    <button>Delete</button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Jona Kasimsiman</td>
-                            <td>Jona K.</td>
-                            <td>GDS Department</td>
-                            <td>
-                                <div className='listMod'>
-                                    <button className='editBtn'>Edit</button>
-                                    <button>Delete</button>
-                                </div>
-                            </td>
-                        </tr>
+	useEffect(() => {
+		const fetchUsers = async () => {
+			try {
+				const token = localStorage.getItem("adminToken");
+				const headers = {
+					Authorization: `Bearer ${token}`,
+					"Content-Type": "application/json",
+				};
 
- 
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    );
-}
-export default EmployeeList;
+				const response = await axios.get("http://localhost:8800/api/user/", {
+					headers,
+				});
+				if (response.status === 200) {
+					setUsers(response.data); // Assuming response.data is an array of user objects
+					setSortedUsers(response.data); // Initialize sorted users
+				}
+			} catch (error) {
+				console.error("Error fetching users:", error);
+			}
+		};
+
+		fetchUsers();
+	}, []);
+
+	useEffect(() => {
+		let sorted;
+		if (sortCriteria) {
+			sorted = users.filter(user => user.department === sortCriteria);
+		} else {
+			sorted = users;
+		}
+		setSortedUsers(sorted);
+	}, [sortCriteria, users]);
+
+	return (
+		<div className="listCont" style={{ margin: "100px 0px" }}>
+			<h1>Employee List</h1>
+
+			<div className="listButtonG">
+				<button className="mainBtn" onClick={goAdd}>
+					Add New Employee
+				</button>
+
+				<div className="dropdown">
+					<button
+						onClick={toggleDropdown}
+						className="dropbtn"
+						style={{ textAlign: "center" }}
+					>
+						Sort Company
+						<IoMdArrowDropdown style={{ fontSize: "20px", margin: "0" }} />
+					</button>
+					{showDropdown && dropdownMenu}
+				</div>
+			</div>
+			<div className="tableContainer">
+				<table className="listTable">
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Username</th>
+							<th>Department</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						{sortedUsers.map(user => (
+							<tr key={user.id}> {/* Use a unique key like user.id */}
+								<td>{user.firstName} {user.surName}</td>
+								<td>{user.userName}</td>
+								<td>{user.department}</td>
+								<td>
+									<div className="listMod">
+										<button className="editBtn">Edit</button>
+										<button>Delete</button>
+									</div>
+								</td>
+							</tr>
+						))}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	);
+};
+
+export default WithAuthAdmin(EmployeeList);

@@ -24,6 +24,8 @@ const Dashboard = () => {
   const userId = localStorage.getItem("userId");
 
   const [formData, setFormData] = useState({
+    firstName: "",
+    surName: "",
     passWord: "",
     email: "",
     department: "",
@@ -33,9 +35,6 @@ const Dashboard = () => {
   const [bookData, setBookData] = useState([]);
   const [roomData, setRoomName] = useState("");
   const [loading, setLoading] = useState(false);
-
-  const userName = "John Doe";
-  const department = "Starlight";
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -290,7 +289,7 @@ const Dashboard = () => {
         }
       );
 
-      if (validationResponse.data.email.exists === true) {
+      if (validationResponse.data.email.exists) {
         toast.error("Email is already registered");
         return;
       }
@@ -300,6 +299,8 @@ const Dashboard = () => {
     }
 
     const updatedUser = {
+      firstName: formData.firstName,
+      surName: formData.surName,
       passWord: formData.passWord,
       email: formData.email,
       department: formData.department,
@@ -377,11 +378,35 @@ const Dashboard = () => {
             {userData && <h2>Welcome, {userData.userName}!</h2>}
             <form ref={formRef} onSubmit={handleRegistrationSubmit}>
               <div className="form-section">
+                <label htmlFor="firstName">First Name</label>
+                <input
+                  type="text"
+                  id="firstName"
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                  placeholder="Firstname"
+                  required
+                  onInvalid={e => e.target.setCustomValidity('Please input your first name.')}
+                  onInput={e => e.target.setCustomValidity('')}
+                />
+              </div>
+              <div className="form-section">
+                <label htmlFor="surName">Surname</label>
+                <input
+                  type="text"
+                  id="surName"
+                  name="surName"
+                  value={formData.surName}
+                  onChange={handleChange}
+                  placeholder="Surname"
+                  required
+                  onInvalid={e => e.target.setCustomValidity('Please input your last name.')}
+                  onInput={e => e.target.setCustomValidity('')}
+                />
+              </div>
+              <div className="form-section">
                 <label htmlFor="email">Email Address</label>
-                <p>
-                  *Please enter your email address so we can notify you about
-                  confirmations, advisory, etc.
-                </p>
                 <input
                   type="text"
                   id="email"
@@ -390,25 +415,23 @@ const Dashboard = () => {
                   onChange={handleChange}
                   placeholder="Email Address"
                   required
+                  onInvalid={e => e.target.setCustomValidity('Please enter your email address so we can notify you about confirmations, advisory, etc.')}
+                  onInput={e => e.target.setCustomValidity('')}
                 />
               </div>
               <div className="form-section">
                 <label htmlFor="department">Department</label>
-                <p>
-                  *Please enter your designated department for specification of
-                  the meeting.
-                </p>
                 <select
                   id="department"
                   name="department"
                   value={formData.department}
                   onChange={handleChange}
                   required
+                  onInvalid={e => e.target.setCustomValidity('Please enter your designated department for specification of the meeting.')}
+                  onInput={e => e.target.setCustomValidity('')}
                 >
                   <option value="">Select Department</option>
-                  <option value="Philippine Dragon Media Network">
-                    Philippine Dragon Media Network
-                  </option>
+                  <option value="Philippine Dragon Media Network">Philippine Dragon Media Network</option>
                   <option value="GDS Travel Agency">GDS Travel Agency</option>
                   <option value="FEILONG Legal">FEILONG Legal</option>
                   <option value="STARLIGHT">STARLIGHT</option>
@@ -422,10 +445,6 @@ const Dashboard = () => {
                 <label htmlFor="new-password">
                   Please enter your new password.
                 </label>
-                <p>
-                  *Please enter your new password to for your security and
-                  privacy.
-                </p>
                 <input
                   type="password"
                   id="passWord"
@@ -434,6 +453,8 @@ const Dashboard = () => {
                   onChange={handleChange}
                   placeholder="New Password"
                   required
+                  onInvalid={e => e.target.setCustomValidity('Please enter your new password for your security and privacy.')}
+                  onInput={e => e.target.setCustomValidity('')}
                 />
               </div>
               <button type="submit">Confirm</button>

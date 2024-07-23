@@ -1,21 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from 'axios'; 
+import axios from "axios";
 
-const WithAuth = (WrappedComponent) => {
+const WithAuthAdmin = (WrappedComponent) => {
   const WithAuthWrapper = (props) => {
     const navigate = useNavigate();
 
     const [userData, setUserData] = useState(null); // Initialize with null
     const [isLoading, setIsLoading] = useState(true);
 
-    const userId = localStorage.getItem("userId");
-    const token = localStorage.getItem("authToken");
+    const adminId = localStorage.getItem("adminId");
+    const token = localStorage.getItem("adminToken");
 
     useEffect(() => {
       const fetchUser = async () => {
-        if (!userId || !token) {
-          navigate("/");
+        if (!adminId || !token) {
+          navigate("/admin");
           return;
         }
 
@@ -25,37 +25,42 @@ const WithAuth = (WrappedComponent) => {
             "Content-Type": "application/json",
           };
 
-          const responseUser = await axios.get(`http://localhost:8800/api/user/`, { headers });
+          const responseUser = await axios.get(
+            `http://localhost:8800/api/admin/`,
+            { headers }
+          );
 
           if (responseUser.status === 200) {
-            const user = responseUser.data.find(user => user._id === userId);
-            if (user) {
-              setUserData(user);
+            const admin = responseUser.data.find(
+              (user) => user._id === adminId
+            );
+            if (admin) {
+              setUserData(admin);
             } else {
-              // User does not exist, clear localStorage and navigate to login
+              // Admin does not exist, clear localStorage and navigate to login
               localStorage.clear();
-              navigate("/");
+              navigate("/admin");
             }
           } else {
-            console.error("Failed to fetch users");
+            console.error("Failed to fetch admin data");
             localStorage.clear();
-            navigate("/");
+            navigate("/admin");
           }
         } catch (error) {
-          console.error("Error fetching users:", error);
+          console.error("Error fetching admin data:", error);
           localStorage.clear();
-          navigate("/");
+          navigate("/admin");
         } finally {
           setIsLoading(false);
         }
       };
 
       fetchUser();
-    }, [userId, token, navigate]);
+    }, [adminId, token, navigate]);
 
     useEffect(() => {
-      if (!userId || !token) {
-        navigate("/");
+      if (!adminId || !token) {
+        navigate("/admin");
         return;
       }
 
@@ -65,10 +70,10 @@ const WithAuth = (WrappedComponent) => {
 
         if (isExpired) {
           localStorage.clear();
-          navigate("/");
+          navigate("/admin");
         }
       }
-    }, [userId, token, navigate]);
+    }, [adminId, token, navigate]);
 
     const decodeToken = (token) => {
       try {
@@ -96,4 +101,4 @@ const WithAuth = (WrappedComponent) => {
   return WithAuthWrapper;
 };
 
-export default WithAuth;
+export default WithAuthAdmin;

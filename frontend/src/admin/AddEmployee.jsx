@@ -2,24 +2,77 @@ import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
+import WithAuthAdmin from '../auth/WithAuthAdmin';
+
+import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
 
 const AddEmployee = () => {
-    const [name, setName] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [department, setDepartment] = useState('');
     const [showPassword, setShowPassword] = useState(false);
 
-    const departments = ['HR', 'IT', 'Finance', 'Operations', 'Marketing'];
+    const [formData, setFormData] = useState({
+        userName: "",
+        passWord: ""
+    })
+
     const navigate = useNavigate();
 
     const returnPage =()=>{
         navigate('/admin/employee-list')
     }
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        // Handle form submission logic here
-        console.log('Form submitted');
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+      };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        try {
+            const validationResponse = await axios.post(
+              `http://localhost:8800/api/auth/validate`,
+              {
+                userName: formData.userName,
+              }
+            );
+      
+            if (validationResponse.data.userName.exists) {
+              toast.error("Username is already registered");
+              return;
+            }
+          } catch (error) {
+            toast.error("Failed to validate email");
+            return;
+          }
+    
+        const employeeData = {
+          userName: formData.userName,
+          passWord: formData.passWord,
+        };
+    
+        try {
+          const token = localStorage.getItem("adminToken");
+    
+          const headers = {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          };
+    
+          const updateResponse = await axios.post(
+            `http://localhost:8800/api/user/create`,
+            employeeData,
+            { headers }
+          );
+    
+          if (updateResponse.status === 201) {
+            navigate("/admin/employee-list");
+          }
+        } catch (error) {
+          console.error("Error during patch:", error);
+        }
     };
 
     const togglePasswordVisibility = () => {
@@ -28,6 +81,7 @@ const AddEmployee = () => {
 
     return (
         <div style={{margin:'150px 0px'}}>
+            <ToastContainer/>
             <div className='listCont1'>
                 <h1>Add Employee</h1>
             </div>
@@ -35,34 +89,25 @@ const AddEmployee = () => {
                 <div className='addForm'>
                     <form onSubmit={handleSubmit}>
                         <div className='formGroup'>
-                            <label htmlFor='name'>Name:</label>
+                            <label htmlFor='userName'>Username:</label>
                             <input
                                 type='text'
-                                id='name'
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                                placeholder='Enter full name of the employee'
-                                required
-                            />
-                        </div>
-                        <div className='formGroup'>
-                            <label htmlFor='username'>Username:</label>
-                            <input
-                                type='text'
-                                id='username'
-                                value={username}
-                                onChange={(e) => setUsername(e.target.value)}
+                                id='userName'
+                                name='userName'
+                                value={formData.userName}
+                                onChange={handleChange}
                                 placeholder='Enter username'
                                 required
                             />
                         </div>
                         <div className='formGroup' style={{position:'relative'}}>
-                            <label htmlFor='password'>Password:</label>
+                            <label htmlFor='passWord'>Password:</label>
                                 <input
                                     type={showPassword ? 'text' : 'password'}
-                                    id='password'
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
+                                    id='passWord'
+                                    name='passWord'
+                                    value={formData.passWord}
+                                    onChange={handleChange}
                                     placeholder='Enter password'
                                     required
                                     className='passwordInput' // Apply a custom class for styling
@@ -75,23 +120,6 @@ const AddEmployee = () => {
                                     <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
                                 </button>
                         </div>
-                        <div className='formGroup'>
-                            <label htmlFor='department'>Department:</label>
-                            <select
-                                id='department'
-                                value={department}
-                                onChange={(e) => setDepartment(e.target.value)}
-                                className='formControl' // Apply a custom class for styling
-                                required
-                            >
-                                <option value=''>Select Departments</option>
-                                {departments.map((dept, index) => (
-                                    <option key={index} value={dept}>
-                                        {dept}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
                         <div className='addGroup'>
                             <button type='submit'  className='mainBtn'>Submit</button>
                             <button type='button' onClick={returnPage} className='secondBtn'>Cancel</button>
@@ -103,4 +131,4 @@ const AddEmployee = () => {
     );
 };
 
-export default AddEmployee;
+export default WithAuthAdmin(AddEmployee);

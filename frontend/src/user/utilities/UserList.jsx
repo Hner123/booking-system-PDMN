@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import PropTypes from "prop-types";
 import "./UserList.css";
+import WithAuth from "../../auth/WithAuth";
 
 const UserList = () => {
   const [users, setUsers] = useState({});
@@ -94,4 +95,4 @@ UserList.propTypes = {
   loading: PropTypes.bool,
 };
 
-export default UserList;
+export default WithAuth(UserList);

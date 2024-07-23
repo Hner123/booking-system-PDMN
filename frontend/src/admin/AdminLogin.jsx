@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import logo from '../assets/logos/GDSLogo.png';
 import mascot from '../assets/mascot.png';
 import axios from 'axios';
+import WithoutAuthAdmin from '../auth/WithoutAuthAdmin';
 
 const AdminLogin = () => {
     const [adminUser, setUsername] = useState('');
@@ -31,8 +32,8 @@ const AdminLogin = () => {
                 const { authToken } = response.data;
                 const { _id } = response.data.user;
 
-                localStorage.setItem("authToken", authToken);
-                localStorage.setItem("userId", _id)
+                localStorage.setItem("adminToken", authToken);
+                localStorage.setItem("adminId", _id)
 
                 setLoading(false);
                 navigate('/admin/employee-list');
@@ -79,9 +80,9 @@ const AdminLogin = () => {
                     <button type="submit">Log In</button>
                     {/* Use a simple anchor tag for "Not an Admin?" */}
                     <button type="redirect">
-                       <a href="/" onClick={handleNotAdminClick}>Not an Admin?</a> 
+                        <a href="/" onClick={handleNotAdminClick}>Not an Admin?</a>
                     </button>
-                    
+
                 </form>
             </div>
             <div className="right-column">
@@ -94,4 +95,4 @@ const AdminLogin = () => {
     );
 };
 
-export default AdminLogin;
+export default WithoutAuthAdmin(AdminLogin);

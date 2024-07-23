@@ -5,6 +5,7 @@ import logo from '../../assets/logos/GDSLogo.png';
 import profile from '../../assets/Default Avatar.png';
 import './Header.css';
 import axios from 'axios';
+import WithAuth from '../../auth/WithAuth';
 
 const Header = () => {
   const [isProfileOpen, setProfileOpen] = useState(false);
@@ -33,9 +34,6 @@ const Header = () => {
         );
         if (response.status === 200) {
           setUsers(response.data);
-          if (response.data.resetPass === false) {
-            setFirstLogin(true);
-          }
         }
       } catch (error) {
         console.error("Error fetching users:", error);
@@ -246,4 +244,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default WithAuth(Header);
