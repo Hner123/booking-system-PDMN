@@ -14,7 +14,9 @@ const ReservationFormsDetails = () => {
   const [suggestions, setSuggestions] = useState([]);
   const [bookData, setBookData] = useState("");
   const [userData, setUserData] = useState([]);
-  const [selectedRoom, setSelectedRoom] = useState(""); // New state for selected room
+  const [selectedRoom, setSelectedRoom] = useState("");
+  const [showGuestInput, setShowGuestInput] = useState(false); // New state for guest input visibility
+  const [guestNames, setGuestNames] = useState(""); // State to store guest names
 
   const navigate = useNavigate();
 
@@ -37,6 +39,8 @@ const ReservationFormsDetails = () => {
           reason: value,
         },
       });
+    } else if (name === "guestNames") {
+      setGuestNames(value);
     } else {
       setFormData({ ...formData, [name]: value });
     }
@@ -46,13 +50,18 @@ const ReservationFormsDetails = () => {
     const { value } = event.target;
     setPax(value);
     setFormData({
-      ...formData,
+     ...formData,
       caps: {
-        ...formData.caps,
+       ...formData.caps,
         pax: value,
         reason: "",
       },
     });
+  
+    if (value === "1-2") {
+      setAttendees([]);
+      setAttendeeInput("");
+    }
   };
 
   useEffect(() => {
@@ -71,7 +80,7 @@ const ReservationFormsDetails = () => {
         );
         if (response.status === 200) {
           setBookData(response.data);
-          setSelectedRoom(response.data.roomName); // Set selected room
+          setSelectedRoom(response.data.roomName);
         }
       } catch (error) {
         console.error("Error fetching book data:", error);
@@ -143,20 +152,25 @@ const ReservationFormsDetails = () => {
   };
 
   const onSuggestionSelected = (event, { suggestion }) => {
+    if (formData.caps.pax === "1-2" && attendees.length >= 2) {
+      toast.error("You can only select up to 2 attendees for 1-2 pax.");
+      return;
+    }
+  
     const updatedAttendees = [...attendees, suggestion.userName];
     setAttendees(updatedAttendees);
-
+  
     setFormData({
-      ...formData,
+     ...formData,
       attendees: updatedAttendees,
     });
-
+  
     setUserData(
       userData.map((user) =>
-        user._id === suggestion._id ? { ...user, disabled: true } : user
+        user._id === suggestion._id? {...user, disabled: true } : user
       )
     );
-
+  
     setAttendeeInput("");
   };
 
@@ -180,21 +194,28 @@ const ReservationFormsDetails = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Check if the number of attendees meets the requirement
+  
     if (selectedRoom === "Palawan and Boracay" && attendees.length < 8) {
-      toast.error(
-        "For 'Palawan and Boracay', you must have at least 8 attendees."
-      );
+      toast.error("For 'Palawan and Boracay', you must have at least 8 attendees.");
       return;
     }
+  
+    if (formData.caps.pax === "3-More" && attendees.length < 3) {
+      toast.error("You must have at least 3 attendees for 3-More pax.");
+      return;
+    }
+    
+    const additionalAttendees = guestNames
+      .split(",")
+      .map((name) => name.trim())
+      .filter((name) => name);
 
     const updatedReserve = {
       caps: {
         pax: formData.caps.pax,
         reason: formData.caps.reason,
       },
-      attendees: formData.attendees,
+      attendees: [...formData.attendees, ...additionalAttendees],
       title: formData.title,
       confirmation:
         bookData.confirmation === false ||
@@ -268,6 +289,17 @@ const ReservationFormsDetails = () => {
                 )}
               </div>
             </div>
+
+            <label htmlFor="title">Meeting Title:</label>
+            <input
+              type="text"
+              id="title"
+              name="title"
+              value={formData.title}
+              onChange={handleChange}
+              placeholder="Enter meeting title"
+              required
+            />
 
             <div>
               <label htmlFor="pax">Number of Pax</label>
@@ -362,18 +394,35 @@ const ReservationFormsDetails = () => {
                   </div>
                 ))}
               </div>
-            </div>
 
-            <label htmlFor="title">Meeting Title:</label>
-            <input
-              type="text"
-              id="title"
-              name="title"
-              value={formData.title}
-              onChange={handleChange}
-              placeholder="Enter meeting title"
-              required
-            />
+              <div className="guest-input-section">
+                <div className="guest-option">
+                  <input
+                    type="checkbox"
+                    checked={showGuestInput}
+                    onChange={() => setShowGuestInput(!showGuestInput)}
+                    style={{ width: "auto" }}
+                  />
+                  <label className="checkbox-label">Have any Guest</label>
+                </div>
+                {showGuestInput && (
+                  <div className="guest-input-wrapper">
+                    <label htmlFor="guestNames" className="guest-names-label">
+                      Enter guest names (comma separated):
+                    </label>
+                    <input
+                      type="text"
+                      id="guestNames"
+                      name="guestNames"
+                      value={guestNames}
+                      onChange={handleChange}
+                      placeholder="Enter guest names"
+                      className="guest-names-input"
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
 
             <button type="submit" style={{ alignItems: "center" }}>
               Book

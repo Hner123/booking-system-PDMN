@@ -55,7 +55,7 @@
   }
 
   .calendar-column h3 {
-    margin: 0 0 10px 0;
+  margin: 0 0 10px 0;
   }
 
   .custom-calendar {
@@ -66,7 +66,7 @@
   }
 
   .react-datepicker__day--today {
-    color: #b62626;
+  color: #b62626;
   }
 
   .custom-calendar .react-datepicker__day--selected {
@@ -80,11 +80,11 @@
     color: #fff;
   }
 
-  .date-picker {
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-  }
+ .date-picker {
+   align-items: center;
+   justify-content: center;
+   text-align: center;
+ }
 
   .time-picker {
     display: flex;
@@ -99,20 +99,20 @@
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   }
-
+  
   .time-picker h3 {
     margin: 0;
     font-size: 18px;
     color: #000000;
   }
-
+  
   .time-picker .rc-time-picker {
     flex: 1;
     display: flex;
     justify-content: center;
     align-items: center;
   }
-
+  
   .time-picker .rc-time-picker-input {
     width: 100%;
     max-width: 120px;
@@ -125,7 +125,7 @@
     text-align: center;
     transition: border-color 0.2s, box-shadow 0.2s;
   }
-
+  
   .time-picker .rc-time-picker-input:focus {
     border-color: #b62626;
     box-shadow: 0 0 5px #b62626;
@@ -165,8 +165,8 @@
 
   .cancel-btn:hover {
     background-color: #eeeeee;
-  }
-
+  } 
+  
   .reserve-btn:hover {
     background-color: #B62626;
   }
@@ -176,7 +176,7 @@
     margin: 0%;
   }
 
-  /* LEGEND */
+/* LEGEND */
 
   .legend {
     display: flex;
@@ -209,7 +209,6 @@
   .legend-item span.pdmn {
     background-color: #dc3545;
   }
-
   .legend-item span.bvp {
     background-color: #28a745;
   }
@@ -239,7 +238,7 @@
     margin: 5% 0 0 0;
   }
 
-  /* event detail modal */
+/* event detail modal */
   .event-details-modal {
     position: fixed;
     top: 50%;
@@ -252,7 +251,6 @@
     z-index: 1000;
     max-width: 80%;
   }
-
   .close {
     position: absolute;
     top: 5px;
@@ -296,12 +294,12 @@
     border-radius: 8px;
     margin: 20px 0px;
   }
-
+  
   .agenda-form h2 {
     font-size: 1.5rem;
     margin-bottom: 10px;
   }
-
+  
   .agenda-form input {
     width: 100%;
     padding: 10px;
@@ -310,7 +308,7 @@
     border-radius: 4px;
     margin-bottom: 10px;
   }
-
+  
   .agenda-form button {
     padding: 10px 20px;
     background-color: #EE3E38;
@@ -319,11 +317,11 @@
     border-radius: 4px;
     cursor: pointer;
   }
-
+  
   .agenda-form button:hover {
     background-color: #B62626;
   }
-
+  
   /* feedback-message */
   .feedback-message {
     width: 100%;
@@ -335,97 +333,79 @@
     border-radius: 4px;
     margin: 20px 0px;
   }
-
+  
   /* Mobile Styles */
-  @media (max-width: 768px) {
-    .room-reservation-container {
-      padding: 20px;
-      text-align: center;
-    }
-
-    .room-reservation-container h1 {
-      margin: 0% 0 10px 0;
-    }
-
-    .main-container {
-      flex-direction: column;
-    }
-
-    .rsrv-column {
-      flex: 1;
-      /* Full width for reservation controls */
-      margin: 0;
-      /* Remove margin for full width */
-    }
-
-    .calendar-column {
-      flex: 1;
-      /* Take full width on mobile */
-      margin: 16px 0 0 0;
-      /* Add space between reservation and calendar */
-      padding: 20px;
-      /* Add padding for better spacing */
-      overflow-x: auto;
-      /* Enable horizontal scroll if necessary */
-    }
-
-    .booking-controls {
-      padding: 16px;
-      /* Reduce padding */
-      text-align: center;
-      /* Center content */
-    }
-
-    .time-picker {
-      flex-direction: row;
-      gap: 15px;
-    }
-
-    .legend {
-      margin: 10px auto;
-      /* Adjust margin */
-    }
-
-    .legend-item {
-      margin: 5px;
-      /* Adjust margin */
-    }
-
-    .legend-item span {
-      width: 16px;
-      height: 16px;
-      /* Adjust size for smaller screens */
-    }
-
-    .legend-item p {
-      font-size: 12px;
-      /* Decrease font size */
-    }
-
-    .legend-controls {
-      padding: 16px;
-      /* Reduce padding */
-      margin-top: 10px;
-      /* Adjust margin */
-    }
-
-    .agenda-form {
-      padding: 16px;
-      /* Reduce padding */
-      margin: 10px 0;
-      /* Adjust margin */
-    }
-
-    .agenda-form h2 {
-      font-size: 1.2rem;
-      /* Decrease font size */
-    }
-
-    .agenda-form input {
-      font-size: 14px;
-      /* Decrease font size */
-    }
+@media (max-width: 768px) {
+  .room-reservation-container {
+    padding: 20px; 
+    text-align: center;
   }
+
+  .room-reservation-container h1 {
+    margin: 0% 0 10px 0;
+  }
+
+  .main-container {
+    flex-direction: column; 
+  }
+
+  .rsrv-column {
+    flex: 1; /* Full width for reservation controls */
+    margin: 0; /* Remove margin for full width */
+  }
+
+  .calendar-column {
+    flex: 1; /* Take full width on mobile */
+    margin: 16px 0 0 0; /* Add space between reservation and calendar */
+    padding: 20px; /* Add padding for better spacing */
+    overflow-x: auto; /* Enable horizontal scroll if necessary */
+  }
+
+  .booking-controls {
+    padding: 16px; /* Reduce padding */
+    text-align: center; /* Center content */
+  }
+
+  .time-picker {
+    flex-direction: row; 
+    gap: 15px; 
+  }
+
+  .legend {
+    margin: 10px auto; /* Adjust margin */
+  }
+
+  .legend-item {
+    margin: 5px; /* Adjust margin */
+  }
+
+  .legend-item span {
+    width: 16px;
+    height: 16px; /* Adjust size for smaller screens */
+  }
+
+  .legend-item p {
+    font-size: 12px; /* Decrease font size */
+  }
+
+  .legend-controls {
+    padding: 16px; /* Reduce padding */
+    margin-top: 10px; /* Adjust margin */
+  }
+
+  .agenda-form {
+    padding: 16px; /* Reduce padding */
+    margin: 10px 0; /* Adjust margin */
+  }
+
+  .agenda-form h2 {
+    font-size: 1.2rem; /* Decrease font size */
+  }
+
+  .agenda-form input {
+    font-size: 14px; /* Decrease font size */
+  }
+}
 
 
   /* form for reservationformdetails*/
@@ -437,7 +417,7 @@
 
   .form-page {
     align-items: center;
-    padding: 2% 8%;
+    padding: 2% 8%; 
   }
 
   .reservation-details-container {
@@ -446,7 +426,7 @@
   }
 
   .form-column {
-    width: 60%;
+    width: 60%; 
     background-color: #ffffff;
     margin-right: 10px;
     padding: 20px;
@@ -473,6 +453,7 @@
     color: #666;
     text-align: left;
     margin: 0px;
+    
   }
 
   .reservation-form {
@@ -480,14 +461,19 @@
     flex-direction: column;
   }
 
+  .reservation-form label {
+    font-weight: bold;
+  }
 
   .reservation-form input,
-  .reservation-form select .reservation-form textarea {
+  .reservation-form select
+  .reservation-form textarea {
     margin-bottom: 16px;
     padding: 8px;
     font-size: 14px;
-    border: 1px solid #ccc;
+    border: 1px solid hsl(0, 0%, 80%);
     border-radius: 4px;
+    width: 100%;
   }
 
   .reservation-form textarea {
@@ -505,27 +491,54 @@
     width: 50%;
     align-items: center;
     align-self: center;
-    margin: 0 auto;
+    margin: 0 auto; 
   }
 
   .read-only-group {
     display: flex;
     gap: 10px;
   }
-
+  
   .read-only {
     border: 1px solid #ccc;
-    padding: 8px;
+    padding: 8px; 
     border-radius: 4px;
     background-color: #f9f9f9;
     margin-bottom: 16px;
     font-size: 14px;
   }
 
-  input[type='radio'] {
+  input[type='radio'], [type='checkbox'] {
     accent-color: #EE3E38;
   }
 
+  
+  .guest-option input[type="checkbox"] {
+    margin: 2px; /* Remove default margin */
+  }
+  
+  .checkbox-label {
+    margin: 0; /* Remove default margin */
+  }
+  
+  .guest-input-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .guest-names-label {
+    font-weight: bold;
+  }
+  
+  .guest-names-input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+  }
+  
+  
   .half-width {
     width: 50%;
   }
@@ -558,10 +571,11 @@
   .suggestion-chip {
     padding: 5px 10px;
     cursor: pointer;
+    width: 100%;
   }
 
   .suggestion-chip:hover {
-    background-color: #f0f0f0;
+    background-color: #f5d5d5d5;
   }
 
   .attendees-container {
@@ -582,11 +596,11 @@
   }
 
   .attendee-chip {
-    display: flex;
-    margin-right: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    padding: 4px 8px;
+    display: flex; 
+    margin-right: 8px; 
+    border: 1px solid #ccc; 
+    border-radius: 4px; 
+    padding: 4px 8px; 
   }
 
   .attendee-text {
@@ -599,13 +613,13 @@
   }
 
   .attendee-chip .remove-button {
-    background-color: #e74c3c;
-    color: white;
-    border: none;
-    padding: 4px 8px;
-    margin-left: 8px;
-    cursor: pointer;
-    border-radius: 4px;
+    background-color: #e74c3c; 
+    color: white; 
+    border: none; 
+    padding: 4px 8px; 
+    margin-left: 8px; 
+    cursor: pointer; 
+    border-radius: 4px; 
   }
 
   .attendee-chip .remove-button:hover {
@@ -614,7 +628,7 @@
 
   /* details column */
   .details-column {
-    width: 40%;
+    width: 40%; 
     margin-left: 10px;
   }
 
@@ -629,22 +643,22 @@
 
   .details h1 {
     font-size: 64px;
-    margin-bottom: 0px;
-    color: #ffffff;
-    text-shadow: 1px 4px 4px rgba(0, 0, 0, 0.8);
+    margin-bottom: 0px; 
+    color: #ffffff; 
+    text-shadow: 1px 4px 4px rgba(0, 0, 0, 0.8); 
   }
 
   .details p {
-    font-size: 32px;
-    margin: 0px;
-    color: #ffffff;
+    font-size: 32px; 
+    margin: 0px; 
+    color: #ffffff; 
     width: max-content;
   }
 
   .separator {
     width: 100%;
-    height: 2px;
-    background-color: #ffffff;
+    height: 2px; 
+    background-color: #ffffff; 
     margin-bottom: 10px;
   }
 
@@ -653,7 +667,7 @@
     width: 100%;
     height: fit-content;
     background-repeat: no-repeat;
-    background-size: cover;
+    background-size:cover; 
     background-position: 40% 90%;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
   }
@@ -664,7 +678,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: #6b000c4d;
+    background-color: #6b000c4d; 
     z-index: 1;
   }
 
@@ -672,7 +686,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 90vh;
+    height: 90vh; 
     background-color: #f9f9f9;
     padding: 20px;
   }
@@ -683,29 +697,29 @@
       flex-direction: column;
       align-items: center;
     }
-
+  
     .details-column {
       order: 1;
       width: 100%;
       margin: 0 0 20px 0;
     }
-
+  
     .form-column {
       order: 2;
       width: 100%;
       margin: 0 0 20px 0;
     }
-
+  
     .reservation-form button {
       width: 80%;
     }
-
+  
     .details h1 {
-      font-size: 32px;
+      font-size: 32px; 
     }
-
+  
     .details p {
-      font-size: 18px;
+      font-size: 18px; 
     }
   }
 
@@ -714,7 +728,7 @@
   .confirmation-content {
     display: flex;
     justify-content: space-between;
-    max-width: 1200px;
+    max-width: 1200px; 
     width: 100%;
     align-self: center;
   }
@@ -722,7 +736,7 @@
   .confirmation-text {
     flex: 1;
     padding: 150px 120px;
-    height: 100%;
+    height: 100%;    
   }
 
   .confirmation-text h1 {
@@ -748,16 +762,16 @@
     flex: 1;
     position: relative;
     overflow: hidden;
-    height: 100%;
+    height: 100%; 
   }
-
+  
   .confirmation-image img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    object-position: center;
+    object-fit: cover; 
+    object-position: center; 
   }
-
+  
 
   .confirmation-overlay {
     position: absolute;
@@ -765,7 +779,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(255, 135, 135, 0.5);
+    background-color: rgba(255, 135, 135, 0.5); 
     z-index: 0;
   }
 
@@ -798,40 +812,32 @@
   }
 
   /* Media Query for Mobile View */
-  @media (max-width: 768px) {
-    .confirmation-content {
-      flex-direction: column;
-      /* Stack items vertically */
-      padding: 20px;
-      /* Adjust padding for better spacing */
-    }
-
-    .confirmation-text {
-      padding: 50px 20px;
-      /* Reduce padding for smaller screens */
-      text-align: center;
-      /* Center text */
-    }
-
-    .confirmation-text h1 {
-      font-size: 36px;
-      /* Decrease font size */
-    }
-
-    .confirmation-text .buttons {
-      margin-top: 20px;
-      /* Adjust margin */
-    }
-
-    .confirmation-image {
-      display: none;
-    }
-
-    .dashboard-btn,
-    .details-btn {
-      width: 100%;
-      /* Full width buttons */
-      margin: 10px 0;
-      /* Adjust margin */
-    }
+@media (max-width: 768px) {
+  .confirmation-content {
+    flex-direction: column; /* Stack items vertically */
+    padding: 20px; /* Adjust padding for better spacing */
   }
+
+  .confirmation-text {
+    padding: 50px 20px; /* Reduce padding for smaller screens */
+    text-align: center; /* Center text */
+  }
+
+  .confirmation-text h1 {
+    font-size: 36px; /* Decrease font size */
+  }
+
+  .confirmation-text .buttons {
+    margin-top: 20px; /* Adjust margin */
+  }
+
+  .confirmation-image {
+    display: none;
+  }
+
+  .dashboard-btn,
+  .details-btn {
+    width: 100%; /* Full width buttons */
+    margin: 10px 0; /* Adjust margin */
+  }
+}

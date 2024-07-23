@@ -268,6 +268,20 @@ const RoomReservation = () => {
   const closeEventDetails = () => {
     setExpandedEvent(null);
   };
+  const format = "h:mm a";
+
+  const disabledHours = () => {
+    const hours = [];
+    for (let i = 0; i < 24; i++) {
+      if (i < 8 || i >= 21) {
+        hours.push(i);
+      }
+    }
+    return hours;
+  };
+
+  const disabledMinutes = () => []; // Allow all minutes
+  const disabledSeconds = () => []; // Allow all seconds
 
   return (
     <div className="room-reservation-container">
@@ -293,20 +307,24 @@ const RoomReservation = () => {
                 <h3>Start Time</h3>
                 <TimePicker
                   showSecond={false}
-                  defaultValue={startTime}
-                  onChange={setStartTime}
-                  minuteStep={10}
-                  className="rc-time-picker"
+                  value={startTime}
+                  format={format}
+                  onChange={(time) => setStartTime(time)}
+                  disabledHours={disabledHours}
+                  disabledMinutes={disabledMinutes}
+                  disabledSeconds={disabledSeconds}
                 />
               </div>
               <div className="time-picker">
                 <h3>End Time</h3>
                 <TimePicker
                   showSecond={false}
-                  defaultValue={endTime}
-                  onChange={setEndTime}
-                  minuteStep={10}
-                  className="rc-time-picker"
+                  value={endTime}
+                  format={format}
+                  onChange={(time) => setEndTime(time)}
+                  disabledHours={disabledHours}
+                  disabledMinutes={disabledMinutes}
+                  disabledSeconds={disabledSeconds}
                 />
               </div>
             </div>
