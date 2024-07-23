@@ -80,6 +80,12 @@
     color: #fff;
   }
 
+ .date-picker {
+   align-items: center;
+   justify-content: center;
+   text-align: center;
+ }
+
   .time-picker {
     display: flex;
     flex-direction: row;

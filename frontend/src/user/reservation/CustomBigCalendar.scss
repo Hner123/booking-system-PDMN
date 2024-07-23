@@ -1,73 +1,110 @@
-// src/CustomBigCalendar.scss
-
-// Import the default big calendar styles
+// // Import the default big calendar styles
 @import "react-big-calendar/lib/sass/styles";
 
-// Override styles or add custom styles here
-.rbc-header {
-  color: rgb(0, 0, 0);
-  font-size: 14px !important;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 36px !important;
-  background: #ffffff;
-}
+// // General Styles
+// .rbc-header {
+//   color: #003b75; // Darker text for better contrast
+//   font-size: 16px !important; // Slightly larger font for readability
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   height: 50px !important;
+//   background: #ecf0f1; // Light background for a clean look
+//   border-bottom: 1px solid #bdc3c7;
+//   text-transform: uppercase; // Adds a professional touch
+// }
 
-.rbc-allday-cell {
-  display: none;
-}
+// // Today’s Cell Styling
+// .rbc-time-header-cell.rbc-today {
+//   background-color: #3498db; // Softer blue for today
+//   color: #ffffff;
+// }
 
-.rbc-time-header-cell .rbc-today {
-  background-color: #DC3545 !important;
-  color: rgb(255, 255, 255);
-}
+// // Time Slot Styling
+// .rbc-time-slot {
+//   color: #0076ec; // Consistent color for time slots
+//   z-index: 1;
+//   height: 100%;
+//   text-align: center;
+//   align-items: center;
+//   border-right: 1px solid #e0e0e0; // Light border for better separation
+//   padding: 8px;
+// }
 
-.rbc-time-slot {
-  color: #000000;
-  z-index: 1;
-}
+// // Event Styling
+// .rbc-event,
+// .rbc-background-event {
+//   z-index: 2;
+//   padding: 5px 10px !important;
+//   border: none !important;
+//   color: #ffffff;
+//   border-radius: 6px;
+//   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+//   font-size: 14px;
+//   transition: background-color 0.3s, box-shadow 0.3s;
+// }
 
-.rbc-time-slot:not(.rbc-today .rbc-time-slot) {
-  background-color: #ffffff;
-}
+// .rbc-event {
+//   background-color: #0076ec; // Primary event color
+// }
 
-/* Event Styles */
-.rbc-event,
-.rbc-background-event {
-  z-index: 2;
-  padding: 0px !important;
-  border: none !important;
-}
+// .rbc-background-event {
+//   background-color: #a3c2f1; // Lighter color for background events
+// }
 
-.rbc-event-label {
-  display: none !important;
-}
+// .rbc-event-label {
+//   display: none !important;
+// }
 
-.rbc-events-container {
-  width: 100% !important;
-}
+// .rbc-events-container {
+//   width: 100% !important;
+// }
 
-// Mobile Styles
+// // Hover Effects
+// .rbc-event:hover,
+// .rbc-background-event:hover {
+//   cursor: pointer;
+//   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+// }
+
+// // Week View Styling
+// .rbc-time-view {
+//   border-top: 1px solid #e0e0e0;
+// }
+
+// .rbc-day-slot {
+//   border-right: 1px solid #e0e0e0;
+// }
+
+// .rbc-day-slot:first-child {
+//   border-left: 1px solid #e0e0e0;
+// }
+
+// .rbc-time-header {
+//   background-color: #e9ecef;
+//   border-bottom: 1px solid #e0e0e0;
+// }
+
+// // Mobile Styles
 // @media (max-width: 768px) {
 //   .rbc-header {
-//     font-size: 12px !important;
-//     height: 30px !important;
+//     font-size: 14px !important;
+//     height: 40px !important;
 //   }
 
-//   .rbc-time-header-cell .rbc-today {
-//     background-color: #DC3545 !important;
-//     color: rgb(255, 255, 255);
-//     font-size: 12px !important;
+//   .rbc-time-header-cell.rbc-today {
+//     background-color: #3498db !important;
+//     color: #ffffff;
+//     font-size: 14px !important;
 //   }
 
 //   .rbc-time-slot {
-//     font-size: 12px !important;
+//     font-size: 14px !important;
 //   }
 
 //   .rbc-event,
 //   .rbc-background-event {
-//     padding: 0px !important;
+//     padding: 3px 7px !important;
 //     font-size: 12px !important;
 //   }
 
@@ -75,3 +112,133 @@
 //     font-size: 12px !important;
 //   }
 // }
+
+
+// Define variables for colors and other styles
+$primary-color: #3498db;
+$secondary-color: #2ecc71;
+$text-color: #333;
+$background-color: #f9f9f9;
+$border-color: #dddddd9f;
+$current-time-color: #6de73c4b; // Color for current time indicator
+
+.rbc-calendar {
+  background-color: $background-color;
+
+  // Styles for header row
+  .rbc-header {
+    background-color: $background-color;
+    color: rgb(0, 0, 0);
+    font-weight: bold;
+    border-bottom: 1px solid $border-color;
+  }
+
+  // Styles for day background and slot borders
+  .rbc-day-bg {
+    display: none;
+  }
+
+  .rbc-day-slot {
+    border: 1px solid $border-color;
+  }
+
+  .rbc-events-container{
+    justify-content: center;
+    margin: 0%;
+  }
+  // Styles for events
+  .rbc-event {
+    background-color: $secondary-color;
+    color: white;
+    border-radius: 4px;
+    padding: 0.2rem;
+    // box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    // &:hover {
+    //   background-color: darken($secondary-color, 10%);
+    // }
+    width: 100%;
+    margin: auto;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .rbc-event-content{
+    justify-content: center;
+    align-items: center;
+    height: fit-content;
+  }
+
+  .rbc-event-label {
+  text-align: center;
+  width: 100%;
+  font-weight: bold;
+  }
+
+  .rbc-selected {
+    color: white;
+  }
+
+  .rbc-agenda-event {
+    background-color: $secondary-color;
+    border-radius: 4px;
+    padding: 0.2rem;
+    color: white;
+  }
+
+  // Weekly view specific styles
+  .rbc-time-header {
+    background-color: $primary-color;
+    color: white;
+    font-weight: bold;
+    border-bottom: 1px solid $border-color;
+  }
+
+  .rbc-time-header-content {
+    // padding: 0.5rem;
+    font-size: 25px;
+  }
+
+  .rbc-time-slot {
+    // border: 1px solid $border-color;
+    background-color: #fff;
+    height: 100%;
+  }
+
+  .rbc-time-slot:last-child {
+    border-bottom: none;
+  }
+
+  .rbc-time-gutter {
+    background-color: #ff0000;
+    border-right: 1px solid $border-color;
+  }
+
+  .rbc-time-view {
+    border-top: 1px solid $border-color;
+  }
+
+  .rbc-allday-cell {
+    display: none;
+  }
+
+  // Style for current time indicator
+  .rbc-current-time-indicator {
+    background-color: $current-time-color;
+    width: 100%; // Adjust size as needed
+    height: 5px; // Adjust size as needed
+    z-index: 1; // Make sure it appears above other content
+  }
+
+  // Responsive adjustments
+  @media (max-width: 768px) {
+    .rbc-header {
+      font-size: 0.8rem;
+    }
+
+    .rbc-event {
+      font-size: 0.8rem;
+      padding: 0.1rem;
+    }
+  }
+}

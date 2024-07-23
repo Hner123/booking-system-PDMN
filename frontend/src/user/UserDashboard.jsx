@@ -166,6 +166,8 @@ const Dashboard = () => {
   };
 
   const handleConfirmDiscard = async (e) => {
+    e.preventDefault(); // Prevent default form behavior if used in a form
+  
     setShowDiscardModal(false); // Hide the discard modal
   
     try {
@@ -182,16 +184,17 @@ const Dashboard = () => {
         { headers }
       );
   
-      console.log(updateResponse.status);
-  
       if (updateResponse.status === 200) {
         localStorage.removeItem("reserveToken");
+        setMeetingToDelete(null); // Reset the meeting to delete state
+        setShowConfirmModal(false); // Hide the confirmation modal
         navigate('/dashboard'); // Navigate back to the dashboard
       }
     } catch (error) {
       console.error("Error during delete:", error);
     }
   };
+  
   
 
   const toggleMyReservations = () => {
@@ -603,6 +606,7 @@ const Dashboard = () => {
             </div>
           </div>
         )}
+
         
         {!firstLogin && <></>}
       </main>

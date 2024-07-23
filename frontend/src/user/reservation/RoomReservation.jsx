@@ -10,6 +10,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
+import '../../user/reservation/CustomBigCalendar.scss'
 
 const RoomReservation = () => {
   const localizer = momentLocalizer(moment);
@@ -57,7 +58,7 @@ const RoomReservation = () => {
             id: event._id, // Include an ID if available
             start: new Date(event.startTime),
             end: new Date(event.endTime),
-            title: 'Booked',
+            title: event.title,
             agenda: event.agenda,
             status: event.confirmation,
             department: event.user.department, // Include department
@@ -225,6 +226,7 @@ const RoomReservation = () => {
   const closeEventDetails = () => {
     setExpandedEvent(null);
   };
+
   return (
     <div className="room-reservation-container">
       <ToastContainer />
@@ -243,7 +245,9 @@ const RoomReservation = () => {
                   inline
                   calendarClassName="custom-calendar"
                 />
+                <p>Reservation of meeting can't be made prior 1 week ahead.</p>
               </div>
+              
               <div className="time-picker">
                 <h3>Start Time</h3>
                 <TimePicker
@@ -265,6 +269,7 @@ const RoomReservation = () => {
                 />
               </div>
             </div>
+            
             <div className="rsrv-buttons">
               <button className="cancel-btn" onClick={handleCancelTime}>Cancel</button>
               <button className="reserve-btn" onClick={handleReserve}>Reserve</button>
@@ -327,13 +332,16 @@ const RoomReservation = () => {
         <div className="calendar-column">
           <h3>Meetings For This Week</h3>
           <div className="calendar-container">
-            <Calendar
+          <Calendar
               localizer={localizer}
               events={events}
               startAccessor="start"
               endAccessor="end"
               style={{ height: '100%' }}
-              view={Views.WEEK} // Set the default view to week
+              min={new Date().setHours(8, 0, 0)} // Set minimum time to 8am
+              max={new Date().setHours(21, 0, 0)} // Set maximum time to 9pm (21:00)
+              defaultView={Views.WEEK} // Set the default view to week
+              views={[Views.WEEK, Views.DAY, Views.AGENDA]} // Restrict to Week, Day, and Agenda views
               eventPropGetter={(event) => ({
                 style: {
                   backgroundColor: departmentColors[event.department] || '#45813',
@@ -351,11 +359,12 @@ const RoomReservation = () => {
                     onClick={() => handleEventClick(event)}
                     style={{ cursor: 'pointer' }}
                   >
-                    <strong>{moment(event.start).format('h:mm a')}</strong>
+                    <strong>{event.title}</strong>
                   </div>
                 ),
               }}
             />
+
           </div>
         </div>
       </div>
