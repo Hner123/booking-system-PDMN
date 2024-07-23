@@ -123,6 +123,9 @@ const Settings = () => {
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
   const handleCancel = () => {
     setShowModal(true);

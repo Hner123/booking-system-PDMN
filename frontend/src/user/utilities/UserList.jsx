@@ -73,7 +73,9 @@ const UserList = () => {
                   {users[department].map((user) => (
                     <tr key={`${user.id}-${user.userName}`}>
                       <td>{user.userName}</td>
-                      <td>{user.firstName} {user.surName}</td>
+                      <td>
+                        {user.firstName} {user.surName}
+                      </td>
                       <td>{user.email}</td>
                     </tr>
                   ))}

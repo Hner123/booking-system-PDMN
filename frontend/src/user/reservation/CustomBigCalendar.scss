@@ -142,10 +142,11 @@ $current-time-color: #6de73c4b; // Color for current time indicator
     border: 1px solid $border-color;
   }
 
-  .rbc-events-container{
+  .rbc-events-container {
     justify-content: center;
     margin: 0%;
   }
+
   // Styles for events
   .rbc-event {
     background-color: $secondary-color;
@@ -163,16 +164,16 @@ $current-time-color: #6de73c4b; // Color for current time indicator
     align-items: center;
   }
 
-  .rbc-event-content{
+  .rbc-event-content {
     justify-content: center;
     align-items: center;
     height: fit-content;
   }
 
   .rbc-event-label {
-  text-align: center;
-  width: 100%;
-  font-weight: bold;
+    text-align: center;
+    width: 100%;
+    font-weight: bold;
   }
 
   .rbc-selected {

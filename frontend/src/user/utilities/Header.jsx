@@ -1,10 +1,10 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import * as FaIcons from 'react-icons/fa';
-import logo from '../../assets/logos/GDSLogo.png';
-import profile from '../../assets/Default Avatar.png';
-import './Header.css';
-import axios from 'axios';
+import React, { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import * as FaIcons from "react-icons/fa";
+import logo from "../../assets/logos/GDSLogo.png";
+import profile from "../../assets/Default Avatar.png";
+import "./Header.css";
+import axios from "axios";
 import WithAuth from '../../auth/WithAuth';
 
 const Header = () => {
@@ -70,18 +70,24 @@ const Header = () => {
 
   useEffect(() => {
     const handleOutsideClick = (event) => {
-      if (profileModalRef.current && !profileModalRef.current.contains(event.target)) {
+      if (
+        profileModalRef.current &&
+        !profileModalRef.current.contains(event.target)
+      ) {
         setProfileOpen(false);
       }
-      if (notifModalRef.current && !notifModalRef.current.contains(event.target)) {
+      if (
+        notifModalRef.current &&
+        !notifModalRef.current.contains(event.target)
+      ) {
         setNotifOpen(false);
       }
     };
 
-    document.addEventListener('mousedown', handleOutsideClick);
+    document.addEventListener("mousedown", handleOutsideClick);
 
     return () => {
-      document.removeEventListener('mousedown', handleOutsideClick);
+      document.removeEventListener("mousedown", handleOutsideClick);
     };
   }, []);
 
@@ -96,20 +102,20 @@ const Header = () => {
   };
 
   const navigateEdit = () => {
-    navigate('/user/edit');
+    navigate("/user/edit");
   };
 
   const navigateUserList = () => {
-    navigate('/employee-list');
+    navigate("/employee-list");
   };
 
   const handleLogoClick = () => {
-    navigate('/dashboard');
+    navigate("/dashboard");
   };
 
   const handleLogout = () => {
     localStorage.clear();
-    navigate('/');
+    navigate("/");
   };
 
   const toggleMenu = () => {
@@ -134,10 +140,12 @@ const Header = () => {
       );
 
       if (response.status === 200) {
-        setNotifications(notifications.map(notification => ({
-          ...notification,
-          read: true
-        })));
+        setNotifications(
+          notifications.map((notification) => ({
+            ...notification,
+            read: true,
+          }))
+        );
       }
     } catch (error) {
       console.error("Error marking notifications as read:", error);
@@ -146,7 +154,11 @@ const Header = () => {
 
   return (
     <header className="dashboard-header">
-      <div className="logodb" onClick={handleLogoClick} style={{ cursor: 'pointer' }}>
+      <div
+        className="logodb"
+        onClick={handleLogoClick}
+        style={{ cursor: "pointer" }}
+      >
         <span className="tooltip-text">Home</span>
         <img src={logo} alt="Logo" />
       </div>
@@ -158,12 +170,18 @@ const Header = () => {
         </div>
         <div className="notif-icon" onClick={handleNotifToggle}>
           <FaIcons.FaBell />
-          <span className="notif-count">{notifications.filter(n => !n.read).length}</span>
+          <span className="notif-count">
+            {notifications.filter((n) => !n.read).length}
+          </span>
           <span className="tooltip-text">Notifications</span>
         </div>
         <div className="profile-icon" onClick={handleModalToggle}>
           <FaIcons.FaUserCircle />
-          {userData && <span className="user-name">{userData.firstName} {userData.surName}</span>}
+          {userData && (
+            <span className="user-name">
+              {userData.firstName} {userData.surName}
+            </span>
+          )}
         </div>
 
         {/* Burger Menu Icon for mobile */}
@@ -184,7 +202,9 @@ const Header = () => {
             </div>
             <div className="profile-icon" onClick={navigateEdit}>
               <FaIcons.FaUserCircle />
-              <span className="user-name">{userData.firstName} {userData.surName}</span>
+              <span className="user-name">
+                {userData.firstName} {userData.surName}
+              </span>
             </div>
           </div>
         )}
@@ -196,20 +216,25 @@ const Header = () => {
               <div className="profileCont">
                 <img src={profile} alt="profile" />
               </div>
-              {userData && 
+              {userData && (
                 <>
-                  <h2 style={{ textAlign: "center" }}>Hello! {userData.firstName} {userData.surName}</h2>
-                  <p style={{ textAlign: "center" }}>Department: {userData.department}</p>
+                  <h2 style={{ textAlign: "center" }}>
+                    Hello! {userData.firstName} {userData.surName}
+                  </h2>
+                  <p style={{ textAlign: "center" }}>
+                    Department: {userData.department}
+                  </p>
                 </>
-              }           
-              <hr style={{ border: "0.5px solid #7C8B9D", marginBottom: "20px" }}></hr>
-              <div className="headermodal-buttons" style={{display: 'flex', gap:'10px'}}>
-                <button onClick={navigateEdit}>
-                  Edit Profile
-                </button>
-                <button onClick={handleLogout}>
-                  Log Out
-                </button>
+              )}
+              <hr
+                style={{ border: "0.5px solid #7C8B9D", marginBottom: "20px" }}
+              ></hr>
+              <div
+                className="headermodal-buttons"
+                style={{ display: "flex", gap: "10px" }}
+              >
+                <button onClick={navigateEdit}>Edit Profile</button>
+                <button onClick={handleLogout}>Log Out</button>
               </div>
             </div>
           </div>
@@ -221,19 +246,26 @@ const Header = () => {
             <div className="headermodal-content">
               <div>
                 <h1 style={{ margin: "0" }}>Your Notifications</h1>
-                <hr style={{ border: "0.5px solid #7C8B9D", margin: "5px" }}></hr>
+                <hr
+                  style={{ border: "0.5px solid #7C8B9D", margin: "5px" }}
+                ></hr>
                 <ul className="notifications-list">
                   {notifications.map((notification, index) => (
-                    <li key={index} className={`notification-item ${notification.read ? 'read' : 'unread'}`}>
+                    <li
+                      key={index}
+                      className={`notification-item ${
+                        notification.read ? "read" : "unread"
+                      }`}
+                    >
                       <p>{notification.message}</p>
-                      <span>{new Date(notification.date).toLocaleString()}</span>
+                      <span>
+                        {new Date(notification.date).toLocaleString()}
+                      </span>
                     </li>
                   ))}
                 </ul>
-                <div className='headermodal-buttons'>
-                  <button onClick={markAllAsRead}>
-                    Mark All as Read
-                  </button>
+                <div className="headermodal-buttons">
+                  <button onClick={markAllAsRead}>Mark All as Read</button>
                 </div>
               </div>
             </div>

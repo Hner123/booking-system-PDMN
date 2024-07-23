@@ -14,7 +14,7 @@
   align-items: center;
   border-bottom: solid 1px #d1d9e2;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  position: relative; 
+  position: relative;
 }
 
 .logodb {
@@ -96,7 +96,8 @@
 /* Header Modal (Dropdown) */
 .headermodal {
   position: absolute;
-  top: 60px; /* Adjust the top position to place it under the profile tab */
+  top: 60px;
+  /* Adjust the top position to place it under the profile tab */
   right: 0;
   background-color: #fff;
   padding: 20px;
@@ -136,11 +137,16 @@
 }
 
 .profileCont img {
-  width: 100px; /* Minimal width */
-  height: 100px; /* Minimal height */
-  object-fit: cover; /* Maintain aspect ratio */
-  border-radius: 50%; /* Round the image */
-  border: 2px solid #7c8b9d; /* Border color */
+  width: 100px;
+  /* Minimal width */
+  height: 100px;
+  /* Minimal height */
+  object-fit: cover;
+  /* Maintain aspect ratio */
+  border-radius: 50%;
+  /* Round the image */
+  border: 2px solid #7c8b9d;
+  /* Border color */
 }
 
 .tooltip-text {
@@ -153,7 +159,8 @@
   padding: 5px 0;
   position: absolute;
   z-index: 1;
-  bottom: 80%; /* Position the tooltip above the icon */
+  bottom: 80%;
+  /* Position the tooltip above the icon */
   left: 50%;
   margin-left: -60px;
   opacity: 0;
@@ -208,7 +215,8 @@
   padding: 5px 0;
   position: absolute;
   z-index: 1;
-  bottom: 80%; /* Position the tooltip above the icon */
+  bottom: 80%;
+  /* Position the tooltip above the icon */
   left: 50%;
   opacity: 0;
   transition: opacity 0.3s;
@@ -236,14 +244,16 @@
 
 @media screen and (max-width: 768px) {
   .logodb {
-    display: block; /* Show logo on smaller screens */
+    display: block;
+    /* Show logo on smaller screens */
     padding: 0%;
     margin: 0%;
     height: auto;
   }
 
   .logodb img {
-    content: url("../../assets/logos/GDSLoog2.png"); /* Use mobile logo */
+    content: url("../../assets/logos/GDSLoog2.png");
+    /* Use mobile logo */
   }
 
   .header-actions {
@@ -253,25 +263,31 @@
   .profile-icon,
   .notif-icon,
   .user-list-icon {
-    display: none; /* Hide profile, notification, and user list icons on smaller screens */
+    display: none;
+    /* Hide profile, notification, and user list icons on smaller screens */
   }
 
   .burger-menu {
-    display: flex; /* Show burger menu on smaller screens */
+    display: flex;
+    /* Show burger menu on smaller screens */
   }
 
   .dashboard-header {
-    flex-direction: row; /* Stack items vertically in header on smaller screens */
+    flex-direction: row;
+    /* Stack items vertically in header on smaller screens */
     align-items: flex-start;
   }
 
   .dashboard-header .header-actions {
-    order: 1; /* Move header actions (like search bar) below logo or burger menu */
-    margin-top: 10px; /* Add space between logo/burger and header actions */
+    order: 1;
+    /* Move header actions (like search bar) below logo or burger menu */
+    margin-top: 10px;
+    /* Add space between logo/burger and header actions */
   }
 
   .headermodal {
-    top: 60px; /* Adjust modal position to fit under burger menu */
+    top: 60px;
+    /* Adjust modal position to fit under burger menu */
     right: 10px;
   }
 }

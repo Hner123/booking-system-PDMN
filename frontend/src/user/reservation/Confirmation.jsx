@@ -46,7 +46,7 @@ const BookingConfirmation = () => {
   };
 
   const handleReturnToDashboard = () => {
-    localStorage.removeItem('reserveToken')
+    localStorage.removeItem("reserveToken");
     navigate("/dashboard");
   };
 
@@ -68,23 +68,23 @@ const BookingConfirmation = () => {
     return (end - start) / (1000 * 60 * 60); // Convert milliseconds to hours
   };
 
-  const isConfirmed = bookData.confirmation === true
+  const isConfirmed = bookData.confirmation === true;
 
   return (
     <div className="booking-confirmation">
       <div className="confirmation-text">
         {bookData && isConfirmed ? (
           <>
-          <h1>
-            Your {bookData.roomName} Room reservation has been confirmed.
-          </h1>
-          <p>
-            Your booking for the dedicated room has been successfully
-            confirmed. You can now rest assured that your reservation is
-            locked in and ready for your upcoming event. You can view the
-            details of your meeting, or head back to the dashboard.
-          </p>
-        </>
+            <h1>
+              Your {bookData.roomName} Room reservation has been confirmed.
+            </h1>
+            <p>
+              Your booking for the dedicated room has been successfully
+              confirmed. You can now rest assured that your reservation is
+              locked in and ready for your upcoming event. You can view the
+              details of your meeting, or head back to the dashboard.
+            </p>
+          </>
         ) : (
           <>
             <h1>
@@ -130,19 +130,23 @@ const BookingConfirmation = () => {
                       <strong>Number of PAX:</strong> {bookData.caps.pax}
                     </p>
                     <p>
-                      <strong>Attendees:</strong> {bookData.attendees.join(", ")}
+                      <strong>Attendees:</strong>{" "}
+                      {bookData.attendees.join(", ")}
                     </p>
                   </div>
                   <div className="right-content">
                     <h3>{bookData.roomName}</h3>
                     <p>
-                      <strong>Date: </strong> {new Date(bookData.scheduleDate).toLocaleDateString()}
+                      <strong>Date: </strong>{" "}
+                      {new Date(bookData.scheduleDate).toLocaleDateString()}
                     </p>
                     <p>
-                      <strong>Meeting Start: </strong> {new Date(bookData.startTime).toLocaleTimeString()}
+                      <strong>Meeting Start: </strong>{" "}
+                      {new Date(bookData.startTime).toLocaleTimeString()}
                     </p>
                     <p>
-                      <strong>Meeting End: </strong> {new Date(bookData.endTime).toLocaleTimeString()}
+                      <strong>Meeting End: </strong>{" "}
+                      {new Date(bookData.endTime).toLocaleTimeString()}
                     </p>
                   </div>
                 </div>

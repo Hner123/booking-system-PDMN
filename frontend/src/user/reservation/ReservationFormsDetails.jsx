@@ -1,41 +1,46 @@
-import React, { useState, useEffect, useRef } from 'react';
-import Autosuggest from 'react-autosuggest';
-import { useNavigate } from 'react-router-dom';
-import roomBg from '../../assets/roombg.jpg';
-import axios from 'axios';
-import { ToastContainer, toast } from 'react-toastify';
-import WithoutAuthReserve from '../../auth/WithAuthReserve';
+import React, { useState, useEffect, useRef } from "react";
+import Autosuggest from "react-autosuggest";
+import { useNavigate } from "react-router-dom";
+import roomBg from "../../assets/roombg.jpg";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import WithoutAuthReserve from "../../auth/WithAuthReserve";
 
 const ReservationFormsDetails = () => {
   const formRef = useRef();
-  const [pax, setPax] = useState('');
+  const [pax, setPax] = useState("");
   const [attendees, setAttendees] = useState([]);
-  const [attendeeInput, setAttendeeInput] = useState('');
+  const [attendeeInput, setAttendeeInput] = useState("");
   const [suggestions, setSuggestions] = useState([]);
-  const [bookData, setBookData] = useState('');
+  const [bookData, setBookData] = useState("");
   const [userData, setUserData] = useState([]);
+  const [selectedRoom, setSelectedRoom] = useState("");
+  const [showGuestInput, setShowGuestInput] = useState(false); // New state for guest input visibility
+  const [guestNames, setGuestNames] = useState(""); // State to store guest names
 
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     caps: {
       pax: "",
-      reason: ""
+      reason: "",
     },
     attendees: [],
-    title: ""
+    title: "",
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (name === 'reason') {
+    if (name === "reason") {
       setFormData({
         ...formData,
         caps: {
           ...formData.caps,
-          reason: value
-        }
+          reason: value,
+        },
       });
+    } else if (name === "guestNames") {
+      setGuestNames(value);
     } else {
       setFormData({ ...formData, [name]: value });
     }
@@ -45,13 +50,18 @@ const ReservationFormsDetails = () => {
     const { value } = event.target;
     setPax(value);
     setFormData({
-      ...formData,
+     ...formData,
       caps: {
-        ...formData.caps,
+       ...formData.caps,
         pax: value,
-        reason: ''
-      }
+        reason: "",
+      },
     });
+  
+    if (value === "1-2") {
+      setAttendees([]);
+      setAttendeeInput("");
+    }
   };
 
   useEffect(() => {
@@ -70,6 +80,7 @@ const ReservationFormsDetails = () => {
         );
         if (response.status === 200) {
           setBookData(response.data);
+          setSelectedRoom(response.data.roomName);
         }
       } catch (error) {
         console.error("Error fetching book data:", error);
@@ -88,15 +99,17 @@ const ReservationFormsDetails = () => {
           "Content-Type": "application/json",
         };
 
-        const response = await axios.get(
-          `http://localhost:8800/api/user/`,
-          { headers }
-        );
+        const response = await axios.get(`http://localhost:8800/api/user/`, {
+          headers,
+        });
         if (response.status === 200) {
-          // Exclude the active user from suggestions
-          const users = response.data.filter(user => user._id !== bookData.user._id);
-          // Add disabled property to each user
-          const usersWithDisabled = users.map(user => ({ ...user, disabled: false }));
+          const users = response.data.filter(
+            (user) => user._id !== bookData.user._id
+          );
+          const usersWithDisabled = users.map((user) => ({
+            ...user,
+            disabled: false,
+          }));
           setUserData(usersWithDisabled);
         }
       } catch (error) {
@@ -112,9 +125,12 @@ const ReservationFormsDetails = () => {
   const getSuggestions = (value) => {
     const inputValue = value.trim().toLowerCase();
     const inputLength = inputValue.length;
-    return inputLength === 0 ? [] : userData.filter(user =>
-      user.userName.toLowerCase().includes(inputValue) && !user.disabled
-    );
+    return inputLength === 0
+      ? []
+      : userData.filter(
+          (user) =>
+            user.userName.toLowerCase().includes(inputValue) && !user.disabled
+        );
   };
 
   const onSuggestionsFetchRequested = ({ value }) => {
@@ -128,9 +144,7 @@ const ReservationFormsDetails = () => {
   const getSuggestionValue = (suggestion) => suggestion.userName;
 
   const renderSuggestion = (suggestion) => (
-    <div className="suggestion-chip">
-      {suggestion.userName}
-    </div>
+    <div className="suggestion-chip">{suggestion.userName}</div>
   );
 
   const onAttendeeInputChange = (event, { newValue }) => {
@@ -138,67 +152,97 @@ const ReservationFormsDetails = () => {
   };
 
   const onSuggestionSelected = (event, { suggestion }) => {
+    if (formData.caps.pax === "1-2" && attendees.length >= 2) {
+      toast.error("You can only select up to 2 attendees for 1-2 pax.");
+      return;
+    }
+  
     const updatedAttendees = [...attendees, suggestion.userName];
     setAttendees(updatedAttendees);
-    
-    // Update formData with the new list of attendees
+  
     setFormData({
-      ...formData,
+     ...formData,
       attendees: updatedAttendees,
     });
-
-    // Disable the selected user
-    setUserData(userData.map(user => user._id === suggestion._id ? { ...user, disabled: true } : user));
   
-    setAttendeeInput('');
+    setUserData(
+      userData.map((user) =>
+        user._id === suggestion._id? {...user, disabled: true } : user
+      )
+    );
+  
+    setAttendeeInput("");
   };
 
   const removeAttendee = (index) => {
     const removedAttendee = attendees[index];
     setAttendees(attendees.filter((_, i) => i !== index));
-    
-    // Re-enable the removed user
-    setUserData(userData.map(user => user.userName === removedAttendee ? { ...user, disabled: false } : user));
+
+    setUserData(
+      userData.map((user) =>
+        user.userName === removedAttendee ? { ...user, disabled: false } : user
+      )
+    );
   };
 
   const inputProps = {
     placeholder: "Type attendee names",
     value: attendeeInput,
     onChange: onAttendeeInputChange,
-    style: { width: '100%' }
+    style: { width: "100%" },
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+  
+    if (selectedRoom === "Palawan and Boracay" && attendees.length < 8) {
+      toast.error("For 'Palawan and Boracay', you must have at least 8 attendees.");
+      return;
+    }
+  
+    if (formData.caps.pax === "3-More" && attendees.length < 3) {
+      toast.error("You must have at least 3 attendees for 3-More pax.");
+      return;
+    }
     
+    const additionalAttendees = guestNames
+      .split(",")
+      .map((name) => name.trim())
+      .filter((name) => name);
+
     const updatedReserve = {
       caps: {
         pax: formData.caps.pax,
-        reason: formData.caps.reason
+        reason: formData.caps.reason,
       },
-      attendees: formData.attendees,
+      attendees: [...formData.attendees, ...additionalAttendees],
       title: formData.title,
-      confirmation: bookData.confirmation === false || (formData.caps.pax === "1-2") || bookData.agenda ? false : true
+      confirmation:
+        bookData.confirmation === false ||
+        formData.caps.pax === "1-2" ||
+        bookData.agenda
+          ? false
+          : true,
     };
-  
+
     try {
       const reserveId = localStorage.getItem("reserveToken");
       const token = localStorage.getItem("authToken");
-  
+
       const headers = {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       };
-  
+
       const updateResponse = await axios.patch(
         `http://localhost:8800/api/book/edit/${reserveId}`,
         updatedReserve,
         { headers }
       );
-  
+
       if (updateResponse.status === 201) {
         toast.success("Successfully updated information.");
-        navigate('/confirmation')
+        navigate("/confirmation");
       } else {
         toast.error("Failed to update information.");
       }
@@ -209,39 +253,57 @@ const ReservationFormsDetails = () => {
   };
 
   return (
-    <div className='form-page'>
-      <ToastContainer/>
+    <div className="form-page">
+      <ToastContainer />
       <h1>Booking Details</h1>
       <div className="reservation-details-container">
         <div className="form-column">
-          <div className='form-title'>
+          <div className="form-title">
             <h2>Reservation Details</h2>
-            <p>Please enter the correct information and check the details before confirming your booking.</p>
+            <p>
+              Please enter the correct information and check the details before
+              confirming your booking.
+            </p>
           </div>
-          
-          <form className="reservation-form" ref={formRef} onSubmit={handleSubmit}>
-            <div className='read-only-group'>
+
+          <form
+            className="reservation-form"
+            ref={formRef}
+            onSubmit={handleSubmit}
+          >
+            <div className="read-only-group">
               <div style={{ flex: 1 }}>
                 <label htmlFor="name">Username:</label>
-                {bookData && 
+                {bookData && (
                   <div id="name" className="read-only">
                     {bookData.user.userName}
                   </div>
-                }
+                )}
               </div>
               <div style={{ flex: 1 }}>
-                <label htmlFor="department">Department:</label>          
-                {bookData && 
+                <label htmlFor="department">Department:</label>
+                {bookData && (
                   <div id="department" className="read-only">
                     {bookData.user.department}
                   </div>
-                }
+                )}
               </div>
             </div>
 
+            <label htmlFor="title">Meeting Title:</label>
+            <input
+              type="text"
+              id="title"
+              name="title"
+              value={formData.title}
+              onChange={handleChange}
+              placeholder="Enter meeting title"
+              required
+            />
+
             <div>
               <label htmlFor="pax">Number of Pax</label>
-              <div className="radio-group" style={{ display: 'flex' }}>
+              <div className="radio-group" style={{ display: "flex" }}>
                 <div className="radio-option half-width">
                   <input
                     type="radio"
@@ -250,8 +312,8 @@ const ReservationFormsDetails = () => {
                     value="1-2"
                     checked={formData.caps.pax === "1-2"}
                     onChange={handlePaxChange}
-                    style={{ width: 'auto' }}
-                    required
+                    disabled={selectedRoom !== "Palawan"}
+                    style={{ width: "auto" }}
                   />
                   <label htmlFor="pax-1-2">1-2 attendees</label>
                 </div>
@@ -263,15 +325,30 @@ const ReservationFormsDetails = () => {
                     value="3-More"
                     checked={formData.caps.pax === "3-More"}
                     onChange={handlePaxChange}
-                    style={{ width: 'auto' }}
-                    required
+                    disabled={selectedRoom !== "Palawan"}
+                    style={{ width: "auto" }}
                   />
-                  <label htmlFor="pax-3-more">3 or more attendees</label>
+                  <label htmlFor="pax-3-more">3 - 8 attendees</label>
                 </div>
+                {selectedRoom === "Palawan and Boracay" && (
+                  <div className="radio-option half-width">
+                    <input
+                      type="radio"
+                      id="pax-8-more"
+                      name="pax"
+                      value="8-More"
+                      checked={formData.caps.pax === "8-More"}
+                      onChange={handlePaxChange}
+                      style={{ width: "auto" }}
+                      required
+                    />
+                    <label htmlFor="pax-8-more">8 or more attendees</label>
+                  </div>
+                )}
               </div>
             </div>
 
-            {pax === '1-2' && (
+            {pax === "1-2" && (
               <div>
                 <label htmlFor="reason">Reason for 1-2 attendees</label>
                 <input
@@ -281,7 +358,7 @@ const ReservationFormsDetails = () => {
                   value={formData.caps.reason}
                   onChange={handleChange}
                   placeholder="Enter reason"
-                  required={pax === '1-2'}
+                  required={pax === "1-2"}
                 />
               </div>
             )}
@@ -297,61 +374,105 @@ const ReservationFormsDetails = () => {
                 inputProps={inputProps}
                 onSuggestionSelected={onSuggestionSelected}
                 theme={{
-                  container: 'autosuggest-container',
-                  suggestionsContainerOpen: 'suggestions-container', 
-                  suggestionsList: 'suggestions-list',
-                  suggestion: 'suggestion-chip'
+                  container: "autosuggest-container",
+                  suggestionsContainerOpen: "suggestions-container",
+                  suggestionsList: "suggestions-list",
+                  suggestion: "suggestion-chip",
                 }}
               />
               <div className="attendees-row">
                 {attendees.map((attendee, index) => (
                   <div key={index} className="attendee-chip">
                     <span className="attendee-text">{attendee}</span>
-                    <button type="button" className="remove-button" onClick={() => removeAttendee(index)}>×</button>
+                    <button
+                      type="button"
+                      className="remove-button"
+                      onClick={() => removeAttendee(index)}
+                    >
+                      ×
+                    </button>
                   </div>
                 ))}
               </div>
+
+              <div className="guest-input-section">
+                <div className="guest-option">
+                  <input
+                    type="checkbox"
+                    checked={showGuestInput}
+                    onChange={() => setShowGuestInput(!showGuestInput)}
+                    style={{ width: "auto" }}
+                  />
+                  <label className="checkbox-label">Have any Guest</label>
+                </div>
+                {showGuestInput && (
+                  <div className="guest-input-wrapper">
+                    <label htmlFor="guestNames" className="guest-names-label">
+                      Enter guest names (comma separated):
+                    </label>
+                    <input
+                      type="text"
+                      id="guestNames"
+                      name="guestNames"
+                      value={guestNames}
+                      onChange={handleChange}
+                      placeholder="Enter guest names"
+                      className="guest-names-input"
+                    />
+                  </div>
+                )}
+              </div>
             </div>
 
-            <label htmlFor="title">Meeting Title:</label>
-            <input
-              type="text"
-              id="title"
-              name="title"
-              value={formData.title}
-              onChange={handleChange}
-              placeholder="Enter meeting title"
-              required
-            />
-
-            <button type="submit" style={{ alignItems: 'center' }}>Book</button>
-            <p style={{ marginTop: '10px', fontSize: '12px', color: '#666', textAlign: 'center' }}>
-              You cannot edit the meeting details once you book. Please check the details before confirming.
+            <button type="submit" style={{ alignItems: "center" }}>
+              Book
+            </button>
+            <p
+              style={{
+                marginTop: "10px",
+                fontSize: "12px",
+                color: "#666",
+                textAlign: "center",
+              }}
+            >
+              You cannot edit the meeting details once you book. Please check
+              the details before confirming.
             </p>
           </form>
         </div>
 
-        <div className="details-column" style={{ flex: '1', position: 'relative' }}>
-          <div className="background-image" style={{ backgroundImage: `url(${roomBg})` }}>
+        <div
+          className="details-column"
+          style={{ flex: "1", position: "relative" }}
+        >
+          <div
+            className="background-image"
+            style={{ backgroundImage: `url(${roomBg})` }}
+          >
             <div className="color-overlay"></div>
-            {bookData && <>
-              <div className="details">
-                <h1>{bookData.roomName}</h1>
-                <div className="separator"></div>
-                <p>
-                  <strong>Date: </strong> {new Date(bookData.scheduleDate).toLocaleDateString()}
-                </p>
-                <p>
-                  <strong>Meeting Start: </strong> {new Date(bookData.startTime).toLocaleTimeString()}
-                </p>
-                <p>
-                  <strong>Meeting End: </strong> {new Date(bookData.endTime).toLocaleTimeString()}
-                </p>
-                <p>
-                  <strong>Meeting Title: </strong> {formData.title}
-                </p>
-              </div>
-            </>}
+            {bookData && (
+              <>
+                <div className="details">
+                  <h1>{bookData.roomName}</h1>
+                  <div className="separator"></div>
+                  <p>
+                    <strong>Date: </strong>{" "}
+                    {new Date(bookData.scheduleDate).toLocaleDateString()}
+                  </p>
+                  <p>
+                    <strong>Meeting Start: </strong>{" "}
+                    {new Date(bookData.startTime).toLocaleTimeString()}
+                  </p>
+                  <p>
+                    <strong>Meeting End: </strong>{" "}
+                    {new Date(bookData.endTime).toLocaleTimeString()}
+                  </p>
+                  <p>
+                    <strong>Meeting Title: </strong> {formData.title}
+                  </p>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>
