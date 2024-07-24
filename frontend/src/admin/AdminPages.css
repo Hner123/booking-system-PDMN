@@ -797,7 +797,7 @@ button[type='appr']:hover{
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 16px;
-    width: 650px;
+    width: 100%;
 }
 
 .changeFields_admin form{

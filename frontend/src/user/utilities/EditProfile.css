@@ -44,20 +44,7 @@
     justify-content: space-between;
 }
 
-.togglePasswordBtn_user {
-    position: absolute;
-    right: 5px;
-    top: 71%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    cursor: pointer;
-    outline: none;
-    padding: 0;
-    font-size: 1rem;
-    color: #333;
-    /* Adjust color as needed */
-}
+
 
 .profileContain {
     margin: 1%;
@@ -92,16 +79,12 @@
 
 }
 
-.formGroup1 input,
-option,
-select {
-    flex: 2;
-    padding: 8px;
+/* .formGroup1 input,option,select {
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 16px;
-    width: 650px;
-}
+    width: 100%;
+} */
 
 .verifyemail {
     border: none;
@@ -116,15 +99,6 @@ select {
 
 .changeFields form {
     margin: 2% 5%;
-}
-
-.changeFields form>div {
-    margin: 20px;
-}
-
-input,
-select {
-    width: 100%;
 }
 
 .buttonGroup {
@@ -189,6 +163,66 @@ select {
     margin: 0 10px;
 }
 
+.editdetails{
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    align-items: center;
+
+    button[type='edit_email'], 
+    button[type='edit_userdept'],
+    button[type='edit_userpass'],
+    button[type='edit_email']:active, 
+    button[type='edit_userdept']:active,
+    button[type='edit_passworduser']:active{
+        color: black;
+        background-color: white;
+        border:none;
+        border-radius: 10px;
+        box-shadow: 0px 4px 4px 0px #7C8B9D;
+        width: 15%;
+        height: 100%;
+        min-height: 40px;
+        margin: none;
+    }
+
+    button[type='edit_email']:hover, 
+    button[type='edit_userdept']:hover,
+    button[type='edit_passworduser']:hover,
+    button[type='save_email'], 
+    button[type='save_userdept'],
+    button[type='save_userpass']
+    {
+        color: white;
+        background-color: #9c0b0b;
+        border:none;
+        border-radius: 10px;
+        box-shadow: 0px 4px 4px 0px #7C8B9D;
+        width: 15%;
+        height: 100%;
+        min-height: 40px;
+        margin: none;
+    }
+
+    .formGroup1{
+        width: 80%;
+    }
+    .togglePasswordBtn_user {
+        position: absolute;
+        right: 5px;
+        top: 70%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        outline: none;
+        padding: 0;
+        font-size: 1rem;
+        color: #333;
+        /* Adjust color as needed */
+    }
+}
+
 @media (max-width: 500px) {
     .upload {
         margin: 10%;
@@ -219,9 +253,4 @@ select {
         margin: 1% 10%;
     }
 
-    .formGroup1 input,
-    option,
-    select {
-        width: 270px;
-    }
 }
