@@ -17,12 +17,12 @@ button[type="redirect"]:hover{
 }
 .sidebar{
     background-color: white;
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     padding: 2rem 0;
     width: 15rem;
-    height: 100vh;
+    height: 100%;
     justify-content: center;
     z-index: 5;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
@@ -488,7 +488,9 @@ p.hed{
     text-align: center;
 }
 .listCont3{
-    margin: 100px;
+    margin: 100px 50px;
+    display: flex;
+    flex-direction: column;
 }
 
 
@@ -592,7 +594,8 @@ p.hed{
 .approval-card-container {
     display: flex;
     gap: 20px;
-    
+    margin: 50px 210px;
+    flex: 1 1 1;
   }
   
   .approveRooms {
@@ -801,6 +804,10 @@ button[type='appr']:hover{
     margin: 2% 6%;
 }
 
+input[type='reject']{
+    width: 300px;
+    height: 70px;
+}
 .changeFields_admin form>div{
     margin: 20px;
 }
