@@ -322,12 +322,15 @@ p.hed{
     border-collapse: collapse;
   }
   
-  .listTable th, .listTable td {
+  .listTable th, .listTable td{
     padding: 15px 20px;
     text-align: left;
   }
-
   
+  .listTable td.dept{
+    padding: 15px 0px;
+  }
+
   .listTable th {
     background-color: #f8f8f8;
     font-weight: bold;

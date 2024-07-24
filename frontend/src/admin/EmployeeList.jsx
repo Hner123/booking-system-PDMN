@@ -11,7 +11,11 @@ const EmployeeList = () => {
 	const [users, setUsers] = useState([]);
 	const [sortedUsers, setSortedUsers] = useState([]);
 	const [sortCriteria, setSortCriteria] = useState('');
+	const [editDeptModal,seteditDeptModal] = useState(false);
 
+	const toggleEditDept =()=>{
+		seteditDeptModal(!editDeptModal)
+	}
 	const toggleDropdown = () => {
 		setShowDropdown(!showDropdown);
 	};
@@ -107,10 +111,10 @@ const EmployeeList = () => {
 							<tr key={user.id}> {/* Use a unique key like user.id */}
 								<td>{user.firstName} {user.surName}</td>
 								<td>{user.userName}</td>
-								<td>{user.department}</td>
+								<td className="dept">{user.department}</td>
 								<td>
 									<div className="listMod">
-										<button className='editBtnadd'>Edit Department</button>
+										<button className='editBtnadd' onClick={toggleEditDept}>Edit Department</button>
 										<button>Delete</button>
 									</div>
 								</td>
@@ -118,6 +122,13 @@ const EmployeeList = () => {
 						))}
 					</tbody>
 				</table>
+				{editDeptModal&&(
+					<div className="modal">
+						<button>hello</button>
+					</div>
+				)
+
+				}
 			</div>
 		</div>
 	);
