@@ -100,18 +100,18 @@ const EmployeeList = () => {
 				<table className="listTable">
 					<thead>
 						<tr>
-							<th>Name</th>
-							<th>Username</th>
-							<th>Department</th>
+							<th className="tName" >Name</th>
+							<th className="tUname">Username</th>
+							<th className="tDept">Department</th>
 							<th></th>
 						</tr>
 					</thead>
 					<tbody>
 						{sortedUsers.map(user => (
 							<tr key={user.id}> {/* Use a unique key like user.id */}
-								<td>{user.firstName} {user.surName}</td>
-								<td>{user.userName}</td>
-								<td className="dept">{user.department}</td>
+								<td className="tName">{user.firstName} {user.surName}</td>
+								<td className="tUname">{user.userName}</td>
+								<td className="tDept">{user.department}</td>
 								<td>
 									<div className="listMod">
 										<button className='editBtnadd' onClick={toggleEditDept}>Edit Department</button>

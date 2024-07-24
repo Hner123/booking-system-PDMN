@@ -247,6 +247,7 @@ p.hed{
     gap:20px;
     justify-content: flex-end;
     margin: 30px 100px;
+    padding: 0px 5rem;
 }
 
 .listButtonG button{
@@ -304,18 +305,16 @@ p.hed{
   /* TABLE */
 
   .tableContainer {
-    width: 75%;
-    justify-self: fle;
+    width: 80%;
+    display: table;
     overflow-x: auto;
-    margin: auto;
+    margin: 0 auto;
+    padding: 0;
+    table-layout: fixed;
     
 }
   .listTable {
-    align-items: center;
-    justify-content: center;
     width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
     margin-top: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
@@ -324,11 +323,18 @@ p.hed{
   
   .listTable th, .listTable td{
     padding: 15px 20px;
-    text-align: left;
+    text-align: center;
+    text-overflow: ellipsis;
+    width: auto;
   }
-  
-  .listTable td.dept{
-    padding: 15px 0px;
+  td.tName, th.tName{
+    width: 450px;
+  }
+  td.tUname, th.tUname{
+    width: 250px;
+  }
+  td.tDept, th.tDept{
+    width: 650px;
   }
 
   .listTable th {
@@ -888,9 +894,9 @@ button[type='appr']:hover{
 
 @media (min-width:1900px) {
 
-    .tableContainer{
-        padding: 0px 100px;
-    }
+    /* .tableContainer{
+        padding: 0px 50px;
+    } */
 
     .listCont h1{
         font-size: 50px;

@@ -213,9 +213,9 @@ const Header = () => {
         {isProfileOpen && (
           <div className="headermodal" ref={profileModalRef}>
             <div className="headermodal-content text-center">
-              <div className="profileCont">
+              {/* <div className="profileCont">
                 <img src={profile} alt="profile" />
-              </div>
+              </div> */}
               {userData && (
                 <>
                   <h2 style={{ textAlign: "center" }}>

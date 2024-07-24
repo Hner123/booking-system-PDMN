@@ -114,6 +114,10 @@
   margin-top: 0;
 }
 
+.headermodal-buttons{
+  justify-content: center;
+}
+
 .headermodal-content button {
   text-align: center;
   width: auto;
