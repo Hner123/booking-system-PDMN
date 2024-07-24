@@ -110,7 +110,7 @@ const EmployeeList = () => {
 								<td>{user.department}</td>
 								<td>
 									<div className="listMod">
-										<button className="editBtn">Edit</button>
+										<button className='editBtnadd'>Edit Department</button>
 										<button>Delete</button>
 									</div>
 								</td>

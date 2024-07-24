@@ -49,10 +49,10 @@ ul{
     height: 1px;
 }
 .line{
-    top:280px;
+    top:225px;
 }
 .line2{
-    top:435px;
+    top:375px;
 }
 li .li{
     display: flex;
@@ -164,7 +164,7 @@ a{
 }
 .last{
     position:relative;
-    bottom:-300px;
+    bottom:-500px;
     left:0px;
 }
 
@@ -371,12 +371,17 @@ p.hed{
     cursor: pointer;
     border-radius: 4px;
     transition: background-color 0.3s;
-    width: 100px;
+    width: 400px;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
 
 .listMod button:hover{
     background-color: #B62626;
+    color: white;
+}
+
+.editBtnadd{
+    background-color: #9c0b0b;
     color: white;
 }
 /* Sidebar.css */
