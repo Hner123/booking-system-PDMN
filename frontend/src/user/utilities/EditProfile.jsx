@@ -56,83 +56,83 @@ const Settings = () => {
   });
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-  
-    // Validate email
-    try {
-      const validationResponse = await axios.post(
-        `http://localhost:8800/api/auth/validate`,
-        { email: formData.email }
-      );
-  
-      if (validationResponse.data.email.exists) {
-        toast.error("Email is already registered.");
-        return;
-      }
-    } catch (error) {
-      toast.error("Failed to validate email.");
+  e.preventDefault();
+
+  // Validate email
+  try {
+    const validationResponse = await axios.post(
+      `http://localhost:8800/api/auth/validate`,
+      { email: formData.email }
+    );
+
+    if (validationResponse.data.email.exists) {
+      toast.error("Email is already registered.");
       return;
     }
-  
-    // Validate current password and new password
-    try {
-      const isCurrentPasswordCorrect = await bcrypt.compare(formData.currPass, userData.passWord);
-      if (!isCurrentPasswordCorrect) {
-        toast.error("Current password is incorrect.");
-        return;
-      }
-  
-      if (formData.currPass === formData.passWord) {
-        toast.error("New password must be different from the current password.");
-        return;
-      }
-  
-      if (formData.passWord !== formData.retype) {
-        toast.error("New password does not match.");
-        return;
-      }
-    } catch (error) {
-      toast.error("Failed to validate password.");
+  } catch (error) {
+    toast.error("Failed to validate email.");
+    return;
+  }
+
+  // Validate current password and new password
+  try {
+    const isCurrentPasswordCorrect = await bcrypt.compare(formData.currPass, userData.passWord);
+    if (!isCurrentPasswordCorrect) {
+      toast.error("Current password is incorrect.");
       return;
     }
-  
-    // Construct updatedUser with only changed fields
-    const updatedUser = {};
-    if (formData.department !== userData.department) {
-      updatedUser.department = formData.department;
-    }
-  
-    if (formData.passWord) {
-      updatedUser.passWord = formData.passWord; // Only add the new password if it needs to be changed
-    }
-  
-    if (Object.keys(updatedUser).length === 0) {
-      toast.info("No changes detected.");
+
+    if (formData.currPass === formData.passWord) {
+      toast.error("New password must be different from the current password.");
       return;
     }
-  
-    // Update user
-    try {
-      const token = localStorage.getItem("authToken");
-      const headers = {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      };
-  
-      const updateResponse = await axios.patch(
-        `http://localhost:8800/api/user/edit/${userId}`,
-        updatedUser,
-        { headers }
-      );
-  
-      if (updateResponse.status === 201) {
-        toast.success("Successfully changed info.");
-      }
-    } catch (error) {
-      console.error("Error during patch:", error);
-      toast.error("Failed to update user info.");
+
+    if (formData.passWord !== formData.retype) {
+      toast.error("New password does not match.");
+      return;
     }
-  };
+  } catch (error) {
+    toast.error("Failed to validate password.");
+    return;
+  }
+
+  // Construct updatedUser with only changed fields
+  const updatedUser = {};
+  if (formData.department !== userData.department) {
+    updatedUser.department = formData.department;
+  }
+
+  if (formData.passWord) {
+    updatedUser.passWord = formData.passWord; // Only add the new password if it needs to be changed
+  }
+
+  if (Object.keys(updatedUser).length === 0) {
+    toast.info("No changes detected.");
+    return;
+  }
+
+  // Update user
+  try {
+    const token = localStorage.getItem("authToken");
+    const headers = {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    };
+
+    const updateResponse = await axios.patch(
+      `http://localhost:8800/api/user/edit/${userId}`,
+      updatedUser,
+      { headers }
+    );
+
+    if (updateResponse.status === 201) {
+      toast.success("Successfully changed info.");
+    }
+  } catch (error) {
+    console.error("Error during patch:", error);
+    toast.error("Failed to update user info.");
+  }
+};
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
