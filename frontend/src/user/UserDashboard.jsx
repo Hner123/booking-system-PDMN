@@ -168,7 +168,6 @@ const Dashboard = () => {
   };
 
   const handleConfirmDiscard = async (e) => {
-    setLoading(true);
     try {
       const token = localStorage.getItem("authToken");
 
@@ -182,12 +181,9 @@ const Dashboard = () => {
         { headers }
       );
 
-      console.log(updateResponse.status);
-
       if (updateResponse.status === 200) {
         localStorage.removeItem("reserveToken");
         setShowConfirmModal(false);
-        setLoading(false);
         window.location.reload();
       }
     } catch (error) {
