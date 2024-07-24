@@ -379,33 +379,36 @@ const Dashboard = () => {
           <div className="registration-form-modal">
             {userData && <h2>Welcome, {userData.userName}!</h2>}
             <form ref={formRef} onSubmit={handleRegistrationSubmit}>
-              <div className="form-section">
-                <label htmlFor="firstName">First Name</label>
-                <input
-                  type="text"
-                  id="firstName"
-                  name="firstName"
-                  value={formData.firstName}
-                  onChange={handleChange}
-                  placeholder="Firstname"
-                  required
-                  onInvalid={e => e.target.setCustomValidity('Please input your first name.')}
-                  onInput={e => e.target.setCustomValidity('')}
-                />
-              </div>
-              <div className="form-section">
-                <label htmlFor="surName">Surname</label>
-                <input
-                  type="text"
-                  id="surName"
-                  name="surName"
-                  value={formData.surName}
-                  onChange={handleChange}
-                  placeholder="Surname"
-                  required
-                  onInvalid={e => e.target.setCustomValidity('Please input your last name.')}
-                  onInput={e => e.target.setCustomValidity('')}
-                />
+            <div className="name-group">
+              <div className="name-section">
+                
+                  <label htmlFor="firstName">First Name</label>
+                  <input
+                    type="text"
+                    id="firstName"
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={handleChange}
+                    placeholder="First Name"
+                    required
+                    onInvalid={e => e.target.setCustomValidity('Please input your first name.')}
+                    onInput={e => e.target.setCustomValidity('')}
+                  />
+                </div>
+                <div className="name-section">
+                  <label htmlFor="lastName">Last Name</label>
+                  <input
+                    type="text"
+                    id="lastName"
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleChange}
+                    placeholder="Last Name"
+                    required
+                    onInvalid={e => e.target.setCustomValidity('Please input your last name.')}
+                    onInput={e => e.target.setCustomValidity('')}
+                  />
+                </div>
               </div>
               <div className="form-section">
                 <label htmlFor="email">Email Address</label>
@@ -444,9 +447,7 @@ const Dashboard = () => {
                 </select>
               </div>
               <div className="form-section">
-                <label htmlFor="new-password">
-                  Please enter your new password.
-                </label>
+                <label htmlFor="new-password">Please enter your new password.</label>
                 <input
                   type="password"
                   id="passWord"
@@ -463,6 +464,7 @@ const Dashboard = () => {
             </form>
           </div>
         </div>
+
       )}
       <main className="dashboard-main">
         <ToastContainer />

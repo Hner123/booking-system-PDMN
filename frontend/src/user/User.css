@@ -604,9 +604,12 @@
   /* Adjust as needed for your layout */
 }
 
-.loading-gif {
-  height: 30%;
-  /* Adjust the height to make it smaller */
-  width: auto;
-  /* Maintain aspect ratio */
+.name-group {
+  display: flex;
+  width: 100%;
+  gap: 10px;
+}
+
+.name-section{
+  width: 50%;
 }
