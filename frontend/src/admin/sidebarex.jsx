@@ -84,24 +84,20 @@ const Sidebar = () => {
         }
       >
         <ul>
-          <p className="hed">Profile Menu</p>
+          <p className="hed">Admin Menu</p>
           <div className="line" />
-          <li className="li">
-            <a href="/admin/profile-settings">
-              <FaIcons.FaUserCircle />
-              <p>Profile Settings</p>
-            </a>
-          </li>
           <li className="li">
             <a href="/notifications">
               <FaIcons.FaBell />
               <p>Notifications</p>
             </a>
-          </li>
-        </ul>
-        <ul>
-          <p className="hed">Admin Menu</p>
-          <div className="line2" />
+          </li>          
+          <li className="li">
+            <a href="/admin/room-approval">
+              <FaIcons.FaCalendarCheck />
+              <p>For Approval</p>
+            </a>
+          </li>          
           <li className="li">
             <a href="/admin/employee-list">
               <MdIcons.MdGroups />
@@ -114,13 +110,9 @@ const Sidebar = () => {
               <p>Add Employee</p>
             </a>
           </li>
-          <li className="li">
-            <a href="/admin/room-approval">
-              <FaIcons.FaCalendarCheck />
-              <p>For Approval</p>
-            </a>
-          </li>
+
         </ul>
+
       </div>
       <div className="last">
         <a href="/admin" onClick={handleLogout} className="logout-link">

@@ -17,7 +17,6 @@ import AddEmployee from './admin/AddEmployee.jsx';
 import ApprovalRoom from './admin/ApprovalRooms.jsx';
 import Approval from './admin/Approval.jsx';
 import NotFoundPage from './auth/NotFoundPage.jsx';
-import EditAdmin from './admin/AdminProfile.jsx';
 
 import Sidebaree from './admin/sidebarex.jsx'
 
@@ -107,13 +106,6 @@ function App() {
             <ApprovalRoom />
           </>
         } />
-        <Route path="/admin/profile-settings" element={
-          <>
-          <Sidebaree />
-          <EditAdmin/>
-          </>
-        }
-        />
 
       </Routes>
     </div>
