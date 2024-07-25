@@ -6,24 +6,22 @@ import WithAuth from "../../auth/WithAuth";
 
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
-import bcrypt from 'bcryptjs'
+import bcrypt from "bcryptjs";
 
 const Settings = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [isValidEmail, setIsValidEmail] = useState(false);
   const [editingPassword, setEditingPassword] = useState(false); // State for password edit mode
-  const [userData, setUsers] = useState();
+  const [userData, setUserData] = useState(null); // Initialize as null to indicate loading
 
   const userId = localStorage.getItem("userId");
-   const [editingEmail, setEditingEmail] = useState(false);
+  const [editingEmail, setEditingEmail] = useState(false);
   const [editingDepartment, setEditingDepartment] = useState(false);
   const [editingPasswords, setEditingPasswords] = useState(false);
 
   const navigate = useNavigate();
 
-
-  
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -38,10 +36,10 @@ const Settings = () => {
           { headers }
         );
         if (response.status === 200) {
-          setUsers(response.data);
+          setUserData(response.data);
           setFormData({
             email: response.data.email,
-            department: response.data.department
+            department: response.data.department,
           });
         }
       } catch (error) {
@@ -57,7 +55,7 @@ const Settings = () => {
     department: "",
     currPass: "",
     passWord: "",
-    retype: ""
+    retype: "",
   });
 
   const handleEditEmail = () => {
@@ -86,6 +84,7 @@ const Settings = () => {
     // Save password logic goes here
     setEditingPassword(false);
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -107,7 +106,10 @@ const Settings = () => {
 
     // Validate current password and new password
     try {
-      const isCurrentPasswordCorrect = await bcrypt.compare(formData.currPass, userData.passWord);
+      const isCurrentPasswordCorrect = await bcrypt.compare(
+        formData.currPass,
+        userData.passWord
+      );
       if (!isCurrentPasswordCorrect) {
         toast.error("Current password is incorrect.");
         return;
@@ -208,8 +210,14 @@ const Settings = () => {
                 <h3>{userData.userName}</h3>
               </div>
               <div>
-                <h4>Department: <br/>{userData.department}</h4>
-                <h4>Email:<br/> {userData.email}</h4>
+                <h4>
+                  Department: <br />
+                  {userData.department}
+                </h4>
+                <h4>
+                  Email:
+                  <br /> {userData.email}
+                </h4>
               </div>
             </div>
           </>
@@ -220,7 +228,7 @@ const Settings = () => {
               <div className="formGroup1">
                 <label htmlFor="email">
                   Change E-mail Address:
-                  {isValidEmail && (
+                  {editingEmail && (
                     <button type="button" className="verifyemail">
                       Verify
                     </button>
@@ -233,26 +241,30 @@ const Settings = () => {
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="Enter your valid e-mail address"
+                  disabled={!editingEmail} // Disable if not editing
                 />
               </div>
               {!editingEmail ? (
-              <button type='edit_email' onClick={handleEditEmail}>
-                Edit
-              </button>
-            ) : (
-              <button type='save_email' onClick={handleSaveEmail}>
-                Save
-              </button>
-            )}
+                <button type="edit_email" onClick={handleEditEmail}>
+                  Edit
+                </button>
+              ) : (
+                <button type="save_email" onClick={handleSaveEmail}>
+                  Save
+                </button>
+              )}
             </div>
             <div className="editdetails">
               <div className="formGroup1">
-                <label htmlFor="department">Change Department / Company:</label>
+                <label htmlFor="department">
+                  Change Department / Company:
+                </label>
                 <select
                   id="department"
                   name="department"
                   value={formData.department}
                   onChange={handleChange}
+                  disabled={!editingDepartment} // Disable if not editing
                 >
                   <option value="">Select Department</option>
                   <option value="Philippine Dragon Media Network">
@@ -268,14 +280,14 @@ const Settings = () => {
                 </select>
               </div>
               {!editingDepartment ? (
-              <button type='edit_userdept' onClick={handleEditDepartment}>
-                Edit
-              </button>
-            ) : (
-              <button type='save_userdept' onClick={handleSaveDepartment}>
-                Save
-              </button>
-            )}
+                <button type="edit_userdept" onClick={handleEditDepartment}>
+                  Edit
+                </button>
+              ) : (
+                <button type="save_userdept" onClick={handleSaveDepartment}>
+                  Save
+                </button>
+              )}
             </div>
             <div className="editdetails">
               <div className="formGroup1" style={{ position: "relative" }}>
@@ -288,6 +300,7 @@ const Settings = () => {
                   onChange={handleChange}
                   placeholder="Enter current password"
                   className="passwordInput"
+                  disabled={!editingPassword} // Disable if not editing
                 />
                 <button
                   type="button"
@@ -298,65 +311,63 @@ const Settings = () => {
                 </button>
               </div>
               {!editingPassword ? (
-              <button type='edit_userpass' onClick={handleEditPassword}>
-                Edit
-              </button>
-            ) : (
-              <button type='save_userpass' onClick={handleSavePassword}>
-                Save
-              </button>
-            )}
+                <button type="edit_passworduser" onClick={handleEditPassword}>
+                  Edit
+                </button>
+              ) : (
+                <button type="save_passworduser" onClick={handleSavePassword}>
+                  Save
+                </button>
+              )}
             </div>
-            <div className="centerpass" >
             {editingPassword && ( // Render new password fields if editingPassword is true
-              <>
-            <div className="editdetails" style={{display:'flex',justifyContent:'center', flexDirection:'column'}}>
-            <div className="formGroup1" style={{ position: "relative" }}>
+              <div className="editdetails">
+                <div className="formGroup1">
                   <label htmlFor="password">New Password:</label>
                   <input
-                      type={showPassword ? "text" : "password"}
-                      id="password"
-                      name="passWord"
-                      value={formData.passWord}
-                      onChange={handleChange}
-                      placeholder="Enter new password"
-                      className="passwordInput"
-                    />
-                    <button
-                      style={{display:'none'}}
-                      type="button"
-                      onClick={togglePasswordVisibility}
-                      className="togglePasswordBtn_user"
-                    >
-                      {showPassword ? <FaEyeSlash /> : <FaEye />}
-                    </button>
-                </div>
-            </div>
-              <div className="editdetails" style={{display:'flex',justifyContent:'center', flexDirection:'column'}}>
-              <div className="formGroup1" style={{ position: "relative" }}>
-                  <label htmlFor="retype">Retype new password:</label>
-                  <input
-                      type={showPassword ? "text" : "password"}
-                      id="password"
-                      name="retype"
-                      value={formData.retype}
-                      onChange={handleChange}
-                      placeholder="Retype new password"
-                      className="passwordInput"
-                    />
-                    <button
-                      style={{display:'none'}}
-                      type="button"
-                      onClick={togglePasswordVisibility}
-                      className="togglePasswordBtn_user"
-                    >
-                      {showPassword ? <FaEyeSlash /> : <FaEye />}
-                    </button>
+                    type={showPassword ? "text" : "password"}
+                    id="password"
+                    name="passWord"
+                    value={formData.passWord}
+                    onChange={handleChange}
+                    placeholder="Enter new password"
+                    className="passwordInput"
+                  />
+                  <button
+                  style={{display:'none'}}
+                    type="button"
+                    onClick={togglePasswordVisibility}
+                    className="togglePasswordBtn_user"
+                  >
+                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  </button>
                 </div>
               </div>
-              </>
             )}
-            </div>
+            {editingPassword && ( // Render retype password field if editingPassword is true
+              <div className="editdetails">
+                <div className="formGroup1">
+                  <label htmlFor="retype">Retype new password:</label>
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    id="retype"
+                    name="retype"
+                    value={formData.retype}
+                    onChange={handleChange}
+                    placeholder="Retype new password"
+                    className="passwordInput"
+                  />
+                  <button
+                  style={{display:'none'}}
+                    type="button"
+                    onClick={togglePasswordVisibility}
+                    className="togglePasswordBtn_user"
+                  >
+                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  </button>
+                </div>
+              </div>
+            )}
           </form>
         </div>
       </div>

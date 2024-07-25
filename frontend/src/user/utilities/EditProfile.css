@@ -171,7 +171,7 @@
 
     button[type='edit_email'], 
     button[type='edit_userdept'],
-    button[type='edit_userpass'],
+    button[type='edit_passworduser'],
     button[type='edit_email']:active, 
     button[type='edit_userdept']:active,
     button[type='edit_passworduser']:active{
@@ -191,7 +191,7 @@
     button[type='edit_passworduser']:hover,
     button[type='save_email'], 
     button[type='save_userdept'],
-    button[type='save_userpass']
+    button[type='save_passworduser']
     {
         color: white;
         background-color: #9c0b0b;
