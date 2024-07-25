@@ -243,17 +243,20 @@ const Settings = () => {
                   placeholder="Enter your valid e-mail address"
                   disabled={!editingEmail} // Disable if not editing
                 />
+               
               </div>
-              {!editingEmail ? (
-                <button type="edit_email" onClick={handleEditEmail}>
-                  Edit
-                </button>
-              ) : (
-                <button type="save_email" onClick={handleSaveEmail}>
+               {!editingEmail ? (
+                  <button className="edit_email" onClick={handleEditEmail}>
+                    Edit
+                  </button>
+                ) : (
+                <button className="save_email" onClick={handleSaveEmail}>
                   Save
                 </button>
               )}
             </div>
+          </form>
+          <form>
             <div className="editdetails">
               <div className="formGroup1">
                 <label htmlFor="department">
@@ -280,15 +283,17 @@ const Settings = () => {
                 </select>
               </div>
               {!editingDepartment ? (
-                <button type="edit_userdept" onClick={handleEditDepartment}>
+                <button className="edit_userdept" onClick={handleEditDepartment}>
                   Edit
                 </button>
               ) : (
-                <button type="save_userdept" onClick={handleSaveDepartment}>
+                <button className="save_userdept" onClick={handleSaveDepartment}>
                   Save
                 </button>
               )}
             </div>
+          </form>
+          <form>
             <div className="editdetails">
               <div className="formGroup1" style={{ position: "relative" }}>
                 <label htmlFor="currPass">Current Password:</label>
@@ -311,11 +316,11 @@ const Settings = () => {
                 </button>
               </div>
               {!editingPassword ? (
-                <button type="edit_passworduser" onClick={handleEditPassword}>
+                <button className="edit_passworduser" onClick={handleEditPassword}>
                   Edit
                 </button>
               ) : (
-                <button type="save_passworduser" onClick={handleSavePassword}>
+                <button className="save_passworduser" onClick={handleSavePassword}>
                   Save
                 </button>
               )}
@@ -334,7 +339,7 @@ const Settings = () => {
                     className="passwordInput"
                   />
                   <button
-                  style={{display:'none'}}
+                    style={{ display: 'none' }}
                     type="button"
                     onClick={togglePasswordVisibility}
                     className="togglePasswordBtn_user"
@@ -358,7 +363,7 @@ const Settings = () => {
                     className="passwordInput"
                   />
                   <button
-                  style={{display:'none'}}
+                    style={{ display: 'none' }}
                     type="button"
                     onClick={togglePasswordVisibility}
                     className="togglePasswordBtn_user"
@@ -372,8 +377,7 @@ const Settings = () => {
         </div>
       </div>
 
-      {/* Modal */}
-      {showModal && (
+      {/* {showModal && (
         <div className="profilemodal">
           <div className="profilemodal-content">
             <p>
@@ -386,7 +390,7 @@ const Settings = () => {
             </div>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 };
