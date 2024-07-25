@@ -170,11 +170,9 @@
     align-items: center;
 
     .edit_email, 
-    .edit_userdept,
     .edit_passworduser,
-    edit_email:active, 
-    edit_userdept:active,
-    edit_passworduser:active{
+    .edit_email:active, 
+    .edit_passworduser:active{
         color: black;
         background-color: white;
         border:none;
@@ -187,10 +185,8 @@
     }
 
     .edit_email:hover, 
-    .edit_userdept:hover,
     .edit_passworduser:hover,
     .save_email, 
-    .save_userdept,
     .save_passworduser
     {
         color: white;

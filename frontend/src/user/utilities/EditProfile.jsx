@@ -16,9 +16,10 @@ const Settings = () => {
   const [userData, setUserData] = useState(null); // Initialize as null to indicate loading
 
   const userId = localStorage.getItem("userId");
-  const [editingEmail, setEditingEmail] = useState(false);
-  const [editingDepartment, setEditingDepartment] = useState(false);
-  const [editingPasswords, setEditingPasswords] = useState(false);
+  const [disabled, setDisabled] = useState(false);
+  const [disabled2, setDisabled2] = useState(false);
+  const [emailEditable, setEmailEditable] = useState(false);
+  const [passwordEditable, setPasswordEditable] = useState(false);
 
   const navigate = useNavigate();
 
@@ -58,37 +59,16 @@ const Settings = () => {
     retype: "",
   });
 
-  const handleEditEmail = () => {
-    setEditingEmail(true);
-  };
-
-  const handleSaveEmail = () => {
-    // Save email logic goes here
-    setEditingEmail(false);
-  };
-
-  const handleEditDepartment = () => {
-    setEditingDepartment(true);
-  };
-
-  const handleSaveDepartment = () => {
-    // Save department logic goes here
-    setEditingDepartment(false);
-  };
-
-  const handleEditPassword = () => {
-    setEditingPassword(true);
-  };
-
-  const handleSavePassword = () => {
-    // Save password logic goes here
-    setEditingPassword(false);
-  };
-
-  const handleSubmit = async (e) => {
+  const handleSubmitEmail = async (e) => {
     e.preventDefault();
+    setDisabled(true);
 
-    // Validate email
+    if (formData.email === userData.email) {
+      toast.error("Email is the same as existing")
+      setDisabled(false);
+      return;
+    }
+
     try {
       const validationResponse = await axios.post(
         `http://localhost:8800/api/auth/validate`,
@@ -97,54 +77,117 @@ const Settings = () => {
 
       if (validationResponse.data.email.exists) {
         toast.error("Email is already registered.");
+        setDisabled(false);
         return;
       }
     } catch (error) {
       toast.error("Failed to validate email.");
+      setDisabled(false);
       return;
     }
 
-    // Validate current password and new password
+    const sendEmail = {
+      _id: userData._id,
+      email: formData.email
+    }
+
+    try {
+      const token = localStorage.getItem("authToken");
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      };
+
+      const updateResponse = await axios.post(
+        `http://localhost:8800/api/auth/changeemail`,
+        sendEmail,
+        { headers }
+      );
+
+      if (updateResponse.status === 201) {
+        const { message, emailToken, emailId } = updateResponse.data;
+        localStorage.setItem('resetToken', emailToken);
+        localStorage.setItem('resetId', emailId);
+        setEmailEditable(false);
+        toast.success(message);
+      }
+    } catch (error) {
+      toast.error(error);
+    } finally {
+      setDisabled(false);
+    }
+  };
+
+  const toggleEmailEdit = () => {
+    setEmailEditable(true);
+  };
+
+  const togglePasswordEdit = () => {
+    setPasswordEditable(true);
+  };
+
+  const cancelEmailEdit = () => {
+    setEmailEditable(false);
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      email: userData.email,
+    }));
+  };
+
+  const cancelPasswordEdit = () => {
+    setPasswordEditable(false);
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      currPass: "",
+      passWord: "",
+      retype: ""
+    }));
+  };
+
+  const handleSubmitPassword = async (e) => {
+    e.preventDefault();
+    setDisabled2(true);
+
     try {
       const isCurrentPasswordCorrect = await bcrypt.compare(
         formData.currPass,
         userData.passWord
       );
+
       if (!isCurrentPasswordCorrect) {
         toast.error("Current password is incorrect.");
+        setDisabled2(false);
         return;
       }
 
-      if (formData.currPass === formData.passWord) {
+      if(!formData.passWord){
+        toast.error("New password must have value");
+        setDisabled2(false);
+        return;
+      } else if (formData.currPass === formData.passWord) {
         toast.error("New password must be different from the current password.");
+        setDisabled2(false);
         return;
       }
 
       if (formData.passWord !== formData.retype) {
         toast.error("New password does not match.");
+        setDisabled2(false);
         return;
       }
+
     } catch (error) {
       toast.error("Failed to validate password.");
+      setDisabled2(false);
       return;
     }
 
-    // Construct updatedUser with only changed fields
     const updatedUser = {};
-    if (formData.department !== userData.department) {
-      updatedUser.department = formData.department;
-    }
 
     if (formData.passWord) {
-      updatedUser.passWord = formData.passWord; // Only add the new password if it needs to be changed
+      updatedUser.passWord = formData.passWord;
     }
 
-    if (Object.keys(updatedUser).length === 0) {
-      toast.info("No changes detected.");
-      return;
-    }
-
-    // Update user
     try {
       const token = localStorage.getItem("authToken");
       const headers = {
@@ -159,11 +202,22 @@ const Settings = () => {
       );
 
       if (updateResponse.status === 201) {
-        toast.success("Successfully changed info.");
+        setUserData(updateResponse.data)
+        setFormData(() => ({
+          ...updateResponse.data,
+          currPass: "",
+          passWord: "",
+          retype: ""
+        }));
+        setPasswordEditable(false);
+        toast.success("Successfully changed password.");
+        
       }
     } catch (error) {
       console.error("Error during patch:", error);
       toast.error("Failed to update user info.");
+    } finally {
+      setDisabled2(false)
     }
   };
 
@@ -171,27 +225,11 @@ const Settings = () => {
     setShowPassword(!showPassword);
   };
 
-  const handleCancel = () => {
-    setShowModal(true);
-  };
-
-  const handleConfirmCancel = () => {
-    setShowModal(false);
-    navigate("/dashboard");
-  };
-
-  const closeModal = () => {
-    setShowModal(false);
-  };
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const togglePasswordEdit = () => {
-    setEditingPassword(!editingPassword);
-  };
 
   return (
     <div>
@@ -223,77 +261,52 @@ const Settings = () => {
           </>
         )}
         <div className="changeFields">
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmitEmail}>
             <div className="editdetails">
               <div className="formGroup1">
                 <label htmlFor="email">
                   Change E-mail Address:
-                  {editingEmail && (
-                    <button type="button" className="verifyemail">
-                      Verify
-                    </button>
-                  )}
                 </label>
                 <input
                   type="email"
                   id="email"
                   name="email"
                   value={formData.email}
+                  required
                   onChange={handleChange}
                   placeholder="Enter your valid e-mail address"
-                  disabled={!editingEmail} // Disable if not editing
+                  disabled={!emailEditable}
                 />
-               
+
               </div>
-               {!editingEmail ? (
-                  <button className="edit_email" onClick={handleEditEmail}>
-                    Edit
+              {emailEditable ? (
+                <>
+                  <button
+                    type="submit"
+                    disabled={disabled}
+                    className={` save_email ${disabled
+                        ? "bg-gray-400 cursor-not-allowed"
+                        : "bg-blue-500 hover:bg-blue-700 text-white"
+                      }`}
+                  >
+                    Verify Email
                   </button>
-                ) : (
-                <button className="save_email" onClick={handleSaveEmail}>
-                  Save
-                </button>
-              )}
-            </div>
-          </form>
-          <form>
-            <div className="editdetails">
-              <div className="formGroup1">
-                <label htmlFor="department">
-                  Change Department / Company:
-                </label>
-                <select
-                  id="department"
-                  name="department"
-                  value={formData.department}
-                  onChange={handleChange}
-                  disabled={!editingDepartment} // Disable if not editing
-                >
-                  <option value="">Select Department</option>
-                  <option value="Philippine Dragon Media Network">
-                    Philippine Dragon Media Network
-                  </option>
-                  <option value="GDS Travel Agency">GDS Travel Agency</option>
-                  <option value="FEILONG Legal">FEILONG Legal</option>
-                  <option value="STARLIGHT">STARLIGHT</option>
-                  <option value="BIG VISION PRODS.">BIG VISION PRODS.</option>
-                  <option value="SuperNova">SuperNova</option>
-                  <option value="ClearPath">ClearPath</option>
-                  <option value="Dragon AI">Dragon AI</option>
-                </select>
-              </div>
-              {!editingDepartment ? (
-                <button className="edit_userdept" onClick={handleEditDepartment}>
+                  <button
+                    type="button"
+                    onClick={cancelEmailEdit}
+                    className="edit_email"
+                  >
+                    Cancel
+                  </button>
+                </>
+              ) : (
+                <button className="edit_email" onClick={toggleEmailEdit}>
                   Edit
                 </button>
-              ) : (
-                <button className="save_userdept" onClick={handleSaveDepartment}>
-                  Save
-                </button>
               )}
             </div>
           </form>
-          <form>
+          <form onSubmit={handleSubmitPassword}>
             <div className="editdetails">
               <div className="formGroup1" style={{ position: "relative" }}>
                 <label htmlFor="currPass">Current Password:</label>
@@ -305,7 +318,7 @@ const Settings = () => {
                   onChange={handleChange}
                   placeholder="Enter current password"
                   className="passwordInput"
-                  disabled={!editingPassword} // Disable if not editing
+                  disabled={!passwordEditable} // Disable if not editing
                 />
                 <button
                   type="button"
@@ -315,17 +328,34 @@ const Settings = () => {
                   {showPassword ? <FaEyeSlash /> : <FaEye />}
                 </button>
               </div>
-              {!editingPassword ? (
-                <button className="edit_passworduser" onClick={handleEditPassword}>
-                  Edit
-                </button>
+              {passwordEditable ? (
+
+                <>
+                  <button
+                    type="submit"
+                    disabled={disabled2}
+                    className={` save_passworduser ${disabled2
+                        ? "bg-gray-400 cursor-not-allowed"
+                        : "bg-blue-500 hover:bg-blue-700 text-white"
+                      }`}
+                  >
+                    Save
+                  </button>
+                  <button
+                    type="button"
+                    onClick={cancelPasswordEdit}
+                    className="edit_email"
+                  >
+                    Cancel
+                  </button>
+                </>
               ) : (
-                <button className="save_passworduser" onClick={handleSavePassword}>
-                  Save
+                <button className="edit_passworduser" onClick={togglePasswordEdit}>
+                  Edit
                 </button>
               )}
             </div>
-            {editingPassword && ( // Render new password fields if editingPassword is true
+            {passwordEditable && ( 
               <div className="editdetails">
                 <div className="formGroup1">
                   <label htmlFor="password">New Password:</label>
@@ -338,18 +368,10 @@ const Settings = () => {
                     placeholder="Enter new password"
                     className="passwordInput"
                   />
-                  <button
-                    style={{ display: 'none' }}
-                    type="button"
-                    onClick={togglePasswordVisibility}
-                    className="togglePasswordBtn_user"
-                  >
-                    {showPassword ? <FaEyeSlash /> : <FaEye />}
-                  </button>
                 </div>
               </div>
             )}
-            {editingPassword && ( // Render retype password field if editingPassword is true
+            {passwordEditable && ( 
               <div className="editdetails">
                 <div className="formGroup1">
                   <label htmlFor="retype">Retype new password:</label>
@@ -396,3 +418,42 @@ const Settings = () => {
 };
 
 export default WithAuth(Settings);
+
+
+{/* <form>
+            <div className="editdetails">
+              <div className="formGroup1">
+                <label htmlFor="department">
+                  Change Department / Company:
+                </label>
+                <select
+                  id="department"
+                  name="department"
+                  value={formData.department}
+                  onChange={handleChange}
+                  disabled={!editingDepartment} // Disable if not editing
+                >
+                  <option value="">Select Department</option>
+                  <option value="Philippine Dragon Media Network">
+                    Philippine Dragon Media Network
+                  </option>
+                  <option value="GDS Travel Agency">GDS Travel Agency</option>
+                  <option value="FEILONG Legal">FEILONG Legal</option>
+                  <option value="STARLIGHT">STARLIGHT</option>
+                  <option value="BIG VISION PRODS.">BIG VISION PRODS.</option>
+                  <option value="SuperNova">SuperNova</option>
+                  <option value="ClearPath">ClearPath</option>
+                  <option value="Dragon AI">Dragon AI</option>
+                </select>
+              </div>
+              {!editingDepartment ? (
+                <button className="edit_userdept" onClick={handleEditDepartment}>
+                  Edit
+                </button>
+              ) : (
+                <button className="save_userdept" onClick={handleSaveDepartment}>
+                  Save
+                </button>
+              )}
+            </div>
+          </form> */}
