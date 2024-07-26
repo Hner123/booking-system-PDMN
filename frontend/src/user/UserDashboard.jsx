@@ -284,6 +284,18 @@ const Dashboard = () => {
   const handleRegistrationSubmit = async (e) => {
     e.preventDefault();
 
+    if (
+      formData.firstName.trim() === "" ||
+      formData.surName.trim() === "" ||
+      formData.passWord.trim() === "" ||
+      formData.email.trim() === "" ||
+      formData.department.trim() === ""
+    ) {
+      toast.error("No spaces");
+      console.log(formData)
+      return;
+    }
+
     try {
       const validationResponse = await axios.post(
         `http://localhost:8800/api/auth/validate`,
@@ -397,12 +409,12 @@ const Dashboard = () => {
                   />
                 </div>
                 <div className="name-section">
-                  <label htmlFor="lastName">Last Name</label>
+                  <label htmlFor="surName">Last Name</label>
                   <input
                     type="text"
-                    id="lastName"
-                    name="lastName"
-                    value={formData.lastName}
+                    id="surName"
+                    name="surName"
+                    value={formData.surName}
                     onChange={handleChange}
                     placeholder="Last Name"
                     required
