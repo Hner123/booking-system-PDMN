@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./tablet.css";
 
-const MeetingRoomSchedule = ({ reserveId, userId }) => {
+const MeetingRoomSchedule = ({}) => {
   const [bookData, setBookData] = useState([]);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [currentMeeting, setCurrentMeeting] = useState(null);
@@ -19,7 +19,7 @@ const MeetingRoomSchedule = ({ reserveId, userId }) => {
         };
 
         const response = await axios.get(
-          `http://localhost:8800/api/bookData/${reserveId}`,
+          `http://localhost:8800/api/bookData/`,
           { headers }
         );
 
@@ -47,7 +47,7 @@ const MeetingRoomSchedule = ({ reserveId, userId }) => {
     // Optionally, update current time every minute
     const timer = setInterval(() => setCurrentTime(new Date()), 60000);
     return () => clearInterval(timer); // Cleanup timer on component unmount
-  }, [reserveId]);
+  }, []);
 
   useEffect(() => {
     const initialReservations = bookData
