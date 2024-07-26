@@ -47,6 +47,7 @@ const CreateReserve = async (req, res) => {
       attendees: reserve.attendees,
       guest: reserve.guest,
       confirmation: true,
+      archive: false,
     });
 
     res.status(201).json({ result });
@@ -80,7 +81,8 @@ const EditReserve = async (req, res) => {
         },
         attendees: reserve.attendees,
         guest: reserve.guest,
-        confirmation: reserve.confirmation
+        confirmation: reserve.confirmation,
+        archive: false
       },
     };
 

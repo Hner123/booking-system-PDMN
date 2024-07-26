@@ -130,7 +130,8 @@ const ReservationFormsDetails = () => {
       ? []
       : userData.filter(
         (user) =>
-          user.userName.toLowerCase().includes(inputValue) && !user.disabled
+          (user.firstName.toLowerCase() + " " + user.surName.toLowerCase()).includes(inputValue) &&
+          !user.disabled
       );
   };
 
@@ -142,10 +143,12 @@ const ReservationFormsDetails = () => {
     setSuggestions([]);
   };
 
-  const getSuggestionValue = (suggestion) => suggestion.userName;
+  const getSuggestionValue = (suggestion) => { suggestion.firstName + " " + suggestion.surName };
 
   const renderSuggestion = (suggestion) => (
-    <div className="suggestion-chip">{suggestion.userName}</div>
+    <div className="suggestion-chip">
+      {suggestion.firstName + " " + suggestion.surName}
+    </div>
   );
 
   const onAttendeeInputChange = (event, { newValue }) => {
@@ -158,7 +161,7 @@ const ReservationFormsDetails = () => {
       return;
     }
 
-    const updatedAttendees = [...attendees, suggestion.userName];
+    const updatedAttendees = [...attendees, suggestion.firstName + " " + suggestion.surName];
     setAttendees(updatedAttendees);
 
     setFormData({
@@ -196,20 +199,16 @@ const ReservationFormsDetails = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (selectedRoom === "Palawan and Boracay" && attendees.length < 8) {
-      toast.error("For 'Palawan and Boracay', you must have at least 8 attendees.");
-      return;
-    }
-
-    if (formData.caps.pax === "3-More" && attendees.length < 3) {
-      toast.error("You must have at least 3 attendees for 3-More pax.");
-      return;
-    }
-
     const additionalAttendees = guestNames
       .split(",")
       .map((name) => name.trim())
       .filter((name) => name);
+
+    const confirmationStatus =
+      (bookData.confirmation === false && formData.caps.pax === "3-More") ||
+        (!(bookData.confirmation === false || formData.caps.pax === "1-2" || bookData.agenda))
+        ? true
+        : false;
 
     const updatedReserve = {
       caps: {
@@ -219,13 +218,28 @@ const ReservationFormsDetails = () => {
       attendees: formData.attendees,
       guest: additionalAttendees,
       title: formData.title,
-      confirmation:
-        bookData.confirmation === false ||
-          formData.caps.pax === "1-2" ||
-          bookData.agenda
-          ? false
-          : true,
+      confirmation: confirmationStatus
     };
+
+    if (selectedRoom === "Palawan and Boracay" && attendees.length < 8) {
+      toast.error("For 'Palawan and Boracay', you must have at least 8 attendees.");
+      return;
+    }
+
+    if (formData.caps.pax === "" && showGuestInput) {
+      toast.error("Please select number of attendees");
+      return;
+    }
+
+    if (formData.caps.pax === "3-More" && (attendees.length < 3 || attendees.length > 7)) {
+      toast.error("You must have between 3 and 7 people accompanying you");
+      return;
+    }
+
+    if (formData.caps.pax === "1-2" && (attendees.length + additionalAttendees.length !== 1)) {
+      toast.error("You must have exactly 1 person accompanying you");
+      return;
+    }
 
     try {
       const reserveId = localStorage.getItem("reserveToken");

@@ -54,6 +54,10 @@ const ReserveSchema = new Schema({
     type: Boolean,
     default: true
   },
+  archive:{
+    type:Boolean,
+    default: false
+  }
 
 });
 

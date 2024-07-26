@@ -93,7 +93,7 @@ const Sidebar = () => {
             </a>
           </li>          
           <li className="li">
-            <a href="/admin/room-approval">
+            <a href="/admin/approval-rooms">
               <FaIcons.FaCalendarCheck />
               <p>For Approval</p>
             </a>

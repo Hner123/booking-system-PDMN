@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const Approval = () => {
+const ApprovalBoth = () => {
     const [rejectModal, setRejectModal] = useState(false);
     const [acceptModal, setAcceptModal] = useState(false);
     const [rejectReason, setRejectReason] = useState('');
@@ -35,7 +35,7 @@ const Approval = () => {
 
     return (
         <div className='listCont1'>
-            <h1>For Approval - PALAWAN ROOM</h1>
+            <h1>For Approva; - PALAWAN and BORACAY ROOM</h1>
             <div className='approvalGroup'>
                 <div className='approvalMeets'>
                     <div className='approvalDeets'>
@@ -44,7 +44,6 @@ const Approval = () => {
                         <p>Reserved By: Jona K.</p>
                         <p>Members: Employee 1, Employee 2</p>
                         <hr/>
-                        <p>Reason: 1-2 Employees only</p>
                         <div className='approvalGrp'>
                             <button type='not-appr' onClick={handleReject}>Reject</button>
                             <button type='appr' onClick={handleApprove}>Approve</button>
@@ -58,7 +57,6 @@ const Approval = () => {
                         <p>Reserved By: Jona K.</p>
                         <p>Members: Employee 1, Employee 2</p>
                         <hr/>
-                        <p>Reason: More than an hour meeting</p>
                         <div className='approvalGrp'>
                             <button type='not-appr' onClick={handleReject}>Reject</button>
                             <button type='appr' onClick={handleApprove}>Approve</button>
@@ -94,4 +92,4 @@ const Approval = () => {
     );
 };
 
-export default Approval;
+export default ApprovalBoth;

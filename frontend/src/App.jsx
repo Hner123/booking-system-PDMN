@@ -14,8 +14,10 @@ import Confirmation from './user/reservation/Confirmation';
 import AdminLogin from './admin/AdminLogin.jsx';
 import EmployeeList from './admin/EmployeeList.jsx';
 import AddEmployee from './admin/AddEmployee.jsx';
-import ApprovalRoom from './admin/ApprovalRooms.jsx';
-import Approval from './admin/Approval.jsx';
+import ApprovalPalawan from './admin/ApprovalPalawan.jsx';
+import ApprovalBoracay from './admin/ApprovalBoracay.jsx';
+import ApprovalBoth from './admin/ApprovalBoth.jsx';
+import ApprovalRooms from './admin/ApprovalRooms.jsx';
 import NotFoundPage from './auth/NotFoundPage.jsx';
 
 import Sidebaree from './admin/sidebarex.jsx'
@@ -94,16 +96,28 @@ function App() {
             <AddEmployee />
           </>
         } />
-        <Route path="/admin/approval" element={
+        <Route path="/admin/approval-rooms" element={
           <>
             <Sidebaree />
-            <Approval />
+            <ApprovalRooms />
           </>
         } />
-        <Route path="/admin/room-approval" element={
+        <Route path="/admin/approval-palawan" element={
           <>
             <Sidebaree />
-            <ApprovalRoom />
+            <ApprovalPalawan />
+          </>
+        } />
+        <Route path="/admin/approval-boracay" element={
+          <>
+            <Sidebaree />
+            <ApprovalBoracay />
+          </>
+        } />
+        <Route path="/admin/approval-both" element={
+          <>
+            <Sidebaree />
+            <ApprovalBoth />
           </>
         } />
 
