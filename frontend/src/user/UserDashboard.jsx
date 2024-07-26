@@ -381,8 +381,8 @@ const Dashboard = () => {
             {userData && <h2>Welcome, {userData.userName}!</h2>}
             <p>Please make sure to fill out the form to proceed.</p>
             <form ref={formRef} onSubmit={handleRegistrationSubmit}>
-            <div className="name-group">
-              <div className="name-section">
+              <div className="name-group">
+                <div className="name-section">
                   <label htmlFor="firstName">First Name</label>
                   <input
                     type="text"
@@ -472,8 +472,11 @@ const Dashboard = () => {
       )}
       <main className="dashboard-main">
         <ToastContainer />
-        {userData && <h1>{userData.userName}'s Dashboard </h1>}
-
+        {userData && (
+          <h1>
+            {userData.firstName ? `${userData.firstName}'s Dashboard` : `${userData.userName}'s Dashboard`}
+          </h1>
+        )}
         <h2>Book a Meeting Room</h2>
         <div className="card-container">
           {rooms.map((place, index) => (
@@ -603,26 +606,29 @@ const Dashboard = () => {
               <div className="modal-columns">
                 <div className="left-content">
                   <p>
-                    <strong>Username:</strong> {selectedMeeting.userName}
-                  </p>
-                  <p>
                     <strong>Department:</strong> {selectedMeeting.department}
                   </p>
                   <p>
                     <strong>Number of PAX:</strong> {selectedMeeting.pax}
                   </p>
-                  <p>
-                    <strong>Purpose of the Meeting:</strong>{" "}
-                    {selectedMeeting.agenda}
-                  </p>
-                  <p className="members">
-                    <strong>Members:</strong>{" "}
-                    {selectedMeeting.members.join(", ")}
-                  </p>
-                  <p>
-                    <strong>Guests:</strong>{" "}
-                    {selectedMeeting.guests.join(", ")}
-                  </p>
+                  {selectedMeeting.agenda && selectedMeeting.agenda.length > 0 && (
+                    <p>
+                      <strong>Purpose of the Meeting:</strong>{" "}
+                      {selectedMeeting.agenda}
+                    </p>
+                  )}
+                  {selectedMeeting.members && selectedMeeting.members.length > 0 && (
+                    <p className="members">
+                      <strong>Members:</strong>{" "}
+                      {selectedMeeting.members.join(", ")}
+                    </p>
+                  )}
+                  {selectedMeeting.guests && selectedMeeting.guests.length > 0 && (
+                    <p>
+                      <strong>Guests:</strong>{" "}
+                      {selectedMeeting.guests.join(", ")}
+                    </p>
+                  )}
                 </div>
                 <div className="right-content">
                   <h3>{selectedMeeting.room}</h3>
