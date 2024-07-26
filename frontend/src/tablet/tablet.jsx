@@ -1,59 +1,47 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "./tablet.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarDay, faClock, faUser } from "@fortawesome/free-solid-svg-icons";
 
-// Sample data for testing
-const sampleBookData = [
-  {
-    _id: "1",
-    title: "Project Kickoff",
-    startTime: new Date().toISOString(), // current time
-    endTime: new Date(new Date().getTime() + 30 * 60 * 1000).toISOString(), // 30 minutes later
-    roomName: "Palawan",
-    user: {
-      firstName: "Jane",
-      surName: "Doe",
-    },
-  },
-  {
-    _id: "2",
-    title: "Team Standup",
-    startTime: new Date(new Date().getTime() + 45 * 60 * 1000).toISOString(), // 45 minutes later
-    endTime: new Date(new Date().getTime() + 60 * 60 * 1000).toISOString(), // 1 hour later
-    roomName: "Boracay",
-    user: {
-      firstName: "John",
-      surName: "Smith",
-    },
-  },
-  {
-    _id: "3",
-    title: "Design Review",
-    startTime: new Date(new Date().getTime() + 2 * 60 * 60 * 1000).toISOString(), // 2 hours later
-    endTime: new Date(new Date().getTime() + 3 * 60 * 60 * 1000).toISOString(), // 3 hours later
-    roomName: "Palawan",
-    user: {
-      firstName: "Alice",
-      surName: "Johnson",
-    },
-  },
-  {
-    _id: "4",
-    title: "Strategy Meeting",
-    startTime: new Date(new Date().getTime() + 4 * 60 * 60 * 1000).toISOString(), // 4 hours later
-    endTime: new Date(new Date().getTime() + 5 * 60 * 60 * 1000).toISOString(), // 5 hours later
-    roomName: "Palawan",
-    user: {
-      firstName: "Bob",
-      surName: "Williams",
-    },
-  },
-];
-
-const MeetingRoomSchedule = ({ reserveId, userId, bookData = sampleBookData, roomName = "Palawan" }) => {
+const MeetingRoomSchedule = ({ }) => {
+  const [bookData, setBookData] = useState([]);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [currentMeeting, setCurrentMeeting] = useState(null);
+  const [otherMeetings, setOtherMeetings] = useState([]);
+
+  useEffect(() => {
+    const fetchBookData = async () => {
+      try {
+        const token = localStorage.getItem("authToken");
+        const headers = {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        };
+
+        const response = await axios.get(`http://localhost:8800/api/book`, { headers });
+
+        if (response.status === 200) {
+          const data = response.data.filter((meeting) => meeting.roomName === "Palawan");
+          setBookData(data);
+
+          const now = new Date();
+          const ongoingMeeting = data.find((meeting) => {
+            const startTime = new Date(meeting.startTime);
+            const endTime = new Date(meeting.endTime);
+            return now >= startTime && now <= endTime;
+          });
+
+          setCurrentMeeting(ongoingMeeting || null);
+          setOtherMeetings(data.filter((meeting) => meeting !== ongoingMeeting));
+        }
+      } catch (error) {
+        console.error("Error fetching book data:", error);
+      }
+    };
+
+    fetchBookData();
+  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 60000);
@@ -66,7 +54,7 @@ const MeetingRoomSchedule = ({ reserveId, userId, bookData = sampleBookData, roo
       const ongoingMeeting = bookData.find((meeting) => {
         const startTime = new Date(meeting.startTime);
         const endTime = new Date(meeting.endTime);
-        return now >= startTime && now <= endTime && meeting.roomName === roomName;
+        return now >= startTime && now <= endTime;
       });
 
       setCurrentMeeting(ongoingMeeting || null);
@@ -75,7 +63,7 @@ const MeetingRoomSchedule = ({ reserveId, userId, bookData = sampleBookData, roo
     updateCurrentMeeting();
     const meetingInterval = setInterval(updateCurrentMeeting, 60000);
     return () => clearInterval(meetingInterval);
-  }, [bookData, currentTime, roomName]);
+  }, [bookData, currentTime]);
 
   const formatDate = (date) => {
     const options = {
@@ -100,13 +88,16 @@ const MeetingRoomSchedule = ({ reserveId, userId, bookData = sampleBookData, roo
           minute: "2-digit",
         })}
       </p>
+      <p>
+        <FontAwesomeIcon icon={faUser} /> {`${meeting.user?.firstName || 'Unknown'} ${meeting.user?.surName || 'Unknown'}`}
+      </p>
     </div>
   );
 
   const renderUpcomingMeetings = () => {
     const now = new Date();
     const upcomingMeetings = bookData
-      .filter((meeting) => meeting.roomName === roomName && new Date(meeting.startTime) > now)
+      .filter((meeting) => new Date(meeting.startTime) > now)
       .sort((a, b) => new Date(a.startTime) - new Date(b.startTime));
     return upcomingMeetings.map(renderMeeting);
   };
@@ -124,9 +115,9 @@ const MeetingRoomSchedule = ({ reserveId, userId, bookData = sampleBookData, roo
     <div className={containerClassName}>
       <div className="first-column">
         <div className="room-info">
-          <h1 className="room-name">{roomName}</h1>
           {currentMeeting ? (
             <>
+              <h1 className="room-name">{currentMeeting.roomName}</h1>
               <h1 className="availability">In Use</h1>
               <h2 className="meeting-title">{currentMeeting.title}</h2>
               <table>
@@ -167,8 +158,12 @@ const MeetingRoomSchedule = ({ reserveId, userId, bookData = sampleBookData, roo
           <p>{formatDate(currentTime)}</p>
         </div>
         <div className="upcoming-meetings">
-          <h2>Upcoming Meetings</h2>
-          {renderUpcomingMeetings()}
+          <h2>Other Meetings</h2>
+          {otherMeetings.length > 0 ? (
+            otherMeetings.map(renderMeeting)
+          ) : (
+            <p>No other meetings</p>
+          )}
         </div>
       </div>
     </div>
