@@ -514,9 +514,9 @@
     color: #9c0b0b;
 }
 
-.cancel-button:hover {
-    color: gray;
-}
+  .cancel-button:hover {
+      color: gray;
+  }
 
   .reservation-button-group {
     display: flex;

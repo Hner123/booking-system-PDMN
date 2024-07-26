@@ -167,6 +167,11 @@ const Dashboard = () => {
     setShowConfirmModal(false);
   };
 
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate("/");
+  };
+
   const handleConfirmDiscard = async (e) => {
     try {
       const token = localStorage.getItem("authToken");
@@ -378,7 +383,6 @@ const Dashboard = () => {
             <form ref={formRef} onSubmit={handleRegistrationSubmit}>
             <div className="name-group">
               <div className="name-section">
-                
                   <label htmlFor="firstName">First Name</label>
                   <input
                     type="text"
@@ -457,7 +461,10 @@ const Dashboard = () => {
                   onInput={e => e.target.setCustomValidity('')}
                 />
               </div>
-              <button type="submit">Confirm</button>
+              <div className="button-group">
+                <button className="submit-button">Confirm</button>
+                <button className="out-button" onClick={handleLogout}>Not Now? Log Out.</button>
+              </div>
             </form>
           </div>
         </div>
