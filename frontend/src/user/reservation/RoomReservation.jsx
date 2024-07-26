@@ -331,30 +331,33 @@ const RoomReservation = () => {
               </div>
               <div className="custom-time-picker">
                 <h3>Start Time</h3>
-                <TimePicker
-                  value={startTime}
-                  showSecond={false}
-                  use12Hours
-                  format="h:mm a"
-                  disabledHours={disabledHours}
-                  disabledMinutes={disabledMinutes}
-                  minuteStep={10}
-                  hideDisabledOptions
-                />
+                  <TimePicker
+            value={startTime}
+            onChange={(value) => setStartTime(value)}
+            showSecond={false}
+            use12Hours
+            format="h:mm a"
+            disabledHours={disabledHours}
+            disabledMinutes={disabledMinutes}
+            minuteStep={10}
+            hideDisabledOptions
+            placeholder="Select Time"
+          />
               </div>
               <div className="custom-time-picker">
                 <h3>End Time</h3>
                 <TimePicker
-                  value={endTime}
-                  showSecond={false}
-                  use12Hours
-                  format="h:mm a"
-                  disabledHours={disabledHours}
-                  disabledMinutes={disabledMinutes}
-                  minuteStep={10}
-                  hideDisabledOptions
-                  placeholder="Select Time"
-                />
+          value={endTime}
+          onChange={(value) => setEndTime(value)}
+          showSecond={false}
+          use12Hours
+          format="h:mm a"
+          disabledHours={disabledHours}
+          disabledMinutes={disabledMinutes}
+          minuteStep={10}
+          hideDisabledOptions
+          placeholder="Select Time"
+        />
               </div>
             </div>
 
