@@ -613,3 +613,15 @@
 .name-section{
   width: 50%;
 }
+
+.registration-form-modal p{
+  margin-top: 5px;
+  margin-bottom: 20px;
+  padding: 0;
+  font-size: 12px;
+  color: #b62626;
+  text-align: center;
+}
+.registration-form-modal h2 {
+  margin: 0%;
+}

@@ -15,8 +15,9 @@ const ReservationFormsDetails = () => {
   const [bookData, setBookData] = useState("");
   const [userData, setUserData] = useState([]);
   const [selectedRoom, setSelectedRoom] = useState("");
-  const [showGuestInput, setShowGuestInput] = useState(false); // New state for guest input visibility
-  const [guestNames, setGuestNames] = useState(""); // State to store guest names
+  const [showGuestInput, setShowGuestInput] = useState(false);
+  const [guestNames, setGuestNames] = useState("");
+  const [showDiscardModal, setShowDiscardModal] = useState(false);
 
   const navigate = useNavigate();
 
@@ -129,9 +130,9 @@ const ReservationFormsDetails = () => {
     return inputLength === 0
       ? []
       : userData.filter(
-        (user) =>
-          user.userName.toLowerCase().includes(inputValue) && !user.disabled
-      );
+          (user) =>
+            user.userName.toLowerCase().includes(inputValue) && !user.disabled
+        );
   };
 
   const onSuggestionsFetchRequested = ({ value }) => {
@@ -197,7 +198,9 @@ const ReservationFormsDetails = () => {
     e.preventDefault();
 
     if (selectedRoom === "Palawan and Boracay" && attendees.length < 8) {
-      toast.error("For 'Palawan and Boracay', you must have at least 8 attendees.");
+      toast.error(
+        "For 'Palawan and Boracay', you must have at least 8 attendees."
+      );
       return;
     }
 
@@ -214,15 +217,15 @@ const ReservationFormsDetails = () => {
     const updatedReserve = {
       caps: {
         pax: formData.caps.pax,
-        reason: formData.caps.reason
+        reason: formData.caps.reason,
       },
       attendees: formData.attendees,
       guest: additionalAttendees,
       title: formData.title,
       confirmation:
         bookData.confirmation === false ||
-          formData.caps.pax === "1-2" ||
-          bookData.agenda
+        formData.caps.pax === "1-2" ||
+        bookData.agenda
           ? false
           : true,
     };
@@ -252,6 +255,40 @@ const ReservationFormsDetails = () => {
       console.error("Error during patch:", error);
       toast.error("Error updating information. Please try again later.");
     }
+  };
+
+  const handleCancelTime = () => {
+    setShowDiscardModal(true);
+  };
+
+  const handleConfirmDiscard = async (e) => {
+    setShowDiscardModal(false);
+
+    try {
+      const reserveId = localStorage.getItem("reserveToken");
+      const token = localStorage.getItem("authToken");
+
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      };
+
+      const updateResponse = await axios.delete(
+        `http://localhost:8800/api/book/delete/${reserveId}`,
+        { headers }
+      );
+
+      if (updateResponse.status === 200) {
+        localStorage.removeItem("reserveToken");
+        navigate("/dashboard");
+      }
+    } catch (error) {
+      console.error("Error during delete:", error);
+    }
+  };
+
+  const handleCancelDiscard = () => {
+    setShowDiscardModal(false);
   };
 
   return (
@@ -314,7 +351,9 @@ const ReservationFormsDetails = () => {
                     value="1-2"
                     checked={formData.caps.pax === "1-2"}
                     onChange={handlePaxChange}
-                    disabled={selectedRoom !== "Boracay" && selectedRoom !== "Palawan"}
+                    disabled={
+                      selectedRoom !== "Boracay" && selectedRoom !== "Palawan"
+                    }
                     style={{ width: "auto" }}
                   />
                   <label htmlFor="pax-1-2">1-2 attendees</label>
@@ -327,7 +366,9 @@ const ReservationFormsDetails = () => {
                     value="3-More"
                     checked={formData.caps.pax === "3-More"}
                     onChange={handlePaxChange}
-                    disabled={selectedRoom !== "Boracay" && selectedRoom !== "Palawan"}
+                    disabled={
+                      selectedRoom !== "Boracay" && selectedRoom !== "Palawan"
+                    }
                     style={{ width: "auto" }}
                   />
                   <label htmlFor="pax-3-more">3 - 8 attendees</label>
@@ -425,10 +466,17 @@ const ReservationFormsDetails = () => {
                 )}
               </div>
             </div>
-
-            <button type="submit" style={{ alignItems: "center" }}>
-              Book
-            </button>
+            <div className="reservation-button-group">
+              <button
+                className="reserve-button"
+                style={{ alignItems: "center" }}
+              >
+                Book
+              </button>
+              <button className="cancel-button" onClick={handleCancelTime}>
+                Cancel
+              </button>
+            </div>
             <p
               style={{
                 marginTop: "10px",
@@ -477,6 +525,25 @@ const ReservationFormsDetails = () => {
             )}
           </div>
         </div>
+        {showDiscardModal && (
+          <div className="discard-modal">
+            <div className="discard-content">
+              <h2>Discard Changes</h2>
+              <p>
+                Are you sure you want to discard your changes and go back to the
+                dashboard?
+              </p>
+              <div className="rsrv-buttons">
+                <button className="reserve-btn" onClick={handleConfirmDiscard}>
+                  Yes, Discard
+                </button>
+                <button className="cancel-btn" onClick={handleCancelDiscard}>
+                  No, Keep Working
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

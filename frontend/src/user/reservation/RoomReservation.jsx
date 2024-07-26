@@ -34,10 +34,10 @@ const RoomReservation = () => {
     "Philippine Dragon Media Network": "#dc3545",
     "GDS Travel Agency": "#fccd32",
     "FEILONG Legal": "#d8a330",
-    STARLIGHT: "#fbff00",
+    "STARLIGHT": "#f0f000",
     "BIG VISION PRODS.": "#28a745",
-    SuperNova: "#272727",
-    ClearPath: "#35bbdc",
+    "SuperNova": "#272727",
+    "ClearPath": "#2a8fc7",
   };
 
   useEffect(() => {
@@ -110,6 +110,19 @@ const RoomReservation = () => {
       fetchBookData();
     }
   }, [origData]);
+
+  const startOfWeek = new Date();
+  startOfWeek.setHours(0, 0, 0, 0);
+  startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay() + 1); // Set to Monday of this week
+
+  const endOfWeek = new Date(startOfWeek);
+  endOfWeek.setDate(startOfWeek.getDate() + 6); // End of week (Sunday)
+
+  const filteredEvents = events.filter((event) => {
+    const eventStart = new Date(event.start);
+    const eventDay = eventStart.getDay();
+    return eventDay !== 0; // Exclude Sundays (0)
+  });
 
   const handleReserve = () => {
     const start = moment(startDate).set({
@@ -257,6 +270,32 @@ const RoomReservation = () => {
     }
   };
 
+  const minTime = 8; // 8:00 AM
+  const maxTime = 21; // 9:00 PM
+
+  const disabledHours = () => {
+    const hours = [];
+    for (let i = 0; i < minTime; i++) {
+      hours.push(i);
+    }
+    for (let i = maxTime + 1; i < 24; i++) {
+      hours.push(i);
+    }
+    return hours;
+  };
+
+  const disabledMinutes = (hour) => {
+    if (hour < minTime || hour > maxTime) {
+      return Array.from({ length: 60 }, (_, i) => i); 
+    }
+    return [];
+  };
+
+  const isNotSunday = (date) => {
+    const day = date.getDay();
+    return day !== 0;
+  };
+
   const handleCancelDiscard = () => {
     setShowDiscardModal(false);
   };
@@ -268,20 +307,6 @@ const RoomReservation = () => {
   const closeEventDetails = () => {
     setExpandedEvent(null);
   };
-  const format = "h:mm a";
-
-  const disabledHours = () => {
-    const hours = [];
-    for (let i = 0; i < 24; i++) {
-      if (i < 8 || i >= 21) {
-        hours.push(i);
-      }
-    }
-    return hours;
-  };
-
-  const disabledMinutes = () => []; // Allow all minutes
-  const disabledSeconds = () => []; // Allow all seconds
 
   return (
     <div className="room-reservation-container">
@@ -296,35 +321,39 @@ const RoomReservation = () => {
                 <DatePicker
                   selected={startDate}
                   minDate={new Date()}
-                  maxDate={moment().add(7, "days").toDate()}
+                  maxDate={moment().add(8, "days").toDate()}
                   onChange={(date) => setStartDate(date)}
                   inline
                   calendarClassName="custom-calendar"
+                  filterDate={isNotSunday} 
                 />
                 <p>Reservation of meeting can't be made prior 1 week ahead.</p>
               </div>
-              <div className="time-picker">
+              <div className="custom-time-picker">
                 <h3>Start Time</h3>
                 <TimePicker
-                  showSecond={false}
                   value={startTime}
-                  format={format}
-                  onChange={(time) => setStartTime(time)}
+                  showSecond={false}
+                  use12Hours
+                  format="h:mm a"
                   disabledHours={disabledHours}
                   disabledMinutes={disabledMinutes}
-                  disabledSeconds={disabledSeconds}
+                  minuteStep={10}
+                  hideDisabledOptions
                 />
               </div>
-              <div className="time-picker">
+              <div className="custom-time-picker">
                 <h3>End Time</h3>
                 <TimePicker
-                  showSecond={false}
                   value={endTime}
-                  format={format}
-                  onChange={(time) => setEndTime(time)}
+                  showSecond={false}
+                  use12Hours
+                  format="h:mm a"
                   disabledHours={disabledHours}
                   disabledMinutes={disabledMinutes}
-                  disabledSeconds={disabledSeconds}
+                  minuteStep={10}
+                  hideDisabledOptions
+                  placeholder="Select Time"
                 />
               </div>
             </div>
@@ -401,18 +430,16 @@ const RoomReservation = () => {
               startAccessor="start"
               endAccessor="end"
               style={{ height: "100%" }}
-              min={new Date().setHours(8, 0, 0)} // Set minimum time to 8am
-              max={new Date().setHours(21, 0, 0)} // Set maximum time to 9pm (21:00)
-              defaultView={Views.WEEK} // Set the default view to week
-              views={[Views.WEEK, Views.DAY, Views.AGENDA]} // Restrict to Week, Day, and Agenda views
+              min={new Date().setHours(8, 0, 0)} 
+              max={new Date().setHours(21, 0, 0)} 
+              defaultView={Views.WEEK}
+              views={[Views.WEEK, Views.DAY, Views.AGENDA]} 
               eventPropGetter={(event) => ({
                 style: {
                   backgroundColor:
                     departmentColors[event.department] || "#45813",
                   borderRadius: "4px",
-                  border: "none",
                   color: "#fff",
-                  padding: "2px 4px",
                   cursor: "pointer",
                   transition: "background-color 0.3s",
                 },
