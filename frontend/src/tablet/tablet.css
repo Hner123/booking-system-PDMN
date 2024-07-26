@@ -16,7 +16,7 @@
 }
 
 .meeting-room-schedule.available {
-  background: rgb(0, 114, 62); 
+  background: rgb(0, 114, 62); /* Dark green for "Available" */
 }
 
 .first-column {
@@ -26,7 +26,7 @@
   background: url('../src/assets/roombg.jpg') no-repeat center center;
   background-size: cover;
   padding: 20px;
-  box-sizing: border-box; /* Ensure padding is included in width/height */
+  box-sizing: border-box;
 }
 
 .first-column::before {
@@ -41,11 +41,11 @@
 }
 
 .meeting-room-schedule.in-use .first-column::before {
-  background: rgb(238, 64, 58, 0.3); /* Dark red overlay for "In Use" */
+  background: rgba(238, 64, 58, 0.3); /* Dark red overlay for "In Use" */
 }
 
 .meeting-room-schedule.available .first-column::before {
-  background: rgba(0, 114, 62, 0.3); /* Default overlay color for "Available" */
+  background: rgba(0, 114, 62, 0.3); /* Green overlay for "Available" */
 }
 
 .first-column > * {
@@ -55,7 +55,8 @@
 
 .second-column {
   width: 40%;
-  box-sizing: border-box; /* Ensure padding is included in width/height */
+  box-sizing: border-box;
+  padding: 20px;
 }
 
 .room-info {
@@ -65,14 +66,14 @@
 }
 
 .availability {
-  font-size: 150px;
+  font-size: 10rem; /* Use rem for scalability */
   margin: 0;
   transition: color 0.3s, text-shadow 0.3s;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .room-name {
-  font-size: 180px;
+  font-size: 12rem;
   margin: 0;
   transition: color 0.3s, text-shadow 0.3s;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
@@ -95,12 +96,12 @@
 }
 
 .clock h1 {
-  font-size: 150px;
+  font-size: 8rem; /* Adjusted for responsiveness */
   margin: 0;
 }
 
 .date-info {
-  font-size: 40px;
+  font-size: 2.5rem;
   text-align: center;
   margin: 0;
 }
@@ -108,79 +109,75 @@
 .current-meeting-info,
 .upcoming-meetings {
   width: 100%;
-  padding: 10px;
+  padding: 1rem; /* Consistent padding */
 }
 
 .meeting-title {
   margin-top: 0;
-  font-size: 70px;
+  font-size: 4rem;
   font-weight: bolder;
   text-align: left;
   border-bottom: 3px solid #ffffff;
   text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
-  margin: 0%;
-  width: 80%;
-  padding: 0 15px;
+  padding: 0 1rem; /* Consistent padding */
 }
 
-/* General table styles */
-table {
+.room-info table {
   width: 100%;
   border-collapse: collapse;
   margin: 0;
-  font-size: 40px;
+  font-size: 2.5rem; /* Adjusted for responsiveness */
   text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
   font-weight: bold;
 }
 
-table td {
-  padding: 10px;
+.room-info table td {
+  padding: 1rem; /* Consistent padding */
 }
 
-table td:first-child {
-  width: 40px; /* Set a fixed width for the icon column */
+.room-info table td:first-child {
+  width: 3rem; /* Fixed width for icons */
   text-align: center;
 }
 
-table td:last-child {
-  padding-left: 10px; /* Add some padding for text */
+.room-info table td:last-child {
+  padding-left: 1rem; /* Consistent padding */
 }
 
-/* Icon styles */
-table .fa-calendar-day, 
-table .fa-clock, 
-table .fa-user {
-  color: #ffffff; /* Dark color for icons */
-  font-size: 40px; /* Adjust icon size */
+.room-info table .fa-calendar-day, 
+.room-info table .fa-clock, 
+.room-info table .fa-user {
+  color: #ffffff;
+  font-size: 2.5rem; /* Adjusted for responsiveness */
 }
 
 .upcoming-meetings h2 {
   margin-top: 0;
-  font-size: 35px;
+  font-size: 2.2rem;
   font-weight: bolder;
   text-align: center;
   border-bottom: 1px solid #d1d9e2;
 }
 
 .meeting {
-  padding: 10px;
+  padding: 1rem;
   background: rgba(255, 255, 255, 0.1);
-  margin-bottom: 10px;
+  margin-bottom: 1rem;
   border-radius: 5px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
 @media (max-width: 768px) {
   .clock h1 {
-    font-size: 2em;
+    font-size: 4rem; /* Adjusted for smaller screens */
   }
 
   .meeting-room-schedule {
-    padding: 15px;
+    padding: 1rem; /* Reduced padding for smaller screens */
   }
 
   .current-meeting-info,
   .upcoming-meetings {
-    padding: 0 5px;
+    padding: 0 1rem;
   }
 }
