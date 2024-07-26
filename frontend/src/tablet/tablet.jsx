@@ -2,9 +2,13 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./tablet.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCalendarDay, faClock, faUser } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCalendarDay,
+  faClock,
+  faUser,
+} from "@fortawesome/free-solid-svg-icons";
 
-const MeetingRoomSchedule = ({ }) => {
+const MeetingRoomSchedule = ({}) => {
   const [bookData, setBookData] = useState([]);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [currentMeeting, setCurrentMeeting] = useState(null);
@@ -19,10 +23,14 @@ const MeetingRoomSchedule = ({ }) => {
           "Content-Type": "application/json",
         };
 
-        const response = await axios.get(`http://localhost:8800/api/book`, { headers });
+        const response = await axios.get(`http://localhost:8800/api/book`, {
+          headers,
+        });
 
         if (response.status === 200) {
-          const data = response.data.filter((meeting) => meeting.roomName === "Palawan");
+          const data = response.data.filter(
+            (meeting) => meeting.roomName === "Palawan"
+          );
           setBookData(data);
 
           const now = new Date();
@@ -33,7 +41,9 @@ const MeetingRoomSchedule = ({ }) => {
           });
 
           setCurrentMeeting(ongoingMeeting || null);
-          setOtherMeetings(data.filter((meeting) => meeting !== ongoingMeeting));
+          setOtherMeetings(
+            data.filter((meeting) => meeting !== ongoingMeeting)
+          );
         }
       } catch (error) {
         console.error("Error fetching book data:", error);
@@ -83,22 +93,42 @@ const MeetingRoomSchedule = ({ }) => {
         {new Date(meeting.startTime).toLocaleTimeString([], {
           hour: "2-digit",
           minute: "2-digit",
-        })} - {new Date(meeting.endTime).toLocaleTimeString([], {
+        })}{" "}
+        -{" "}
+        {new Date(meeting.endTime).toLocaleTimeString([], {
           hour: "2-digit",
           minute: "2-digit",
         })}
       </p>
       <p>
-        <FontAwesomeIcon icon={faUser} /> {`${meeting.user?.firstName || 'Unknown'} ${meeting.user?.surName || 'Unknown'}`}
+        <FontAwesomeIcon icon={faUser} />{" "}
+        {`${meeting.user?.firstName || "Unknown"} ${
+          meeting.user?.surName || "Unknown"
+        }`}
       </p>
     </div>
   );
 
   const renderUpcomingMeetings = () => {
     const now = new Date();
+    const todayStart = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate()
+    );
+    const todayEnd = new Date(todayStart.getTime() + 24 * 60 * 60 * 1000); // End of today
+
     const upcomingMeetings = bookData
-      .filter((meeting) => new Date(meeting.startTime) > now)
-      .sort((a, b) => new Date(a.startTime) - new Date(b.startTime));
+      .filter((meeting) => {
+        const meetingStart = new Date(meeting.startTime);
+        return (
+          meetingStart >= now &&
+          meetingStart >= todayStart &&
+          meetingStart < todayEnd
+        );
+      })
+      .sort((a, b) => new Date(a.startTime) - new Date(b.startTime))
+      .slice(0, 4); // Limit to 4 upcoming meetings
     return upcomingMeetings.map(renderMeeting);
   };
 
@@ -109,7 +139,9 @@ const MeetingRoomSchedule = ({ }) => {
     });
   };
 
-  const containerClassName = currentMeeting ? "meeting-room-schedule in-use" : "meeting-room-schedule available";
+  const containerClassName = currentMeeting
+    ? "meeting-room-schedule in-use"
+    : "meeting-room-schedule available";
 
   return (
     <div className={containerClassName}>
@@ -123,24 +155,37 @@ const MeetingRoomSchedule = ({ }) => {
               <table>
                 <tbody>
                   <tr>
-                    <td><FontAwesomeIcon icon={faCalendarDay} /></td>
+                    <td>
+                      <FontAwesomeIcon icon={faCalendarDay} />
+                    </td>
                     <td>{formatDate(new Date(currentMeeting.startTime))}</td>
                   </tr>
                   <tr>
-                    <td><FontAwesomeIcon icon={faClock} /></td>
                     <td>
-                      {new Date(currentMeeting.startTime).toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })} - {new Date(currentMeeting.endTime).toLocaleTimeString([], {
+                      <FontAwesomeIcon icon={faClock} />
+                    </td>
+                    <td>
+                      {new Date(currentMeeting.startTime).toLocaleTimeString(
+                        [],
+                        {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        }
+                      )}{" "}
+                      -{" "}
+                      {new Date(currentMeeting.endTime).toLocaleTimeString([], {
                         hour: "2-digit",
                         minute: "2-digit",
                       })}
                     </td>
                   </tr>
                   <tr>
-                    <td><FontAwesomeIcon icon={faUser} /></td>
-                    <td>{`${currentMeeting.user?.firstName || 'Unknown'} ${currentMeeting.user?.surName || 'Unknown'}`}</td>
+                    <td>
+                      <FontAwesomeIcon icon={faUser} />
+                    </td>
+                    <td>{`${currentMeeting.user?.firstName || "Unknown"} ${
+                      currentMeeting.user?.surName || "Unknown"
+                    }`}</td>
                   </tr>
                 </tbody>
               </table>
@@ -158,11 +203,11 @@ const MeetingRoomSchedule = ({ }) => {
           <p>{formatDate(currentTime)}</p>
         </div>
         <div className="upcoming-meetings">
-          <h2>Other Meetings</h2>
-          {otherMeetings.length > 0 ? (
-            otherMeetings.map(renderMeeting)
+          <h2>Upcoming Meetings Today</h2>
+          {renderUpcomingMeetings().length > 0 ? (
+            renderUpcomingMeetings()
           ) : (
-            <p>No other meetings</p>
+            <p>No upcoming meetings today</p>
           )}
         </div>
       </div>
