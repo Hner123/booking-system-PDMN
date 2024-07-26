@@ -89,12 +89,10 @@ const WithAuthAdmin = (WrappedComponent) => {
       return currentTime > exp;
     };
 
-    // Render nothing or a loading indicator while fetching
-    if (isLoading) {
-      return <div>Loading...</div>;
-    }
-
-    // Render the wrapped component if not loading
+    // if (isLoading) {
+    //   return <div>Loading...</div>;
+    // }
+    
     return <WrappedComponent {...props} />;
   };
 

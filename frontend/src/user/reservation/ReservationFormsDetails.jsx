@@ -205,9 +205,12 @@ const ReservationFormsDetails = () => {
       .map((name) => name.trim())
       .filter((name) => name);
 
-    const confirmationStatus =
-      (bookData.confirmation === false && formData.caps.pax === "3-More") ||
-        (!(bookData.confirmation === false || formData.caps.pax === "1-2" || bookData.agenda))
+      const confirmationStatus =
+      (bookData.confirmation === false && formData.caps.pax === "3-More")
+        ? false
+        : (bookData.confirmation === true && formData.caps.pax === "1-2")
+        ? false
+        : (bookData.confirmation === true && formData.caps.pax === "3-More")
         ? true
         : false;
 
@@ -219,7 +222,12 @@ const ReservationFormsDetails = () => {
       attendees: formData.attendees,
       guest: additionalAttendees,
       title: formData.title,
-      confirmation: confirmationStatus
+      confirmation: confirmationStatus,
+      approval:{
+        archive: false,
+        status: false,
+        reason: "",
+      }
     };
 
     if (selectedRoom === "Palawan and Boracay" && attendees.length < 8) {
@@ -232,7 +240,7 @@ const ReservationFormsDetails = () => {
       return;
     }
 
-    if (formData.caps.pax === "3-More" && (attendees.length < 3 || attendees.length > 7)) {
+    if (formData.caps.pax === "3-More" && (attendees.length < 2 || attendees.length > 7)) {
       toast.error("You must have between 3 and 7 people accompanying you");
       return;
     }

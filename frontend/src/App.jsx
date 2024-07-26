@@ -125,12 +125,12 @@ function App() {
           </>
         } />
 
-      <Route path="/verified" element={
+      <Route path="/verify" element={
           <>
             <Verifyemail/>
           </>
         } />
-      <Route path="/reset" element={
+      <Route path="/forgot-pass" element={
           <>
             <ResetPass/>
           </>

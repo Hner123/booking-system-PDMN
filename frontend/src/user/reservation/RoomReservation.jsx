@@ -214,6 +214,11 @@ const RoomReservation = () => {
         pax: "",
         reason: "",
       },
+      approval: {
+        archive: false,
+        status: false,
+        reason: "",
+      },
       confirmation: agenda ? false : true,
     };
 
@@ -231,7 +236,6 @@ const RoomReservation = () => {
         reserveData,
         { headers }
       );
-
       if (updateResponse.status === 201) {
         navigate("/reserveform");
       }

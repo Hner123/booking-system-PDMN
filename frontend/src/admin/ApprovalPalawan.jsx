@@ -1,12 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ApprovalPalawan = () => {
   const [rejectModal, setRejectModal] = useState(false);
   const [acceptModal, setAcceptModal] = useState(false);
-  const [rejectReason, setRejectReason] = useState('');
   const [selectedBooking, setSelectedBooking] = useState(null);
+
+  const [formData, setFormData] = useState({
+    approval: {
+      archive: false,
+      status: false,
+      reason: "",
+    },
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      approval: {
+        ...prevFormData.approval,
+        [name]: value,
+      },
+    }));
+  };
 
   const [bookData, setBookData] = useState([]);
 
@@ -25,7 +44,7 @@ const ApprovalPalawan = () => {
 
         if (response.status === 200) {
           const filteredData = response.data.filter(
-            (event) => event.roomName === "Palawan" && event.confirmation === false
+            (event) => event.roomName === "Palawan" && event.confirmation === false && event.approval.archive === false
           );
           setBookData(filteredData);
         } else {
@@ -38,8 +57,6 @@ const ApprovalPalawan = () => {
 
     fetchBookData();
   }, []);
-
-  console.log(bookData)
 
   const calculateReason = (booking) => {
     const startTime = new Date(booking.startTime);
@@ -59,7 +76,11 @@ const ApprovalPalawan = () => {
 
   const cancelReject = () => {
     setRejectModal(false);
-    setRejectReason('');
+  };
+
+  const handleReject = (booking) => {
+    setSelectedBooking(booking);
+    setRejectModal(true);
   };
 
   const cancelApprove = () => {
@@ -71,23 +92,128 @@ const ApprovalPalawan = () => {
     setAcceptModal(true);
   };
 
-  const handleReject = (booking) => {
-    setSelectedBooking(booking);
-    setRejectModal(true);
+  const handleApproveConfirm = async (e) => {
+    e.preventDefault();
+
+    const updatedReserve = {
+      ...selectedBooking,
+      approval: {
+        archive: true,
+        status: true,
+        reason: "",
+      },
+    };
+
+    try {
+      const token = localStorage.getItem("authToken");
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      };
+
+      const updateResponse = await axios.patch(
+        `http://localhost:8800/api/book/edit/${selectedBooking._id}`,
+        updatedReserve,
+        { headers }
+      );
+
+      if (updateResponse.status === 201) {
+        try {
+          const emailData = {
+            _id: selectedBooking._id,
+            email: selectedBooking.user.email
+          };
+
+          const emailResponse = await axios.post(
+            `http://localhost:8800/api/auth/approval`,
+            emailData,
+            { headers }
+          );
+
+          if (emailResponse.status === 201) {
+            const { message } = emailResponse.data;
+            setBookData(emailResponse.data)
+            toast.success(message);
+            setAcceptModal(false);
+          }
+        } catch (error) {
+          console.error("Error details:", error.response ? error.response.data : error.message);
+          toast.error(error);
+        }
+      }
+    } catch (error) {
+      console.error("Error details:", error.response ? error.response.data : error.message);
+      toast.error(error);
+    }
   };
 
-  const handleRejectConfirm = () => {
-    console.log('Reject Reason:', rejectReason);
-    setRejectModal(false);
-    setRejectReason('');
-  };
+  const handleRejectConfirm = async (e) => {
+    e.preventDefault();
 
-  const handleReasonChange = (event) => {
-    setRejectReason(event.target.value);
+    if (!formData.approval.reason) {
+      toast.error("Please state your reason.");
+      return;
+    }
+
+    const updatedReserve = {
+      ...selectedBooking,
+      approval: {
+        archive: true,
+        status: false,
+        reason: formData.approval.reason,
+      },
+    };
+
+    try {
+      const token = localStorage.getItem("authToken");
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      };
+
+      const updateResponse = await axios.patch(
+        `http://localhost:8800/api/book/edit/${selectedBooking._id}`,
+        updatedReserve,
+        { headers }
+      );
+
+      if (updateResponse.status === 201) {
+        try {
+          const emailData = {
+            _id: selectedBooking._id,
+            email: selectedBooking.user.email
+          };
+
+          const emailResponse = await axios.post(
+            `http://localhost:8800/api/auth/approval`,
+            emailData,
+            { headers }
+          );
+
+          if (emailResponse.status === 201) {
+            const { message } = emailResponse.data;
+            setBookData(emailResponse.data)
+            setFormData(() => ({
+              ...emailResponse.data,
+              approval:{
+                reason: ""
+              }
+            }));
+            toast.success(message);
+            setRejectModal(false);
+          }
+        } catch (error) {
+          toast.error(error);
+        }
+      }
+    } catch (error) {
+      toast.error(error);
+    }
   };
 
   return (
     <div className='listCont1'>
+      <ToastContainer />
       <h1>For Approval - PALAWAN ROOM</h1>
       <div className='approvalGroup'>
         {bookData
@@ -95,7 +221,7 @@ const ApprovalPalawan = () => {
             (book) =>
               book.title &&
               book.scheduleDate !== null &&
-              book.startTime !== null
+              book.startTime !== null 
           )
           .sort((a, b) => new Date(a.startTime) - new Date(b.startTime)) // Sorting by startTime from earliest to latest
           .map((booking, index) => (
@@ -114,11 +240,11 @@ const ApprovalPalawan = () => {
                 <hr />
                 <p>
                   Reason: {calculateReason(booking)}
-                  {booking.caps.reason && ` ${booking.caps.reason}`}
+                  {booking.caps.reason && ` ${booking.caps.reason}.`}
                   {booking.agenda && (
                     <>
                       <br />
-                      Agenda: {booking.agenda}
+                      Agenda: {booking.agenda}.
                     </>
                   )}
                 </p>
@@ -129,7 +255,6 @@ const ApprovalPalawan = () => {
               </div>
             </div>
           ))}
-
       </div>
 
       {rejectModal && (
@@ -137,10 +262,13 @@ const ApprovalPalawan = () => {
           <div className='gen_modal-content'>
             <p>Are you sure you want to reject the meeting?</p>
             <input
+              id='reason'
+              name='reason'
               placeholder="Reason for rejecting"
-              value={rejectReason}
-              type='reject'
-              onChange={handleReasonChange}
+              value={formData.approval.reason}
+              type='text'
+              onChange={handleChange}
+              required
             />
             <button type='cancel' onClick={cancelReject}>Cancel</button>
             <button type='reject' onClick={handleRejectConfirm}>Yes, reject</button>
@@ -153,7 +281,7 @@ const ApprovalPalawan = () => {
           <div className='gen_modal-content'>
             <p>Are you sure you want to approve the meeting?</p>
             <button type='cancel' onClick={cancelApprove}>Cancel</button>
-            <button type='approve'>Yes, approve</button>
+            <button type='approve' onClick={handleApproveConfirm}>Yes, approve</button>
           </div>
         </div>
       )}

@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const UserModel = require("../models/UserModel");
 const AdminModel = require("../models/AdminModel");
+const ReserveModel = require("../models/ReserveModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const mailer = require("nodemailer");
@@ -147,19 +148,19 @@ const ChangeEmail = async (req, res) => {
 
 const Approval = async (req, res) => {
   try {
-    const { _id, email } = req.body;
+    const { _id, email} = req.body;
 
-    const user = await UserModel.findOne({ _id });
+    const user = await UserModel.findOne({ email });
+    const book = await ReserveModel.findOne({ _id });
 
     if (user) {
-      const emailToken = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
-        expiresIn: "5m",
-      });
       const name = user.firstName + " " + user.surName;
-      const id = user._id;
+      const status = book.approval.status;
+      const roomName = book.roomName;
+      const reason = book.approval.reason;
+      const title = book.title;
 
-      const companyLogoUrl =
-        "https://drive.google.com/uc?id=108JoeqEjPR7HKfbNjXdV30wvvy9oDk_B";
+      const companyLogoUrl = "https://drive.google.com/uc?id=108JoeqEjPR7HKfbNjXdV30wvvy9oDk_B";
 
       const htmlContent = `
         <!DOCTYPE html>
@@ -168,18 +169,19 @@ const Approval = async (req, res) => {
             <meta charset="UTF-8">
             <meta http-equiv="X-UA-Compatible" content="IE=edge">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Change Email - GDS Booking System</title>
+            <title>Reservation Status - GDS Booking System</title>
         </head>
         <body style="font-family: Arial, sans-serif;">
             <div style="max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f4f4f4; color: #000; font-size: 16px;">
                 <img src="${companyLogoUrl}" alt="Company Logo" style="max-width: 200px; margin: 0 auto 20px; display: block;">
-                <h2 style="margin-bottom: 20px; text-align: center; color: #000;">Email Change Request</h2>
+                <h2 style="margin-bottom: 20px; text-align: center; color: #000;">Reservation Status for ${roomName}</h2>
                 <p>Hello ${name},</p>
-                <p>We received a request to change the email associated with your GDS Booking System account. If you made this request, please click the button below to confirm your new email address:</p>
-                <p style="text-align: center;">
-                    <a href="https://tiktok.com" style="display: inline-block; padding: 10px 20px; background-color: rgb(234, 88, 12); color: #fff; text-decoration: none; border-radius: 5px;">Confirm Email Change</a>
-                </p>
-                <p>If you did not request this change, please ignore this email or contact our support team immediately.</p>
+                <p>Your reservation request for the room ${roomName}, titled "${title}", has been ${
+                    status
+                      ? "approved. You can proceed with your reservation on the scheduled date."
+                      : `rejected. The reason provided is: <span style="color: red;">${reason}</span>. If you have any questions or need further assistance, please contact our support team.`
+                  }</p>
+                <p>If you have any questions or need further assistance, please contact our support team.</p>
                 <p>Best regards,</p>
                 <p>Management</p>
             </div>
@@ -189,15 +191,13 @@ const Approval = async (req, res) => {
       await transporter.sendMail({
         from: process.env.GMAIL_SENDER,
         to: email,
-        subject: "Change Email",
+        subject: "Reservation Status",
         html: htmlContent,
         replyTo: "",
         disableReplyTo: true,
       });
       res.status(201).json({
         message: "An email has been sent into your account",
-        emailToken,
-        emailId: id
       });
     } else {
       // Send error response indicating user not found

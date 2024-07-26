@@ -54,9 +54,19 @@ const ReserveSchema = new Schema({
     type: Boolean,
     default: true
   },
-  archive:{
-    type:Boolean,
-    default: false
+  approval:{
+    archive:{
+      type:Boolean,
+      default: false
+    },
+    status:{
+      type: Boolean,
+      default: false
+    },
+    reason:{
+      type: String,
+      default: ""
+    }
   }
 
 });

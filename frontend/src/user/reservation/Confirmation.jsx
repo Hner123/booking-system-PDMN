@@ -50,24 +50,6 @@ const BookingConfirmation = () => {
     navigate("/dashboard");
   };
 
-  // useEffect(() => {
-  //   if (showModal) {
-  //     const timer = setTimeout(() => {
-  //       setShowModal(false);
-  //       handleReturnToDashboard();
-  //     }, 5000); // Close modal after 5 seconds
-
-  //     return () => clearTimeout(timer);
-  //   }
-  // }, [showModal]);
-
-  // Helper function to calculate the duration
-  const calculateDuration = (startTime, endTime) => {
-    const start = new Date(startTime);
-    const end = new Date(endTime);
-    return (end - start) / (1000 * 60 * 60); // Convert milliseconds to hours
-  };
-
   const isConfirmed = bookData.confirmation === true;
 
   return (

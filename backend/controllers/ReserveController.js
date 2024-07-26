@@ -17,14 +17,18 @@ const GetSpecificReserve = async (req, res) => {
     const { id } = req.params;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      res.status(400).json("No such user");
+      return res.status(400).json("No such reservation");
+    }
+    
+    const result = await ReserveModel.findById(id).populate("user");
+
+    if (!result) {
+      return res.status(404).json("Reservation not found");
     }
 
-    const result = await ReserveModel.findById(id).populate("user");;
-
-    res.status(200).json(result);
+    return res.status(200).json(result);
   } catch (err) {
-    res.send(err.message);
+    return res.send(err.message);
   }
 };
 
@@ -47,7 +51,11 @@ const CreateReserve = async (req, res) => {
       attendees: reserve.attendees,
       guest: reserve.guest,
       confirmation: true,
-      archive: false,
+      approval: {
+        archive: false,
+        status: false,
+        reason: ''
+      }
     });
 
     res.status(201).json({ result });
@@ -82,7 +90,11 @@ const EditReserve = async (req, res) => {
         attendees: reserve.attendees,
         guest: reserve.guest,
         confirmation: reserve.confirmation,
-        archive: false
+        approval: {
+          archive: reserve.approval.archive,
+          status: reserve.approval.status,
+          reason: reserve.approval.reason
+        }
       },
     };
 
