@@ -19,8 +19,8 @@ const RoomReservation = () => {
 
   // State variables
   const [startDate, setStartDate] = useState(new Date());
-  const [startTime, setStartTime] = useState(moment().hours(9).minutes(0));
-  const [endTime, setEndTime] = useState(moment().hours(10).minutes(0));
+  const [startTime, setStartTime] = useState(moment());
+  const [endTime, setEndTime] = useState(moment().add(1, 'hours'));
   const [events, setEvents] = useState([]);
   const [showAgendaForm, setShowAgendaForm] = useState(false);
   const [agenda, setAgenda] = useState("");
@@ -331,33 +331,37 @@ const RoomReservation = () => {
               </div>
               <div className="custom-time-picker">
                 <h3>Start Time</h3>
-                  <TimePicker
-            value={startTime}
-            onChange={(value) => setStartTime(value)}
-            showSecond={false}
-            use12Hours
-            format="h:mm a"
-            disabledHours={disabledHours}
-            disabledMinutes={disabledMinutes}
-            minuteStep={10}
-            hideDisabledOptions
-            placeholder="Select Time"
-          />
+                <TimePicker
+                  value={startTime}
+                  onChange={(value) => setStartTime(value)}
+                  showSecond={false}
+                  use12Hours
+                  format="h:mm a"
+                  disabledHours={disabledHours}
+                  disabledMinutes={disabledMinutes}
+                  minuteStep={10}
+                  hideDisabledOptions
+                  placeholder="Select Time"
+                  defaultValue={moment()} // Set default to current time
+                  defaultOpenValue={moment()} // Set default open panel value to current time
+                />
               </div>
               <div className="custom-time-picker">
                 <h3>End Time</h3>
                 <TimePicker
-          value={endTime}
-          onChange={(value) => setEndTime(value)}
-          showSecond={false}
-          use12Hours
-          format="h:mm a"
-          disabledHours={disabledHours}
-          disabledMinutes={disabledMinutes}
-          minuteStep={10}
-          hideDisabledOptions
-          placeholder="Select Time"
-        />
+                  value={endTime}
+                  onChange={(value) => setEndTime(value)}
+                  showSecond={false}
+                  use12Hours
+                  format="h:mm a"
+                  disabledHours={disabledHours}
+                  disabledMinutes={disabledMinutes}
+                  minuteStep={10}
+                  hideDisabledOptions
+                  placeholder="Select Time"
+                  defaultValue={moment().add(1, 'hours')} // Set default to 1 hour after current time
+                  defaultOpenValue={moment().add(1, 'hours')} // Set default open panel value to 1 hour after current time
+                />
               </div>
             </div>
 
