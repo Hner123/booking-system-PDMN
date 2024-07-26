@@ -374,6 +374,7 @@ const Dashboard = () => {
         <div className="reg-overlay">
           <div className="registration-form-modal">
             {userData && <h2>Welcome, {userData.userName}!</h2>}
+            <p>Please make sure to fill out the form to proceed.</p>
             <form ref={formRef} onSubmit={handleRegistrationSubmit}>
             <div className="name-group">
               <div className="name-section">
@@ -464,7 +465,7 @@ const Dashboard = () => {
       )}
       <main className="dashboard-main">
         <ToastContainer />
-        <h1>My Dashboard</h1>
+        {userData && <h1>{userData.userName}'s Dashboard </h1>}
 
         <h2>Book a Meeting Room</h2>
         <div className="card-container">
