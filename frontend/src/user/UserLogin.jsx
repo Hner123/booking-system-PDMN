@@ -72,6 +72,9 @@ const UserLogin = () => {
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Enter your password"
           />
+          <div className="resetpasss">
+            <button>Reset Password</button>
+          </div>
           <button type="submit">Log In</button>
         </form>
       </div>

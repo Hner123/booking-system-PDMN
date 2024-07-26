@@ -28,6 +28,10 @@ import 'rc-time-picker/assets/index.css';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import Tablet from './tablet/tablet';
 
+import Verifyemail from './user/utilities/verify.jsx'
+import ResetPass from './user/utilities/resetpass.jsx'
+import NewPass from './user/utilities/newpass.jsx'
+
 import './App.css';
 
 
@@ -121,6 +125,21 @@ function App() {
           </>
         } />
 
+      <Route path="/verified" element={
+          <>
+            <Verifyemail/>
+          </>
+        } />
+      <Route path="/reset" element={
+          <>
+            <ResetPass/>
+          </>
+        } />
+      <Route path="/reset-pass" element={
+          <>
+            <NewPass/>
+          </>
+        } />     
       </Routes>
     </div>
   );
