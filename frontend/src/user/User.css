@@ -51,6 +51,7 @@
   font-size: 16px;
   background-color: #fafafa;
   transition: border-color 0.3s;
+  
 }
 
 .login-form input:focus {
@@ -655,4 +656,16 @@
   background-color: white;
   text-decoration: underline;
   color: #9c0b0b;
+}
+.resetpasss{
+  display: inline;
+  button {
+    background-color: white;
+    color: #000000;
+    font-size: 10px;
+    padding: 0px;
+    margin-bottom: 20px;
+    text-align: left;
+    text-decoration: underline;
+  }
 }

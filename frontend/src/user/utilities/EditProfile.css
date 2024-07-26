@@ -250,3 +250,32 @@
     }
 
 }
+/* Verifyemail.css */
+
+/* Styles specific to the Verifyemail component */
+.verify-container {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    height: 100vh; /* Full viewport height */
+    background-color: gray; /* Gray background for the entire page */
+    margin: 0; /* Remove default margin */
+    .verify {
+        background-color: white; /* White background for the verify container */
+        padding: 20px; /* Add some padding inside the container */
+        border-radius: 8px; /* Optional: Add rounded corners */
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Optional: Add a subtle shadow */
+        text-align: center; /* Center text inside the container */
+    }
+    button{
+        background-color: white;
+        border: none;
+        color: #9c0b0b;
+        text-decoration: underline;
+    }
+    button:hover{
+        color: #58595A;
+        text-decoration: none;
+    }
+}
+

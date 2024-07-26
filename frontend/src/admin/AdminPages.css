@@ -64,7 +64,7 @@ li .li{
     border-radius: 1rem;
 }
 
-a{
+a, .notif-icon{
     text-decoration: none;
     color: black;
     font-size:15px;
@@ -73,6 +73,7 @@ a{
     justify-content: center;
     margin:  0 0 0 0.5rem;
     gap:15px;
+    padding: 0;
 }
 
 .logodbs{
@@ -101,7 +102,55 @@ a{
     align-items: center;
     justify-content: center;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
 
+.notification-modal{
+    position: absolute;
+    top: 250px;
+    left: 50px;
+    background-color: #fff;
+    padding: 0px 20px 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+
+    .closenotif{
+        position: relative;
+        top: 5px;
+        left: 140px;
+        border-radius: 20px;
+        border:none;
+        color: white;
+        background-color: gray;
+    }
+    .notifContnn{
+        
+        font-size: 10px;
+        overflow: hidden;
+        text-decoration: ellipse;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;      /* Number of lines to show */
+        -webkit-box-orient: vertical;
+        margin-top: 10px;
+        margin-bottom: 10px; /* Space between notifications */
+        border-bottom: 1px solid #ccc; /* Light grey line, adjust color as needed */
+    }
+    .seeread{
+        display: flex;
+        gap: 2px;
+        justify-content: center;
+        button{
+            font-size: 10px;
+            border: none;
+            margin: 5px 2px 0px ;
+            border-radius: 2px;
+        }
+        button:hover{
+            background-color: #9c0b0b;
+            color: white;
+            border: none;
+        }
+    }
 }
 
 .Contain{
@@ -164,7 +213,7 @@ a{
 }
 .last{
     position:relative;
-    bottom:-500px;
+    bottom:-400px;
     left:0px;
 }
 
@@ -212,13 +261,14 @@ a{
         font-size: 0px;
         opacity: 0;
     }
-    a{
+    a, .notif-icon{
         margin-top:10px;
         font-size: 30px;
     }
     li{
         margin:20px 0px;
     }
+
 
     ul:first-child{
         margin-top:100px;
@@ -811,6 +861,7 @@ input[type='reject']{
 .changeFields_admin form>div{
     margin: 20px;
 }
+
   @media (max-width:500px){
     .nav-icons{
         display: none;
