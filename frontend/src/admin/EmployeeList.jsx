@@ -129,33 +129,33 @@ const EmployeeList = () => {
 			</div>
 			<div className="tableContainer">
 				<div className="horizonscroll">
-				<table className="listTable">
-					<thead>
-						<tr>
-							<th className="tName">Name</th>
-							<th className="tUname">Username</th>
-							<th className="tDept">Department</th>
-							<th></th>
-						</tr>
-					</thead>
-					<tbody>
-						{sortedUsers.map(user => (
-							<tr key={user.id}> {/* Use a unique key like user.id */}
-								<td className="tName">{user.firstName} {user.surName}</td>
-								<td className="tUname">{user.userName}</td>
-								<td className="tDept">{user.department}</td>
-								<td>
-									<div className="listMod">
-										<button className='editBtnadd' onClick={() => toggleEditDept(user._id)}>Edit Department</button>
-										<button onClick={() => DeleteUser(user._id)}>Delete</button>
-									</div>
-								</td>
+					<table className="listTable">
+						<thead>
+							<tr>
+								<th className="tName">Name</th>
+								<th className="tUname">Username</th>
+								<th className="tDept">Department</th>
+								<th></th>
 							</tr>
-						))}
-					</tbody>
-				</table>
+						</thead>
+						<tbody>
+							{sortedUsers.map(user => (
+								<tr key={user.id}> {/* Use a unique key like user.id */}
+									<td className="tName">{user.firstName} {user.surName}</td>
+									<td className="tUname">{user.userName}</td>
+									<td className="tDept">{user.department}</td>
+									<td>
+										<div className="listMod">
+											<button className='editBtnadd' onClick={() => toggleEditDept(user._id)}>Edit Department</button>
+											<button onClick={() => DeleteUser(user._id)}>Delete</button>
+										</div>
+									</td>
+								</tr>
+							))}
+						</tbody>
+					</table>
 				</div>
-				
+
 				{editDeptModal && selectedUser && (
 					<div className="modal">
 						<p>User ID: {selectedUser}</p>
@@ -163,6 +163,7 @@ const EmployeeList = () => {
 					</div>
 				)}
 			</div>
+		</div>
 	);
 };
 
