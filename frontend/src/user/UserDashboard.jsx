@@ -728,16 +728,31 @@ const Dashboard = () => {
         )}
 
         {showConfirmModal && (
-          <div className="discard-modal">
-            <div className="discard-content">
-              <h2>Cancel Resevation?</h2>
-              <p>This will cancel your reservation. </p>
-              <button onClick={handleConfirmDiscard} className="confirm-btn">
-                Cancel my Meeting
-              </button>
-              <button onClick={handleCancelDelete} className="cancel-btn">
-                No, Go Back
-              </button>
+          <div
+            className="cancel-modal"
+            role="dialog"
+            aria-labelledby="modal-title"
+            aria-describedby="modal-description"
+          >
+            <div className="cancel-content">
+              <h2 id="modal-title">Cancel Reservation?</h2>
+              <p id="modal-description">This will cancel your reservation.</p>
+              <div className="selection">
+                <button
+                  onClick={handleCancelDelete}
+                  className="no-btn"
+                  aria-label="Close the modal and go back"
+                >
+                  No, Go Back
+                </button>
+                <button
+                  onClick={handleConfirmDiscard}
+                  className="confirm-btn"
+                  aria-label="Confirm cancellation of the meeting"
+                >
+                  Cancel my Meeting
+                </button>
+              </div>
             </div>
           </div>
         )}
