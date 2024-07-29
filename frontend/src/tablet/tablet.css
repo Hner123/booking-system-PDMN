@@ -12,11 +12,11 @@
 }
 
 .meeting-room-schedule.in-use {
-  background: rgb(114, 8, 0); /* Dark red for "In Use" */
+  background: rgb(114, 8, 0);
 }
 
 .meeting-room-schedule.available {
-  background: rgb(0, 114, 62); /* Dark green for "Available" */
+  background: rgb(0, 114, 62);
 }
 
 .first-column {
@@ -41,22 +41,16 @@
 }
 
 .meeting-room-schedule.in-use .first-column::before {
-  background: rgba(238, 64, 58, 0.3); /* Dark red overlay for "In Use" */
+  background: rgba(238, 64, 58, 0.3);
 }
 
 .meeting-room-schedule.available .first-column::before {
-  background: rgba(0, 114, 62, 0.3); /* Green overlay for "Available" */
+  background: rgba(0, 114, 62, 0.3);
 }
 
-.first-column > * {
+.first-column>* {
   position: relative;
   z-index: 2;
-}
-
-.second-column {
-  width: 40%;
-  box-sizing: border-box;
-  padding: 20px;
 }
 
 .room-info {
@@ -66,27 +60,75 @@
 }
 
 .availability {
-  font-size: 10rem; /* Use rem for scalability */
+  font-size: 160px;
   margin: 0;
   transition: color 0.3s, text-shadow 0.3s;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .room-name {
-  font-size: 12rem;
+  font-size: 192px;
+  /* Converted from 12rem to 192px */
   margin: 0;
   transition: color 0.3s, text-shadow 0.3s;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .meeting-room-schedule.in-use .room-name {
-  color: #EE3E38; /* Light color for "In Use" */
-  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7); /* Darker shadow for "In Use" */
+  color: #EE3E38;
+  /* Light color for "In Use" */
+  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7);
+  /* Darker shadow for "In Use" */
 }
 
 .meeting-room-schedule.available .room-name {
-  color: #1E8C45; /* Light color for "Available" */
-  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7); /* Darker shadow for "Available" */
+  color: #1E8C45;
+  /* Light color for "Available" */
+  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7);
+  /* Darker shadow for "Available" */
+}
+
+.room-info table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0;
+  font-size: 40px;
+  /* Converted from 2.5rem to 40px */
+  text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
+  font-weight: bold;
+}
+
+.room-info table td {
+  padding: 16px;
+  /* Consistent padding, converted from 1rem to 16px */
+}
+
+.room-info table td:first-child {
+  width: 48px;
+  /* Fixed width for icons, converted from 3rem to 48px */
+  text-align: center;
+}
+
+.room-info table td:last-child {
+  padding-left: 16px;
+  /* Consistent padding, converted from 1rem to 16px */
+}
+
+.room-info table .fa-calendar-day,
+.room-info table .fa-clock,
+.room-info table .fa-user {
+  color: #ffffff;
+  font-size: 40px;
+  /* Adjusted for responsiveness, converted from 2.5rem to 40px */
+}
+
+.second-column {
+  width: 40%;
+  box-sizing: border-box;
+  padding: 20px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .clock {
@@ -96,88 +138,78 @@
 }
 
 .clock h1 {
-  font-size: 8rem; /* Adjusted for responsiveness */
+  font-size: 128px;
+  /* Converted from 8rem to 128px */
   margin: 0;
 }
 
 .date-info {
-  font-size: 2.5rem;
+  font-size: 40px;
+  /* Converted from 2.5rem to 40px */
   text-align: center;
   margin: 0;
 }
 
-.current-meeting-info,
+.meeting-list {
+  margin-top: 0;
+  text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
+  padding: 0 16px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
 .upcoming-meetings {
-  width: 100%;
-  padding: 1rem; /* Consistent padding */
-}
-
-.meeting-title {
   margin-top: 0;
-  font-size: 4rem;
-  font-weight: bolder;
-  text-align: left;
-  border-bottom: 3px solid #ffffff;
-  text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
-  padding: 0 1rem; /* Consistent padding */
-}
-
-.room-info table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 0;
-  font-size: 2.5rem; /* Adjusted for responsiveness */
-  text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
-  font-weight: bold;
-}
-
-.room-info table td {
-  padding: 1rem; /* Consistent padding */
-}
-
-.room-info table td:first-child {
-  width: 3rem; /* Fixed width for icons */
-  text-align: center;
-}
-
-.room-info table td:last-child {
-  padding-left: 1rem; /* Consistent padding */
-}
-
-.room-info table .fa-calendar-day, 
-.room-info table .fa-clock, 
-.room-info table .fa-user {
-  color: #ffffff;
-  font-size: 2.5rem; /* Adjusted for responsiveness */
-}
-
-.upcoming-meetings h2 {
-  margin-top: 0;
-  font-size: 2.2rem;
+  font-size: 35px;
   font-weight: bolder;
   text-align: center;
   border-bottom: 1px solid #d1d9e2;
+  margin: 0;
+}
+
+.upcoming-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
 }
 
 .meeting {
-  padding: 1rem;
+  padding: 16px;
+  /* Converted from 1rem to 16px */
   background: rgba(255, 255, 255, 0.1);
-  margin-bottom: 1rem;
+  margin-bottom: 16px;
+  /* Converted from 1rem to 16px */
   border-radius: 5px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
+.meetings {
+  font-size: 30px;
+  margin: 0;
+  transition: color 0.3s, text-shadow 0.3s;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  text-align: center;
+  height: 100%;
+}
+
 @media (max-width: 768px) {
   .clock h1 {
-    font-size: 4rem; /* Adjusted for smaller screens */
+    font-size: 64px;
+    /* Converted from 4rem to 64px */
   }
 
   .meeting-room-schedule {
-    padding: 1rem; /* Reduced padding for smaller screens */
+    padding: 16px;
+    /* Reduced padding for smaller screens, converted from 1rem to 16px */
   }
 
   .current-meeting-info,
   .upcoming-meetings {
-    padding: 0 1rem;
+    padding: 0 16px;
   }
 }

@@ -151,7 +151,7 @@ const MeetingRoomSchedule = ({}) => {
             <>
               <h1 className="room-name">{currentMeeting.roomName}</h1>
               <h1 className="availability">In Use</h1>
-              <h2 className="meeting-title">{currentMeeting.title}</h2>
+              <h3 className="meeting-title">{currentMeeting.title}</h3>
               <table>
                 <tbody>
                   <tr>
@@ -202,13 +202,15 @@ const MeetingRoomSchedule = ({}) => {
         <div className="date-info">
           <p>{formatDate(currentTime)}</p>
         </div>
-        <div className="upcoming-meetings">
-          <h2>Upcoming Meetings Today</h2>
-          {renderUpcomingMeetings().length > 0 ? (
-            renderUpcomingMeetings()
-          ) : (
-            <p>No upcoming meetings today</p>
-          )}
+        <div className="meeting-list" >
+          <h2 className="upcoming-meetings">Upcoming Meetings Today</h2>  
+            {renderUpcomingMeetings().length > 0 ? (
+              renderUpcomingMeetings()
+            ) : (
+              <div className="upcoming-content">
+              <h4 className="meetings">No upcoming meetings today</h4>
+              </div>
+            )}
         </div>
       </div>
     </div>
