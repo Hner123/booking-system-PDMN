@@ -19,10 +19,15 @@ const RoomReservation = () => {
   const localizer = momentLocalizer(moment);
   const navigate = useNavigate();
 
+  // Function to initialize hour with minutes set to 00
+  const initializeHour = (hoursToAdd = 0) => {
+    return moment().startOf("hour").add(hoursToAdd, "hours");
+  };
+
   // State variable
+  const [startTime, setStartTime] = useState(initializeHour());
+  const [endTime, setEndTime] = useState(initializeHour(1));
   const [startDate, setStartDate] = useState(new Date());
-  const [startTime, setStartTime] = useState(moment());
-  const [endTime, setEndTime] = useState(moment().add(1, 'hours'));
   const [events, setEvents] = useState([]);
   const [showAgendaForm, setShowAgendaForm] = useState(false);
   const [agenda, setAgenda] = useState("");
@@ -36,10 +41,10 @@ const RoomReservation = () => {
     "Philippine Dragon Media Network": "#dc3545",
     "GDS Travel Agency": "#fccd32",
     "FEILONG Legal": "#d8a330",
-    "STARLIGHT": "#f0f000",
+    STARLIGHT: "#f0f000",
     "BIG VISION PRODS.": "#28a745",
-    "SuperNova": "#272727",
-    "ClearPath": "#2a8fc7",
+    SuperNova: "#272727",
+    ClearPath: "#2a8fc7",
   };
 //header
 
@@ -413,7 +418,7 @@ const markAllAsRead = async () => {
 
   const disabledMinutes = (hour) => {
     if (hour < minTime || hour > maxTime) {
-      return Array.from({ length: 60 }, (_, i) => i); 
+      return Array.from({ length: 60 }, (_, i) => i);
     }
     return [];
   };
@@ -572,7 +577,7 @@ const markAllAsRead = async () => {
                   onChange={(date) => setStartDate(date)}
                   inline
                   calendarClassName="custom-calendar"
-                  filterDate={isNotSunday} 
+                  filterDate={isNotSunday}
                 />
                 <p>Reservation of meeting can't be made prior 1 week ahead.</p>
               </div>
@@ -606,8 +611,8 @@ const markAllAsRead = async () => {
                   minuteStep={10}
                   hideDisabledOptions
                   placeholder="Select Time"
-                  defaultValue={moment().add(1, 'hours')} // Set default to 1 hour after current time
-                  defaultOpenValue={moment().add(1, 'hours')} // Set default open panel value to 1 hour after current time
+                  defaultValue={moment().add(1, "hours")} // Set default to 1 hour after current time
+                  defaultOpenValue={moment().add(1, "hours")} // Set default open panel value to 1 hour after current time
                 />
               </div>
             </div>
@@ -684,10 +689,10 @@ const markAllAsRead = async () => {
               startAccessor="start"
               endAccessor="end"
               style={{ height: "100%" }}
-              min={new Date().setHours(8, 0, 0)} 
-              max={new Date().setHours(21, 0, 0)} 
+              min={new Date().setHours(8, 0, 0)}
+              max={new Date().setHours(21, 0, 0)}
               defaultView={Views.WEEK}
-              views={[Views.WEEK, Views.DAY, Views.AGENDA]} 
+              views={[Views.WEEK, Views.DAY, Views.AGENDA]}
               eventPropGetter={(event) => ({
                 style: {
                   backgroundColor:
