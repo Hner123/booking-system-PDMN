@@ -30,6 +30,7 @@ const EmployeeList = () => {
 
 	const dropdownMenu = (
 		<div className="dropdown-content">
+			<button onClick={() => handleSort("")}>Clear Filter</button>
 			<button onClick={() => handleSort("Philippine Dragon Media Network")}>Philippine Dragon Media Network</button>
 			<button onClick={() => handleSort("GDS Travel Agency")}>GDS Travel Agency</button>
 			<button onClick={() => handleSort("FEILONG Legal")}>FEILONG Legal</button>

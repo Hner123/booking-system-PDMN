@@ -210,14 +210,14 @@ const ReservationFormsDetails = () => {
       .map((name) => name.trim())
       .filter((name) => name);
 
-      const confirmationStatus =
+    const confirmationStatus =
       (bookData.confirmation === false && formData.caps.pax === "3-More")
         ? false
         : (bookData.confirmation === true && formData.caps.pax === "1-2")
-        ? false
-        : (bookData.confirmation === true && formData.caps.pax === "3-More")
-        ? true
-        : false;
+          ? false
+          : (bookData.confirmation === true && formData.caps.pax === "3-More")
+            ? true
+            : false;
 
     const updatedReserve = {
       caps: {
@@ -228,25 +228,27 @@ const ReservationFormsDetails = () => {
       guest: additionalAttendees,
       title: formData.title,
       confirmation: confirmationStatus,
-      approval:{
+      approval: {
         archive: false,
         status: false,
         reason: "",
       }
     };
 
-    if (selectedRoom === "Palawan and Boracay" && attendees.length < 8) {
+    const totalAttendees = attendees.length + additionalAttendees.length;
+
+    if (selectedRoom === "Palawan and Boracay" && totalAttendees < 8) {
       toast.error("For 'Palawan and Boracay', you must have at least 8 attendees.");
       return;
     }
 
-    if (formData.caps.pax === "3-More" && (attendees.length < 2 || attendees.length > 7)) {
-      toast.error("You must have between 3 and 7 people accompanying you");
+    if (formData.caps.pax === "3-More" && (totalAttendees < 2 || totalAttendees > 7)) {
+      toast.error("You must have between 3 and 7 people accompanying you.");
       return;
     }
 
-    if (formData.caps.pax === "1-2" && (attendees.length + additionalAttendees.length !== 1)) {
-      toast.error("You must have exactly 1 person accompanying you");
+    if (formData.caps.pax === "1-2" && totalAttendees !== 1) {
+      toast.error("You must have exactly 1 person accompanying you.");
       return;
     }
 
