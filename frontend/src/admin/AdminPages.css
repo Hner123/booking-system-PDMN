@@ -1033,5 +1033,10 @@ input[type='reject']{
     .formGroup input{
         width: 650px;
     }
-
+    .approvalGroup{
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: row;
+        gap:30px;
+    }
 }
