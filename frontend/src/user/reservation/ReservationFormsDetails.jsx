@@ -200,6 +200,11 @@ const ReservationFormsDetails = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (formData.caps.pax === "") {
+      toast.error("Please select number of attendees");
+      return;
+    }
+
     const additionalAttendees = guestNames
       .split(",")
       .map((name) => name.trim())
@@ -232,11 +237,6 @@ const ReservationFormsDetails = () => {
 
     if (selectedRoom === "Palawan and Boracay" && attendees.length < 8) {
       toast.error("For 'Palawan and Boracay', you must have at least 8 attendees.");
-      return;
-    }
-
-    if (formData.caps.pax === "" && showGuestInput) {
-      toast.error("Please select number of attendees");
       return;
     }
 
