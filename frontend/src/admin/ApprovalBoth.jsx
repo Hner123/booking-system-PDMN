@@ -214,7 +214,7 @@ const ApprovalBoth = () => {
   return (
     <div className='listCont1'>
       <ToastContainer />
-      <h1>For Approval - PALAWAN AND BORACAY ROOM</h1>
+      <h1>For Approval - <br/> PALAWAN AND BORACAY ROOM</h1>
       <div className='approvalGroup'>
         {bookData
           .filter(
