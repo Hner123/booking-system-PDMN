@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios'; 
+import Loader from "../assets/7.gif";
 
 const WithAuth = (WrappedComponent) => {
   const WithAuthWrapper = (props) => {
@@ -84,9 +85,15 @@ const WithAuth = (WrappedComponent) => {
       return currentTime > exp;
     };
 
-    // if (isLoading) {
-    //   return <div>Loading...</div>;
-    // }
+    if (isLoading) {
+      return (
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+          <img src={Loader} style={{ width: '200px' }} alt="Loading..." />
+        </div>
+      );
+    }
+    
+
 
     return <WrappedComponent {...props} />;
   };

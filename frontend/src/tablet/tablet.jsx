@@ -8,14 +8,16 @@ import {
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 
-const MeetingRoomSchedule = ({}) => {
+const MeetingRoomSchedule = () => {
   const [bookData, setBookData] = useState([]);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [currentMeeting, setCurrentMeeting] = useState(null);
   const [otherMeetings, setOtherMeetings] = useState([]);
+  const [loading, setLoading] = useState(true); // Added loading state
 
   useEffect(() => {
     const fetchBookData = async () => {
+      setLoading(true); // Set loading to true when starting fetch
       try {
         const token = localStorage.getItem("authToken");
         const headers = {
@@ -23,35 +25,30 @@ const MeetingRoomSchedule = ({}) => {
           "Content-Type": "application/json",
         };
 
-        const response = await axios.get(`http://localhost:8800/api/book`, {
-          headers,
-        });
+        const [userResponse, bookResponse] = await Promise.all([
+          axios.get(`http://localhost:8800/api/user/${userId}`, { headers }),
+          axios.get(`http://localhost:8800/api/book/`, { headers }),
+        ]);
 
-        if (response.status === 200) {
-          const data = response.data.filter(
-            (meeting) => meeting.roomName === "Palawan"
-          );
-          setBookData(data);
+        if (userResponse.status === 200) {
+          setUsers(userResponse.data);
+          if (userResponse.data.resetPass === false) {
+            setFirstLogin(true);
+          }
+        }
 
-          const now = new Date();
-          const ongoingMeeting = data.find((meeting) => {
-            const startTime = new Date(meeting.startTime);
-            const endTime = new Date(meeting.endTime);
-            return now >= startTime && now <= endTime;
-          });
-
-          setCurrentMeeting(ongoingMeeting || null);
-          setOtherMeetings(
-            data.filter((meeting) => meeting !== ongoingMeeting)
-          );
+        if (bookResponse.status === 200) {
+          setBookData(bookResponse.data);
         }
       } catch (error) {
-        console.error("Error fetching book data:", error);
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false); // Set loading to false after fetch completes
       }
     };
 
     fetchBookData();
-  }, []);
+  }, [userId]);
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 60000);
@@ -145,74 +142,83 @@ const MeetingRoomSchedule = ({}) => {
 
   return (
     <div className={containerClassName}>
-      <div className="first-column">
-        <div className="room-info">
-          {currentMeeting ? (
-            <>
-              <h1 className="room-name">{currentMeeting.roomName}</h1>
-              <h1 className="availability">In Use</h1>
-              <h3 className="meeting-title">{currentMeeting.title}</h3>
-              <table>
-                <tbody>
-                  <tr>
-                    <td>
-                      <FontAwesomeIcon icon={faCalendarDay} />
-                    </td>
-                    <td>{formatDate(new Date(currentMeeting.startTime))}</td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <FontAwesomeIcon icon={faClock} />
-                    </td>
-                    <td>
-                      {new Date(currentMeeting.startTime).toLocaleTimeString(
-                        [],
-                        {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        }
-                      )}{" "}
-                      -{" "}
-                      {new Date(currentMeeting.endTime).toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <FontAwesomeIcon icon={faUser} />
-                    </td>
-                    <td>{`${currentMeeting.user?.firstName || "Unknown"} ${
-                      currentMeeting.user?.surName || "Unknown"
-                    }`}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </>
-          ) : (
-            <h1 className="availability">AVAILABLE</h1>
-          )}
-        </div>
-      </div>
-      <div className="second-column">
-        <div className="clock">
-          <h1>{getCurrentTime()}</h1>
-        </div>
-        <div className="date-info">
-          <p>{formatDate(currentTime)}</p>
-        </div>
-        <div className="meeting-list" >
-          <h2 className="upcoming-meetings">Upcoming Meetings Today</h2>  
-            {renderUpcomingMeetings().length > 0 ? (
-              renderUpcomingMeetings()
-            ) : (
-              <div className="upcoming-content">
-              <h4 className="meetings">No upcoming meetings today</h4>
-              </div>
-            )}
-        </div>
-      </div>
+      {loading ? (
+        <div className="loading">Loading...</div> // Display loading message or spinner
+      ) : (
+        <>
+          <div className="first-column">
+            <div className="room-info">
+              {currentMeeting ? (
+                <>
+                  <h1 className="room-name">{currentMeeting.roomName}</h1>
+                  <h1 className="availability">In Use</h1>
+                  <h2 className="meeting-title">{currentMeeting.title}</h2>
+                  <table>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <FontAwesomeIcon icon={faCalendarDay} />
+                        </td>
+                        <td>{formatDate(new Date(currentMeeting.startTime))}</td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <FontAwesomeIcon icon={faClock} />
+                        </td>
+                        <td>
+                          {new Date(currentMeeting.startTime).toLocaleTimeString(
+                            [],
+                            {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            }
+                          )}{" "}
+                          -{" "}
+                          {new Date(currentMeeting.endTime).toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <FontAwesomeIcon icon={faUser} />
+                        </td>
+                        <td>{`${currentMeeting.user?.firstName || "Unknown"} ${
+                          currentMeeting.user?.surName || "Unknown"
+                        }`}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </>
+              ) : (
+                <>
+                  <h1 className="room-name">Palawan</h1>
+                  <h1 className="availability">AVAILABLE</h1>
+                </>
+              )}
+            </div>
+          </div>
+          <div className="second-column">
+            <div className="clock">
+              <h1>{getCurrentTime()}</h1>
+            </div>
+            <div className="date-info">
+              <h2 className="ddate">{formatDate(currentTime)}</h2>
+            </div>
+            <div className="meeting-list">
+              <h2 className="upcoming-meetings">Upcoming Meetings Today</h2>
+              {renderUpcomingMeetings().length > 0 ? (
+                renderUpcomingMeetings()
+              ) : (
+                <div className="upcoming-content">
+                  <h4 className="meetings">No upcoming meetings today</h4>
+                </div>
+              )}
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };

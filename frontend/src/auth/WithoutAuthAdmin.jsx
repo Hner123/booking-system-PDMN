@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from 'axios';
+import axios from "axios";
 import Loader from "../assets/7.gif";
 
 const WithoutAuthAdmin = (WrappedComponent) => {
@@ -21,13 +21,18 @@ const WithoutAuthAdmin = (WrappedComponent) => {
             const decodedToken = decodeToken(token);
             if (decodedToken) {
               const { _id } = decodedToken;
-              
-              const responseUser = await axios.get(`http://localhost:8800/api/admin/`, { headers });
+
+              const responseUser = await axios.get(
+                `http://localhost:8800/api/admin/`,
+                { headers }
+              );
 
               if (responseUser.status === 200) {
-                const foundUser = responseUser.data.find((user) => user._id === _id);
+                const foundUser = responseUser.data.find(
+                  (user) => user._id === _id
+                );
                 if (foundUser) {
-                  navigate('/admin/employee-list');
+                  navigate("/admin/employee-list");
                 }
               }
             }
@@ -52,12 +57,18 @@ const WithoutAuthAdmin = (WrappedComponent) => {
 
     if (isLoading) {
       return (
-        <div className='flex justify-center items-center h-screen'>
-          <img src={Loader} className="w-[80px]" alt="Loading..." />
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh",
+          }}
+        >
+          <img src={Loader} style={{ width: "200px" }} alt="Loading..." />
         </div>
       );
     }
-
     return <WrappedComponent {...props} />;
   };
 

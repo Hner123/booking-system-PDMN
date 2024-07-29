@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import roomBg from "../assets/roombg.jpg";
-import Loader from "../assets/7.gif";
+import palawanImage from "../assets/palawan.jpg";
+import boracayImage from "../assets/boracay.jpg";
+import palawanBoracayImage from "../assets/both.jpg";
 
 import "./User.css";
 import { useTable } from "react-table";
@@ -9,6 +11,12 @@ import { FaChevronDown, FaChevronRight } from "react-icons/fa";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import WithAuth from "../auth/WithAuth";
+
+const roomImages = {
+  Palawan: palawanImage,
+  Boracay: boracayImage,
+  "Palawan and Boracay": palawanBoracayImage,
+};
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -105,8 +113,13 @@ const Dashboard = () => {
         title: book.title,
         status: book.confirmation ? "Approved" : "Pending",
         date: new Date(book.scheduleDate).toLocaleDateString(),
-        time: new Date(book.startTime).toLocaleTimeString(),
-        end: new Date(book.endTime).toLocaleTimeString(),
+        time: `${new Date(book.startTime).toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        })} - ${new Date(book.endTime).toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        })}`,
         room: book.roomName,
         creator: book.user.userName,
         members: book.attendees,
@@ -118,21 +131,28 @@ const Dashboard = () => {
       }));
     setReservations(initialReservations);
 
+    const now = new Date();
     const initialOtherMeetings = bookData
       .filter(
         (book) =>
           book.user._id !== userId &&
           book.title &&
           book.scheduleDate !== null &&
-          book.startTime !== null
+          book.startTime !== null &&
+          new Date(book.scheduleDate) >= now // Filter out past meetings
       )
       .map((book) => ({
         id: book._id,
         title: book.title,
         status: book.confirmation ? "Approved" : "Pending",
         date: new Date(book.scheduleDate).toLocaleDateString(),
-        time: new Date(book.startTime).toLocaleTimeString(),
-        end: new Date(book.endTime).toLocaleTimeString(),
+        time: `${new Date(book.startTime).toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        })} - ${new Date(book.endTime).toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        })}`,
         room: book.roomName,
         creator: book.user.userName,
         members: book.attendees,
@@ -227,7 +247,7 @@ const Dashboard = () => {
               className="full-btn"
               onClick={() => handleMeetingClick(row.original)}
             >
-              <i className="fas fa-info-circle"></i> Details
+              <i className="fas fa-info-circle"></i> Meeting Details
             </button>
             <button
               className="delete-btn"
@@ -264,7 +284,7 @@ const Dashboard = () => {
             className="full-btn"
             onClick={() => handleMeetingClick(row.original)}
           >
-            <i className="fas fa-info-circle"></i> Details
+            <i className="fas fa-info-circle"></i> Meeting Details
           </button>
         ),
       },
@@ -292,7 +312,7 @@ const Dashboard = () => {
       formData.department.trim() === ""
     ) {
       toast.error("No spaces");
-      console.log(formData)
+      console.log(formData);
       return;
     }
 
@@ -404,8 +424,12 @@ const Dashboard = () => {
                     onChange={handleChange}
                     placeholder="First Name"
                     required
-                    onInvalid={e => e.target.setCustomValidity('Please input your first name.')}
-                    onInput={e => e.target.setCustomValidity('')}
+                    onInvalid={(e) =>
+                      e.target.setCustomValidity(
+                        "Please input your first name."
+                      )
+                    }
+                    onInput={(e) => e.target.setCustomValidity("")}
                   />
                 </div>
                 <div className="name-section">
@@ -418,8 +442,10 @@ const Dashboard = () => {
                     onChange={handleChange}
                     placeholder="Last Name"
                     required
-                    onInvalid={e => e.target.setCustomValidity('Please input your last name.')}
-                    onInput={e => e.target.setCustomValidity('')}
+                    onInvalid={(e) =>
+                      e.target.setCustomValidity("Please input your last name.")
+                    }
+                    onInput={(e) => e.target.setCustomValidity("")}
                   />
                 </div>
               </div>
@@ -433,8 +459,12 @@ const Dashboard = () => {
                   onChange={handleChange}
                   placeholder="Email Address"
                   required
-                  onInvalid={e => e.target.setCustomValidity('Please enter your email address so we can notify you about confirmations, advisory, etc.')}
-                  onInput={e => e.target.setCustomValidity('')}
+                  onInvalid={(e) =>
+                    e.target.setCustomValidity(
+                      "Please enter your email address so we can notify you about confirmations, advisory, etc."
+                    )
+                  }
+                  onInput={(e) => e.target.setCustomValidity("")}
                 />
               </div>
               <div className="form-section">
@@ -445,11 +475,17 @@ const Dashboard = () => {
                   value={formData.department}
                   onChange={handleChange}
                   required
-                  onInvalid={e => e.target.setCustomValidity('Please enter your designated department for specification of the meeting.')}
-                  onInput={e => e.target.setCustomValidity('')}
+                  onInvalid={(e) =>
+                    e.target.setCustomValidity(
+                      "Please enter your designated department for specification of the meeting."
+                    )
+                  }
+                  onInput={(e) => e.target.setCustomValidity("")}
                 >
                   <option value="">Select Department</option>
-                  <option value="Philippine Dragon Media Network">Philippine Dragon Media Network</option>
+                  <option value="Philippine Dragon Media Network">
+                    Philippine Dragon Media Network
+                  </option>
                   <option value="GDS Travel Agency">GDS Travel Agency</option>
                   <option value="FEILONG Legal">FEILONG Legal</option>
                   <option value="STARLIGHT">STARLIGHT</option>
@@ -460,7 +496,9 @@ const Dashboard = () => {
                 </select>
               </div>
               <div className="form-section">
-                <label htmlFor="new-password">Please enter your new password.</label>
+                <label htmlFor="new-password">
+                  Please enter your new password.
+                </label>
                 <input
                   type="password"
                   id="passWord"
@@ -469,24 +507,31 @@ const Dashboard = () => {
                   onChange={handleChange}
                   placeholder="New Password"
                   required
-                  onInvalid={e => e.target.setCustomValidity('Please enter your new password for your security and privacy.')}
-                  onInput={e => e.target.setCustomValidity('')}
+                  onInvalid={(e) =>
+                    e.target.setCustomValidity(
+                      "Please enter your new password for your security and privacy."
+                    )
+                  }
+                  onInput={(e) => e.target.setCustomValidity("")}
                 />
               </div>
               <div className="button-group">
                 <button className="submit-button">Confirm</button>
-                <button className="out-button" onClick={handleLogout}>Not Now? Log Out.</button>
+                <button className="out-button" onClick={handleLogout}>
+                  Not Now? Log Out.
+                </button>
               </div>
             </form>
           </div>
         </div>
-
       )}
       <main className="dashboard-main">
         <ToastContainer />
         {userData && (
           <h1>
-            {userData.firstName ? `${userData.firstName}'s Dashboard` : `${userData.userName}'s Dashboard`}
+            {userData.firstName
+              ? `${userData.firstName}'s Dashboard`
+              : `${userData.userName}'s Dashboard`}
           </h1>
         )}
         <h2>Book a Meeting Room</h2>
@@ -495,12 +540,12 @@ const Dashboard = () => {
             <div
               key={`room-${index}`}
               className="card"
-              style={{ backgroundImage: `url(${roomBg})` }}
+              style={{ backgroundImage: `url(${roomImages[place] || roomBg})` }}
             >
               <div className="overlay">
-                <h3>{place}</h3>
+                <h3 className="room-title">{place}</h3>
                 <button
-                  className="reserve-btn"
+                  className="dashboard-rsrv"
                   onClick={() => handleReserveClick(place)}
                 >
                   Reserve
@@ -510,10 +555,22 @@ const Dashboard = () => {
           ))}
         </div>
 
-        <div className="toggle-header" onClick={toggleMyReservations}>
+        <div>
           <h2>
             My Reservations ({reservations.length}){" "}
-            {showMyReservations ? <FaChevronDown /> : <FaChevronRight />}
+            {showMyReservations ? (
+              <FaChevronDown
+                className="toggle-header"
+                onClick={toggleMyReservations}
+                data-tooltip="Toggle My Reservations"
+              />
+            ) : (
+              <FaChevronRight
+                className="toggle-header"
+                onClick={toggleMyReservations}
+                data-tooltip="Toggle My Reservations"
+              />
+            )}
           </h2>
         </div>
 
@@ -537,7 +594,6 @@ const Dashboard = () => {
                   </tr>
                 ))}
               </thead>
-
               <tbody {...myReservationsTable.getTableBodyProps()}>
                 {myReservationsTable.rows.map((row) => {
                   myReservationsTable.prepareRow(row);
@@ -559,10 +615,22 @@ const Dashboard = () => {
           </div>
         )}
 
-        <div className="toggle-header" onClick={toggleOtherMeetings}>
+        <div className="table-title">
           <h2>
             Other Meetings ({otherMeetings.length}){" "}
-            {showOtherMeetings ? <FaChevronDown /> : <FaChevronRight />}
+            {showOtherMeetings ? (
+              <FaChevronDown
+                className="toggle-header"
+                onClick={toggleOtherMeetings}
+                data-tooltip="Toggle Other Meetings"
+              />
+            ) : (
+              <FaChevronRight
+                className="toggle-header"
+                onClick={toggleOtherMeetings}
+                data-tooltip="Toggle Other Meetings"
+              />
+            )}
           </h2>
         </div>
         {showOtherMeetings && (
@@ -623,24 +691,27 @@ const Dashboard = () => {
                   <p>
                     <strong>Number of PAX:</strong> {selectedMeeting.pax}
                   </p>
-                  {selectedMeeting.agenda && selectedMeeting.agenda.length > 0 && (
-                    <p>
-                      <strong>Purpose of the Meeting:</strong>{" "}
-                      {selectedMeeting.agenda}
-                    </p>
-                  )}
-                  {selectedMeeting.members && selectedMeeting.members.length > 0 && (
-                    <p className="members">
-                      <strong>Members:</strong>{" "}
-                      {selectedMeeting.members.join(", ")}
-                    </p>
-                  )}
-                  {selectedMeeting.guests && selectedMeeting.guests.length > 0 && (
-                    <p>
-                      <strong>Guests:</strong>{" "}
-                      {selectedMeeting.guests.join(", ")}
-                    </p>
-                  )}
+                  {selectedMeeting.agenda &&
+                    selectedMeeting.agenda.length > 0 && (
+                      <p>
+                        <strong>Purpose of the Meeting:</strong>{" "}
+                        {selectedMeeting.agenda}
+                      </p>
+                    )}
+                  {selectedMeeting.members &&
+                    selectedMeeting.members.length > 0 && (
+                      <p className="members">
+                        <strong>Members:</strong>{" "}
+                        {selectedMeeting.members.join(", ")}
+                      </p>
+                    )}
+                  {selectedMeeting.guests &&
+                    selectedMeeting.guests.length > 0 && (
+                      <p>
+                        <strong>Guests:</strong>{" "}
+                        {selectedMeeting.guests.join(", ")}
+                      </p>
+                    )}
                 </div>
                 <div className="right-content">
                   <h3>{selectedMeeting.room}</h3>
@@ -648,10 +719,7 @@ const Dashboard = () => {
                     <strong>Date:</strong> {selectedMeeting.date}
                   </p>
                   <p>
-                    <strong>Meeting Start:</strong> {selectedMeeting.time}
-                  </p>
-                  <p>
-                    <strong>Meeting End:</strong> {selectedMeeting.end}
+                    <strong>Time:</strong> {selectedMeeting.time}
                   </p>
                 </div>
               </div>
@@ -662,10 +730,10 @@ const Dashboard = () => {
         {showConfirmModal && (
           <div className="discard-modal">
             <div className="discard-content">
-              <h2>Confirm Cancellation</h2>
-              <p>Are you sure you want to cancel this meeting?</p>
-              <button onClick={handleConfirmDiscard} className="reserve-btn">
-                Yes, Cancel
+              <h2>Cancel Resevation?</h2>
+              <p>This will cancel your reservation. </p>
+              <button onClick={handleConfirmDiscard} className="confirm-btn">
+                Cancel my Meeting
               </button>
               <button onClick={handleCancelDelete} className="cancel-btn">
                 No, Go Back
