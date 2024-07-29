@@ -78,7 +78,7 @@ const Sidebar = () => {
           <li className="li" onClick={toggleNotif}>
             <div className="notif-icon">
               <FaIcons.FaBell />
-              <p style={{ fontSize: '15px' }}>Notifications</p>
+              <p>Notifications</p>
             </div>
           </li>
           <li className="li">

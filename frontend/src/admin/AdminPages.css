@@ -158,7 +158,6 @@ a, .notif-icon{
     background-color: #9c0b0b;
     position: absolute;
     right:-20px;
-    /* top: calc(9rem/1.15); */
     top:20px;
     width: 35px;
     height: 35px;
@@ -354,14 +353,11 @@ p.hed{
 
   /* TABLE */
 
-  .tableContainer {
+.horizonscroll{
+    
     width: 80%;
-    display: table;
-    overflow-x: auto;
     margin: 0 auto;
     padding: 0;
-    table-layout: fixed;
-    
 }
   .listTable {
     width: 100%;
@@ -369,8 +365,12 @@ p.hed{
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
     border-collapse: collapse;
+    overflow-x: auto;
   }
-  
+
+  /* .horizonscroll table thead th{
+    position:absolute;
+  } */
   .listTable th, .listTable td{
     padding: 15px 20px;
     text-align: center;
@@ -643,8 +643,9 @@ p.hed{
  
 .approval-card-container {
     display: flex;
-    gap: 20px;
-    margin: 50px 210px;
+    gap: 50px;
+    margin: auto;
+    margin-top: 30px;
     flex: 1 1 1;
   }
   
@@ -863,18 +864,61 @@ input[type='reject']{
 }
 
   @media (max-width:500px){
+    .sidebar{
+        position: fixed;
+    }
+    .sidebar.active{
+        width: 10%;
+
+        ul{
+            font-size: 10px;
+        }
+        a, .notif-icon{
+            text-decoration: none;
+            color: black;
+            font-size:15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin:  0 0 0 0;
+            gap:15px;
+            padding: 0;
+        }
+        li .li{
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            flex-direction: column;
+            margin: 0.5rem 0;
+            width: 100%;
+            border-radius: 1rem;
+        }
+        .logodbss img{
+            height: 30px;
+        }
+        .line{
+            display: none;
+        }
+        .last{
+            position:relative;
+            bottom:-400px;
+            left:0px;
+        }
+    }
+
+    .horizonscroll{
+        height: 500px;
+        overflow: auto;
+    }
+
+    
     .nav-icons{
         display: none;
     }
     .profileDetail > div{
         margin:0px 0px;
     }
-    .sidebar{
-        display:none;
-    }
-    .listCont {
-        margin: 50px 10px ;
-    }
+
     .listButtonG{
      justify-content: center;   
     }
@@ -885,9 +929,13 @@ input[type='reject']{
         padding: 5px 10px;
         font-size: 12px;
     }
-    .listMod {
-        flex-direction: column;  
+
+    .listMod button{
+        width:70px;
+        font-size: 10px;
+        padding: 5px;
     }
+
     .listTable td:last-child{
         padding: 0px 100px;
     }
@@ -898,6 +946,9 @@ input[type='reject']{
     .formGroup input{
         width: 200px;
         }
+    .dropdown button{
+        padding:10px 60px;
+    }
     .listCont1{
        margin:50px 0px;
        text-align: center;
@@ -929,33 +980,29 @@ input[type='reject']{
         /*APPROVAL ROOMS*/
         .listCont3{
             margin:50px 20px 0px;
-            
-        }
 
-        .listCont3 h1{
-            margin-bottom: 50px ;
-            font-size: 30px;
-            text-align: center;
+            h1{
+                margin-bottom: 20px ;
+                font-size: 20px;
+                text-align: center;
+            }
+            .approval-card-container{
+                flex-direction: column;
+                margin: 0px 70px;
+            }
+            .approveRooms .overlayy button.forApproval-btn{
+                font-size: 11px;
+            }
+            .approveRooms {
+                width: 300px;
+                height:230px;
+            }          
         }
-        .approval-card-container{
-            flex-wrap: wrap;
-        }
-        .approveRooms .overlayy button.forApproval-btn{
-            font-size: 11px;
-        }
-        .approveRooms {
-            width: 300px;
-            height:230px;
-        }
+        
 }
 
 
 @media (min-width:1900px) {
-
-    /* .tableContainer{
-        padding: 0px 50px;
-    } */
-
     .listCont h1{
         font-size: 50px;
     }

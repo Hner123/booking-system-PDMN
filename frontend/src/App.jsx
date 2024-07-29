@@ -50,13 +50,11 @@ function App() {
         } />
         <Route path="/reserve" element={
           <>
-            <Header />
             <Room />
           </>
         } />
         <Route path="/reserveform" element={
           <>
-            <Header />
             <ReservationFormsDetails />
           </>
         } />

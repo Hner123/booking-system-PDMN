@@ -97,6 +97,7 @@ const EmployeeList = () => {
 				</div>
 			</div>
 			<div className="tableContainer">
+				<div className="horizonscroll">
 				<table className="listTable">
 					<thead>
 						<tr>
@@ -108,7 +109,7 @@ const EmployeeList = () => {
 					</thead>
 					<tbody>
 						{sortedUsers.map(user => (
-							<tr key={user.id}> {/* Use a unique key like user.id */}
+							<tr key={user.id}>
 								<td className="tName">{user.firstName} {user.surName}</td>
 								<td className="tUname">{user.userName}</td>
 								<td className="tDept">{user.department}</td>
@@ -122,6 +123,8 @@ const EmployeeList = () => {
 						))}
 					</tbody>
 				</table>
+				</div>
+				
 				{editDeptModal&&(
 					<div className="modal">
 						<button>hello</button>

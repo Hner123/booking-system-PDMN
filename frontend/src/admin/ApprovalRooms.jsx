@@ -21,8 +21,7 @@ const ApprovalRoom = () => {
   return (
     <div className='listCont3'>
       <h1>For Approval - Rooms</h1>
-      <div className="cardConts">
-        <div className="approval-card-container">
+      <div className="approval-card-container">
           {Rooms.map((place, index) => (
             <div key={`Rooms-${index}`} className="approveRooms" style={{ backgroundImage: `url(${roomBg})` }}>
               <div className="overlayy">
@@ -34,7 +33,6 @@ const ApprovalRoom = () => {
             </div>
           ))}
         </div>
-      </div>
     </div>
   );
 }

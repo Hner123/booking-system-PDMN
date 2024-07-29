@@ -43,31 +43,6 @@ const Header = () => {
     fetchUsers();
   }, []);
 
-  // useEffect(() => {
-  //   const fetchNotifications = async () => {
-  //     try {
-  //       const userId = localStorage.getItem("userId");
-  //       const token = localStorage.getItem("authToken");
-  //       const headers = {
-  //         Authorization: `Bearer ${token}`,
-  //         "Content-Type": "application/json",
-  //       };
-
-  //       const response = await axios.get(
-  //         `http://localhost:8800/api/notifications/${userId}`,
-  //         { headers }
-  //       );
-  //       if (response.status === 200) {
-  //         setNotifications(response.data);
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching notifications:", error);
-  //     }
-  //   };
-
-  //   fetchNotifications();
-  // }, []);
-
   useEffect(() => {
     const handleOutsideClick = (event) => {
       if (
