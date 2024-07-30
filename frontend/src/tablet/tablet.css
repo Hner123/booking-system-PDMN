@@ -216,7 +216,7 @@
     padding: 0 16px;
   }
 }
-@media (max-width: 1024px) {
+@media (max-width: 1180px) {
   .first-column {
     padding: 10px;
   }
