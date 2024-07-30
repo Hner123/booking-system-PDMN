@@ -28,9 +28,9 @@ import 'rc-time-picker/assets/index.css';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import MeetingRoomSchedule from './tablet/MeetingRoomSchedule.jsx';
 
-import Verify from './user/utilities/Verify.jsx'
-import ForgotPass from './user/utilities/ForgotPass.jsx'
-import ResetPass from './user/utilities/ResetPass.jsx'
+import Verify from './user/utilities/Verify.jsx';
+import ForgotPass from './user/utilities/ForgotPass.jsx';
+import ResetPass from './user/utilities/ResetPass.jsx';
 
 import './App.css';
 
