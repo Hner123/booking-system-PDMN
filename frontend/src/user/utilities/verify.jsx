@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Verifyemail = () => {
+const Verify = () => {
     return (
         <div className="verify-container">
             <div className="verify">
@@ -14,4 +14,4 @@ const Verifyemail = () => {
     );
 }
 
-export default Verifyemail;
+export default Verify;

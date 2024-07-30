@@ -18,14 +18,18 @@ const GetSpecificAdmin = async (req, res) => {
     const { id } = req.params;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      res.status(400).json("No such user");
+      return res.status(400).json("No such user");
     }
 
     const result = await AdminModel.findById(id);
 
-    res.status(200).json(result);
+    if (!result) {
+      return res.status(404).json("User not found");
+    }
+
+    return res.status(200).json(result);
   } catch (err) {
-    res.send(err.message);
+    return res.status(500).send(err.message);
   }
 };
 

@@ -20,17 +20,17 @@ import ApprovalBoth from './admin/ApprovalBoth.jsx';
 import ApprovalRooms from './admin/ApprovalRooms.jsx';
 import NotFoundPage from './auth/NotFoundPage.jsx';
 
-import Sidebaree from './admin/sidebarex.jsx'
+import Sidebar from './admin/Sidebar.jsx'
 
 import "react-toastify/dist/ReactToastify.css";
 import 'react-datepicker/dist/react-datepicker.css';
 import 'rc-time-picker/assets/index.css';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import Tablet from './tablet/tablet';
+import MeetingRoomSchedule from './tablet/MeetingRoomSchedule.jsx';
 
-import Verifyemail from './user/utilities/verify.jsx'
-import ResetPass from './user/utilities/resetpass.jsx'
-import NewPass from './user/utilities/newpass.jsx'
+import Verify from './user/utilities/Verify.jsx'
+import ForgotPass from './user/utilities/ForgotPass.jsx'
+import ResetPass from './user/utilities/ResetPass.jsx'
 
 import './App.css';
 
@@ -108,7 +108,7 @@ function App() {
           path="/admin/employee-list"
           element={
             <>
-              <Sidebaree />
+              <Sidebar />
               <EmployeeList />
             </>
           }
@@ -117,7 +117,7 @@ function App() {
           path="/tablet"
           element={
             <>
-              <Tablet />
+              <MeetingRoomSchedule />
             </>
           }
         />
@@ -125,7 +125,7 @@ function App() {
           path="/admin/add-employee"
           element={
             <>
-              <Sidebaree />
+              <Sidebar />
               <AddEmployee />
             </>
           }
@@ -134,7 +134,7 @@ function App() {
           path="/admin/approval-rooms"
           element={
             <>
-              <Sidebaree />
+              <Sidebar />
               <ApprovalRooms />
             </>
           }
@@ -143,7 +143,7 @@ function App() {
           path="/admin/approval-palawan"
           element={
             <>
-              <Sidebaree />
+              <Sidebar />
               <ApprovalPalawan />
             </>
           }
@@ -152,7 +152,7 @@ function App() {
           path="/admin/approval-boracay"
           element={
             <>
-              <Sidebaree />
+              <Sidebar />
               <ApprovalBoracay />
             </>
           }
@@ -161,7 +161,7 @@ function App() {
           path="/admin/approval-both"
           element={
             <>
-              <Sidebaree />
+              <Sidebar />
               <ApprovalBoth />
             </>
           }
@@ -171,7 +171,7 @@ function App() {
           path="/verify"
           element={
             <>
-              <Verifyemail />
+              <Verify />
             </>
           }
         />
@@ -179,7 +179,7 @@ function App() {
           path="/forgot-pass"
           element={
             <>
-              <ResetPass />
+              <ForgotPass />
             </>
           }
         />
@@ -187,10 +187,9 @@ function App() {
           path="/reset-pass"
           element={
             <>
-              <NewPass />
+              <ResetPass />
             </>
-          }
-        />
+        } />     
       </Routes>
     </div>
   );

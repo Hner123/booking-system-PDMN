@@ -268,13 +268,41 @@ const ReservationFormsDetails = () => {
       );
 
       if (updateResponse.status === 201) {
-        toast.success("Successfully updated information.");
-        navigate("/confirmation");
+        if(updatedReserve.confirmation){
+          toast.success("Successfully updated information.");
+          navigate("/confirmation");
+        } else {
+          const messageContent = `New reservation ${updateResponse.data.title} from ${updateResponse.data.user.firstName} ${updateResponse.data.user.surName} needs approval`
+          const notifData = {
+            booking: updateResponse.data._id,
+            message: messageContent,
+            sender: updateResponse.data.user._id,
+            senderType: "user",
+            receiver: "66861570dd3fc08ab2a6557d",
+            receiverType: "admin",
+          };
+  
+          try {
+      
+            const notifResponse = await axios.post(
+              `http://localhost:8800/api/notif/new`,
+              notifData,
+              { headers }
+            );
+      
+            if (notifResponse.status === 201) {
+              toast.success("Successfully updated information.");
+              navigate("/confirmation");
+            }
+          } catch (error) {
+            console.log(error)
+            toast.error("Error updating information. Please try again later.");
+          }
+        }
       } else {
-        toast.error("Failed to update information.");
+        toast.error("Error updating information. Please try again later.");
       }
     } catch (error) {
-      console.error("Error during patch:", error);
       toast.error("Error updating information. Please try again later.");
     }
   };

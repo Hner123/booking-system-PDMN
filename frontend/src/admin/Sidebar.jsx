@@ -5,19 +5,43 @@ import * as FaIcons from "react-icons/fa";
 import * as MdIcons from "react-icons/md";
 import { HiUserAdd } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
-import axios from 'axios'
+import axios from 'axios';
 import WithAuthAdmin from "../auth/WithAuthAdmin";
+import io from 'socket.io-client';
+
+const ENDPOINT = 'http://localhost:8800';
+let socket;
 
 const Sidebar = () => {
   const navigate = useNavigate();
   const [notif, setNotif] = useState(false);
   const [closeMenu, setCloseMenu] = useState(false);
   const [userData, setUserData] = useState(null);
+  const [notifications, setNotifications] = useState([]);
+  const [socketConnected, setSocketConnected] = useState(false);
+
+  useEffect(() => {
+    const adminId = localStorage.getItem("adminId");
+
+    socket = io(ENDPOINT);
+    socket.emit("setup", { _id: adminId });
+
+    socket.on("connected", () => setSocketConnected(true));
+    socket.on("newNotification", (newNotification) => {
+      if (newNotification.receiver._id === adminId) {
+        setNotifications((prevNotifications) => [...prevNotifications, newNotification]);
+      }
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const adminId = localStorage.getItem("adminId")
+        const adminId = localStorage.getItem("adminId");
         const token = localStorage.getItem("adminToken");
         const headers = {
           Authorization: `Bearer ${token}`,
@@ -30,9 +54,6 @@ const Sidebar = () => {
         );
         if (response.status === 200) {
           setUserData(response.data);
-          if (response.data.resetPass === false) {
-            setFirstLogin(true);
-          }
         }
       } catch (error) {
         console.error("Error fetching users:", error);
@@ -42,10 +63,25 @@ const Sidebar = () => {
     fetchUsers();
   }, []);
 
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        const adminId = localStorage.getItem("adminId");
+        const response = await axios.get('http://localhost:8800/api/notif');
+        const userNotifications = response.data.filter(notif => notif.receiver._id === adminId);
+        setNotifications(userNotifications);
+      } catch (error) {
+        console.error('Error fetching notifications:', error);
+      }
+    };
+
+    fetchNotifications();
+  }, []);
+
   const handleLogout = (event) => {
-    event.preventDefault(); // Prevent the default anchor behavior
+    event.preventDefault();
     localStorage.clear();
-    navigate("/admin"); // Navigate to the homepage or login page
+    navigate("/admin");
   };
 
   const toggleCloseMenu = () => {
@@ -113,21 +149,21 @@ const Sidebar = () => {
         <div className="notification-modal">
           <button className="closenotif" onClick={toggleNotif}>X</button>
           <h3 style={{margin:'0', padding:'0', textAlign:'center'}}>Notifications</h3>
-          <div className="notifContnn">
-            New user has been added
-          </div>
-          <div className="notifContnn">
-            New meeting at palawan room has been added
+          <div>
+            {notifications.map((notification) => (
+              <div key={notification._id} className="notifContnn">
+                {notification.message}
+              </div>
+            ))}
           </div>
           <div className="seeread">
             <button className="see">
-            See All
+              See All
             </button>
             <button className="read">
               Mark All as Read
             </button>
           </div>
-          
         </div>
       )}
     </div>

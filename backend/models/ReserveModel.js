@@ -67,6 +67,10 @@ const ReserveSchema = new Schema({
       type: String,
       default: ""
     }
+  },
+  notif:{
+    type: Boolean,
+    default: true
   }
 
 });
