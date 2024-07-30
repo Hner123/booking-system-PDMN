@@ -3,35 +3,36 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import "./EditProfile.css";
 import { useNavigate } from "react-router-dom";
 import WithAuth from "../../auth/WithAuth";
-
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import bcrypt from "bcryptjs";
 
 const Settings = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [showModal, setShowModal] = useState(false);
-  const [isValidEmail, setIsValidEmail] = useState(false);
-  const [editingPassword, setEditingPassword] = useState(false); // State for password edit mode
-  const [userData, setUserData] = useState(null); // Initialize as null to indicate loading
-
-  const userId = localStorage.getItem("userId");
-  const [disabled, setDisabled] = useState(false);
-  const [disabled2, setDisabled2] = useState(false);
   const [emailEditable, setEmailEditable] = useState(false);
   const [passwordEditable, setPasswordEditable] = useState(false);
+  const [userData, setUserData] = useState(null);
+  const [formData, setFormData] = useState({
+    email: "",
+    department: "",
+    currPass: "",
+    passWord: "",
+    retype: ""
+  });
+  const [disabled, setDisabled] = useState(false);
+  const [disabled2, setDisabled2] = useState(false);
 
+  const userId = localStorage.getItem("userId");
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchUser = async () => {
       try {
         const token = localStorage.getItem("authToken");
         const headers = {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
+          "Content-Type": "application/json"
         };
-
         const response = await axios.get(
           `http://localhost:8800/api/user/${userId}`,
           { headers }
@@ -40,31 +41,23 @@ const Settings = () => {
           setUserData(response.data);
           setFormData({
             email: response.data.email,
-            department: response.data.department,
+            department: response.data.department
           });
         }
       } catch (error) {
-        console.error("Error fetching users:", error);
+        console.error("Error fetching user data:", error);
       }
     };
 
-    fetchUsers();
-  }, []);
+    fetchUser();
+  }, [userId]);
 
-  const [formData, setFormData] = useState({
-    email: "",
-    department: "",
-    currPass: "",
-    passWord: "",
-    retype: "",
-  });
-
-  const handleSubmitEmail = async (e) => {
+  const handleEmailSubmit = async (e) => {
     e.preventDefault();
     setDisabled(true);
 
     if (formData.email === userData.email) {
-      toast.error("Email is the same as existing")
+      toast.error("The new email is the same as the existing one.");
       setDisabled(false);
       return;
     }
@@ -76,7 +69,7 @@ const Settings = () => {
       );
 
       if (validationResponse.data.email.exists) {
-        toast.error("Email is already registered.");
+        toast.error("This email is already registered.");
         setDisabled(false);
         return;
       }
@@ -89,13 +82,13 @@ const Settings = () => {
     const sendEmail = {
       _id: userData._id,
       email: formData.email
-    }
+    };
 
     try {
       const token = localStorage.getItem("authToken");
       const headers = {
         Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
+        "Content-Type": "application/json"
       };
 
       const updateResponse = await axios.post(
@@ -112,39 +105,13 @@ const Settings = () => {
         toast.success(message);
       }
     } catch (error) {
-      toast.error(error);
+      toast.error("Error updating email.");
     } finally {
       setDisabled(false);
     }
   };
 
-  const toggleEmailEdit = () => {
-    setEmailEditable(true);
-  };
-
-  const togglePasswordEdit = () => {
-    setPasswordEditable(true);
-  };
-
-  const cancelEmailEdit = () => {
-    setEmailEditable(false);
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      email: userData.email,
-    }));
-  };
-
-  const cancelPasswordEdit = () => {
-    setPasswordEditable(false);
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      currPass: "",
-      passWord: "",
-      retype: ""
-    }));
-  };
-
-  const handleSubmitPassword = async (e) => {
+  const handlePasswordSubmit = async (e) => {
     e.preventDefault();
     setDisabled2(true);
 
@@ -160,8 +127,8 @@ const Settings = () => {
         return;
       }
 
-      if(!formData.passWord){
-        toast.error("New password must have value");
+      if (!formData.passWord) {
+        toast.error("New password cannot be empty.");
         setDisabled2(false);
         return;
       } else if (formData.currPass === formData.passWord) {
@@ -175,24 +142,19 @@ const Settings = () => {
         setDisabled2(false);
         return;
       }
-
     } catch (error) {
       toast.error("Failed to validate password.");
       setDisabled2(false);
       return;
     }
 
-    const updatedUser = {};
-
-    if (formData.passWord) {
-      updatedUser.passWord = formData.passWord;
-    }
+    const updatedUser = { passWord: formData.passWord };
 
     try {
       const token = localStorage.getItem("authToken");
       const headers = {
         Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
+        "Content-Type": "application/json"
       };
 
       const updateResponse = await axios.patch(
@@ -202,27 +164,22 @@ const Settings = () => {
       );
 
       if (updateResponse.status === 201) {
-        setUserData(updateResponse.data)
-        setFormData(() => ({
-          ...updateResponse.data,
+        setUserData(updateResponse.data);
+        setFormData({
+          email: updateResponse.data.email,
+          department: updateResponse.data.department,
           currPass: "",
           passWord: "",
           retype: ""
-        }));
+        });
         setPasswordEditable(false);
-        toast.success("Successfully changed password.");
-        
+        toast.success("Password changed successfully.");
       }
     } catch (error) {
-      console.error("Error during patch:", error);
-      toast.error("Failed to update user info.");
+      toast.error("Failed to update password.");
     } finally {
-      setDisabled2(false)
+      setDisabled2(false);
     }
-  };
-
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
   };
 
   const handleChange = (e) => {
@@ -230,83 +187,71 @@ const Settings = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-
   return (
-    <div>
+    <div className="">
       <ToastContainer />
-      <div>
-        <h1 style={{ margin: "1% 3%" }}>Edit Profile Account</h1>
-      </div>
+      {/* <div>
+        <h1>Edit Profile</h1>
+      </div> */}
       <div className="area">
+      <div>
+        <h1>Edit Profile</h1>
+      </div>
         {userData && (
-          <>
-            <div className="upload">
-              <div>
-                <h2>
-                  {userData.firstName} {userData.surName}
-                </h2>
-                <h3>{userData.userName}</h3>
-              </div>
-              <div>
-                <h4>
-                  Department: <br />
-                  {userData.department}
-                </h4>
-                <h4>
-                  Email:
-                  <br /> {userData.email}
-                </h4>
-              </div>
+          <div className="upload">
+            <div className="profile-details">
+              <p className="name"><strong>{`${userData.firstName} ${userData.surName}`}</strong> @{userData.userName}</p>
+              {/* <h3>@{userData.userName}</h3> */}
+              <p><strong>Department:</strong> {userData.department}</p>
+              <p><strong>Email:</strong> {userData.email}</p>
             </div>
-          </>
+          </div>
         )}
         <div className="changeFields">
-          <form onSubmit={handleSubmitEmail}>
+          <form onSubmit={handleEmailSubmit}>
             <div className="editdetails">
               <div className="formGroup1">
-                <label htmlFor="email">
-                  Change E-mail Address:
-                </label>
+                <label htmlFor="email">Change Email Address:</label>
                 <input
                   type="email"
                   id="email"
                   name="email"
                   value={formData.email}
-                  required
                   onChange={handleChange}
-                  placeholder="Enter your valid e-mail address"
+                  placeholder="Enter your new email address"
                   disabled={!emailEditable}
+                  required
                 />
-
               </div>
               {emailEditable ? (
                 <>
                   <button
                     type="submit"
                     disabled={disabled}
-                    className={` save_email ${disabled
-                        ? "bg-gray-400 cursor-not-allowed"
-                        : "bg-blue-500 hover:bg-blue-700 text-white"
-                      }`}
+                    className={`save_email ${disabled ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-700 text-white"}`}
                   >
                     Verify Email
                   </button>
                   <button
                     type="button"
-                    onClick={cancelEmailEdit}
+                    onClick={() => setEmailEditable(false)}
                     className="edit_email"
                   >
                     Cancel
                   </button>
                 </>
               ) : (
-                <button className="edit_email" onClick={toggleEmailEdit}>
+                <button
+                  type="button"
+                  onClick={() => setEmailEditable(true)}
+                  className="edit_email"
+                >
                   Edit
                 </button>
               )}
             </div>
           </form>
-          <form onSubmit={handleSubmitPassword}>
+          <form onSubmit={handlePasswordSubmit}>
             <div className="editdetails">
               <div className="formGroup1" style={{ position: "relative" }}>
                 <label htmlFor="currPass">Current Password:</label>
@@ -318,46 +263,47 @@ const Settings = () => {
                   onChange={handleChange}
                   placeholder="Enter current password"
                   className="passwordInput"
-                  disabled={!passwordEditable} // Disable if not editing
+                  disabled={!passwordEditable}
                 />
                 <button
                   type="button"
-                  onClick={togglePasswordVisibility}
-                  className="togglePasswordBtn_user"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="togglePassword"
+                  style={{ position: "absolute", right: "10px", top: "50%" }}
                 >
                   {showPassword ? <FaEyeSlash /> : <FaEye />}
                 </button>
               </div>
               {passwordEditable ? (
-
                 <>
                   <button
                     type="submit"
                     disabled={disabled2}
-                    className={` save_passworduser ${disabled2
-                        ? "bg-gray-400 cursor-not-allowed"
-                        : "bg-blue-500 hover:bg-blue-700 text-white"
-                      }`}
+                    className={`save_passworduser ${disabled2 ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-700 text-white"}`}
                   >
                     Save
                   </button>
                   <button
                     type="button"
-                    onClick={cancelPasswordEdit}
+                    onClick={() => setPasswordEditable(false)}
                     className="edit_email"
                   >
                     Cancel
                   </button>
                 </>
               ) : (
-                <button className="edit_passworduser" onClick={togglePasswordEdit}>
+                <button
+                  type="button"
+                  onClick={() => setPasswordEditable(true)}
+                  className="edit_passworduser"
+                >
                   Edit
                 </button>
               )}
             </div>
-            {passwordEditable && ( 
+            {passwordEditable && (
               <div className="editdetails">
-                <div className="formGroup1">
+                <div className="formGroup1" style={{ position: "relative" }}>
                   <label htmlFor="password">New Password:</label>
                   <input
                     type={showPassword ? "text" : "password"}
@@ -368,13 +314,21 @@ const Settings = () => {
                     placeholder="Enter new password"
                     className="passwordInput"
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="togglePassword"
+                    style={{ position: "absolute", right: "10px", top: "50%"}}
+                  >
+                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  </button>
                 </div>
               </div>
             )}
-            {passwordEditable && ( 
+            {passwordEditable && (
               <div className="editdetails">
-                <div className="formGroup1">
-                  <label htmlFor="retype">Retype new password:</label>
+                <div className="formGroup1" style={{ position: "relative" }}>
+                  <label htmlFor="retype">Retype New Password:</label>
                   <input
                     type={showPassword ? "text" : "password"}
                     id="retype"
@@ -385,10 +339,9 @@ const Settings = () => {
                     className="passwordInput"
                   />
                   <button
-                    style={{ display: 'none' }}
-                    type="button"
-                    onClick={togglePasswordVisibility}
-                    className="togglePasswordBtn_user"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="togglePassword"
+                    style={{ position: "absolute", right: "10px", top: "50%" }}
                   >
                     {showPassword ? <FaEyeSlash /> : <FaEye />}
                   </button>
@@ -398,27 +351,11 @@ const Settings = () => {
           </form>
         </div>
       </div>
-
-      {/* {showModal && (
-        <div className="profilemodal">
-          <div className="profilemodal-content">
-            <p>
-              Are you sure you want to cancel editing and head back to
-              dashboard?
-            </p>
-            <div className="profilemodal-buttons">
-              <button onClick={closeModal}>Close</button>
-              <button onClick={handleConfirmCancel}>Confirm</button>
-            </div>
-          </div>
-        </div>
-      )} */}
     </div>
   );
 };
 
 export default WithAuth(Settings);
-
 
 {/* <form>
             <div className="editdetails">

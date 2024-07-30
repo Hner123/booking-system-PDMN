@@ -1,51 +1,54 @@
+/* General Layout */
 .area {
     display: flex;
     flex-direction: column;
+    padding: 0px 20px;
 }
 
-.upload {
-    width: auto;
-    height: auto;
-    margin-inline: 30%;
-    padding: 2%;
-    color: #58595A;
-    background-color: white;
-    border-radius: 6px;
-    box-shadow: 0px 4px 4px 0px #7C8B9D;
-    text-align: center;
-    color: #9c0b0b;
-    width: auto;
+/* Profile Details */
+.profile-details {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    text-align: left;
 }
 
+.name {
+    font-size: 50px;
+}
+
+/* Upload Section */
 .upload {
     display: flex;
     flex-direction: column;
-
-    h2 {
-        font-size: 64px;
-        margin: auto;
-    }
-
-    h3 {
-        margin: auto;
-        font-size: 20px;
-    }
-
-    h4 {
-        margin-inline: 40px;
-        margin-bottom: 10px;
-        margin-top: 40px;
-    }
+    align-items: center;
+    width: auto;
+    margin-inline: 30%;
+    padding: 2%;
+    background-color: white;
+    border-radius: 6px;
+    box-shadow: 0px 4px 4px 0px #7C8B9D;
+    color: #9c0b0b;
+    text-align: center;
 }
 
-.upload div:last-child {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+.upload h2 {
+    font-size: 50px;
+    margin: 0;
+    text-align: left;
 }
 
+.upload h3 {
+    font-size: 20px;
+    margin: 0;
+}
 
+.upload p {
+    margin: 0;
+    text-align: left;
+}
 
+/* Profile Container */
 .profileContain {
     margin: 1%;
 }
@@ -58,34 +61,30 @@
     border: 2px solid #7C8B9D;
 }
 
+/* Change Fields */
 .changeFields {
     display: flex;
     flex-direction: column;
     width: auto;
-    height: auto;
-    margin: 3% 30%;
-    padding: 0.1%;
-    color: #58595A;
+    margin: 2% 30%;
+    padding: 2%;
     background-color: white;
     border-radius: 6px;
     box-shadow: 0px 4px 4px 0px #7C8B9D;
+    color: #9c0b0b;
+    text-align: center;
 }
 
+/* Form Group */
 .formGroup1 {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     margin-bottom: 30px;
-
+    width: 100%;
 }
 
-/* .formGroup1 input,option,select {
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
-    width: 100%;
-} */
-
+/* Buttons */
 .verifyemail {
     border: none;
     background-color: white;
@@ -97,43 +96,7 @@
     color: gray;
 }
 
-.changeFields form {
-    margin: 2% 5%;
-}
-
-.buttonGroup {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 20px;
-}
-
-.buttonGroup button {
-    margin-left: 10px;
-    text-align: center;
-    width: auto;
-    padding: 10px;
-    border: #58595A solid 0.1px;
-    border-radius: 6px;
-    box-shadow: 0px 4px 4px 0px #7C8B9D;
-}
-
-.buttonGroup button[type='cancel'] {
-    color: #58595A;
-    background-color: white;
-}
-
-.buttonGroup button[type='submit']:hover {
-    transform: scale(1.1)
-}
-
-.buttonGroup button[type='submit'],
-.buttonGroup button[type='cancel']:hover {
-    color: white;
-    background-color: #EE3E38;
-    border: #EE3E38 solid 0.1px;
-    transition: transform 0.2s ease-out;
-}
-
+/* Modal */
 .profilemodal {
     position: fixed;
     top: 0;
@@ -163,70 +126,166 @@
     margin: 0 10px;
 }
 
-.editdetails{
+/* Edit Details */
+.editdetails {
     display: flex;
     flex-direction: row;
-    gap: 20px;
+    gap: 10px;
     align-items: center;
+    width: 100%;
+}
 
-    .edit_email, 
+.editdetails > :first-child {
+    width: 100%;
+}
+
+/* General styles for password input fields */
+.passwordInput {
+    width: 100%;
+    padding: 8px;
+    margin-top: 0px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .passwordInput:focus {
+    outline: none;
+    border-color: #ce0e0e;
+  }
+  
+  
+  /* Style for the toggle button */
+  .togglePassword {
+    position: absolute;
+    right: 500px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    color: #ff0000;
+    font-size: 1.2rem;
+  }
+
+/* Common button styles */
+.edit_email,
+.edit_passworduser,
+.save_email,
+.save_passworduser {
+    background-color: #EE3E38;
+    color: #FFFF;
+    border: none;
+    padding: 10px 20px;
+    font-size: 13px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+    box-shadow: 0px 4px 4px var(--box-shadow-color);
+    width: auto;
+    white-space: nowrap; /* Prevents text from wrapping */
+    display: inline-block;
+}
+
+/* Hover and active states */
+.edit_email:active,
+.edit_passworduser:active,
+.edit_email:hover,
+.edit_passworduser:hover,
+.save_email:hover,
+.save_passworduser:hover {
+    background-color: #b62b26;
+}
+
+
+/* Specific to Verify Email Component */
+.verify-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+    background-color: gray;
+    margin: 0;
+}
+
+.verify {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.verify button {
+    background-color: white;
+    border: none;
+    color: #9c0b0b;
+    text-decoration: underline;
+}
+
+.verify button:hover {
+    color: #58595A;
+    text-decoration: none;
+}
+
+/* Adjusting styles for smaller screens */
+@media (max-width: 768px) {
+    .area h1 {
+        text-align: center;
+    }
+    .upload {
+        margin: 10%;
+        padding: 4%;
+    }
+
+    .upload h2 {
+        font-size: 40px;
+    }
+
+    .upload h3 {
+        font-size: 18px;
+    }
+
+    .upload p {
+        font-size: 14px;
+    }
+
+    .profile-details .name {
+        font-size: 40px;
+    }
+
+    .changeFields {
+        margin: 10%;
+        padding: 5%;
+    }
+
+    .formGroup1 {
+        width: 100%;
+    }
+
+    .editdetails {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .edit_email,
     .edit_passworduser,
-    .edit_email:active, 
-    .edit_passworduser:active{
-        color: black;
-        background-color: white;
-        border:none;
-        border-radius: 10px;
-        box-shadow: 0px 4px 4px 0px #7C8B9D;
-        width: 15%;
-        height: 100%;
-        min-height: 40px;
-        margin: none;
+    .save_email,
+    .save_passworduser {
+        font-size: 12px;
+        padding: 8px 16px;
     }
 
-    .edit_email:hover, 
-    .edit_passworduser:hover,
-    .save_email, 
-    .save_passworduser
-    {
-        color: white;
-        background-color: #9c0b0b;
-        border:none;
-        border-radius: 10px;
-        box-shadow: 0px 4px 4px 0px #7C8B9D;
-        width: 15%;
-        height: 100%;
-        min-height: 40px;
-        margin: none;
+    .verify-container {
+        padding: 10px;
     }
 
-    .formGroup1{
-        width: 80%;
-    }
-    .togglePasswordBtn_user {
-        position: absolute;
-        right: 5px;
-        top: 70%;
-        transform: translateY(-50%);
-        background: none;
-        border: none;
-        cursor: pointer;
-        outline: none;
-        padding: 0;
-        font-size: 1rem;
-        color: #333;
-        /* Adjust color as needed */
+    .verify {
+        padding: 10px;
     }
 }
 
 @media (max-width: 500px) {
     .upload {
         margin: 10%;
-    }
-
-    .profileContain img {
-        width: 100px;
-        height: 100px;
+        padding: 5%;
     }
 
     .upload h2 {
@@ -234,48 +293,50 @@
     }
 
     .upload h3 {
-        font-size: 20px;
+        font-size: 16px;
     }
 
-    .upload h4 {
-        font-size: 10px;
+    .upload p {
+        font-size: 12px;
     }
 
-    .button {
-        padding: 2px;
+    .profile-details .name {
+        font-size: 30px;
+    }
+
+    .profileContain img {
+        width: 80px;
+        height: 80px;
     }
 
     .changeFields {
-        margin: 1% 10%;
+        margin: 10%;
+        padding: 5%;
     }
 
-}
-/* Verifyemail.css */
+    .formGroup1 {
+        width: 100%;
+        margin: 0;
+    }
 
-/* Styles specific to the Verifyemail component */
-.verify-container {
-    display: flex;
-    justify-content: center; /* Center horizontally */
-    align-items: center; /* Center vertically */
-    height: 100vh; /* Full viewport height */
-    background-color: gray; /* Gray background for the entire page */
-    margin: 0; /* Remove default margin */
+    .editdetails {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .edit_email,
+    .edit_passworduser,
+    .save_email,
+    .save_passworduser {
+        font-size: 10px;
+        padding: 6px 12px;
+    }
+
+    .verify-container {
+        padding: 5px;
+    }
+
     .verify {
-        background-color: white; /* White background for the verify container */
-        padding: 20px; /* Add some padding inside the container */
-        border-radius: 8px; /* Optional: Add rounded corners */
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Optional: Add a subtle shadow */
-        text-align: center; /* Center text inside the container */
-    }
-    button{
-        background-color: white;
-        border: none;
-        color: #9c0b0b;
-        text-decoration: underline;
-    }
-    button:hover{
-        color: #58595A;
-        text-decoration: none;
+        padding: 5px;
     }
 }
-

@@ -686,7 +686,7 @@ const Dashboard = () => {
               <div className="modal-columns">
                 <div className="left-content">
                   <p>
-                    <strong>Department:</strong> {selectedMeeting.department}
+                    <strong>Department:</strong> {selectedMeeting.department}{" "}
                   </p>
                   <p>
                     <strong>Number of PAX:</strong> {selectedMeeting.pax}

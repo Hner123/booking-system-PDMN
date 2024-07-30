@@ -171,14 +171,14 @@ const Header = () => {
               <FaIcons.FaUsers />
               <span className="user-name">User List</span>
             </div>
-            <div className="notif-icon" onClick={handleNotifToggle}>
+            {/* <div className="notif-icon" onClick={handleNotifToggle}>
               <FaIcons.FaBell />
               <span className="user-name">Notifications</span>
-            </div>
+            </div> */}
             <div className="profile-icon" onClick={navigateEdit}>
               <FaIcons.FaUserCircle />
               <span className="user-name">
-                {userData.firstName} {userData.surName}
+                Profile
               </span>
             </div>
           </div>

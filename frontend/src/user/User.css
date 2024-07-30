@@ -89,7 +89,7 @@
   text-align: center;
 }
 
-.right-column .overlay {
+.right-column .overlay1 {
   position: absolute;
   margin: auto;
   width: 85%;
@@ -99,38 +99,41 @@
   z-index: 1;
 }
 
-.mascot {
-  position: absolute;
-  right: 5%;
-  bottom: 0;
-  height: 80%;
+.overlay-content{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
 }
 
-/* For mobile devices (up to 7  ,68px wide) */
+.mascot {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 73%;
+  width: 75%;
+  margin: auto;
+}
+
+
 @media (max-width: 768px) {
   .login-page {
     flex-direction: column;
-    /* Stack columns vertically */
     align-items: center;
-    /* Center items horizontally */
     padding: 20px;
-    /* Add padding for spacing */
   }
 
   .login-page>* {
     width: 100%;
-    /* Full width for each column */
     padding: 20px 20px;
-    /* Adjust padding */
     margin-bottom: 20px;
-    /* Add space between columns */
-  }
+    }
 
   .logo {
     width: 200px;
-    /* Adjust logo size */
+
     margin-bottom: 80px;
-    /* Reduce margin for smaller screens */
+
   }
 
   .right-column {
@@ -139,24 +142,18 @@
 
   .login-form {
     max-width: 100%;
-    /* Full width for form */
     padding: 0 20px;
-    /* Adjust padding */
-
   }
 
   .login-form h2 {
     font-size: 32px;
-    /* Decrease font size */
   }
 
   .login-form label,
   .login-form input,
   .login-form button {
     width: 100%;
-    /* Full width for form elements */
     max-width: none;
-    /* Remove max-width constraint */
   }
 }
 
@@ -370,7 +367,8 @@
     align-items: center;
     padding: 20px;
     box-sizing: border-box;
-    transition: none; /* Remove transition for mobile */
+    transition: none;
+    transform: translateY(0);;
   }
 
   .dashboard-rsrv {
@@ -393,34 +391,22 @@
   /* Remove hover effects */
   .card:hover {
     transform: none;
+    transition: none;
   }
   .card:hover .overlay {
     transform: none;
   }
   .card:hover .dashboard-rsrv {
     transform: none;
+    transition: none;
   }
   .card:hover .room-title {
     font-size: 30px;
     transform: none;
+
+    margin-bottom: 0;
   }
-  
-  /* Click-based interaction */
-  .card:active .overlay {
-    background: linear-gradient(90deg, rgba(255, 186, 186, 0.8) 0%, rgba(255, 84, 84, 0.8) 100%);
-  }
-  .card:active {
-    transform: none;
-  }
-  .card:active .overlay {
-    transform: none;
-  }
-  .card:active .dashboard-rsrv {
-    transform: none;
-  }
-  .card:active .room-title {
-    transform: none;
-}
+
 }
 
 
@@ -447,7 +433,6 @@
   text-align: center;
   background-color: #9c0b0b;
   color: #ffff;
-
 }
 
 .details-content {

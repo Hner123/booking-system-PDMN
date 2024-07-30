@@ -79,9 +79,11 @@ const UserLogin = () => {
         </form>
       </div>
       <div className="right-column">
-        <div className="overlay">
+        <div className="overlay1">
+          <div className="overlay-content">
           <h2>Effortless Meeting Room Reservations for Your Team!</h2>
           <img className="mascot" src={mascot} alt="Mascot" />
+        </div>
         </div>
       </div>
     </div>

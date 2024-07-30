@@ -337,10 +337,10 @@ const RoomReservation = () => {
     };
   }, [feedbackMessage]);
   
+
   return (
     <div className="room-reservation-container">
-      <ToastContainer /> 
-
+      <ToastContainer />
 
       <h1>Reserve Room</h1>
       <div className="main-container">
@@ -499,23 +499,32 @@ const RoomReservation = () => {
 
       {/* Expanded Event Modal */}
       {expandedEvent && (
-        <div className="event-details-modal">
-          <div className="modal-content">
-            {/* Event details */}
-            <span className="close" onClick={closeEventDetails}>
-              &times;
-            </span>
-            <h2>{expandedEvent.title}</h2>
-            <p>
-              <strong>Start:</strong>{" "}
-              {moment(expandedEvent.start).format("MMMM Do YYYY, h:mm a")}
-            </p>
-            <p>
-              <strong>End:</strong>{" "}
-              {moment(expandedEvent.end).format("MMMM Do YYYY, h:mm a")}
-            </p>
-          </div>
-        </div>
+        <div className="expanded-event-modal">
+          <div className="expanded-event-content">
+
+                <h2>{expandedEvent.title}</h2>
+                <p>
+                  <strong>Start Time:</strong>{" "}
+                  {moment(expandedEvent.start).format("MMMM D, YYYY h:mm A")}
+                </p>
+                <p>
+                  <strong>End Time:</strong>{" "}
+                  {moment(expandedEvent.end).format("MMMM D, YYYY h:mm A")}
+                </p>
+                <p>
+                  <strong>Department:</strong> {expandedEvent.department}
+                </p>
+                <div className="closetab">
+                  <button
+                    className="close-btn"
+                    onClick={() => setExpandedEvent(null)}
+                  >
+                    &times;
+                  </button>
+                </div>
+              </div>
+            </div>
+
       )}
 
       {/* Discard Changes Modal */}
@@ -538,7 +547,6 @@ const RoomReservation = () => {
           </div>
         </div>
       )}
-
     </div>
   );
 };
