@@ -21,7 +21,7 @@ const AdminLogin = () => {
             setLoading(true);
 
             const response = await axios.post(
-                "https://booking-system-e1fe.onrender.com/api/auth/login/admin",
+                "http://localhost:8800/api/auth/login/admin",
                 {
                     adminUser: trimmedUserName,
                     adminPass: trimmedPassWord,

@@ -27,7 +27,7 @@ const BookingConfirmation = () => {
         };
 
         const response = await axios.get(
-          `https://booking-system-e1fe.onrender.com/api/book/${reserveId}`,
+          `http://localhost:8800/api/book/${reserveId}`,
           { headers }
         );
         if (response.status === 200) {
@@ -77,7 +77,7 @@ const BookingConfirmation = () => {
         };
 
         const response = await axios.get(
-          `https://booking-system-e1fe.onrender.com/api/user/${userId}`,
+          `http://localhost:8800/api/user/${userId}`,
           { headers }
         );
         if (response.status === 200) {
@@ -157,7 +157,7 @@ const BookingConfirmation = () => {
       };
 
       const response = await axios.post(
-        `https://booking-system-e1fe.onrender.com/api/notifications/${userId}/mark-all-read`,
+        `http://localhost:8800/api/notifications/${userId}/mark-all-read`,
         {},
         { headers }
       );

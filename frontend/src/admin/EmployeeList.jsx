@@ -57,7 +57,7 @@ const EmployeeList = () => {
 				"Content-Type": "application/json",
 			};
 
-			const response = await axios.delete(`https://booking-system-e1fe.onrender.com/api/user/delete/${userId}`, {
+			const response = await axios.delete(`http://localhost:8800/api/user/delete/${userId}`, {
 				headers,
 			});
 
@@ -81,7 +81,7 @@ const EmployeeList = () => {
 					"Content-Type": "application/json",
 				};
 
-				const response = await axios.get("https://booking-system-e1fe.onrender.com/api/user/", {
+				const response = await axios.get("http://localhost:8800/api/user/", {
 					headers,
 				});
 				if (response.status === 200) {

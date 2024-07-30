@@ -59,7 +59,7 @@ const Dashboard = () => {
         };
 
         const response = await axios.get(
-          `https://booking-system-e1fe.onrender.com/api/user/${userId}`,
+          `http://localhost:8800/api/user/${userId}`,
           { headers }
         );
         if (response.status === 200) {
@@ -85,7 +85,7 @@ const Dashboard = () => {
           "Content-Type": "application/json",
         };
 
-        const response = await axios.get(`https://booking-system-e1fe.onrender.com/api/book/`, {
+        const response = await axios.get(`http://localhost:8800/api/book/`, {
           headers,
         });
         if (response.status === 200) {
@@ -202,7 +202,7 @@ const Dashboard = () => {
       };
 
       const updateResponse = await axios.delete(
-        `https://booking-system-e1fe.onrender.com/api/book/delete/${meetingToDelete.id}`,
+        `http://localhost:8800/api/book/delete/${meetingToDelete.id}`,
         { headers }
       );
 
@@ -322,7 +322,7 @@ const Dashboard = () => {
 
     try {
       const validationResponse = await axios.post(
-        `https://booking-system-e1fe.onrender.com/api/auth/validate`,
+        `http://localhost:8800/api/auth/validate`,
         {
           email: formData.email,
         }
@@ -355,7 +355,7 @@ const Dashboard = () => {
       };
 
       const updateResponse = await axios.patch(
-        `https://booking-system-e1fe.onrender.com/api/user/edit/${userId}`,
+        `http://localhost:8800/api/user/edit/${userId}`,
         updatedUser,
         { headers }
       );
@@ -386,7 +386,7 @@ const Dashboard = () => {
       };
 
       const updateResponse = await axios.post(
-        `https://booking-system-e1fe.onrender.com/api/book/create`,
+        `http://localhost:8800/api/book/create`,
         reserveRoom,
         { headers }
       );
