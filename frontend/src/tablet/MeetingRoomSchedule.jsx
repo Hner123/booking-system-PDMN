@@ -26,7 +26,6 @@ const MeetingRoomSchedule = () => {
         };
 
         const [userResponse, bookResponse] = await Promise.all([
-          axios.get(`http://localhost:8800/api/user/${userId}`, { headers }),
           axios.get(`http://localhost:8800/api/book/`, { headers }),
         ]);
 
@@ -48,7 +47,7 @@ const MeetingRoomSchedule = () => {
     };
 
     fetchBookData();
-  }, [userId]);
+  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 60000);
