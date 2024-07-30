@@ -11,10 +11,12 @@ const ReserveRoutes = require("./routes/ReserveRoutes");
 const ValidateRoutes = require("./routes/ValidateRoutes");
 const NotifRoutes = require("./routes/NotifRoutes");
 
+const app = express();
+
 dotenv.config();
+
 ConnectDB();
 
-const app = express();
 const server = http.createServer(app);
 
 app.use(express.json());
@@ -46,7 +48,6 @@ app.use('/api/notif', NotifRoutes);
 const io = initializeSocket(server);
 app.set('socketio', io);
 
-const PORT = process.env.PORT || 8800;
 server.listen(PORT, () =>
-  console.log(`Server started on port ${PORT}`)
+  console.log(`Server started on port ${process.env.PORT}`)
 );
