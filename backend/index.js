@@ -48,6 +48,6 @@ app.use('/api/notif', NotifRoutes);
 const io = initializeSocket(server);
 app.set('socketio', io);
 
-server.listen(PORT, () =>
+server.listen(process.env.PORT, () =>
   console.log(`Server started on port ${process.env.PORT}`)
 );
