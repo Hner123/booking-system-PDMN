@@ -116,12 +116,12 @@ const Settings = () => {
     setDisabled2(true);
 
     try {
-      const isCurrentPasswordCorrect = await bcrypt.compare(
-        formData.currPass,
-        userData.passWord
+      const validationResponse = await axios.post(
+        `http://localhost:8800/api/auth/check`,
+        { currPass: formData.currPass, hashedPassword: userData.passWord }
       );
 
-      if (!isCurrentPasswordCorrect) {
+      if (validationResponse.data.isMatch) {
         toast.error("Current password is incorrect.");
         setDisabled2(false);
         return;
@@ -142,6 +142,7 @@ const Settings = () => {
         setDisabled2(false);
         return;
       }
+
     } catch (error) {
       toast.error("Failed to validate password.");
       setDisabled2(false);
@@ -194,9 +195,9 @@ const Settings = () => {
         <h1>Edit Profile</h1>
       </div> */}
       <div className="area">
-      <div>
-        <h1>Edit Profile</h1>
-      </div>
+        <div>
+          <h1>Edit Profile</h1>
+        </div>
         {userData && (
           <div className="upload">
             <div className="profile-details">
@@ -318,7 +319,7 @@ const Settings = () => {
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
                     className="togglePassword"
-                    style={{ position: "absolute", right: "10px", top: "50%"}}
+                    style={{ position: "absolute", right: "10px", top: "50%" }}
                   >
                     {showPassword ? <FaEyeSlash /> : <FaEye />}
                   </button>

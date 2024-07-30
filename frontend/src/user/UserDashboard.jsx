@@ -241,26 +241,30 @@ const Dashboard = () => {
       {
         Header: "",
         accessor: "actions",
-        Cell: ({ row }) => (
-          <>
-            <button
-              className="full-btn"
-              onClick={() => handleMeetingClick(row.original)}
-            >
-              <i className="fas fa-info-circle"></i> Meeting Details
-            </button>
-            <button
-              className="delete-btn"
-              onClick={() => handleShowConfirmModal(row.original)}
-            >
-              <i className="fas fa-trash-alt"></i> Cancel Meeting
-            </button>
-          </>
-        ),
+        Cell: ({ row }) => {
+          const { key, ...restProps } = row.getRowProps();
+          return (
+            <>
+              <button
+                className="full-btn"
+                onClick={() => handleMeetingClick(row.original)}
+              >
+                <i className="fas fa-info-circle"></i> Meeting Details
+              </button>
+              <button
+                className="delete-btn"
+                onClick={() => handleShowConfirmModal(row.original)}
+              >
+                <i className="fas fa-trash-alt"></i> Cancel Meeting
+              </button>
+            </>
+          );
+        },
       },
     ],
     []
   );
+  
 
   const otherMeetingsColumns = React.useMemo(
     () => [
@@ -581,32 +585,36 @@ const Dashboard = () => {
               {...myReservationsTable.getTableProps()}
             >
               <thead>
-                {myReservationsTable.headerGroups.map((headerGroup) => (
-                  <tr
-                    key={headerGroup.id}
-                    {...headerGroup.getHeaderGroupProps()}
-                  >
-                    {headerGroup.headers.map((column) => (
-                      <th key={column.id} {...column.getHeaderProps()}>
-                        {column.render("Header")}
-                      </th>
-                    ))}
-                  </tr>
-                ))}
+                {myReservationsTable.headerGroups.map((headerGroup) => {
+                  const { key, ...headerProps } = headerGroup.getHeaderGroupProps();
+                  return (
+                    <tr key={key} {...headerProps}>
+                      {headerGroup.headers.map((column) => {
+                        const { key, ...columnProps } = column.getHeaderProps();
+                        return (
+                          <th key={key} {...columnProps}>
+                            {column.render("Header")}
+                          </th>
+                        );
+                      })}
+                    </tr>
+                  );
+                })}
               </thead>
               <tbody {...myReservationsTable.getTableBodyProps()}>
                 {myReservationsTable.rows.map((row) => {
                   myReservationsTable.prepareRow(row);
+                  const { key, ...rowProps } = row.getRowProps();
                   return (
-                    <tr {...row.getRowProps()}>
-                      {row.cells.map((cell) => (
-                        <td
-                          key={cell.getCellProps().key}
-                          {...cell.getCellProps()}
-                        >
-                          {cell.render("Cell")}
-                        </td>
-                      ))}
+                    <tr key={key} {...rowProps}>
+                      {row.cells.map((cell) => {
+                        const { key, ...cellProps } = cell.getCellProps();
+                        return (
+                          <td key={key} {...cellProps}>
+                            {cell.render("Cell")}
+                          </td>
+                        );
+                      })}
                     </tr>
                   );
                 })}
@@ -640,32 +648,36 @@ const Dashboard = () => {
               {...otherMeetingsTable.getTableProps()}
             >
               <thead>
-                {otherMeetingsTable.headerGroups.map((headerGroup) => (
-                  <tr
-                    key={headerGroup.id}
-                    {...headerGroup.getHeaderGroupProps()}
-                  >
-                    {headerGroup.headers.map((column) => (
-                      <th key={column.id} {...column.getHeaderProps()}>
-                        {column.render("Header")}
-                      </th>
-                    ))}
-                  </tr>
-                ))}
+                {otherMeetingsTable.headerGroups.map((headerGroup) => {
+                  const { key, ...headerProps } = headerGroup.getHeaderGroupProps();
+                  return (
+                    <tr key={key} {...headerProps}>
+                      {headerGroup.headers.map((column) => {
+                        const { key, ...columnProps } = column.getHeaderProps();
+                        return (
+                          <th key={key} {...columnProps}>
+                            {column.render("Header")}
+                          </th>
+                        );
+                      })}
+                    </tr>
+                  );
+                })}
               </thead>
               <tbody {...otherMeetingsTable.getTableBodyProps()}>
                 {otherMeetingsTable.rows.map((row) => {
                   otherMeetingsTable.prepareRow(row);
+                  const { key, ...rowProps } = row.getRowProps();
                   return (
-                    <tr {...row.getRowProps()}>
-                      {row.cells.map((cell) => (
-                        <td
-                          key={cell.getCellProps().key}
-                          {...cell.getCellProps()}
-                        >
-                          {cell.render("Cell")}
-                        </td>
-                      ))}
+                    <tr key={key} {...rowProps}>
+                      {row.cells.map((cell) => {
+                        const { key, ...cellProps } = cell.getCellProps();
+                        return (
+                          <td key={key} {...cellProps}>
+                            {cell.render("Cell")}
+                          </td>
+                        );
+                      })}
                     </tr>
                   );
                 })}

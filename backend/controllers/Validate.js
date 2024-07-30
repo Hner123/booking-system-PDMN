@@ -302,6 +302,16 @@ const LoginAdmin = async (req, res) => {
   }
 };
 
+const CheckPass = async (req, res) => {
+  const { currPass, hashedPassword } = req.body;
+  try {
+    const isMatch = await bcrypt.compare(currPass, hashedPassword);
+    res.json({ isMatch });
+  } catch (error) {
+    res.status(500).json({ error: 'Error validating password' });
+  }
+}
+
 const ChangeEmailWithAuth = (req, res) => {
   requireAuth(req, res, async () => {
     await ChangeEmail(req, res);
@@ -312,6 +322,11 @@ const ApprovalWithAuth = (req, res) => {
     await Approval(req, res);
   });
 };
+const CheckPassWithAuth = (req, res) => {
+  requireAuth(req, res, async () => {
+    await CheckPass(req, res);
+  });
+};
 
 module.exports = {
   LogChangePass,
@@ -320,7 +335,9 @@ module.exports = {
   ValidateUserData,
   LoginUser,
   LoginAdmin,
+  CheckPass,
 
   ChangeEmailWithAuth,
   ApprovalWithAuth,
+  CheckPassWithAuth
 };

@@ -9,9 +9,11 @@ const {
   LoginUser,
   LoginAdmin,
   Approval,
+  CheckPass,
 
   ChangeEmailWithAuth,
-  ApprovalWithAuth
+  ApprovalWithAuth,
+  CheckPassWithAuth
 } = require("../controllers/Validate");
 
 router.post("/changepass", LogChangePass);
@@ -21,5 +23,6 @@ router.post("/login/admin", LoginAdmin);
 // router.use(requireAuth);
 router.post("/changeemail", ChangeEmail);
 router.post("/approval", Approval);
+router.post("/check", CheckPass);
 
 module.exports = router;
