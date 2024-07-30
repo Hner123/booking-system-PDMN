@@ -216,3 +216,42 @@
     padding: 0 16px;
   }
 }
+@media (max-width: 1024px) {
+  .first-column {
+    padding: 10px;
+  }
+  .room-name {
+    font-size: 120px;
+  }
+  .availability{
+    font-size:  100px;
+  }
+
+  .room-info table {
+    font-size: 30px;
+  }
+
+  .clock h1 {
+    font-size: 80px;
+  }
+
+  .ddate {
+    font-size: 30px;
+  }
+
+  .upcoming-meetings {
+    font-size: 30px;
+  }
+
+  .meeting h3 {
+    font-size: 24px;
+  }
+
+  .meeting p {
+    font-size: 16px;
+  }
+
+  .meetings {
+    font-size: 24px;
+  }
+}
