@@ -320,7 +320,6 @@
   opacity: 0;
   transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out, background-color 0.4s ease-in-out;
   width: 50%;
-  z-index: 1; /* Ensure it appears above other elements */
 }
 
 .card:hover .dashboard-rsrv {

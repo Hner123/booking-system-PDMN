@@ -38,106 +38,159 @@ import './App.css';
 function App() {
   return (
     <div>
-      <ToastContainer/>
+      <ToastContainer />
       <Routes>
         <Route path="/" element={<UserLogin />} />
-        <Route path='/page-not-found' element={<NotFoundPage/>}/>
-        <Route path="/dashboard" element={
-          <>
-            <Header />
-            <UserDashboard />
-          </>
-        } />
-        <Route path="/reserve" element={
-          <>
-            <Room />
-          </>
-        } />
-        <Route path="/reserveform" element={
-          <>
-            <ReservationFormsDetails />
-          </>
-        } />
-        <Route path="/confirmation" element={
-          <>
-            <Header />
-            <Confirmation />
-          </>
-        } />
-        <Route path="/user/edit" element={
-          <>
-            <Header/>
-            <Edit />
-          </>
-        } />
-         <Route path="/employee-list" element={
-          <>
-            <Header/>
-            <UserList />
-          </>
-        } />
-        <Route path="/admin" element={
-          <>
-            <AdminLogin />
-          </>
-        } />
-        <Route path="/admin/employee-list" element={
-          <>
-            <Sidebaree/>
-            <EmployeeList />
-          </>
-        } />
-        <Route path="/tablet" element={
-          <>
-            <Tablet />
-          </>
-        } />
-        <Route path="/admin/add-employee" element={
-          <>
-            <Sidebaree />
-            <AddEmployee />
-          </>
-        } />
-        <Route path="/admin/approval-rooms" element={
-          <>
-            <Sidebaree />
-            <ApprovalRooms />
-          </>
-        } />
-        <Route path="/admin/approval-palawan" element={
-          <>
-            <Sidebaree />
-            <ApprovalPalawan />
-          </>
-        } />
-        <Route path="/admin/approval-boracay" element={
-          <>
-            <Sidebaree />
-            <ApprovalBoracay />
-          </>
-        } />
-        <Route path="/admin/approval-both" element={
-          <>
-            <Sidebaree />
-            <ApprovalBoth />
-          </>
-        } />
+        <Route path="/page-not-found" element={<NotFoundPage />} />
+        <Route
+          path="/dashboard"
+          element={
+            <>
+              <Header />
+              <UserDashboard />
+            </>
+          }
+        />
+        <Route
+          path="/reserve"
+          element={
+            <>
+              <Header />
+              <Room />
+            </>
+          }
+        />
+        <Route
+          path="/reserveform"
+          element={
+            <>
+              <Header />
+              <ReservationFormsDetails />
+            </>
+          }
+        />
+        <Route
+          path="/confirmation"
+          element={
+            <>
+              <Header />
+              <Confirmation />
+            </>
+          }
+        />
+        <Route
+          path="/user/edit"
+          element={
+            <>
+              <Header />
+              <Edit />
+            </>
+          }
+        />
+        <Route
+          path="/employee-list"
+          element={
+            <>
+              <Header />
+              <UserList />
+            </>
+          }
+        />
+        <Route
+          path="/admin"
+          element={
+            <>
+              <AdminLogin />
+            </>
+          }
+        />
+        <Route
+          path="/admin/employee-list"
+          element={
+            <>
+              <Sidebaree />
+              <EmployeeList />
+            </>
+          }
+        />
+        <Route
+          path="/tablet"
+          element={
+            <>
+              <Tablet />
+            </>
+          }
+        />
+        <Route
+          path="/admin/add-employee"
+          element={
+            <>
+              <Sidebaree />
+              <AddEmployee />
+            </>
+          }
+        />
+        <Route
+          path="/admin/approval-rooms"
+          element={
+            <>
+              <Sidebaree />
+              <ApprovalRooms />
+            </>
+          }
+        />
+        <Route
+          path="/admin/approval-palawan"
+          element={
+            <>
+              <Sidebaree />
+              <ApprovalPalawan />
+            </>
+          }
+        />
+        <Route
+          path="/admin/approval-boracay"
+          element={
+            <>
+              <Sidebaree />
+              <ApprovalBoracay />
+            </>
+          }
+        />
+        <Route
+          path="/admin/approval-both"
+          element={
+            <>
+              <Sidebaree />
+              <ApprovalBoth />
+            </>
+          }
+        />
 
-      <Route path="/verify" element={
-          <>
-            <Verifyemail/>
-          </>
-        } />
-      <Route path="/forgot-pass" element={
-          <>
-            <ResetPass/>
-          </>
-        } />
-      <Route path="/reset-pass" element={
-          <>
-            <NewPass/>
-          </>
-        } />     
+        <Route
+          path="/verify"
+          element={
+            <>
+              <Verifyemail />
+            </>
+          }
+        />
+        <Route
+          path="/forgot-pass"
+          element={
+            <>
+              <ResetPass />
+            </>
+          }
+        />
+        <Route
+          path="/reset-pass"
+          element={
+            <>
+              <NewPass />
+            </>
+          }
+        />
       </Routes>
     </div>
   );

@@ -312,10 +312,12 @@ const ReservationFormsDetails = () => {
   const handleCancelDiscard = () => {
     setShowDiscardModal(false);
   };
+  
 
   return (
     <div className="form-page">
       <ToastContainer />
+     <main>
       <h1>Booking Details</h1>
       <div className="reservation-details-container">
         <div className="form-column">
@@ -567,7 +569,9 @@ const ReservationFormsDetails = () => {
           </div>
         )}
       </div>
+      </main>
     </div>
+
   );
 };
 
