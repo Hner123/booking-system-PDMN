@@ -25,20 +25,14 @@ const MeetingRoomSchedule = () => {
           "Content-Type": "application/json",
         };
 
-        const [userResponse, bookResponse] = await Promise.all([
+        const bookResponse = await Promise.all([
           axios.get(`http://localhost:8800/api/book/`, { headers }),
         ]);
-
-        if (userResponse.status === 200) {
-          setUsers(userResponse.data);
-          if (userResponse.data.resetPass === false) {
-            setFirstLogin(true);
-          }
-        }
 
         if (bookResponse.status === 200) {
           setBookData(bookResponse.data);
         }
+        
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
