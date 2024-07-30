@@ -38,7 +38,7 @@ const ApprovalBoth = () => {
           "Content-Type": "application/json",
         };
 
-        const response = await axios.get(`http://localhost:8800/api/book/`, {
+        const response = await axios.get(`https://booking-system-e1fe.onrender.com/api/book/`, {
           headers,
         });
 
@@ -112,7 +112,7 @@ const ApprovalBoth = () => {
       };
 
       const updateResponse = await axios.patch(
-        `http://localhost:8800/api/book/edit/${selectedBooking._id}`,
+        `https://booking-system-e1fe.onrender.com/api/book/edit/${selectedBooking._id}`,
         updatedReserve,
         { headers }
       );
@@ -125,16 +125,39 @@ const ApprovalBoth = () => {
           };
 
           const emailResponse = await axios.post(
-            `http://localhost:8800/api/auth/approval`,
+            `https://booking-system-e1fe.onrender.com/api/auth/approval`,
             emailData,
             { headers }
           );
 
           if (emailResponse.status === 201) {
-            const { message } = emailResponse.data;
-            setBookData(emailResponse.data)
-            toast.success(message);
-            setAcceptModal(false);
+            const messageContent = `Your reservation ${updateResponse.data.title} on ${updateResponse.data.user.scheduleDate} has been approved`
+            const notifData = {
+              booking: updateResponse.data._id,
+              message: messageContent,
+              sender: "66861570dd3fc08ab2a6557d",
+              senderType: "admin",
+              receiver: updateResponse.data.user._id,
+              receiverType: "user",
+            };
+
+            try {
+
+              const notifResponse = await axios.post(
+                `https://booking-system-e1fe.onrender.com/api/notif/new`,
+                notifData,
+                { headers }
+              );
+
+              if (notifResponse.status === 201) {
+                const { message } = emailResponse.data;
+                setBookData(emailResponse.data)
+                toast.success(message);
+                setAcceptModal(false);
+              }
+            } catch (error) {
+              toast.error("Error updating information. Please try again later.");
+            }
           }
         } catch (error) {
           console.error("Error details:", error.response ? error.response.data : error.message);
@@ -172,7 +195,7 @@ const ApprovalBoth = () => {
       };
 
       const updateResponse = await axios.patch(
-        `http://localhost:8800/api/book/edit/${selectedBooking._id}`,
+        `https://booking-system-e1fe.onrender.com/api/book/edit/${selectedBooking._id}`,
         updatedReserve,
         { headers }
       );
@@ -185,22 +208,45 @@ const ApprovalBoth = () => {
           };
 
           const emailResponse = await axios.post(
-            `http://localhost:8800/api/auth/approval`,
+            `https://booking-system-e1fe.onrender.com/api/auth/approval`,
             emailData,
             { headers }
           );
 
           if (emailResponse.status === 201) {
-            const { message } = emailResponse.data;
-            setBookData(emailResponse.data)
-            setFormData(() => ({
-              ...emailResponse.data,
-              approval: {
-                reason: ""
+            const messageContent = `Your reservation ${updateResponse.data.title} on ${updateResponse.data.user.scheduleDate} has been rejected`
+            const notifData = {
+              booking: updateResponse.data._id,
+              message: messageContent,
+              sender: "66861570dd3fc08ab2a6557d",
+              senderType: "admin",
+              receiver: updateResponse.data.user._id,
+              receiverType: "user",
+            };
+
+            try {
+
+              const notifResponse = await axios.post(
+                `https://booking-system-e1fe.onrender.com/api/notif/new`,
+                notifData,
+                { headers }
+              );
+
+              if (notifResponse.status === 201) {
+                const { message } = emailResponse.data;
+                setBookData(emailResponse.data)
+                setFormData(() => ({
+                  ...emailResponse.data,
+                  approval: {
+                    reason: ""
+                  }
+                }));
+                toast.success(message);
+                setRejectModal(false);
               }
-            }));
-            toast.success(message);
-            setRejectModal(false);
+            } catch (error) {
+              toast.error("Error updating information. Please try again later.");
+            }
           }
         } catch (error) {
           toast.error(error);

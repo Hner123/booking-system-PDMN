@@ -26,7 +26,7 @@ const MeetingRoomSchedule = () => {
         };
 
         const [userResponse, bookResponse] = await Promise.all([
-          axios.get(`http://localhost:8800/api/book/`, { headers }),
+          axios.get(`https://booking-system-e1fe.onrender.com/api/book/`, { headers }),
         ]);
 
         if (userResponse.status === 200) {

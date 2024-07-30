@@ -22,7 +22,7 @@ const UserLogin = () => {
       setLoading(true);
 
       const response = await axios.post(
-        "http://localhost:8800/api/auth/login/user",
+        "https://booking-system-e1fe.onrender.com/api/auth/login/user",
         {
           userName: trimmedUserName,
           passWord: trimmedPassWord,

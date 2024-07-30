@@ -8,7 +8,7 @@ import axios from "axios";
 import WithAuth from '../../auth/WithAuth';
 import io from 'socket.io-client';
 
-const ENDPOINT = 'http://localhost:8800';
+const ENDPOINT = 'https://booking-system-e1fe.onrender.com';
 let socket;
 
 const Header = () => {
@@ -51,7 +51,7 @@ const Header = () => {
           "Content-Type": "application/json",
         };
 
-        const response = await axios.get(`http://localhost:8800/api/user/${userId}`, { headers });
+        const response = await axios.get(`https://booking-system-e1fe.onrender.com/api/user/${userId}`, { headers });
         if (response.status === 200) {
           setUserData(response.data);
         }
@@ -67,7 +67,7 @@ const Header = () => {
     const fetchNotifications = async () => {
       try {
         const userId = localStorage.getItem("userId");
-        const response = await axios.get('http://localhost:8800/api/notif');
+        const response = await axios.get('https://booking-system-e1fe.onrender.com/api/notif');
         const userNotifications = response.data.filter(notif => notif.receiver._id === userId);
         setNotifications(userNotifications);
       } catch (error) {
