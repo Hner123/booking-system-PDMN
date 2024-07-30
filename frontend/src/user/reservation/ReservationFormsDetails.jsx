@@ -77,7 +77,7 @@ const ReservationFormsDetails = () => {
         };
 
         const response = await axios.get(
-          `https://booking-system-e1fe.onrender.com/api/book/${reserveId}`,
+          `http://localhost:8800/api/book/${reserveId}`,
           { headers }
         );
         if (response.status === 200) {
@@ -101,7 +101,7 @@ const ReservationFormsDetails = () => {
           "Content-Type": "application/json",
         };
 
-        const response = await axios.get(`https://booking-system-e1fe.onrender.com/api/user/`, {
+        const response = await axios.get(`http://localhost:8800/api/user/`, {
           headers,
         });
         if (response.status === 200) {
@@ -262,7 +262,7 @@ const ReservationFormsDetails = () => {
       };
 
       const updateResponse = await axios.patch(
-        `https://booking-system-e1fe.onrender.com/api/book/edit/${reserveId}`,
+        `http://localhost:8800/api/book/edit/${reserveId}`,
         updatedReserve,
         { headers }
       );
@@ -285,7 +285,7 @@ const ReservationFormsDetails = () => {
           try {
       
             const notifResponse = await axios.post(
-              `https://booking-system-e1fe.onrender.com/api/notif/new`,
+              `http://localhost:8800/api/notif/new`,
               notifData,
               { headers }
             );
@@ -324,7 +324,7 @@ const ReservationFormsDetails = () => {
       };
 
       const updateResponse = await axios.delete(
-        `https://booking-system-e1fe.onrender.com/api/book/delete/${reserveId}`,
+        `http://localhost:8800/api/book/delete/${reserveId}`,
         { headers }
       );
 

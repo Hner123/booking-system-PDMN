@@ -22,7 +22,7 @@ const WithoutAuthReserve = (WrappedComponent) => {
           };
 
           const [responseUser] = await Promise.all([
-            axios.get(`https://booking-system-e1fe.onrender.com/api/user/`, { headers }),
+            axios.get(`http://localhost:8800/api/user/`, { headers }),
           ]);
 
           if (responseUser.status === 200) {

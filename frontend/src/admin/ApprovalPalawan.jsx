@@ -38,7 +38,7 @@ const ApprovalPalawan = () => {
           "Content-Type": "application/json",
         };
 
-        const response = await axios.get(`https://booking-system-e1fe.onrender.com/api/book/`, {
+        const response = await axios.get(`http://localhost:8800/api/book/`, {
           headers,
         });
 
@@ -113,7 +113,7 @@ const ApprovalPalawan = () => {
       };
 
       const updateResponse = await axios.patch(
-        `https://booking-system-e1fe.onrender.com/api/book/edit/${selectedBooking._id}`,
+        `http://localhost:8800/api/book/edit/${selectedBooking._id}`,
         updatedReserve,
         { headers }
       );
@@ -126,7 +126,7 @@ const ApprovalPalawan = () => {
           };
 
           const emailResponse = await axios.post(
-            `https://booking-system-e1fe.onrender.com/api/auth/approval`,
+            `http://localhost:8800/api/auth/approval`,
             emailData,
             { headers }
           );
@@ -145,7 +145,7 @@ const ApprovalPalawan = () => {
             try {
 
               const notifResponse = await axios.post(
-                `https://booking-system-e1fe.onrender.com/api/notif/new`,
+                `http://localhost:8800/api/notif/new`,
                 notifData,
                 { headers }
               );
@@ -197,7 +197,7 @@ const ApprovalPalawan = () => {
       };
 
       const updateResponse = await axios.patch(
-        `https://booking-system-e1fe.onrender.com/api/book/edit/${selectedBooking._id}`,
+        `http://localhost:8800/api/book/edit/${selectedBooking._id}`,
         updatedReserve,
         { headers }
       );
@@ -210,7 +210,7 @@ const ApprovalPalawan = () => {
           };
 
           const emailResponse = await axios.post(
-            `https://booking-system-e1fe.onrender.com/api/auth/approval`,
+            `http://localhost:8800/api/auth/approval`,
             emailData,
             { headers }
           );
@@ -229,7 +229,7 @@ const ApprovalPalawan = () => {
             try {
 
               const notifResponse = await axios.post(
-                `https://booking-system-e1fe.onrender.com/api/notif/new`,
+                `http://localhost:8800/api/notif/new`,
                 notifData,
                 { headers }
               );

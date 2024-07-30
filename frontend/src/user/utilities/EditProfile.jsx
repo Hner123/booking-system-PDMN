@@ -34,7 +34,7 @@ const Settings = () => {
           "Content-Type": "application/json"
         };
         const response = await axios.get(
-          `https://booking-system-e1fe.onrender.com/api/user/${userId}`,
+          `http://localhost:8800/api/user/${userId}`,
           { headers }
         );
         if (response.status === 200) {
@@ -64,7 +64,7 @@ const Settings = () => {
 
     try {
       const validationResponse = await axios.post(
-        `https://booking-system-e1fe.onrender.com/api/auth/validate`,
+        `http://localhost:8800/api/auth/validate`,
         { email: formData.email }
       );
 
@@ -92,7 +92,7 @@ const Settings = () => {
       };
 
       const updateResponse = await axios.post(
-        `https://booking-system-e1fe.onrender.com/api/auth/changeemail`,
+        `http://localhost:8800/api/auth/changeemail`,
         sendEmail,
         { headers }
       );
@@ -117,7 +117,7 @@ const Settings = () => {
 
     try {
       const validationResponse = await axios.post(
-        `https://booking-system-e1fe.onrender.com/api/auth/check`,
+        `http://localhost:8800/api/auth/check`,
         { currPass: formData.currPass, hashedPassword: userData.passWord }
       );
 
@@ -159,7 +159,7 @@ const Settings = () => {
       };
 
       const updateResponse = await axios.patch(
-        `https://booking-system-e1fe.onrender.com/api/user/edit/${userId}`,
+        `http://localhost:8800/api/user/edit/${userId}`,
         updatedUser,
         { headers }
       );
