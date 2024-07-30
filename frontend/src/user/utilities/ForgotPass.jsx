@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const NewPass = () => {
+const ForgotPass = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -16,25 +16,26 @@ const NewPass = () => {
     return (
         <div className="verify-container">
             <div className="verify" >
-                <h2>Change Password</h2>
-                <p>Input your new password</p>
+                <h2>Reset Password</h2>
+                <p>Input your email to reset your password</p>
+                <h4 style={{margin:'0', textAlign:'left'}}>Email:</h4>
                 <form onSubmit={handleSubmit}>
-                    <div className="form-group">
-                    <h4 style={{margin:'0', textAlign:'left'}}>New Password:</h4>
+                    <div className="form-groupss">
                         <input
-                            type="password"
-                            id="confirmPassword"
-                            name="confirmPassword"
-                            value={confirmPassword}
-                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            placeholder='Enter your valid email'
+                            type="email"
+                            id="email"
+                            name="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                             required
                         />
                     </div>
-                    <button style={{fontSize:"15px", marginTop:'5px'}} type="submit">Submit</button>
+                    <button style={{fontSize:"15px", marginTop:'5px'}} type="submit">Verify</button>
                 </form>
             </div>
         </div>
     );
 };
 
-export default NewPass;
+export default ForgotPass;

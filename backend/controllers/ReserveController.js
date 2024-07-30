@@ -55,7 +55,7 @@ const CreateReserve = async (req, res) => {
         archive: false,
         status: false,
         reason: ''
-      }
+      },
     });
 
     res.status(201).json({ result });
@@ -67,12 +67,12 @@ const CreateReserve = async (req, res) => {
 const EditReserve = async (req, res) => {
   try {
     const { id } = req.params;
-    const reserve = req.body
+    const reserve = req.body;
 
     const currentReserve = await ReserveModel.findById(id);
 
     if (!currentReserve) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: "Reservation not found" });
     }
 
     let update = {
@@ -98,12 +98,14 @@ const EditReserve = async (req, res) => {
       },
     };
 
-    const result = await ReserveModel.findByIdAndUpdate(id, update, { new: true });
+    const result = await ReserveModel.findByIdAndUpdate(id, update, { new: true }).populate('user');
+
     res.status(201).json(result);
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
 };
+
 
 const DeleteReserve = async (req, res) => {
   try {

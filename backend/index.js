@@ -1,21 +1,23 @@
 const dotenv = require('dotenv');
 const express = require('express');
 const cors = require('cors');
+const http = require('http');
 const ConnectDB = require("./config/Database");
+const { initializeSocket } = require('./config/socket');
 
 const UserRoutes = require("./routes/UserRoutes");
 const AdminRoutes = require("./routes/AdminRoutes");
 const ReserveRoutes = require("./routes/ReserveRoutes");
 const ValidateRoutes = require("./routes/ValidateRoutes");
-
-const app = express();
+const NotifRoutes = require("./routes/NotifRoutes");
 
 dotenv.config();
-
 ConnectDB();
 
-app.use(express.json());
+const app = express();
+const server = http.createServer(app);
 
+app.use(express.json());
 app.use(
   cors({
     origin: "*",
@@ -35,11 +37,16 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/api/user', UserRoutes)
-app.use('/api/admin', AdminRoutes)
-app.use('/api/book', ReserveRoutes)
-app.use('/api/auth', ValidateRoutes)
+app.use('/api/user', UserRoutes);
+app.use('/api/admin', AdminRoutes);
+app.use('/api/book', ReserveRoutes);
+app.use('/api/auth', ValidateRoutes);
+app.use('/api/notif', NotifRoutes);
 
-app.listen(process.env.PORT, () =>
-  console.log(`Server started on port ${process.env.PORT}`)
+const io = initializeSocket(server);
+app.set('socketio', io);
+
+const PORT = process.env.PORT || 8800;
+server.listen(PORT, () =>
+  console.log(`Server started on port ${PORT}`)
 );
