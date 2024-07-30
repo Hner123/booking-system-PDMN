@@ -26,7 +26,7 @@ const WithAuth = (WrappedComponent) => {
             "Content-Type": "application/json",
           };
 
-          const responseUser = await axios.get(`http://localhost:8800/api/user/`, { headers });
+          const responseUser = await axios.get(`https://booking-system-e1fe.onrender.com/api/user/`, { headers });
 
           if (responseUser.status === 200) {
             const user = responseUser.data.find(user => user._id === userId);

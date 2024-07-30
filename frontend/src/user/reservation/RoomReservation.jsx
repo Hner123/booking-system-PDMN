@@ -57,7 +57,7 @@ const RoomReservation = () => {
         };
 
         const response = await axios.get(
-          `http://localhost:8800/api/book/${reserveToken}`,
+          `https://booking-system-e1fe.onrender.com/api/book/${reserveToken}`,
           {
             headers,
           }
@@ -82,7 +82,7 @@ const RoomReservation = () => {
           "Content-Type": "application/json",
         };
 
-        const response = await axios.get(`http://localhost:8800/api/book/`, {
+        const response = await axios.get(`https://booking-system-e1fe.onrender.com/api/book/`, {
           headers,
         });
 
@@ -238,7 +238,7 @@ const RoomReservation = () => {
       };
 
       const updateResponse = await axios.patch(
-        `http://localhost:8800/api/book/edit/${reserveId}`,
+        `https://booking-system-e1fe.onrender.com/api/book/edit/${reserveId}`,
         reserveData,
         { headers }
       );
@@ -267,7 +267,7 @@ const RoomReservation = () => {
       };
 
       const updateResponse = await axios.delete(
-        `http://localhost:8800/api/book/delete/${reserveId}`,
+        `https://booking-system-e1fe.onrender.com/api/book/delete/${reserveId}`,
         { headers }
       );
 
