@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const AdminModel = require("../models/AdminModel");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const requireAuth = require("../utils/requireAuth");
 
 const GetAllAdmin = async (req, res) => {
