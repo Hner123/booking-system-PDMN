@@ -26,7 +26,7 @@ const WithAuthAdmin = (WrappedComponent) => {
           };
 
           const responseUser = await axios.get(
-            `http://localhost:8800/api/admin/`,
+            `https://booking-system-e1fe.onrender.com/api/admin/`,
             { headers }
           );
 

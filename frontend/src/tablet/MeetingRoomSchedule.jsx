@@ -12,7 +12,6 @@ const MeetingRoomSchedule = () => {
   const [bookData, setBookData] = useState([]);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [currentMeeting, setCurrentMeeting] = useState(null);
-  const [otherMeetings, setOtherMeetings] = useState([]);
   const [loading, setLoading] = useState(true); // Added loading state
 
   useEffect(() => {
@@ -25,14 +24,14 @@ const MeetingRoomSchedule = () => {
           "Content-Type": "application/json",
         };
 
-        const bookResponse = await Promise.all([
-          axios.get(`http://localhost:8800/api/book/`, { headers }),
-        ]);
+        const bookResponse = await axios.get(
+          `https://booking-system-e1fe.onrender.com/api/book/`,
+          { headers }
+        );
 
         if (bookResponse.status === 200) {
           setBookData(bookResponse.data);
         }
-        
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -44,7 +43,7 @@ const MeetingRoomSchedule = () => {
   }, []);
 
   useEffect(() => {
-    const timer = setInterval(() => setCurrentTime(new Date()), 60000);
+    const timer = setInterval(() => setCurrentTime(new Date()), 1000); // Update every second for real-time accuracy
     return () => clearInterval(timer);
   }, []);
 
@@ -61,7 +60,7 @@ const MeetingRoomSchedule = () => {
     };
 
     updateCurrentMeeting();
-    const meetingInterval = setInterval(updateCurrentMeeting, 60000);
+    const meetingInterval = setInterval(updateCurrentMeeting, 1000); // Update every second for real-time accuracy
     return () => clearInterval(meetingInterval);
   }, [bookData, currentTime]);
 
