@@ -3,6 +3,8 @@ import axios from "axios";
 import "./tablet.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Loader from "../assets/7.gif";
+import bgPalawan from "../assets/palawan2.jpg";
+import bgBoracay from "../assets/boracay2.jpg";
 import {
   faCalendarDay,
   faClock,
@@ -13,48 +15,89 @@ const MeetingRoomSchedule = () => {
   const [bookData, setBookData] = useState([]);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [currentMeeting, setCurrentMeeting] = useState(null);
-  const [loading, setLoading] = useState(true); // Added loading state
-  const [selectedRoom, setSelectedRoom] = useState(null); // State for selected room
-  const [roomSelected, setRoomSelected] = useState(false); // State to track if a room has been selected
+  const [loading, setLoading] = useState(true);
+  const [selectedRoom, setSelectedRoom] = useState(localStorage.getItem('selectedRoom'));
+  const [roomSelected, setRoomSelected] = useState(!!localStorage.getItem('selectedRoom'));
 
-  useEffect(() => {
-    if (selectedRoom) {
-      const fetchBookData = async () => {
-        setLoading(true); // Set loading to true when starting fetch
-        try {
-          const token = localStorage.getItem("authToken");
-          const headers = {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          };
-
-          const bookResponse = await axios.get(
-            `https://booking-system-ge1i.onrender.com/api/book/`,
-            { headers }
-          );
-
-          if (bookResponse.status === 200) {
-            const filteredData = bookResponse.data.filter(
-              (event) => event.roomName === selectedRoom && event.confirmation === true && event.title || event.roomName === "Palawan and Boracay"
-            );
-            setBookData(filteredData);
-          }
-        } catch (error) {
-          console.error("Error fetching data:", error);
-        } finally {
-          setLoading(false); // Set loading to false after fetch completes
-        }
+  // Fetch booking data
+  const fetchBookData = async () => {
+    setLoading(true);
+    try {
+      const token = localStorage.getItem("authToken");
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
       };
 
+      const bookResponse = await axios.get(
+        `https://booking-system-ge1i.onrender.com/api/book/`,
+        { headers }
+      );
+
+      if (bookResponse.status === 200) {
+        const filteredData = bookResponse.data.filter(
+          (event) => (event.roomName === selectedRoom && event.confirmation === true && event.title) || event.roomName === "Palawan and Boracay"
+        );
+        setBookData(filteredData);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Initial data fetch and subsequent updates based on selected room
+  useEffect(() => {
+    if (selectedRoom) {
       fetchBookData();
     }
-  }, [selectedRoom]); // Refetch data when selected room changes
+  }, [selectedRoom]);
 
+  // Update current time every second
   useEffect(() => {
-    const timer = setInterval(() => setCurrentTime(new Date()), 1000); // Update every second for real-time accuracy
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+
     return () => clearInterval(timer);
   }, []);
 
+  // Polling for booking data every 10 seconds
+  useEffect(() => {
+    const updateBookingData = async () => {
+      try {
+        const token = localStorage.getItem("authToken");
+        const headers = {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        };
+
+        const bookResponse = await axios.get(
+          `https://booking-system-ge1i.onrender.com/api/book/`,
+          { headers }
+        );
+
+        if (bookResponse.status === 200) {
+          const filteredData = bookResponse.data.filter(
+            (event) => (event.roomName === selectedRoom && event.confirmation === true && event.title) || event.roomName === "Palawan and Boracay"
+          );
+
+          if (JSON.stringify(filteredData) !== JSON.stringify(bookData)) {
+            setBookData(filteredData);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    const pollingInterval = setInterval(updateBookingData, 10000); // Polling every 10 seconds
+
+    return () => clearInterval(pollingInterval);
+  }, [bookData, selectedRoom]);
+
+  // Update current meeting based on time
   useEffect(() => {
     const updateCurrentMeeting = () => {
       const now = new Date();
@@ -68,7 +111,7 @@ const MeetingRoomSchedule = () => {
     };
 
     updateCurrentMeeting();
-    const meetingInterval = setInterval(updateCurrentMeeting, 1000); // Update every second for real-time accuracy
+    const meetingInterval = setInterval(updateCurrentMeeting, 1000);
     return () => clearInterval(meetingInterval);
   }, [bookData, currentTime]);
 
@@ -99,8 +142,7 @@ const MeetingRoomSchedule = () => {
       </p>
       <p>
         <FontAwesomeIcon icon={faUser} />{" "}
-        {`${meeting.user?.firstName || "Unknown"} ${meeting.user?.surName || "Unknown"
-          }`}
+        {`${meeting.user?.firstName || "Unknown"} ${meeting.user?.surName || "Unknown"}`}
       </p>
     </div>
   );
@@ -112,7 +154,7 @@ const MeetingRoomSchedule = () => {
       now.getMonth(),
       now.getDate()
     );
-    const todayEnd = new Date(todayStart.getTime() + 24 * 60 * 60 * 1000); // End of today
+    const todayEnd = new Date(todayStart.getTime() + 24 * 60 * 60 * 1000);
 
     const upcomingMeetings = bookData
       .filter((meeting) => {
@@ -124,7 +166,7 @@ const MeetingRoomSchedule = () => {
         );
       })
       .sort((a, b) => new Date(a.startTime) - new Date(b.startTime))
-      .slice(0, 4); // Limit to 4 upcoming meetings
+      .slice(0, 4);
     return upcomingMeetings.map(renderMeeting);
   };
 
@@ -135,11 +177,19 @@ const MeetingRoomSchedule = () => {
     });
   };
 
+  const handleRoomSelection = (room) => {
+    setSelectedRoom(room);
+    setRoomSelected(true);
+    localStorage.setItem('selectedRoom', room);
+  };
+
   const containerClassName = roomSelected
     ? currentMeeting
       ? "meeting-room-schedule in-use"
       : "meeting-room-schedule available"
     : "meeting-room-schedule default-state";
+
+  const backgroundImage = selectedRoom === "Palawan" ? bgPalawan : bgBoracay;
 
   return (
     <div className={containerClassName}>
@@ -147,19 +197,13 @@ const MeetingRoomSchedule = () => {
         <div className="subtle-room-selector">
           <button
             className={`room-button ${selectedRoom === "Palawan" ? "active" : ""}`}
-            onClick={() => {
-              setSelectedRoom("Palawan");
-              setRoomSelected(true);
-            }}
+            onClick={() => handleRoomSelection("Palawan")}
           >
             Palawan
           </button>
           <button
             className={`room-button ${selectedRoom === "Boracay" ? "active" : ""}`}
-            onClick={() => {
-              setSelectedRoom("Boracay");
-              setRoomSelected(true);
-            }}
+            onClick={() => handleRoomSelection("Boracay")}
           >
             Boracay
           </button>
@@ -171,7 +215,7 @@ const MeetingRoomSchedule = () => {
         </div>
       ) : (
         <>
-          <div className="first-column">
+          <div className="first-column" style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
             <div className="room-info">
               {currentMeeting ? (
                 <>
@@ -209,8 +253,7 @@ const MeetingRoomSchedule = () => {
                         <td>
                           <FontAwesomeIcon icon={faUser} />
                         </td>
-                        <td>{`${currentMeeting.user?.firstName || "Unknown"} ${currentMeeting.user?.surName || "Unknown"
-                          }`}</td>
+                        <td>{`${currentMeeting.user?.firstName || "Unknown"} ${currentMeeting.user?.surName || "Unknown"}`}</td>
                       </tr>
                     </tbody>
                   </table>
