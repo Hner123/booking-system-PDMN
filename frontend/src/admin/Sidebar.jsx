@@ -93,21 +93,21 @@ const Sidebar = () => {
   };
 
   return (
-    <div className={closeMenu ? "sidebar active" : "sidebar"}>
+    <div className={closeMenu ? "sidebar" : "sidebar active"}>
       <div className="logodbs">
         <img src={logo} alt="Logo" />
       </div>
       <div className="logodbss">
         <img src={logosmall} alt="Logo" />
       </div>
-      <div className={closeMenu ? "Contain active" : "Contain"} onClick={toggleCloseMenu}>
+      <div className={closeMenu ? "Contain" : "Contain active"} onClick={toggleCloseMenu}>
         <div className="ContTrigger"></div>
         <div className="ContMenu"></div>
       </div>
-      <div className={closeMenu ? "profileDetail active" : "profileDetail"}>
+      <div className={closeMenu ? "profileDetail" : "profileDetail active"}>
         <h2 style={{ margin: "0" }}>{userData && userData.adminUser}</h2>
       </div>
-      <div className={closeMenu ? "menuContainer active" : "menuContainer"}>
+      <div className={closeMenu ? "menuContainer" : "menuContainer active"}>
         <ul>
           <p className="hed">Admin Menu</p>
           <div className="line" />

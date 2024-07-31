@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation, UNSAFE_NavigationContext as NavigationContext } from "react-router-dom";
 import * as FaIcons from "react-icons/fa";
 import logo from "../../assets/logos/GDSLogo.png";
 import profile from "../../assets/Default Avatar.png";
@@ -7,6 +7,7 @@ import "./Header.css";
 import axios from "axios";
 import WithAuth from '../../auth/WithAuth';
 import io from 'socket.io-client';
+// import Modal from "./Modal";
 
 const ENDPOINT = 'https://booking-system-ge1i.onrender.com';
 let socket;
@@ -16,6 +17,7 @@ const Header = () => {
   const [isNotifOpen, setNotifOpen] = useState(false);
   const [isMenuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const profileModalRef = useRef(null);
   const notifModalRef = useRef(null);
 
@@ -95,6 +97,45 @@ const Header = () => {
     };
   }, []);
 
+  useEffect(() => {
+    // Log the current path when the component mounts
+    console.log("Current Path:", location.pathname);
+    if(location.pathname === "/reserve")
+      console.log("eyyy")
+  }, [location]);
+
+  // const [prevLocation, setPrevLocation] = useState(location.pathname);
+  // useEffect(() => {
+  //   const currentPath = location.pathname;
+  //   if (currentPath !== prevLocation) {
+  //     console.log(`Navigated from ${prevLocation} to ${currentPath}`);
+  //     setPrevLocation(currentPath); // Update previous location
+  //   }
+  // }, [location, prevLocation]);
+
+  // const [prevLocation, setPrevLocation] = useState(location.pathname);
+  // const [nextLocation, setNextLocation] = useState(null);
+  // const [showModal, setShowModal] = useState(false);
+
+  // useEffect(() => {
+  //   const currentPath = location.pathname;
+  //   if (prevLocation === '/reserve' && currentPath !== '/reserve' && !showModal) {
+  //     setNextLocation(currentPath);
+  //     setShowModal(true);
+  //     navigate(prevLocation); // Revert back to the reserve page
+  //   }
+  // }, [location, prevLocation, showModal, navigate]);
+
+  // const handleConfirm = () => {
+  //   setShowModal(false);
+  //   setPrevLocation(nextLocation); // Confirm the navigation
+  // };
+
+  // const handleCancel = () => {
+  //   setShowModal(false);
+  //   navigate(prevLocation); // Stay on the current page
+  // };
+
   const handleModalToggle = () => {
     setProfileOpen(!isProfileOpen);
     setNotifOpen(false);
@@ -138,6 +179,12 @@ const Header = () => {
         <span className="tooltip-text">Home</span>
         <img src={logo} alt="Logo" />
       </div>
+
+      {/* <Modal
+        show={showModal}
+        onConfirm={handleConfirm}
+        onCancel={handleCancel}
+      /> */}
 
       <div className="header-actions">
         <div className="user-list-icon" onClick={navigateUserList}>

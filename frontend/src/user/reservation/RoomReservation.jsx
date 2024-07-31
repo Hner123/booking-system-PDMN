@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "../../user/reservation/CustomBigCalendar.scss";
-import WithoutAuthReserve from "../../auth/WithAuthReserve";
+import WithAuthReserve from "../../auth/WithAuthReserve";
 
 const RoomReservation = () => {
   const localizer = momentLocalizer(moment);
@@ -246,7 +246,7 @@ const RoomReservation = () => {
         { headers }
       );
 
-      if (updateResponse.status === 201) {
+      if (updateResponse.status === 200) {
         navigate("/reserveform");
       }
     } catch (error) {
@@ -318,14 +318,19 @@ const RoomReservation = () => {
     setExpandedEvent(event);
   };
 
-  const closeEventDetails = () => {
-    setExpandedEvent(null);
+  const handleConfirm = () => {
+    setShowModal(false);
+    setPrevLocation(nextLocation); // Confirm the navigation
+  };
+
+  const handleCancel = () => {
+    setShowModal(false);
+    navigate(prevLocation); // Stay on the current page
   };
 
   return (
     <div className="room-reservation-container">
       <ToastContainer />
-
       <h1>Reserve Room</h1>
       <div className="main-container">
         <div className="rsrv-column">
@@ -538,4 +543,4 @@ const RoomReservation = () => {
   );
 };
 
-export default WithoutAuthReserve(RoomReservation);
+export default WithAuthReserve(RoomReservation);

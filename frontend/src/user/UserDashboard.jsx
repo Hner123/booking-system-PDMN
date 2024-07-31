@@ -127,7 +127,7 @@ const Dashboard = () => {
         department: book.user.department,
         pax: book.caps.pax,
         agenda: book.agenda,
-        dateTime: new Date(book.scheduleDate + ' ' + book.startTime),
+        dateTime: new Date(book.scheduleDate),
       }))
       .sort((a, b) => a.dateTime - b.dateTime); 
   
@@ -164,7 +164,7 @@ const Dashboard = () => {
         pax: book.caps.pax,
         agenda: book.agenda,
        
-        dateTime: new Date(book.scheduleDate + ' ' + book.startTime),
+        dateTime: new Date(book.scheduleDate),
       }))
       .sort((a, b) => a.dateTime - b.dateTime); 
   

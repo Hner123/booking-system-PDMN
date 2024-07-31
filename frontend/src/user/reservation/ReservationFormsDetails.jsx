@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import roomBg from "../../assets/palawan.jpg";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
-import WithoutAuthReserve from "../../auth/WithAuthReserve";
+import WithAuthReserve from "../../auth/WithAuthReserve";
 
 const ReservationFormsDetails = () => {
   const formRef = useRef();
@@ -280,7 +280,7 @@ const ReservationFormsDetails = () => {
         { headers }
       );
 
-      if (updateResponse.status === 201) {
+      if (updateResponse.status === 200) {
         toast.success("Reservation successfully updated.");
         navigate("/confirmation");
       }
@@ -558,4 +558,4 @@ const ReservationFormsDetails = () => {
   );
 };
 
-export default WithoutAuthReserve(ReservationFormsDetails);
+export default WithAuthReserve(ReservationFormsDetails);

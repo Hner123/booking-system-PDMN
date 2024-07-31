@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import WithAuth from "../../auth/WithAuth";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
-import bcrypt from "bcryptjs";
 
 const Settings = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -23,7 +22,6 @@ const Settings = () => {
   const [disabled2, setDisabled2] = useState(false);
 
   const userId = localStorage.getItem("userId");
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -40,15 +38,18 @@ const Settings = () => {
         if (response.status === 200) {
           setUserData(response.data);
           setFormData({
-            email: response.data.email,
-            department: response.data.department
+            email: response.data.email || "",
+            department: response.data.department || "",
+            currPass: "",
+            passWord: "",
+            retype: ""
           });
         }
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
     };
-
+  
     fetchUser();
   }, [userId]);
 
@@ -167,8 +168,8 @@ const Settings = () => {
       if (updateResponse.status === 201) {
         setUserData(updateResponse.data);
         setFormData({
-          email: updateResponse.data.email,
-          department: updateResponse.data.department,
+          email: response.data.email || "",
+          department: response.data.department || "",
           currPass: "",
           passWord: "",
           retype: ""
@@ -357,41 +358,3 @@ const Settings = () => {
 };
 
 export default WithAuth(Settings);
-
-{/* <form>
-            <div className="editdetails">
-              <div className="formGroup1">
-                <label htmlFor="department">
-                  Change Department / Company:
-                </label>
-                <select
-                  id="department"
-                  name="department"
-                  value={formData.department}
-                  onChange={handleChange}
-                  disabled={!editingDepartment} // Disable if not editing
-                >
-                  <option value="">Select Department</option>
-                  <option value="Philippine Dragon Media Network">
-                    Philippine Dragon Media Network
-                  </option>
-                  <option value="GDS Travel Agency">GDS Travel Agency</option>
-                  <option value="FEILONG Legal">FEILONG Legal</option>
-                  <option value="STARLIGHT">STARLIGHT</option>
-                  <option value="BIG VISION PRODS.">BIG VISION PRODS.</option>
-                  <option value="SuperNova">SuperNova</option>
-                  <option value="ClearPath">ClearPath</option>
-                  <option value="Dragon AI">Dragon AI</option>
-                </select>
-              </div>
-              {!editingDepartment ? (
-                <button className="edit_userdept" onClick={handleEditDepartment}>
-                  Edit
-                </button>
-              ) : (
-                <button className="save_userdept" onClick={handleSaveDepartment}>
-                  Save
-                </button>
-              )}
-            </div>
-          </form> */}
