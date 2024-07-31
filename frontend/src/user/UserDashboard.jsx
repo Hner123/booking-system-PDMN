@@ -23,12 +23,13 @@ const Dashboard = () => {
   const [selectedMeeting, setSelectedMeeting] = useState(null);
   const [showMyReservations, setShowMyReservations] = useState(true);
   const [showOtherMeetings, setShowOtherMeetings] = useState(true);
-  const [firstLogin, setFirstLogin] = useState(false); // Track first login state
-  const [showConfirmModal, setShowConfirmModal] = useState(false); // Confirmation modal state
-  const [meetingToDelete, setMeetingToDelete] = useState(null); // Meeting to delete
-  const [showDiscardModal, setShowDiscardModal] = useState(false); // Discard modal state
+  const [firstLogin, setFirstLogin] = useState(false); 
+  const [showConfirmModal, setShowConfirmModal] = useState(false); 
+  const [meetingToDelete, setMeetingToDelete] = useState(null); 
+
   const formRef = useRef();
   const userId = localStorage.getItem("userId");
+  
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -41,7 +42,6 @@ const Dashboard = () => {
   const [userData, setUsers] = useState(null);
   const [bookData, setBookData] = useState([]);
   const [roomData, setRoomName] = useState("");
-  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -111,7 +111,7 @@ const Dashboard = () => {
         id: book._id,
         title: book.title,
         status: book.confirmation ? "Approved" : "Pending",
-        date: new Date(book.scheduleDate).toLocaleDateString(),
+        date: new Date(book.scheduleDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
         time: `${new Date(book.startTime).toLocaleTimeString([], {
           hour: "2-digit",
           minute: "2-digit",
@@ -127,7 +127,10 @@ const Dashboard = () => {
         department: book.user.department,
         pax: book.caps.pax,
         agenda: book.agenda,
-      }));
+        dateTime: new Date(book.scheduleDate + ' ' + book.startTime),
+      }))
+      .sort((a, b) => a.dateTime - b.dateTime); 
+  
     setReservations(initialReservations);
 
     const now = new Date();
@@ -138,13 +141,14 @@ const Dashboard = () => {
           book.title &&
           book.scheduleDate !== null &&
           book.startTime !== null &&
-          new Date(book.scheduleDate) >= now // Filter out past meetings
+          new Date(book.scheduleDate) >= now 
       )
       .map((book) => ({
         id: book._id,
         title: book.title,
         status: book.confirmation ? "Approved" : "Pending",
-        date: new Date(book.scheduleDate).toLocaleDateString(),
+        status: book.confirmation ? "Approved" : "Pending",
+        date: new Date(book.scheduleDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
         time: `${new Date(book.startTime).toLocaleTimeString([], {
           hour: "2-digit",
           minute: "2-digit",
@@ -160,7 +164,11 @@ const Dashboard = () => {
         department: book.user.department,
         pax: book.caps.pax,
         agenda: book.agenda,
-      }));
+       
+        dateTime: new Date(book.scheduleDate + ' ' + book.startTime),
+      }))
+      .sort((a, b) => a.dateTime - b.dateTime); 
+  
     setOtherMeetings(initialOtherMeetings);
   }, [bookData]);
 
