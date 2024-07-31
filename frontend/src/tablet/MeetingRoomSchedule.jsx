@@ -3,7 +3,8 @@ import axios from "axios";
 import "./tablet.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Loader from "../assets/7.gif";
-import bg from "../assets/roombg.jpg"
+import bgPalawan from "../assets/palawan2.jpg"; // Importing a new background image for Palawan
+import bgBoracay from "../assets/boracay2.jpg"; // Importing a new background image for Boracay
 import {
   faCalendarDay,
   faClock,
@@ -152,6 +153,9 @@ const MeetingRoomSchedule = () => {
       : "meeting-room-schedule available"
     : "meeting-room-schedule default-state";
 
+  // Select the background image based on the selected room
+  const backgroundImage = selectedRoom === "Palawan" ? bgPalawan : bgBoracay;
+
   return (
     <div className={containerClassName}>
       {!roomSelected && (
@@ -176,7 +180,7 @@ const MeetingRoomSchedule = () => {
         </div>
       ) : (
         <>
-         <div className="first-column" style={{ backgroundImage: `url(${bg})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
+          <div className="first-column" style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
             <div className="room-info">
               {currentMeeting ? (
                 <>

@@ -1,5 +1,5 @@
 import React from 'react';
-import roomBg from '../assets/roombg.jpg';
+import roomBg from '../assets/palawan2.jpg';
 import { useNavigate } from 'react-router-dom';
 
 const ApprovalRoom = () => {

@@ -281,16 +281,16 @@
   padding: 10px 20px;
   font-size: 16px;
   cursor: pointer;
-  border: 2px solid #007bff;
+  border: 2px solid #ff0800;
   border-radius: 5px;
   background-color: white;
-  color: #007bff;
+  color: #ff0800;
   transition: background-color 0.3s, color 0.3s;
 }
 
 .room-button.active,
 .room-button:hover {
-  background-color: #007bff;
+  background-color: #ff0800;
   color: white;
 }
 

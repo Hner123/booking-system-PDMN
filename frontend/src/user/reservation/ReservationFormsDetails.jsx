@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Autosuggest from "react-autosuggest";
 import { useNavigate } from "react-router-dom";
-import roomBg from "../../assets/roombg.jpg";
+import roomBg from "../../assets/palawan.jpg";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import WithoutAuthReserve from "../../auth/WithAuthReserve";

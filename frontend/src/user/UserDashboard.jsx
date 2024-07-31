@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import roomBg from "../assets/roombg.jpg";
 import palawanImage from "../assets/palawan.jpg";
 import boracayImage from "../assets/boracay.jpg";
 import palawanBoracayImage from "../assets/both.jpg";

@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef} from "react";
 import { useNavigate } from "react-router-dom";
-import * as FaIcons from "react-icons/fa";
-import logo from "../../assets/logos/GDSLogo.png";
-import roomBg from "../../assets/roombg.jpg";
+import roomBg from "../../assets/palawan2.jpg";
 import axios from "axios";
 import { ToastContainer } from "react-toastify";
 
