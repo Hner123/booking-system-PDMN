@@ -11,7 +11,7 @@ const ApprovalBoth = () => {
   const [formData, setFormData] = useState({
     approval: {
       archive: false,
-      status: false,
+      status: "",
       reason: "",
     },
   });
@@ -63,16 +63,17 @@ const ApprovalBoth = () => {
     const endTime = new Date(booking.endTime);
     const duration = (endTime - startTime) / (1000 * 60 * 60); // Duration in hours
 
-    if (duration > 1 && booking.caps.pax === "1-2") {
-      return "Reservation is for more than 1 hour and only 1-2 people.";
+    if (duration > 1 && booking.caps.pax === "8-More") {
+      return "Reservation is for more than 1 hour and requires both rooms.";
     } else if (duration > 1) {
       return "Reservation is for more than 1 hour.";
-    } else if (booking.caps.pax === "1-2") {
-      return "Reservation is for only 1-2 people.";
+    } else if (booking.caps.pax === "8-More") {
+      return "Reservation is for both rooms.";
     } else {
       return booking.reason || "No specific reason provided.";
     }
   };
+
 
   const cancelReject = () => {
     setRejectModal(false);
@@ -97,9 +98,10 @@ const ApprovalBoth = () => {
 
     const updatedReserve = {
       ...selectedBooking,
+      confirmation: true,
       approval: {
         archive: true,
-        status: true,
+        status: "Approved",
         reason: "",
       },
     };
@@ -131,7 +133,8 @@ const ApprovalBoth = () => {
           );
 
           if (emailResponse.status === 201) {
-            const messageContent = `Your reservation ${updateResponse.data.title} on ${updateResponse.data.user.scheduleDate} has been approved`
+            const date = new Date(updateResponse.data.user.scheduleDate).toLocaleDateString();
+            const messageContent = `Your reservation ${updateResponse.data.title} on ${date} has been approved`
             const notifData = {
               booking: updateResponse.data._id,
               message: messageContent,
@@ -139,6 +142,7 @@ const ApprovalBoth = () => {
               senderType: "admin",
               receiver: updateResponse.data.user._id,
               receiverType: "user",
+              createdAt: new Date().toISOString(),
             };
 
             try {
@@ -180,9 +184,10 @@ const ApprovalBoth = () => {
 
     const updatedReserve = {
       ...selectedBooking,
+      confirmation: false,
       approval: {
         archive: true,
-        status: false,
+        status: "Declined",
         reason: formData.approval.reason,
       },
     };
@@ -214,7 +219,8 @@ const ApprovalBoth = () => {
           );
 
           if (emailResponse.status === 201) {
-            const messageContent = `Your reservation ${updateResponse.data.title} on ${updateResponse.data.user.scheduleDate} has been rejected`
+            const date = new Date(updateResponse.data.user.scheduleDate).toLocaleDateString();
+            const messageContent = `Your reservation ${updateResponse.data.title} on ${date} has been rejected`
             const notifData = {
               booking: updateResponse.data._id,
               message: messageContent,
@@ -222,6 +228,7 @@ const ApprovalBoth = () => {
               senderType: "admin",
               receiver: updateResponse.data.user._id,
               receiverType: "user",
+              createdAt: new Date().toISOString(),
             };
 
             try {
@@ -260,47 +267,48 @@ const ApprovalBoth = () => {
   return (
     <div className='listCont1'>
       <ToastContainer />
-      <h1>For Approval - <br/> PALAWAN AND BORACAY ROOM</h1>
+      <h1>For Approval - <br /> PALAWAN AND BORACAY ROOM</h1>
       <div className='approvalGroup'>
-        {bookData
-          .filter(
-            (book) =>
-              book.title &&
-              book.scheduleDate !== null &&
-              book.startTime !== null
-          )
-          .sort((a, b) => new Date(a.startTime) - new Date(b.startTime)) // Sorting by startTime from earliest to latest
-          .map((booking, index) => (
-            <div className='approvalMeets' key={index}>
-              <div className='approvalDeets'>
-                <h2>Meeting With Client</h2>
-                <p>Title: {booking.title}</p>
-                <p>Date and Time: {new Date(booking.startTime).toLocaleString()} - {new Date(booking.endTime).toLocaleString()}</p>
-                <p>Reserved By: {booking.user.firstName} {booking.user.surName}</p>
-                {booking.attendees && booking.attendees.length > 0 && (
-                  <p>Members: {booking.attendees.join(', ')}</p>
-                )}
-                {booking.guest && booking.guest.length > 0 && (
-                  <p>Guests: {booking.guest.join(', ')}</p>
-                )}
-                <hr />
-                <p>
-                  Reason: {calculateReason(booking)}
-                  {booking.caps.reason && ` ${booking.caps.reason}.`}
-                  {booking.agenda && (
-                    <>
-                      <br />
-                      Agenda: {booking.agenda}.
-                    </>
+        {Array.isArray(bookData) &&
+          bookData
+            .filter(
+              (book) =>
+                book.title &&
+                book.scheduleDate !== null &&
+                book.startTime !== null
+            )
+            .sort((a, b) => new Date(a.startTime) - new Date(b.startTime)) // Sorting by startTime from earliest to latest
+            .map((booking, index) => (
+              <div className='approvalMeets' key={index}>
+                <div className='approvalDeets'>
+                  <h2>Meeting With Client</h2>
+                  <p>Title: {booking.title}</p>
+                  <p>Date and Time: {new Date(booking.startTime).toLocaleString()} - {new Date(booking.endTime).toLocaleString()}</p>
+                  <p>Reserved By: {booking.user.firstName} {booking.user.surName}</p>
+                  {booking.attendees && booking.attendees.length > 0 && (
+                    <p>Members: {booking.attendees.join(', ')}</p>
                   )}
-                </p>
-                <div className='approvalGrp'>
-                  <button type='not-appr' onClick={() => handleReject(booking)}>Reject</button>
-                  <button type='appr' onClick={() => handleApprove(booking)}>Approve</button>
+                  {booking.guest && booking.guest.length > 0 && (
+                    <p>Guests: {booking.guest.join(', ')}</p>
+                  )}
+                  <hr />
+                  <p>
+                    Reason: {calculateReason(booking)}
+                    {booking.caps.reason && ` ${booking.caps.reason}.`}
+                    {booking.agenda && (
+                      <>
+                        <br />
+                        Agenda: {booking.agenda}.
+                      </>
+                    )}
+                  </p>
+                  <div className='approvalGrp'>
+                    <button type='not-appr' onClick={() => handleReject(booking)}>Reject</button>
+                    <button type='appr' onClick={() => handleApprove(booking)}>Approve</button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
       </div>
 
       {rejectModal && (

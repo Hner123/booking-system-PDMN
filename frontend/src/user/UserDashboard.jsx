@@ -111,7 +111,7 @@ const Dashboard = () => {
       .map((book) => ({
         id: book._id,
         title: book.title,
-        status: book.confirmation ? "Approved" : "Pending",
+        status: book.approval.status,
         date: new Date(book.scheduleDate).toLocaleDateString(),
         time: `${new Date(book.startTime).toLocaleTimeString([], {
           hour: "2-digit",
@@ -138,13 +138,12 @@ const Dashboard = () => {
           book.user._id !== userId &&
           book.title &&
           book.scheduleDate !== null &&
-          book.startTime !== null &&
-          new Date(book.scheduleDate) >= now // Filter out past meetings
+          book.startTime !== null
       )
       .map((book) => ({
         id: book._id,
         title: book.title,
-        status: book.confirmation ? "Approved" : "Pending",
+        status: book.approval.status,
         date: new Date(book.scheduleDate).toLocaleDateString(),
         time: `${new Date(book.startTime).toLocaleTimeString([], {
           hour: "2-digit",
@@ -264,7 +263,7 @@ const Dashboard = () => {
     ],
     []
   );
-  
+
 
   const otherMeetingsColumns = React.useMemo(
     () => [
@@ -316,7 +315,6 @@ const Dashboard = () => {
       formData.department.trim() === ""
     ) {
       toast.error("No spaces");
-      console.log(formData);
       return;
     }
 

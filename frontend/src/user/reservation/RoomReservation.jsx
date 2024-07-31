@@ -1,4 +1,4 @@
-import React, { useState,useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import moment from "moment";
 import "./RoomReservation.css";
 import DatePicker from "react-datepicker";
@@ -58,9 +58,7 @@ const RoomReservation = () => {
 
         const response = await axios.get(
           `https://booking-system-ge1i.onrender.com/api/book/${reserveToken}`,
-          {
-            headers,
-          }
+          { headers }
         );
         if (response.status === 200) {
           setOrigData(response.data);
@@ -88,9 +86,14 @@ const RoomReservation = () => {
 
         if (response.status === 200) {
           if (origData && origData.roomName) {
-            const filteredData = response.data.filter(
-              (event) => event.roomName === origData.roomName
-            );
+            let filteredData = response.data;
+
+            if (origData.roomName !== "Palawan and Boracay") {
+              filteredData = response.data.filter(
+                (event) => event.roomName === origData.roomName && event.approval.status !== "Declined" || event.roomName === "Palawan and Boracay" 
+              );
+            }
+
             const fetchedEvents = filteredData.map((event) => ({
               id: event._id,
               start: new Date(event.startTime),
@@ -99,7 +102,9 @@ const RoomReservation = () => {
               agenda: event.agenda,
               status: event.confirmation,
               department: event.user.department,
+              room: event.roomName
             }));
+
             setEvents(fetchedEvents);
             setBookData(filteredData);
           } else {
@@ -170,33 +175,24 @@ const RoomReservation = () => {
       e.preventDefault();
     }
 
-    if (
-      !agenda &&
-      moment.duration(moment(endTime).diff(moment(startTime))).asHours() > 1
-    ) {
-      setFeedbackMessage(
-        "Please provide an agenda for meetings longer than 1 hour."
-      );
+    if (!agenda && moment.duration(moment(endTime).diff(moment(startTime))).asHours() > 1) {
+      setFeedbackMessage("Please provide an agenda for meetings longer than 1 hour.");
       return;
     }
 
-    const startDateTime = moment(startDate)
-      .set({
-        hour: startTime.hour(),
-        minute: startTime.minute(),
-        second: 0,
-        millisecond: 0,
-      })
-      .toDate();
-
-    const endDateTime = moment(startDate)
-      .set({
-        hour: endTime.hour(),
-        minute: endTime.minute(),
-        second: 0,
-        millisecond: 0,
-      })
-      .toDate();
+    const startDateTime = moment(startDate).set({
+      hour: startTime.hour(),
+      minute: startTime.minute(),
+      second: 0,
+      millisecond: 0,
+    }).toDate();
+  
+    const endDateTime = moment(startDate).set({
+      hour: endTime.hour(),
+      minute: endTime.minute(),
+      second: 0,
+      millisecond: 0,
+    }).toDate();
 
     const newEvent = {
       start: startDateTime,
@@ -211,6 +207,13 @@ const RoomReservation = () => {
     setAgenda("");
     setFeedbackMessage("Appointment request submitted for approval.");
 
+    let confirmationStatus;
+    if (!agenda) {
+      confirmationStatus = origData.roomName === "Palawan and Boracay" ? false : true;
+    } else {
+      confirmationStatus = false;
+    }
+
     const reserveData = {
       scheduleDate: moment(startDate).format("YYYY-MM-DD"),
       startTime: startDateTime.toISOString(),
@@ -222,12 +225,12 @@ const RoomReservation = () => {
       },
       approval: {
         archive: false,
-        status: false,
+        status: "Pending",
         reason: "",
       },
-      confirmation: agenda ? false : true,
+      confirmation: confirmationStatus,
     };
-
+  
     try {
       const reserveId = localStorage.getItem("reserveToken");
       const token = localStorage.getItem("authToken");
@@ -242,6 +245,7 @@ const RoomReservation = () => {
         reserveData,
         { headers }
       );
+
       if (updateResponse.status === 201) {
         navigate("/reserveform");
       }
@@ -317,26 +321,6 @@ const RoomReservation = () => {
   const closeEventDetails = () => {
     setExpandedEvent(null);
   };
-  useEffect(() => {
-    const handleBeforeUnload = (event) => {
-      if (feedbackMessage) {
-        console.log("Before unload triggered"); // Log to verify event is being called
-        const message = "You have unsaved changes. Are you sure you want to leave?";
-        event.preventDefault(); // For most browsers
-        event.returnValue = message; // For older browsers
-        return message; // For compatibility
-      }
-    };
-  
-    console.log("Adding beforeunload event listener"); // Log to verify attachment
-    window.addEventListener("beforeunload", handleBeforeUnload);
-  
-    return () => {
-      console.log("Removing beforeunload event listener"); // Log to verify removal
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
-  }, [feedbackMessage]);
-  
 
   return (
     <div className="room-reservation-container">
@@ -502,28 +486,31 @@ const RoomReservation = () => {
         <div className="expanded-event-modal">
           <div className="expanded-event-content">
 
-                <h2>{expandedEvent.title}</h2>
-                <p>
-                  <strong>Start Time:</strong>{" "}
-                  {moment(expandedEvent.start).format("MMMM D, YYYY h:mm A")}
-                </p>
-                <p>
-                  <strong>End Time:</strong>{" "}
-                  {moment(expandedEvent.end).format("MMMM D, YYYY h:mm A")}
-                </p>
-                <p>
-                  <strong>Department:</strong> {expandedEvent.department}
-                </p>
-                <div className="closetab">
-                  <button
-                    className="close-btn"
-                    onClick={() => setExpandedEvent(null)}
-                  >
-                    &times;
-                  </button>
-                </div>
-              </div>
+            <h2>{expandedEvent.title}</h2>
+            <p>
+              <strong>Room:</strong> {expandedEvent.room}
+            </p>
+            <p>
+              <strong>Start Time:</strong>{" "}
+              {moment(expandedEvent.start).format("MMMM D, YYYY h:mm A")}
+            </p>
+            <p>
+              <strong>End Time:</strong>{" "}
+              {moment(expandedEvent.end).format("MMMM D, YYYY h:mm A")}
+            </p>
+            <p>
+              <strong>Department:</strong> {expandedEvent.department}
+            </p>
+            <div className="closetab">
+              <button
+                className="close-btn"
+                onClick={() => setExpandedEvent(null)}
+              >
+                &times;
+              </button>
             </div>
+          </div>
+        </div>
 
       )}
 

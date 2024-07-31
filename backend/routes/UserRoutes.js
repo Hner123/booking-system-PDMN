@@ -1,20 +1,19 @@
 const express = require("express");
 const router = express.Router();
 const upload = require("../config/Multer.js");
-const requireAuth = require('../utils/requireAuth')
+const requireAuth = require("../utils/requireAuth");
 
 const {
-  GetAllUsersWithAuth,
-  GetSpecificUserWithAuth,
-  CreateUser,
-  EditUserWithAuth,
-  DeleteUserWithAuth,
-
   GetAllUsers,
   GetSpecificUser,
+  CreateUser,
   EditUser,
   DeleteUser,
 
+  GetAllUsersWithAuth,
+  GetSpecificUserWithAuth,
+  EditUserWithAuth,
+  DeleteUserWithAuth
 } = require("../controllers/UserController.js");
 
 router.post("/create", CreateUser);

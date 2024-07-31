@@ -4,13 +4,13 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
-  firstName:{
+  firstName: {
     type: String,
-    default: ""
+    default: "",
   },
   surName: {
     type: String,
-    default: ""
+    default: "",
   },
   userName: {
     type: String,
@@ -34,8 +34,7 @@ const UserSchema = new Schema({
   resetPass: {
     type: Boolean,
     default: false,
-  }
-  
+  },
 });
 
 module.exports = mongoose.model("user", UserSchema);

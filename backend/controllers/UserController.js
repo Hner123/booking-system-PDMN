@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
 const UserModel = require("../models/UserModel");
-const bcrypt = require("bcryptjs")
+const bcrypt = require("bcryptjs");
 const DriveService = require("../utils/DriveService");
 const jwt = require("jsonwebtoken");
-const requireAuth = require("../utils/requireAuth")
+const requireAuth = require("../utils/requireAuth");
 
 const GetAllUsers = async (req, res) => {
   try {
@@ -24,7 +24,7 @@ const GetSpecificUser = async (req, res) => {
     }
 
     const result = await UserModel.findById(id);
-    
+
     if (!result) {
       return res.status(404).json("User not found");
     }
@@ -35,12 +35,11 @@ const GetSpecificUser = async (req, res) => {
   }
 };
 
-
 const CreateUser = async (req, res) => {
   try {
-    const user = req.body
+    const user = req.body;
 
-    const hashPassWord = await bcrypt.hash(user.passWord, 13)
+    const hashPassWord = await bcrypt.hash(user.passWord, 13);
 
     const result = await UserModel.create({
       firstName: user.firstName,
@@ -49,7 +48,7 @@ const CreateUser = async (req, res) => {
       passWord: hashPassWord,
       email: user.email,
       department: user.department,
-      resetPass: false
+      resetPass: false,
     });
 
     // const emailToken = jwt.sign(
@@ -91,7 +90,7 @@ const EditUser = async (req, res) => {
         passWord: hashPassWord,
         email: user.email,
         department: user.department,
-        resetPass: user.resetPass
+        resetPass: user.resetPass,
       },
     };
 
@@ -107,20 +106,20 @@ const EditUser = async (req, res) => {
 const DeleteUser = async (req, res) => {
   try {
     const { id } = req.params;
-  
+
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json("No user listed");
     }
-  
+
     const user = await UserModel.findById(id);
-  
+
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
     // Delete the user document from the database
     const result = await UserModel.findByIdAndDelete(id);
-  
+
     res.status(200).json(result);
   } catch (err) {
     res.send(err.message);

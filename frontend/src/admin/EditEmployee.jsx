@@ -18,8 +18,6 @@ const EditAdmin=()=>{
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        console.log('Submitted values:', email, newDepartment, password);
-        // Further logic for form submission (e.g., API calls)
     };
 
     const togglePasswordVisibility = () => {

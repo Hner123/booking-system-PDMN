@@ -5,38 +5,38 @@ const Schema = mongoose.Schema;
 const NotifSchema = new Schema({
   booking: {
     type: Schema.Types.ObjectId,
-    ref: "reserve"
+    ref: "reserve",
   },
-  message:{
+  message: {
     type: String,
-    default: ""
+    default: "",
   },
   sender: {
     type: Schema.Types.ObjectId,
-    refPath: 'senderType'
+    refPath: "senderType",
   },
   senderType: {
     type: String,
     required: true,
-    enum: ['user', 'admin']
+    enum: ["user", "admin"],
   },
   receiver: {
     type: Schema.Types.ObjectId,
-    refPath: 'receiverType'
+    refPath: "receiverType",
   },
   receiverType: {
     type: String,
     required: true,
-    enum: ['user', 'admin']
+    enum: ["user", "admin"],
   },
   read: {
     type: Boolean,
-    default: false
+    default: false,
   },
   createdAt: {
     type: Date,
-    default: Date.now
-  }
+    default: Date.now,
+  },
 });
 
 module.exports = mongoose.model("notif", NotifSchema);

@@ -1,9 +1,9 @@
-const dotenv = require('dotenv');
-const express = require('express');
-const cors = require('cors');
-const http = require('http');
+const dotenv = require("dotenv");
+const express = require("express");
+const cors = require("cors");
+const http = require("http");
 const ConnectDB = require("./config/Database");
-const { initializeSocket } = require('./config/Socket');
+const { initializeSocket } = require("./config/Socket");
 
 const UserRoutes = require("./routes/UserRoutes");
 const AdminRoutes = require("./routes/AdminRoutes");
@@ -39,14 +39,14 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/api/user', UserRoutes);
-app.use('/api/admin', AdminRoutes);
-app.use('/api/book', ReserveRoutes);
-app.use('/api/auth', ValidateRoutes);
-app.use('/api/notif', NotifRoutes);
+app.use("/api/user", UserRoutes);
+app.use("/api/admin", AdminRoutes);
+app.use("/api/book", ReserveRoutes);
+app.use("/api/auth", ValidateRoutes);
+app.use("/api/notif", NotifRoutes);
 
 const io = initializeSocket(server);
-app.set('socketio', io);
+app.set("socketio", io);
 
 server.listen(process.env.PORT, () =>
   console.log(`Server started on port ${process.env.PORT}`)

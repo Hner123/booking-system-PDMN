@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef} from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import * as FaIcons from "react-icons/fa";
 import logo from "../../assets/logos/GDSLogo.png";
@@ -56,128 +56,9 @@ const BookingConfirmation = () => {
 
   const isConfirmed = bookData.confirmation === true;
 
-  //header
-  const [isProfileOpen, setProfileOpen] = useState(false);
-  const [isNotifOpen, setNotifOpen] = useState(false);
-  const [isMenuOpen, setMenuOpen] = useState(false);
-  const [notifications, setNotifications] = useState([]);
-  const profileModalRef = useRef(null);
-  const notifModalRef = useRef(null);
-
-  const [userData, setUsers] = useState(null);
-
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const userId = localStorage.getItem("userId");
-        const token = localStorage.getItem("authToken");
-        const headers = {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        };
-
-        const response = await axios.get(
-          `https://booking-system-ge1i.onrender.com/api/user/${userId}`,
-          { headers }
-        );
-        if (response.status === 200) {
-          setUsers(response.data);
-        }
-      } catch (error) {
-        console.error("Error fetching users:", error);
-      }
-    };
-
-    fetchUsers();
-  }, []);
-
-  useEffect(() => {
-    const handleOutsideClick = (event) => {
-      if (
-        profileModalRef.current &&
-        !profileModalRef.current.contains(event.target)
-      ) {
-        setProfileOpen(false);
-      }
-      if (
-        notifModalRef.current &&
-        !notifModalRef.current.contains(event.target)
-      ) {
-        setNotifOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleOutsideClick);
-
-    return () => {
-      document.removeEventListener("mousedown", handleOutsideClick);
-    };
-  }, []);
-
-  const handleModalToggle = () => {
-    setProfileOpen(!isProfileOpen);
-    setNotifOpen(false);
-  };
-
-  const handleNotifToggle = () => {
-    setNotifOpen(!isNotifOpen);
-    setProfileOpen(false);
-  };
-
-  const navigateEdit = () => {
-    navigate("/user/edit");
-  };
-
-  const navigateUserList = () => {
-    navigate("/employee-list");
-  };
-
-  const handleLogoClick = () => {
-    navigate("/dashboard");
-  };
-
-  const handleLogout = () => {
-    localStorage.clear();
-    navigate("/");
-  };
-
-  const toggleMenu = () => {
-    setProfileOpen(false);
-    setNotifOpen(false);
-    setMenuOpen(!isMenuOpen);
-  };
-
-  const markAllAsRead = async () => {
-    try {
-      const userId = localStorage.getItem("userId");
-      const token = localStorage.getItem("authToken");
-      const headers = {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      };
-
-      const response = await axios.post(
-        `https://booking-system-ge1i.onrender.com/api/notifications/${userId}/mark-all-read`,
-        {},
-        { headers }
-      );
-
-      if (response.status === 200) {
-        setNotifications(
-          notifications.map((notification) => ({
-            ...notification,
-            read: true,
-          }))
-        );
-      }
-    } catch (error) {
-      console.error("Error marking notifications as read:", error);
-    }
-  };
-  //end of header
   return (
     <div className="booking-confirmation">
-      <ToastContainer/>
+      <ToastContainer />
       <div className="confirmation-text">
         {bookData && isConfirmed ? (
           <>
@@ -235,10 +116,20 @@ const BookingConfirmation = () => {
                     <p>
                       <strong>Number of PAX:</strong> {bookData.caps.pax}
                     </p>
-                    <p>
-                      <strong>Attendees:</strong>{" "}
-                      {bookData.attendees.join(", ")}
-                    </p>
+                    {bookData.attendees &&
+                      bookData.attendees.length > 0 && (
+                        <p>
+                          <strong>Attendees:</strong>{" "}
+                          {bookData.attendees.join(", ")}
+                        </p>
+                      )}
+                    {bookData.guest &&
+                      bookData.guest.length > 0 && (
+                        <p>
+                          <strong>Guests:</strong>{" "}
+                          {bookData.guest.join(", ")}
+                        </p>
+                      )}
                   </div>
                   <div className="right-content">
                     <h3>{bookData.roomName}</h3>

@@ -73,9 +73,9 @@ const UserLogin = () => {
             placeholder="Enter your password"
           />
           <button type="submit">Log In</button>
-          <Link to="/forgot-pass" className="resetpass">
-            Forgot password?
-          </Link>
+          <button type="redirect">
+              <a href="/forgot-pass" >Forgot password?</a>
+          </button>
         </form>
       </div>
       <div className="right-column">

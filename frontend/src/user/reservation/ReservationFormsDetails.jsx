@@ -48,6 +48,36 @@ const ReservationFormsDetails = () => {
     }
   };
 
+  // Move fetchUserData function outside of useEffect
+  const fetchUserData = async () => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      };
+
+      const response = await axios.get(
+        `https://booking-system-ge1i.onrender.com/api/user/`,
+        {
+          headers,
+        }
+      );
+      if (response.status === 200) {
+        const users = response.data.filter(
+          (user) => user._id !== bookData.user._id
+        );
+        const usersWithDisabled = users.map((user) => ({
+          ...user,
+          disabled: false,
+        }));
+        setUserData(usersWithDisabled);
+      }
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
+
   const handlePaxChange = (event) => {
     const { value } = event.target;
     setPax(value);
@@ -60,9 +90,11 @@ const ReservationFormsDetails = () => {
       },
     });
 
-    if (value === "1-2") {
+    if (value === "1-2" || value === "3-More" || value === "8-More") {
       setAttendees([]);
       setAttendeeInput("");
+      setSuggestions([]);
+      fetchUserData(); // Now this can be called here
     }
   };
 
@@ -93,47 +125,24 @@ const ReservationFormsDetails = () => {
   }, []);
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const token = localStorage.getItem("authToken");
-        const headers = {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        };
-
-        const response = await axios.get(`https://booking-system-ge1i.onrender.com/api/user/`, {
-          headers,
-        });
-        if (response.status === 200) {
-          const users = response.data.filter(
-            (user) => user._id !== bookData.user._id
-          );
-          const usersWithDisabled = users.map((user) => ({
-            ...user,
-            disabled: false,
-          }));
-          setUserData(usersWithDisabled);
-        }
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-    };
-
     if (bookData) {
-      fetchUserData();
+      fetchUserData(); // Fetch user data whenever bookData changes
     }
   }, [bookData]);
 
   const getSuggestions = (value) => {
+    if (!value) return [];
+
     const inputValue = value.trim().toLowerCase();
     const inputLength = inputValue.length;
+
     return inputLength === 0
       ? []
       : userData.filter(
-        (user) =>
-          (user.firstName.toLowerCase() + " " + user.surName.toLowerCase()).includes(inputValue) &&
-          !user.disabled
-      );
+          (user) =>
+            (user.firstName.toLowerCase() + " " + user.surName.toLowerCase()).includes(inputValue) &&
+            !user.disabled
+        );
   };
 
   const onSuggestionsFetchRequested = ({ value }) => {
@@ -144,7 +153,7 @@ const ReservationFormsDetails = () => {
     setSuggestions([]);
   };
 
-  const getSuggestionValue = (suggestion) => { suggestion.firstName + " " + suggestion.surName };
+  const getSuggestionValue = (suggestion) => suggestion.firstName + " " + suggestion.surName;
 
   const renderSuggestion = (suggestion) => (
     <div className="suggestion-chip">
@@ -157,11 +166,6 @@ const ReservationFormsDetails = () => {
   };
 
   const onSuggestionSelected = (event, { suggestion }) => {
-    if (formData.caps.pax === "1-2" && attendees.length >= 2) {
-      toast.error("You can only select up to 2 attendees for 1-2 pax.");
-      return;
-    }
-
     const updatedAttendees = [...attendees, suggestion.firstName + " " + suggestion.surName];
     setAttendees(updatedAttendees);
 
@@ -185,14 +189,14 @@ const ReservationFormsDetails = () => {
 
     setUserData(
       userData.map((user) =>
-        user.userName === removedAttendee ? { ...user, disabled: false } : user
+        user.firstName + " " + user.surName === removedAttendee ? { ...user, disabled: false } : user
       )
     );
   };
 
   const inputProps = {
     placeholder: "Type attendee names",
-    value: attendeeInput,
+    value: attendeeInput || "",
     onChange: onAttendeeInputChange,
     style: { width: "100%" },
   };
@@ -219,6 +223,15 @@ const ReservationFormsDetails = () => {
             ? true
             : false;
 
+    const approvalStatus =
+    (bookData.confirmation === false && formData.caps.pax === "3-More")
+      ? "Pending"
+      : (bookData.confirmation === true && formData.caps.pax === "1-2")
+        ? "Pending"
+        : (bookData.confirmation === true && formData.caps.pax === "3-More")
+          ? "Approved"
+          : "Pending";
+
     const updatedReserve = {
       caps: {
         pax: formData.caps.pax,
@@ -230,14 +243,14 @@ const ReservationFormsDetails = () => {
       confirmation: confirmationStatus,
       approval: {
         archive: false,
-        status: false,
+        status: approvalStatus,
         reason: "",
       }
     };
 
     const totalAttendees = attendees.length + additionalAttendees.length;
 
-    if (selectedRoom === "Palawan and Boracay" && totalAttendees < 8) {
+    if (selectedRoom === "Palawan and Boracay" && totalAttendees < 7) {
       toast.error("For 'Palawan and Boracay', you must have at least 8 attendees.");
       return;
     }
@@ -268,42 +281,11 @@ const ReservationFormsDetails = () => {
       );
 
       if (updateResponse.status === 201) {
-        if(updatedReserve.confirmation){
-          toast.success("Successfully updated information.");
-          navigate("/confirmation");
-        } else {
-          const messageContent = `New reservation ${updateResponse.data.title} from ${updateResponse.data.user.firstName} ${updateResponse.data.user.surName} needs approval`
-          const notifData = {
-            booking: updateResponse.data._id,
-            message: messageContent,
-            sender: updateResponse.data.user._id,
-            senderType: "user",
-            receiver: "66861570dd3fc08ab2a6557d",
-            receiverType: "admin",
-          };
-  
-          try {
-      
-            const notifResponse = await axios.post(
-              `https://booking-system-ge1i.onrender.com/api/notif/new`,
-              notifData,
-              { headers }
-            );
-      
-            if (notifResponse.status === 201) {
-              toast.success("Successfully updated information.");
-              navigate("/confirmation");
-            }
-          } catch (error) {
-            console.log(error)
-            toast.error("Error updating information. Please try again later.");
-          }
-        }
-      } else {
-        toast.error("Error updating information. Please try again later.");
+        toast.success("Reservation successfully updated.");
+        navigate("/confirmation");
       }
     } catch (error) {
-      toast.error("Error updating information. Please try again later.");
+      toast.error("An error occurred while updating the reservation.");
     }
   };
 
@@ -311,36 +293,9 @@ const ReservationFormsDetails = () => {
     setShowDiscardModal(true);
   };
 
-  const handleConfirmDiscard = async (e) => {
-    setShowDiscardModal(false);
-
-    try {
-      const reserveId = localStorage.getItem("reserveToken");
-      const token = localStorage.getItem("authToken");
-
-      const headers = {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      };
-
-      const updateResponse = await axios.delete(
-        `https://booking-system-ge1i.onrender.com/api/book/delete/${reserveId}`,
-        { headers }
-      );
-
-      if (updateResponse.status === 200) {
-        localStorage.removeItem("reserveToken");
-        navigate("/dashboard");
-      }
-    } catch (error) {
-      console.error("Error during delete:", error);
-    }
+  const handleConfirmDiscard = () => {
+    navigate("/reservation");
   };
-
-  const handleCancelDiscard = () => {
-    setShowDiscardModal(false);
-  };
-  
 
   return (
     <div className="form-page">
@@ -443,7 +398,7 @@ const ReservationFormsDetails = () => {
               </div>
             </div>
 
-            {pax === "1-2" && (
+            {(pax === "1-2" || pax === "8-More")  && (
               <div>
                 <label htmlFor="reason">Reason for 1-2 attendees</label>
                 <input

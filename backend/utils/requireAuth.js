@@ -21,7 +21,7 @@ const requireAuth = async (req, res, next) => {
     const admin = await AdminModel.findById(decoded._id);
 
     // If user exists in either model, attach user object to request and proceed to next middleware
-    if ( client || admin) {
+    if (client || admin) {
       req.user = decoded; // Attach decoded token payload to request
       next();
     } else {

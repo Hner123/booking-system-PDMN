@@ -26,53 +26,52 @@ const ReserveSchema = new Schema({
   },
   endTime: {
     type: Date,
-    default: ""
+    default: "",
   },
   user: {
     type: Schema.Types.ObjectId,
-    ref: "user"
+    ref: "user",
   },
-  caps:{
+  caps: {
     pax: {
-      type: String,
-      default: ""
-    },
-    reason:{
-      type: String,
-      default: ""
-    }
-  },
-  attendees: [{
-    type: String,
-    default: ""
-  }],
-  guest: [{
-    type: String,
-    default: ""
-  }],
-  confirmation:{
-    type: Boolean,
-    default: true
-  },
-  approval:{
-    archive:{
-      type:Boolean,
-      default: false
-    },
-    status:{
       type: String,
       default: "",
     },
-    reason:{
+    reason: {
       type: String,
-      default: ""
-    }
+      default: "",
+    },
   },
-  notif:{
+  attendees: [
+    {
+      type: String,
+      default: "",
+    },
+  ],
+  guest: [
+    {
+      type: String,
+      default: "",
+    },
+  ],
+  confirmation: {
     type: Boolean,
-    default: true
-  }
-
+    default: true,
+  },
+  approval: {
+    archive: {
+      type: Boolean,
+      default: false,
+    },
+    status: {
+      type: String,
+      default: "",
+    },
+    reason: {
+      type: String,
+      default: "",
+    },
+  },
 });
 
 module.exports = mongoose.model("reserve", ReserveSchema);

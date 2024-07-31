@@ -604,6 +604,10 @@
   background-color: rgb(79, 179, 79);
 }
 
+.status.declined {
+  background-color: rgb(236, 20, 20);
+}
+
 @media screen and (max-width: 768px) {
 
   /* Adjust table styles for smaller screens */

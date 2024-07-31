@@ -1,14 +1,14 @@
 const mongoose = require("mongoose");
 const ReserveModel = require("../models/ReserveModel");
+const NotifModel = require("../models/NotifModel");
 const requireAuth = require("../utils/requireAuth");
 
 const GetAllReserve = async (req, res) => {
   try {
     const result = await ReserveModel.find({}).populate("user");
-
     res.status(200).json(result);
   } catch (err) {
-    res.send(err.message);
+    res.status(500).send(err.message);
   }
 };
 
@@ -19,7 +19,7 @@ const GetSpecificReserve = async (req, res) => {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json("No such reservation");
     }
-    
+
     const result = await ReserveModel.findById(id).populate("user");
 
     if (!result) {
@@ -28,13 +28,14 @@ const GetSpecificReserve = async (req, res) => {
 
     return res.status(200).json(result);
   } catch (err) {
-    return res.send(err.message);
+    return res.status(500).json({ message: err.message });
   }
 };
 
+
 const CreateReserve = async (req, res) => {
   try {
-    const reserve = req.body
+    const reserve = req.body;
 
     const result = await ReserveModel.create({
       roomName: reserve.roomName,
@@ -45,8 +46,8 @@ const CreateReserve = async (req, res) => {
       endTime: reserve.endTime,
       user: reserve.user,
       caps: {
-        pax: '',
-        reason: ''
+        pax: "",
+        reason: "",
       },
       attendees: reserve.attendees,
       guest: reserve.guest,
@@ -54,7 +55,7 @@ const CreateReserve = async (req, res) => {
       approval: {
         archive: false,
         status: "Pending",
-        reason: ''
+        reason: "",
       },
     });
 
@@ -85,7 +86,7 @@ const EditReserve = async (req, res) => {
         endTime: reserve.endTime,
         caps: {
           pax: reserve.caps.pax,
-          reason: reserve.caps.reason
+          reason: reserve.caps.reason,
         },
         attendees: reserve.attendees,
         guest: reserve.guest,
@@ -93,42 +94,45 @@ const EditReserve = async (req, res) => {
         approval: {
           archive: reserve.approval.archive,
           status: reserve.approval.status,
-          reason: reserve.approval.reason
-        }
+          reason: reserve.approval.reason,
+        },
       },
     };
 
-    const result = await ReserveModel.findByIdAndUpdate(id, update, { new: true }).populate('user');
+    const result = await ReserveModel.findByIdAndUpdate(id, update, {
+      new: true,
+    }).populate("user");
 
-    res.status(201).json(result);
+    res.status(200).json(result);
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
 };
 
-
 const DeleteReserve = async (req, res) => {
   try {
     const { id } = req.params;
-  
+
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json("No reserve listed");
     }
-  
+
     const reserve = await ReserveModel.findById(id);
-  
+
     if (!reserve) {
       return res.status(404).json({ message: "Reservation not found" });
     }
 
-    // Delete the reserve document from the database
+    await NotifModel.deleteMany({ 'booking': id });
+
     const result = await ReserveModel.findByIdAndDelete(id);
-  
+
     res.status(200).json(result);
   } catch (err) {
-    res.send(err.message);
+    res.status(500).json({ message: err.message });
   }
 };
+
 
 const GetAllReserveWithAuth = (req, res) => {
   requireAuth(req, res, async () => {

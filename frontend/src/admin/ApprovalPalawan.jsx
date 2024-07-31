@@ -11,7 +11,7 @@ const ApprovalPalawan = () => {
   const [formData, setFormData] = useState({
     approval: {
       archive: false,
-      status: false,
+      status: "",
       reason: "",
     },
   });
@@ -100,7 +100,7 @@ const ApprovalPalawan = () => {
       confirmation: true,
       approval: {
         archive: true,
-        status: true,
+        status: "Approved",
         reason: "",
       },
     };
@@ -132,7 +132,8 @@ const ApprovalPalawan = () => {
           );
 
           if (emailResponse.status === 201) {
-            const messageContent = `Your reservation ${updateResponse.data.title} on ${updateResponse.data.user.scheduleDate} has been approved`
+            const date = new Date(updateResponse.data.user.scheduleDate).toLocaleDateString();
+            const messageContent = `Your reservation ${updateResponse.data.title} on ${date} has been approved`
             const notifData = {
               booking: updateResponse.data._id,
               message: messageContent,
@@ -140,6 +141,7 @@ const ApprovalPalawan = () => {
               senderType: "admin",
               receiver: updateResponse.data.user._id,
               receiverType: "user",
+              createdAt: new Date().toISOString(),
             };
 
             try {
@@ -184,7 +186,7 @@ const ApprovalPalawan = () => {
       confirmation: false,
       approval: {
         archive: true,
-        status: false,
+        status: "Declined",
         reason: formData.approval.reason,
       },
     };
@@ -216,7 +218,8 @@ const ApprovalPalawan = () => {
           );
 
           if (emailResponse.status === 201) {
-            const messageContent = `Your reservation ${updateResponse.data.title} on ${updateResponse.data.user.scheduleDate} has been rejected`
+            const date = new Date(updateResponse.data.user.scheduleDate).toLocaleDateString();
+            const messageContent = `Your reservation ${updateResponse.data.title} on ${date} has been rejected`
             const notifData = {
               booking: updateResponse.data._id,
               message: messageContent,
@@ -224,6 +227,7 @@ const ApprovalPalawan = () => {
               senderType: "admin",
               receiver: updateResponse.data.user._id,
               receiverType: "user",
+              createdAt: new Date().toISOString(),
             };
 
             try {

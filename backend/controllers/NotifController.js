@@ -4,14 +4,16 @@ const requireAuth = require("../utils/requireAuth");
 
 const GetAllNotifications = async (req, res) => {
   try {
-    const notifications = await NotifModel.find({}).populate("booking").populate("sender").populate("receiver")
+    const notifications = await NotifModel.find({})
+      .populate("booking")
+      .populate("sender")
+      .populate("receiver");
     res.status(200).json(notifications);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
 
-// Get a specific notification by ID
 const GetNotificationById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -20,7 +22,10 @@ const GetNotificationById = async (req, res) => {
       return res.status(400).json({ message: "Invalid notification ID" });
     }
 
-    const notification = await NotifModel.findById(id).populate("booking").populate("sender").populate("receiver");
+    const notification = await NotifModel.findById(id)
+      .populate("booking")
+      .populate("sender")
+      .populate("receiver");
 
     if (!notification) {
       return res.status(404).json({ message: "Notification not found" });
@@ -34,7 +39,7 @@ const GetNotificationById = async (req, res) => {
 
 const CreateNotification = async (req, res) => {
   try {
-    const notif = req.body
+    const notif = req.body;
 
     const result = await NotifModel.create({
       booking: notif.booking,
@@ -47,8 +52,8 @@ const CreateNotification = async (req, res) => {
       createdAt: new Date(),
     });
 
-    const io = req.app.get('socketio');  // Add this line
-    io.to(notif.receiver).emit('newNotification', result);  // Add this line
+    const io = req.app.get('socketio');
+    io.to(notif.receiver).emit('newNotification', result);
 
     res.status(201).json({ result });
   } catch (err) {
@@ -59,7 +64,7 @@ const CreateNotification = async (req, res) => {
 const UpdateNotification = async (req, res) => {
   try {
     const { id } = req.params;
-    const notif = req.body
+    const notif = req.body;
 
     const currentNotif = await NotifModel.findById(id);
 
@@ -69,11 +74,13 @@ const UpdateNotification = async (req, res) => {
 
     let update = {
       $set: {
-        read: notif.read
+        read: notif.read,
       },
     };
 
-    const result = await NotifModel.findByIdAndUpdate(id, update, { new: true });
+    const result = await NotifModel.findByIdAndUpdate(id, update, {
+      new: true,
+    });
     res.status(201).json(result);
   } catch (err) {
     res.status(500).json({ message: err.message });

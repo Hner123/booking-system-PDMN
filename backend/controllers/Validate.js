@@ -72,7 +72,7 @@ const LogChangePass = async (req, res) => {
       res.status(201).json({
         message: "An email has been sent into your account",
         passToken,
-        passId: id
+        passId: id,
       });
     } else {
       // Send error response indicating user not found
@@ -135,7 +135,7 @@ const ChangeEmail = async (req, res) => {
       res.status(201).json({
         message: "An email has been sent into your account",
         emailToken,
-        emailId: id
+        emailId: id,
       });
     } else {
       // Send error response indicating user not found
@@ -148,7 +148,7 @@ const ChangeEmail = async (req, res) => {
 
 const Approval = async (req, res) => {
   try {
-    const { _id, email} = req.body;
+    const { _id, email } = req.body;
 
     const user = await UserModel.findOne({ email });
     const book = await ReserveModel.findOne({ _id });
@@ -160,7 +160,8 @@ const Approval = async (req, res) => {
       const reason = book.approval.reason;
       const title = book.title;
 
-      const companyLogoUrl = "https://drive.google.com/uc?id=108JoeqEjPR7HKfbNjXdV30wvvy9oDk_B";
+      const companyLogoUrl =
+        "https://drive.google.com/uc?id=108JoeqEjPR7HKfbNjXdV30wvvy9oDk_B";
 
       const htmlContent = `
         <!DOCTYPE html>
@@ -177,10 +178,10 @@ const Approval = async (req, res) => {
                 <h2 style="margin-bottom: 20px; text-align: center; color: #000;">Reservation Status for ${roomName}</h2>
                 <p>Hello ${name},</p>
                 <p>Your reservation request for the room ${roomName}, titled "${title}", has been ${
-                    status
-                      ? "approved. You can proceed with your reservation on the scheduled date."
-                      : `rejected. The reason provided is: <span style="color: red;">${reason}</span>. If you have any questions or need further assistance, please contact our support team.`
-                  }</p>
+        status
+          ? "approved. You can proceed with your reservation on the scheduled date."
+          : `rejected. The reason provided is: <span style="color: red;">${reason}</span>. If you have any questions or need further assistance, please contact our support team.`
+      }</p>
                 <p>If you have any questions or need further assistance, please contact our support team.</p>
                 <p>Best regards,</p>
                 <p>Management</p>
@@ -308,9 +309,9 @@ const CheckPass = async (req, res) => {
     const isMatch = await bcrypt.compare(currPass, hashedPassword);
     res.json({ isMatch });
   } catch (error) {
-    res.status(500).json({ error: 'Error validating password' });
+    res.status(500).json({ error: "Error validating password" });
   }
-}
+};
 
 const ChangeEmailWithAuth = (req, res) => {
   requireAuth(req, res, async () => {
@@ -339,5 +340,5 @@ module.exports = {
 
   ChangeEmailWithAuth,
   ApprovalWithAuth,
-  CheckPassWithAuth
+  CheckPassWithAuth,
 };

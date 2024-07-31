@@ -35,9 +35,9 @@ const GetSpecificAdmin = async (req, res) => {
 
 const CreateAdmin = async (req, res) => {
   try {
-    const admin = req.body
+    const admin = req.body;
 
-    const hashPassWord = await bcrypt.hash(admin.adminPass, 13)
+    const hashPassWord = await bcrypt.hash(admin.adminPass, 13);
 
     const result = await AdminModel.create({
       adminUser: admin.adminUser,
@@ -53,7 +53,7 @@ const CreateAdmin = async (req, res) => {
 const EditAdmin = async (req, res) => {
   try {
     const { id } = req.params;
-    const admin = req.body
+    const admin = req.body;
 
     const currentAdmin = await AdminModel.findById(id);
 
@@ -74,7 +74,9 @@ const EditAdmin = async (req, res) => {
       },
     };
 
-    const result = await AdminModel.findByIdAndUpdate(id, update, { new: true });
+    const result = await AdminModel.findByIdAndUpdate(id, update, {
+      new: true,
+    });
     res.status(201).json(result);
   } catch (err) {
     res.status(400).json({ message: err.message });
@@ -84,20 +86,20 @@ const EditAdmin = async (req, res) => {
 const DeleteAdmin = async (req, res) => {
   try {
     const { id } = req.params;
-  
+
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json("No admin listed");
     }
-  
+
     const admin = await AdminModel.findById(id);
-  
+
     if (!admin) {
       return res.status(404).json({ message: "User not found" });
     }
 
     // Delete the admin document from the database
     const result = await AdminModel.findByIdAndDelete(id);
-  
+
     res.status(200).json(result);
   } catch (err) {
     res.send(err.message);

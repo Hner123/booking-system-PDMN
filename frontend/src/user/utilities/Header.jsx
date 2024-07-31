@@ -218,7 +218,7 @@ const Header = () => {
                       className={`notification-item ${notification.read ? "read" : "unread"}`}
                     >
                       <p>{notification.message}</p>
-                      <span>{new Date(notification.date).toLocaleString()}</span>
+                      <span>{new Date(notification.createdAt).toLocaleString()}</span>
                     </li>
                   ))}
                 </ul>
@@ -234,4 +234,4 @@ const Header = () => {
   );
 };
 
-export default WithAuth(Header);
+export default Header;
