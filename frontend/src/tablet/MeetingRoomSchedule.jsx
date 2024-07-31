@@ -15,60 +15,89 @@ const MeetingRoomSchedule = () => {
   const [bookData, setBookData] = useState([]);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [currentMeeting, setCurrentMeeting] = useState(null);
-  const [loading, setLoading] = useState(true); 
-  const [selectedRoom, setSelectedRoom] = useState(localStorage.getItem('selectedRoom')); 
-  const [roomSelected, setRoomSelected] = useState(!!localStorage.getItem('selectedRoom')); 
-  const [refresh, setRefresh] = useState(false); 
-  const [newBookData, setNewBookData] = useState([]); // State to hold new data before updating
+  const [loading, setLoading] = useState(true);
+  const [selectedRoom, setSelectedRoom] = useState(localStorage.getItem('selectedRoom'));
+  const [roomSelected, setRoomSelected] = useState(!!localStorage.getItem('selectedRoom'));
 
-  useEffect(() => {
-    if (selectedRoom) {
-      const fetchBookData = async () => {
-        try {
-          setLoading(true);
-          const token = localStorage.getItem("authToken");
-          const headers = {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          };
-
-          const bookResponse = await axios.get(
-            `https://booking-system-ge1i.onrender.com/api/book/`,
-            { headers }
-          );
-
-          if (bookResponse.status === 200) {
-            const filteredData = bookResponse.data.filter(
-              (event) => event.roomName === selectedRoom && event.confirmation === true && event.title || event.roomName === "Palawan and Boracay"
-            );
-            setNewBookData(filteredData); // Temporarily store new data
-            setTimeout(() => {
-              setBookData(filteredData); // Update bookData after a delay
-              setLoading(false);
-            }, 1000); // 1-second delay for subtle refresh effect
-          }
-        } catch (error) {
-          console.error("Error fetching data:", error);
-          setLoading(false);
-        }
+  // Fetch booking data
+  const fetchBookData = async () => {
+    setLoading(true);
+    try {
+      const token = localStorage.getItem("authToken");
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
       };
 
-      fetchBookData();
+      const bookResponse = await axios.get(
+        `https://booking-system-ge1i.onrender.com/api/book/`,
+        { headers }
+      );
 
-      const interval = setInterval(fetchBookData, 30000); // Polling every 30 seconds
-      return () => clearInterval(interval);
+      if (bookResponse.status === 200) {
+        const filteredData = bookResponse.data.filter(
+          (event) => (event.roomName === selectedRoom && event.confirmation === true && event.title) || event.roomName === "Palawan and Boracay"
+        );
+        setBookData(filteredData);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Initial data fetch and subsequent updates based on selected room
+  useEffect(() => {
+    if (selectedRoom) {
+      fetchBookData();
     }
   }, [selectedRoom]);
 
+  // Update current time every second
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(new Date());
-      setRefresh((prev) => !prev);
     }, 1000);
 
     return () => clearInterval(timer);
   }, []);
 
+  // Polling for booking data every 10 seconds
+  useEffect(() => {
+    const updateBookingData = async () => {
+      try {
+        const token = localStorage.getItem("authToken");
+        const headers = {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        };
+
+        const bookResponse = await axios.get(
+          `https://booking-system-ge1i.onrender.com/api/book/`,
+          { headers }
+        );
+
+        if (bookResponse.status === 200) {
+          const filteredData = bookResponse.data.filter(
+            (event) => (event.roomName === selectedRoom && event.confirmation === true && event.title) || event.roomName === "Palawan and Boracay"
+          );
+
+          if (JSON.stringify(filteredData) !== JSON.stringify(bookData)) {
+            setBookData(filteredData);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    const pollingInterval = setInterval(updateBookingData, 10000); // Polling every 10 seconds
+
+    return () => clearInterval(pollingInterval);
+  }, [bookData, selectedRoom]);
+
+  // Update current meeting based on time
   useEffect(() => {
     const updateCurrentMeeting = () => {
       const now = new Date();
