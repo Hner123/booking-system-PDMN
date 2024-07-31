@@ -14,8 +14,8 @@ const MeetingRoomSchedule = () => {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [currentMeeting, setCurrentMeeting] = useState(null);
   const [loading, setLoading] = useState(true); // Added loading state
-  const [selectedRoom, setSelectedRoom] = useState(null); // State for selected room
-  const [roomSelected, setRoomSelected] = useState(false); // State to track if a room has been selected
+  const [selectedRoom, setSelectedRoom] = useState(localStorage.getItem('selectedRoom')); // Initialize from localStorage
+  const [roomSelected, setRoomSelected] = useState(!!localStorage.getItem('selectedRoom')); // Initialize based on localStorage
 
   useEffect(() => {
     const fetchBookData = async () => {
@@ -26,12 +26,12 @@ const MeetingRoomSchedule = () => {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         };
-  
+
         const bookResponse = await axios.get(
           `https://booking-system-ge1i.onrender.com/api/book/`,
           { headers }
         );
-  
+
         if (bookResponse.status === 200) {
           const filteredData = bookResponse.data.filter(
             (event) => event.roomName === selectedRoom && event.confirmation === true && event.title || event.roomName === "Palawan and Boracay"
@@ -44,7 +44,7 @@ const MeetingRoomSchedule = () => {
         setLoading(false);
       }
     };
-  
+
     if (selectedRoom) {
       fetchBookData();
     }
@@ -135,6 +135,12 @@ const MeetingRoomSchedule = () => {
     });
   };
 
+  const handleRoomSelection = (room) => {
+    setSelectedRoom(room);
+    setRoomSelected(true);
+    localStorage.setItem('selectedRoom', room); // Save selected room to localStorage
+  };
+
   const containerClassName = roomSelected
     ? currentMeeting
       ? "meeting-room-schedule in-use"
@@ -147,19 +153,13 @@ const MeetingRoomSchedule = () => {
         <div className="subtle-room-selector">
           <button
             className={`room-button ${selectedRoom === "Palawan" ? "active" : ""}`}
-            onClick={() => {
-              setSelectedRoom("Palawan");
-              setRoomSelected(true);
-            }}
+            onClick={() => handleRoomSelection("Palawan")}
           >
             Palawan
           </button>
           <button
             className={`room-button ${selectedRoom === "Boracay" ? "active" : ""}`}
-            onClick={() => {
-              setSelectedRoom("Boracay");
-              setRoomSelected(true);
-            }}
+            onClick={() => handleRoomSelection("Boracay")}
           >
             Boracay
           </button>
