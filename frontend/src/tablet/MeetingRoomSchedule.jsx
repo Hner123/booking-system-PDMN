@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./tablet.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Loader from "../assets/7.gif";
 import {
   faCalendarDay,
   faClock,
@@ -30,7 +31,10 @@ const MeetingRoomSchedule = () => {
         );
 
         if (bookResponse.status === 200) {
-          setBookData(bookResponse.data);
+          const filteredData = bookResponse.data.filter(
+            (event) => event.roomName === "Palawan" && event.confirmation === true && event.title
+          );
+          setBookData(filteredData);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -91,9 +95,8 @@ const MeetingRoomSchedule = () => {
       </p>
       <p>
         <FontAwesomeIcon icon={faUser} />{" "}
-        {`${meeting.user?.firstName || "Unknown"} ${
-          meeting.user?.surName || "Unknown"
-        }`}
+        {`${meeting.user?.firstName || "Unknown"} ${meeting.user?.surName || "Unknown"
+          }`}
       </p>
     </div>
   );
@@ -135,7 +138,9 @@ const MeetingRoomSchedule = () => {
   return (
     <div className={containerClassName}>
       {loading ? (
-        <div className="loading">Loading...</div> // Display loading message or spinner
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+          <img src={Loader} style={{ width: '200px' }} alt="Loading..." />
+        </div>
       ) : (
         <>
           <div className="first-column">
@@ -176,9 +181,8 @@ const MeetingRoomSchedule = () => {
                         <td>
                           <FontAwesomeIcon icon={faUser} />
                         </td>
-                        <td>{`${currentMeeting.user?.firstName || "Unknown"} ${
-                          currentMeeting.user?.surName || "Unknown"
-                        }`}</td>
+                        <td>{`${currentMeeting.user?.firstName || "Unknown"} ${currentMeeting.user?.surName || "Unknown"
+                          }`}</td>
                       </tr>
                     </tbody>
                   </table>

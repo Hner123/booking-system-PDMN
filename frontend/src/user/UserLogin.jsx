@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import "./User.css";
 import logo from "../assets/logos/GDSLogo.png";
@@ -19,7 +19,7 @@ const UserLogin = () => {
       const trimmedUserName = userName.trim();
       const trimmedPassWord = passWord.trim();
 
-      setLoading(true);
+      // setLoading(true);
 
       const response = await axios.post(
         "https://booking-system-ge1i.onrender.com/api/auth/login/user",
@@ -36,11 +36,11 @@ const UserLogin = () => {
         localStorage.setItem("authToken", authToken);
         localStorage.setItem("userId", _id);
 
-        setLoading(false);
+        // setLoading(false);
         navigate("/dashboard");
       }
     } catch (error) {
-      setLoading(false);
+      // setLoading(false);
       setError(error.response.data.message);
     }
   };
@@ -72,18 +72,18 @@ const UserLogin = () => {
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Enter your password"
           />
-          <div className="resetpasss">
-            <button>Reset Password</button>
-          </div>
           <button type="submit">Log In</button>
+          <Link to="/forgot-pass" className="resetpass">
+            Forgot password?
+          </Link>
         </form>
       </div>
       <div className="right-column">
         <div className="overlay1">
           <div className="overlay-content">
-          <h2>Effortless Meeting Room Reservations for Your Team!</h2>
-          <img className="mascot" src={mascot} alt="Mascot" />
-        </div>
+            <h2>Effortless Meeting Room Reservations for Your Team!</h2>
+            <img className="mascot" src={mascot} alt="Mascot" />
+          </div>
         </div>
       </div>
     </div>
