@@ -18,34 +18,34 @@ const MeetingRoomSchedule = () => {
   const [roomSelected, setRoomSelected] = useState(false); // State to track if a room has been selected
 
   useEffect(() => {
-    if (selectedRoom) {
-      const fetchBookData = async () => {
-        setLoading(true); // Set loading to true when starting fetch
-        try {
-          const token = localStorage.getItem("authToken");
-          const headers = {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          };
-
-          const bookResponse = await axios.get(
-            `https://booking-system-ge1i.onrender.com/api/book/`,
-            { headers }
+    const fetchBookData = async () => {
+      setLoading(true);
+      try {
+        const token = localStorage.getItem("authToken");
+        const headers = {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        };
+  
+        const bookResponse = await axios.get(
+          `https://booking-system-ge1i.onrender.com/api/book/`,
+          { headers }
+        );
+  
+        if (bookResponse.status === 200) {
+          const filteredData = bookResponse.data.filter(
+            (event) => event.roomName === selectedRoom && event.confirmation === true && event.title || event.roomName === "Palawan and Boracay"
           );
-
-          if (bookResponse.status === 200) {
-            const filteredData = bookResponse.data.filter(
-              (event) => event.roomName === selectedRoom && event.confirmation === true && event.title || event.roomName === "Palawan and Boracay"
-            );
-            setBookData(filteredData);
-          }
-        } catch (error) {
-          console.error("Error fetching data:", error);
-        } finally {
-          setLoading(false); // Set loading to false after fetch completes
+          setBookData(filteredData);
         }
-      };
-
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    if (selectedRoom) {
       fetchBookData();
     }
   }, [selectedRoom]); // Refetch data when selected room changes
