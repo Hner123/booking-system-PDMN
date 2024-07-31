@@ -35,7 +35,7 @@ const MeetingRoomSchedule = () => {
 
           if (bookResponse.status === 200) {
             const filteredData = bookResponse.data.filter(
-              (event) => event.roomName === selectedRoom && event.confirmation === true && event.title
+              (event) => event.roomName === selectedRoom && event.confirmation === true && event.title || event.roomName === "Palawan and Boracay"
             );
             setBookData(filteredData);
           }
