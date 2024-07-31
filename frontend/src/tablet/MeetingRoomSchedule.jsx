@@ -16,11 +16,12 @@ const MeetingRoomSchedule = () => {
   const [loading, setLoading] = useState(true); 
   const [selectedRoom, setSelectedRoom] = useState(localStorage.getItem('selectedRoom')); 
   const [roomSelected, setRoomSelected] = useState(!!localStorage.getItem('selectedRoom')); 
+  const [refresh, setRefresh] = useState(false); // New state for forcing re-render
 
   useEffect(() => {
     if (selectedRoom) {
       const fetchBookData = async () => {
-        setLoading(true); // Set loading to true when starting fetch
+        setLoading(true);
         try {
           const token = localStorage.getItem("authToken");
           const headers = {
@@ -42,7 +43,7 @@ const MeetingRoomSchedule = () => {
         } catch (error) {
           console.error("Error fetching data:", error);
         } finally {
-          setLoading(false); // Set loading to false after fetch completes
+          setLoading(false);
         }
       };
 
@@ -53,6 +54,7 @@ const MeetingRoomSchedule = () => {
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(new Date());
+      setRefresh((prev) => !prev); // Toggle the refresh state
     }, 1000); 
 
     return () => clearInterval(timer);
@@ -102,8 +104,7 @@ const MeetingRoomSchedule = () => {
       </p>
       <p>
         <FontAwesomeIcon icon={faUser} />{" "}
-        {`${meeting.user?.firstName || "Unknown"} ${meeting.user?.surName || "Unknown"
-          }`}
+        {`${meeting.user?.firstName || "Unknown"} ${meeting.user?.surName || "Unknown"}`}
       </p>
     </div>
   );
@@ -115,7 +116,7 @@ const MeetingRoomSchedule = () => {
       now.getMonth(),
       now.getDate()
     );
-    const todayEnd = new Date(todayStart.getTime() + 24 * 60 * 60 * 1000); 
+    const todayEnd = new Date(todayStart.getTime() + 24 * 60 * 60 * 1000);
 
     const upcomingMeetings = bookData
       .filter((meeting) => {
@@ -212,8 +213,7 @@ const MeetingRoomSchedule = () => {
                         <td>
                           <FontAwesomeIcon icon={faUser} />
                         </td>
-                        <td>{`${currentMeeting.user?.firstName || "Unknown"} ${currentMeeting.user?.surName || "Unknown"
-                          }`}</td>
+                        <td>{`${currentMeeting.user?.firstName || "Unknown"} ${currentMeeting.user?.surName || "Unknown"}`}</td>
                       </tr>
                     </tbody>
                   </table>
