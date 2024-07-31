@@ -27,7 +27,7 @@ const BookingConfirmation = () => {
         };
 
         const response = await axios.get(
-          `https://booking-system-e1fe.onrender.com/api/book/${reserveId}`,
+          `https://booking-system-ge1i.onrender.com/api/book/${reserveId}`,
           { headers }
         );
         if (response.status === 200) {
@@ -77,7 +77,7 @@ const BookingConfirmation = () => {
         };
 
         const response = await axios.get(
-          `https://booking-system-e1fe.onrender.com/api/user/${userId}`,
+          `https://booking-system-ge1i.onrender.com/api/user/${userId}`,
           { headers }
         );
         if (response.status === 200) {
@@ -157,7 +157,7 @@ const BookingConfirmation = () => {
       };
 
       const response = await axios.post(
-        `https://booking-system-e1fe.onrender.com/api/notifications/${userId}/mark-all-read`,
+        `https://booking-system-ge1i.onrender.com/api/notifications/${userId}/mark-all-read`,
         {},
         { headers }
       );

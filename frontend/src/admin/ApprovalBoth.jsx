@@ -38,7 +38,7 @@ const ApprovalBoth = () => {
           "Content-Type": "application/json",
         };
 
-        const response = await axios.get(`https://booking-system-e1fe.onrender.com/api/book/`, {
+        const response = await axios.get(`https://booking-system-ge1i.onrender.com/api/book/`, {
           headers,
         });
 
@@ -112,7 +112,7 @@ const ApprovalBoth = () => {
       };
 
       const updateResponse = await axios.patch(
-        `https://booking-system-e1fe.onrender.com/api/book/edit/${selectedBooking._id}`,
+        `https://booking-system-ge1i.onrender.com/api/book/edit/${selectedBooking._id}`,
         updatedReserve,
         { headers }
       );
@@ -125,7 +125,7 @@ const ApprovalBoth = () => {
           };
 
           const emailResponse = await axios.post(
-            `https://booking-system-e1fe.onrender.com/api/auth/approval`,
+            `https://booking-system-ge1i.onrender.com/api/auth/approval`,
             emailData,
             { headers }
           );
@@ -144,7 +144,7 @@ const ApprovalBoth = () => {
             try {
 
               const notifResponse = await axios.post(
-                `https://booking-system-e1fe.onrender.com/api/notif/new`,
+                `https://booking-system-ge1i.onrender.com/api/notif/new`,
                 notifData,
                 { headers }
               );
@@ -195,7 +195,7 @@ const ApprovalBoth = () => {
       };
 
       const updateResponse = await axios.patch(
-        `https://booking-system-e1fe.onrender.com/api/book/edit/${selectedBooking._id}`,
+        `https://booking-system-ge1i.onrender.com/api/book/edit/${selectedBooking._id}`,
         updatedReserve,
         { headers }
       );
@@ -208,7 +208,7 @@ const ApprovalBoth = () => {
           };
 
           const emailResponse = await axios.post(
-            `https://booking-system-e1fe.onrender.com/api/auth/approval`,
+            `https://booking-system-ge1i.onrender.com/api/auth/approval`,
             emailData,
             { headers }
           );
@@ -227,7 +227,7 @@ const ApprovalBoth = () => {
             try {
 
               const notifResponse = await axios.post(
-                `https://booking-system-e1fe.onrender.com/api/notif/new`,
+                `https://booking-system-ge1i.onrender.com/api/notif/new`,
                 notifData,
                 { headers }
               );

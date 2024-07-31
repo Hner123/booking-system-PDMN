@@ -17,7 +17,7 @@ const UserList = () => {
           "Content-Type": "application/json",
         };
 
-        const response = await axios.get("https://booking-system-e1fe.onrender.com/api/user/", {
+        const response = await axios.get("https://booking-system-ge1i.onrender.com/api/user/", {
           headers,
         });
         if (response.status === 200) {

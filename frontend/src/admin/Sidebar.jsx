@@ -9,7 +9,7 @@ import axios from 'axios';
 import WithAuthAdmin from "../auth/WithAuthAdmin";
 import io from 'socket.io-client';
 
-const ENDPOINT = 'https://booking-system-e1fe.onrender.com';
+const ENDPOINT = 'https://booking-system-ge1i.onrender.com';
 let socket;
 
 const Sidebar = () => {
@@ -49,7 +49,7 @@ const Sidebar = () => {
         };
 
         const response = await axios.get(
-          `https://booking-system-e1fe.onrender.com/api/admin/${adminId}`,
+          `https://booking-system-ge1i.onrender.com/api/admin/${adminId}`,
           { headers }
         );
         if (response.status === 200) {
@@ -67,7 +67,7 @@ const Sidebar = () => {
     const fetchNotifications = async () => {
       try {
         const adminId = localStorage.getItem("adminId");
-        const response = await axios.get('https://booking-system-e1fe.onrender.com/api/notif');
+        const response = await axios.get('https://booking-system-ge1i.onrender.com/api/notif');
         const userNotifications = response.data.filter(notif => notif.receiver._id === adminId);
         setNotifications(userNotifications);
       } catch (error) {

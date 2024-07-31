@@ -33,7 +33,7 @@ const AddEmployee = () => {
 
         try {
             const validationResponse = await axios.post(
-              `https://booking-system-e1fe.onrender.com/api/auth/validate`,
+              `https://booking-system-ge1i.onrender.com/api/auth/validate`,
               {
                 userName: formData.userName,
               }
@@ -62,7 +62,7 @@ const AddEmployee = () => {
           };
     
           const updateResponse = await axios.post(
-            `https://booking-system-e1fe.onrender.com/api/user/create`,
+            `https://booking-system-ge1i.onrender.com/api/user/create`,
             employeeData,
             { headers }
           );

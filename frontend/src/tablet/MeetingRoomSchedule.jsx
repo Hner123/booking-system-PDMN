@@ -25,7 +25,7 @@ const MeetingRoomSchedule = () => {
         };
 
         const bookResponse = await axios.get(
-          `https://booking-system-e1fe.onrender.com/api/book/`,
+          `https://booking-system-ge1i.onrender.com/api/book/`,
           { headers }
         );
 
