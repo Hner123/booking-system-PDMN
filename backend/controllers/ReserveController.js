@@ -53,7 +53,7 @@ const CreateReserve = async (req, res) => {
       confirmation: true,
       approval: {
         archive: false,
-        status: false,
+        status: "Pending",
         reason: ''
       },
     });

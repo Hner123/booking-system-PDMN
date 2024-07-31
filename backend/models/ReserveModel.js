@@ -60,8 +60,8 @@ const ReserveSchema = new Schema({
       default: false
     },
     status:{
-      type: Boolean,
-      default: false
+      type: String,
+      default: "",
     },
     reason:{
       type: String,
