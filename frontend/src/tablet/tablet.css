@@ -9,6 +9,15 @@
   height: 100vh;
   box-sizing: border-box;
   transition: background-color 0.3s;
+  background: rgb(255, 255, 255);
+}
+
+.default-state {
+  background-color: #f0f0f0; 
+  flex-direction: column;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .meeting-room-schedule.in-use {
@@ -254,4 +263,42 @@
   .meetings {
     font-size: 24px;
   }
+}
+
+
+/* Centering the room selector */
+.subtle-room-selector {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px; /* Space between the buttons */
+}
+
+/* Styling for the room buttons */
+.room-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border: 2px solid #007bff;
+  border-radius: 5px;
+  background-color: white;
+  color: #007bff;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.room-button.active,
+.room-button:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+/* Centering the loading indicator */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+img.loading {
+  width: 200px;
 }
