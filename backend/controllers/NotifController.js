@@ -43,7 +43,8 @@ const CreateNotification = async (req, res) => {
       senderType: notif.senderType,
       receiver: notif.receiver,
       receiverType: notif.receiverType,
-      read: false
+      read: false,
+      createdAt: new Date(),
     });
 
     const io = req.app.get('socketio');  // Add this line
