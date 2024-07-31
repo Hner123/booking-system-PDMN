@@ -3,8 +3,8 @@ import axios from "axios";
 import "./tablet.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Loader from "../assets/7.gif";
-import bgPalawan from "../assets/palawan2.jpg"; // Importing a new background image for Palawan
-import bgBoracay from "../assets/boracay2.jpg"; // Importing a new background image for Boracay
+import bgPalawan from "../assets/palawan2.jpg";
+import bgBoracay from "../assets/boracay2.jpg";
 import {
   faCalendarDay,
   faClock,
@@ -18,52 +18,53 @@ const MeetingRoomSchedule = () => {
   const [loading, setLoading] = useState(true); 
   const [selectedRoom, setSelectedRoom] = useState(localStorage.getItem('selectedRoom')); 
   const [roomSelected, setRoomSelected] = useState(!!localStorage.getItem('selectedRoom')); 
-  const [refresh, setRefresh] = useState(false); // New state for forcing re-render
+  const [refresh, setRefresh] = useState(false); 
+  const [newBookData, setNewBookData] = useState([]); // State to hold new data before updating
 
   useEffect(() => {
     if (selectedRoom) {
       const fetchBookData = async () => {
-        setLoading(true);
         try {
+          setLoading(true);
           const token = localStorage.getItem("authToken");
           const headers = {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           };
-  
+
           const bookResponse = await axios.get(
             `https://booking-system-ge1i.onrender.com/api/book/`,
             { headers }
           );
-  
+
           if (bookResponse.status === 200) {
             const filteredData = bookResponse.data.filter(
-              (event) =>
-                event.roomName === selectedRoom &&
-                event.confirmation === true &&
-                event.title
+              (event) => event.roomName === selectedRoom && event.confirmation === true && event.title || event.roomName === "Palawan and Boracay"
             );
-            setBookData(filteredData);
+            setNewBookData(filteredData); // Temporarily store new data
+            setTimeout(() => {
+              setBookData(filteredData); // Update bookData after a delay
+              setLoading(false);
+            }, 1000); // 1-second delay for subtle refresh effect
           }
         } catch (error) {
           console.error("Error fetching data:", error);
-        } finally {
           setLoading(false);
         }
       };
-  
+
       fetchBookData();
-  
-      const interval = setInterval(fetchBookData, 10000); 
+
+      const interval = setInterval(fetchBookData, 30000); // Polling every 30 seconds
       return () => clearInterval(interval);
     }
   }, [selectedRoom]);
-  
+
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(new Date());
-      setRefresh((prev) => !prev); // Toggle the refresh state
-    }, 1000); 
+      setRefresh((prev) => !prev);
+    }, 1000);
 
     return () => clearInterval(timer);
   }, []);
@@ -81,7 +82,7 @@ const MeetingRoomSchedule = () => {
     };
 
     updateCurrentMeeting();
-    const meetingInterval = setInterval(updateCurrentMeeting, 1000); 
+    const meetingInterval = setInterval(updateCurrentMeeting, 1000);
     return () => clearInterval(meetingInterval);
   }, [bookData, currentTime]);
 
@@ -136,7 +137,7 @@ const MeetingRoomSchedule = () => {
         );
       })
       .sort((a, b) => new Date(a.startTime) - new Date(b.startTime))
-      .slice(0, 4); 
+      .slice(0, 4);
     return upcomingMeetings.map(renderMeeting);
   };
 
@@ -159,7 +160,6 @@ const MeetingRoomSchedule = () => {
       : "meeting-room-schedule available"
     : "meeting-room-schedule default-state";
 
-  // Select the background image based on the selected room
   const backgroundImage = selectedRoom === "Palawan" ? bgPalawan : bgBoracay;
 
   return (
