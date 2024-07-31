@@ -30,15 +30,18 @@ const MeetingRoomSchedule = () => {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           };
-
+  
           const bookResponse = await axios.get(
             `https://booking-system-ge1i.onrender.com/api/book/`,
             { headers }
           );
-
+  
           if (bookResponse.status === 200) {
             const filteredData = bookResponse.data.filter(
-              (event) => event.roomName === selectedRoom && event.confirmation === true && event.title || event.roomName === "Palawan and Boracay"
+              (event) =>
+                event.roomName === selectedRoom &&
+                event.confirmation === true &&
+                event.title
             );
             setBookData(filteredData);
           }
@@ -48,11 +51,14 @@ const MeetingRoomSchedule = () => {
           setLoading(false);
         }
       };
-
+  
       fetchBookData();
+  
+      const interval = setInterval(fetchBookData, 10000); 
+      return () => clearInterval(interval);
     }
   }, [selectedRoom]);
-
+  
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(new Date());
