@@ -181,6 +181,7 @@
   flex-direction: column;
   justify-content: center;
   text-align: center;
+  height: 100%;
 }
 
 .meeting {
@@ -196,19 +197,20 @@
   font-size: 30px;
   margin: 0%;
 }
+
 .meeting p {
   font-size: 20px;
   margin: 1%;
 }
 
 .meetings {
-  font-size: 30px;
-  margin: 0;
-  transition: color 0.3s, text-shadow 0.3s;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-  justify-content: center;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  margin: 5px;
   text-align: center;
-  height: 100%;
+  font-size: 30px;
 }
 
 @media (max-width: 768px) {
