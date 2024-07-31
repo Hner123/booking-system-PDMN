@@ -13,9 +13,9 @@ const MeetingRoomSchedule = () => {
   const [bookData, setBookData] = useState([]);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [currentMeeting, setCurrentMeeting] = useState(null);
-  const [loading, setLoading] = useState(true); // Added loading state
-  const [selectedRoom, setSelectedRoom] = useState(localStorage.getItem('selectedRoom')); // Initialize from localStorage
-  const [roomSelected, setRoomSelected] = useState(!!localStorage.getItem('selectedRoom')); // Initialize based on localStorage
+  const [loading, setLoading] = useState(true); 
+  const [selectedRoom, setSelectedRoom] = useState(localStorage.getItem('selectedRoom')); 
+  const [roomSelected, setRoomSelected] = useState(!!localStorage.getItem('selectedRoom')); 
 
   useEffect(() => {
     const fetchBookData = async () => {
@@ -48,10 +48,13 @@ const MeetingRoomSchedule = () => {
     if (selectedRoom) {
       fetchBookData();
     }
-  }, [selectedRoom]); // Refetch data when selected room changes
+  }, [selectedRoom]);
 
   useEffect(() => {
-    const timer = setInterval(() => setCurrentTime(new Date()), 1000); // Update every second for real-time accuracy
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000); 
+
     return () => clearInterval(timer);
   }, []);
 
@@ -68,7 +71,7 @@ const MeetingRoomSchedule = () => {
     };
 
     updateCurrentMeeting();
-    const meetingInterval = setInterval(updateCurrentMeeting, 1000); // Update every second for real-time accuracy
+    const meetingInterval = setInterval(updateCurrentMeeting, 1000); 
     return () => clearInterval(meetingInterval);
   }, [bookData, currentTime]);
 
@@ -112,7 +115,7 @@ const MeetingRoomSchedule = () => {
       now.getMonth(),
       now.getDate()
     );
-    const todayEnd = new Date(todayStart.getTime() + 24 * 60 * 60 * 1000); // End of today
+    const todayEnd = new Date(todayStart.getTime() + 24 * 60 * 60 * 1000); 
 
     const upcomingMeetings = bookData
       .filter((meeting) => {
@@ -124,7 +127,7 @@ const MeetingRoomSchedule = () => {
         );
       })
       .sort((a, b) => new Date(a.startTime) - new Date(b.startTime))
-      .slice(0, 4); // Limit to 4 upcoming meetings
+      .slice(0, 4); 
     return upcomingMeetings.map(renderMeeting);
   };
 
@@ -138,7 +141,7 @@ const MeetingRoomSchedule = () => {
   const handleRoomSelection = (room) => {
     setSelectedRoom(room);
     setRoomSelected(true);
-    localStorage.setItem('selectedRoom', room); // Save selected room to localStorage
+    localStorage.setItem('selectedRoom', room);
   };
 
   const containerClassName = roomSelected
