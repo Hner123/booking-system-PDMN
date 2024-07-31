@@ -3,6 +3,7 @@ import axios from "axios";
 import "./tablet.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Loader from "../assets/7.gif";
+import bg from "../assets/roombg.jpg"
 import {
   faCalendarDay,
   faClock,
@@ -175,7 +176,7 @@ const MeetingRoomSchedule = () => {
         </div>
       ) : (
         <>
-          <div className="first-column">
+         <div className="first-column" style={{ backgroundImage: `url(${bg})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
             <div className="room-info">
               {currentMeeting ? (
                 <>
