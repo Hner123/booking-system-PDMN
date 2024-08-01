@@ -524,8 +524,8 @@ const Dashboard = () => {
                   onInput={(e) => e.target.setCustomValidity("")}
                 />
               </div>
-              <div className="button-group">
-                <button className="submit-button">Confirm</button>
+              <div className="reg-group">
+                <button className="reg-btn">Confirm</button>
                 <button className="out-button" onClick={handleLogout}>
                   Not Now? Log Out.
                 </button>
