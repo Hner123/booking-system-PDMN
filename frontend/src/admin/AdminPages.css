@@ -668,11 +668,11 @@ th {
 }
 
 .password-toggle svg {
-    color: #3498db;
+    color: #e74c3c;
 }
 
 .form-actions button {
-    background-color: #3498db;
+    background-color: #e74c3c;
     color: #fff;
     border: none;
     padding: 12px 24px;
@@ -683,7 +683,7 @@ th {
 }
 
 .form-actions button:hover {
-    background-color: #2980b9;
+    background-color: #c0392b;
 }
 
 .form-actions .secondBtn {
