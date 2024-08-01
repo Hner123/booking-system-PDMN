@@ -15,7 +15,6 @@ const ResetPassword = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       if (passWord.trim() === "") {
         toast.error("Please enter your new password.");

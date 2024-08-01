@@ -26,6 +26,6 @@ router.post("/login/admin", LoginAdmin);
 router.post("/changeemail", ChangeEmail);
 router.post("/approval", Approval);
 router.post("/check", CheckPass);
-router.post("/resetpass", ResetPassword);
+router.patch("/resetpass/:id", ResetPassword);
 
 module.exports = router;

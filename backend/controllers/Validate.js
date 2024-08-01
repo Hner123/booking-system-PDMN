@@ -89,16 +89,13 @@ const ResetPassword = async (req, res) => {
       return res.status(404).json({ message: "Invalid ID" });
     }
 
-    // Find the user in the UserModel
     const user = await UserModel.findById(id);
 
     if (user) {
       const { passWord } = req.body;
       user.passWord = passWord;
       await user.save();
-      return res
-        .status(200)
-        .json({ message: "Password reset successfully" });
+      return res.status(200).json({ message: "Password reset successfully" });
     }
 
     // If user is not found, return error
@@ -107,7 +104,6 @@ const ResetPassword = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
 
 const ChangeEmail = async (req, res) => {
   try {
@@ -163,7 +159,7 @@ const ChangeEmail = async (req, res) => {
         message: "An email has been sent into your account",
         emailToken,
         emailId,
-        newEmail
+        newEmail,
       });
     } else {
       // Send error response indicating user not found
@@ -375,5 +371,5 @@ module.exports = {
   ChangeEmailWithAuth,
   ApprovalWithAuth,
   CheckPassWithAuth,
-  ResetPasswordWithAuth
+  ResetPasswordWithAuth,
 };

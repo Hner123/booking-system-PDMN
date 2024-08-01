@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import './OtherPages.css';
 import GIF from '../../assets/32.gif';
 import axios from 'axios';
@@ -12,38 +12,32 @@ const Verify = () => {
   const newEmail = localStorage.getItem("newEmail");
   const token = localStorage.getItem("emailToken");
 
-  useEffect(() => {
-    if (token) {
-      const handleVerify = async () => {
-        try {
-          const headers = {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json"
-          };
-  
-          const updateResponse = await axios.patch(
-            `https://booking-system-ge1i.onrender.com/api/user/edit/${userId}`,
-            { email: newEmail },
-            { headers }
-          );
-  
-          if (updateResponse.status === 201) {
-            localStorage.removeItem("resetId");
-            localStorage.removeItem("newEmail");
-            localStorage.removeItem("emailToken");
-            toast.success("Email updated successfully!");   
-          } else {
-            toast.error("Failed to update email.");
-          }
-          
-        } catch (error) {
-          toast.error("Failed to update email.");
-        }
+  const handleVerify = async () => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json"
       };
 
-      handleVerify();
+      const updateResponse = await axios.patch(
+        `https://booking-system-ge1i.onrender.com/api/user/edit/${userId}`,
+        { email: newEmail },
+        { headers }
+      );
+
+      if (updateResponse.status === 201) {
+        localStorage.removeItem("resetId");
+        localStorage.removeItem("newEmail");
+        localStorage.removeItem("emailToken");
+        navigate('/dashboard');
+      } else {
+        toast.error("Failed to update email.");
+      }
+
+    } catch (error) {
+      toast.error("Failed to update email.");
     }
-  }, [token, userId, newEmail]);
+  };
 
   return (
     <div className="verify-container">
@@ -51,7 +45,7 @@ const Verify = () => {
         <img src={GIF} alt="Verification GIF" />
         <h2>Email Verification</h2>
         <p>You have successfully changed your email!</p>
-        <button className="back-button" onClick={() => navigate('/dashboard')}>
+        <button className="back-button" onClick={handleVerify}>
           Back to Dashboard
         </button>
       </div>
