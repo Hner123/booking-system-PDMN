@@ -94,7 +94,7 @@ const ApprovalPalawan = () => {
 
   const handleApproveConfirm = async (e) => {
     e.preventDefault();
-
+  
     const updatedReserve = {
       ...selectedBooking,
       confirmation: true,
@@ -104,36 +104,36 @@ const ApprovalPalawan = () => {
         reason: "",
       },
     };
-
+  
     try {
       const token = localStorage.getItem("authToken");
       const headers = {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       };
-
+  
       const updateResponse = await axios.patch(
         `https://booking-system-ge1i.onrender.com/api/book/edit/${selectedBooking._id}`,
         updatedReserve,
         { headers }
       );
-
-      if (updateResponse.status === 201) {
+  
+      if (updateResponse.status === 200) {
         try {
           const emailData = {
             _id: selectedBooking._id,
-            email: selectedBooking.user.email
+            email: selectedBooking.user.email,
           };
-
+  
           const emailResponse = await axios.post(
             `https://booking-system-ge1i.onrender.com/api/auth/approval`,
             emailData,
             { headers }
           );
-
+  
           if (emailResponse.status === 201) {
             const date = new Date(updateResponse.data.user.scheduleDate).toLocaleDateString();
-            const messageContent = `Your reservation ${updateResponse.data.title} on ${date} has been approved`
+            const messageContent = `Your reservation ${updateResponse.data.title} on ${date} has been approved.`;
             const notifData = {
               booking: updateResponse.data._id,
               message: messageContent,
@@ -143,18 +143,19 @@ const ApprovalPalawan = () => {
               receiverType: "user",
               createdAt: new Date().toISOString(),
             };
-
+  
             try {
-
               const notifResponse = await axios.post(
                 `https://booking-system-ge1i.onrender.com/api/notif/new`,
                 notifData,
                 { headers }
               );
-
+  
               if (notifResponse.status === 201) {
                 const { message } = emailResponse.data;
-                setBookData(emailResponse.data)
+                setBookData((prevBookData) => 
+                  prevBookData.filter((booking) => booking._id !== selectedBooking._id)
+                );
                 toast.success(message);
                 setAcceptModal(false);
               }
@@ -163,24 +164,23 @@ const ApprovalPalawan = () => {
             }
           }
         } catch (error) {
-          console.error("Error details:", error.response ? error.response.data : error.message);
-          toast.error(error);
+          toast.error(error.message || "Error sending approval email.");
         }
       }
     } catch (error) {
-      console.error("Error details:", error.response ? error.response.data : error.message);
-      toast.error(error);
+      toast.error(error.message || "Error updating reservation.");
     }
   };
+  
 
   const handleRejectConfirm = async (e) => {
     e.preventDefault();
-
+  
     if (!formData.approval.reason) {
       toast.error("Please state your reason.");
       return;
     }
-
+  
     const updatedReserve = {
       ...selectedBooking,
       confirmation: false,
@@ -190,36 +190,36 @@ const ApprovalPalawan = () => {
         reason: formData.approval.reason,
       },
     };
-
+  
     try {
       const token = localStorage.getItem("authToken");
       const headers = {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       };
-
+  
       const updateResponse = await axios.patch(
         `https://booking-system-ge1i.onrender.com/api/book/edit/${selectedBooking._id}`,
         updatedReserve,
         { headers }
       );
-
-      if (updateResponse.status === 201) {
+  
+      if (updateResponse.status === 200) {
         try {
           const emailData = {
             _id: selectedBooking._id,
-            email: selectedBooking.user.email
+            email: selectedBooking.user.email,
           };
-
+  
           const emailResponse = await axios.post(
             `https://booking-system-ge1i.onrender.com/api/auth/approval`,
             emailData,
             { headers }
           );
-
+  
           if (emailResponse.status === 201) {
             const date = new Date(updateResponse.data.user.scheduleDate).toLocaleDateString();
-            const messageContent = `Your reservation ${updateResponse.data.title} on ${date} has been rejected`
+            const messageContent = `Your reservation ${updateResponse.data.title} on ${date} has been rejected.`;
             const notifData = {
               booking: updateResponse.data._id,
               message: messageContent,
@@ -229,24 +229,25 @@ const ApprovalPalawan = () => {
               receiverType: "user",
               createdAt: new Date().toISOString(),
             };
-
+  
             try {
-
               const notifResponse = await axios.post(
                 `https://booking-system-ge1i.onrender.com/api/notif/new`,
                 notifData,
                 { headers }
               );
-
+  
               if (notifResponse.status === 201) {
                 const { message } = emailResponse.data;
-                setBookData(emailResponse.data)
-                setFormData(() => ({
-                  ...emailResponse.data,
+                // Remove the rejected booking from bookData
+                setBookData((prevBookData) => 
+                  prevBookData.filter((booking) => booking._id !== selectedBooking._id)
+                );
+                setFormData({
                   approval: {
-                    reason: ""
-                  }
-                }));
+                    reason: "",
+                  },
+                });
                 toast.success(message);
                 setRejectModal(false);
               }
@@ -255,13 +256,14 @@ const ApprovalPalawan = () => {
             }
           }
         } catch (error) {
-          toast.error(error);
+          toast.error(error.message || "Error sending rejection email.");
         }
       }
     } catch (error) {
-      toast.error(error);
+      toast.error(error.message || "Error updating reservation.");
     }
   };
+  
 
   return (
     <div className='listCont1'>

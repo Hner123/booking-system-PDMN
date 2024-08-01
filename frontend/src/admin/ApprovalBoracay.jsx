@@ -118,7 +118,7 @@ const ApprovalBoracay = () => {
         { headers }
       );
 
-      if (updateResponse.status === 201) {
+      if (updateResponse.status === 200) {
         try {
           const emailData = {
             _id: selectedBooking._id,
@@ -204,7 +204,7 @@ const ApprovalBoracay = () => {
         { headers }
       );
 
-      if (updateResponse.status === 201) {
+      if (updateResponse.status === 200) {
         try {
           const emailData = {
             _id: selectedBooking._id,
