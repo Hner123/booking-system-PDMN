@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import WithAuthAdmin from '../auth/WithAuthAdmin';
 
 const ApprovalBoracay = () => {
   const [rejectModal, setRejectModal] = useState(false);
@@ -342,4 +343,4 @@ const ApprovalBoracay = () => {
   );
 };
 
-export default ApprovalBoracay;
+export default WithAuthAdmin(ApprovalBoracay);

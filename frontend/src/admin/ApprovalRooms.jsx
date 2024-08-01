@@ -46,6 +46,7 @@ import './AdminPages.css';
 import roomBgPalawan from '../assets/palawan2.jpg';
 import roomBgBoracay from '../assets/boracay.jpg';
 import roomBgBoth from '../assets/both.jpg';
+import WithAuthAdmin from '../auth/WithAuthAdmin';
 
 const ApprovalRoom = ({ sidebarOpen }) => {
   const navigate = useNavigate();
@@ -144,4 +145,4 @@ const ApprovalRoom = ({ sidebarOpen }) => {
   );
 };
 
-export default ApprovalRoom;
+export default WithAuthAdmin(ApprovalRoom);

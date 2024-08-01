@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import './AdminPages.css';
 import { toast } from 'react-toastify';
+import WithAuthAdmin from '../auth/WithAuthAdmin';
 
 const ApprovalDetails = ({ sidebarOpen }) => {
   const { roomName } = useParams();
@@ -344,4 +345,4 @@ const ApprovalDetails = ({ sidebarOpen }) => {
   );
 };
 
-export default ApprovalDetails;
+export default WithAuthAdmin(ApprovalDetails);
