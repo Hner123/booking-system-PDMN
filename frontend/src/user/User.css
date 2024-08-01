@@ -58,7 +58,8 @@
   border-color: #007BFF;
 }
 
-.login-form button {
+.login-form button, 
+.reg-btn {
   width: 100%;
   padding: 12px;
   background-color: #ff5c5c;
@@ -668,7 +669,7 @@
   margin: 0%;
 }
 
-.button-group {
+.reg-group {
   display: flex;
   gap: 10px;
   margin-top: 10px;

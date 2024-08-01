@@ -319,19 +319,19 @@ button[type="redirect"]:hover {
 }
 
 /* Table Styles */
-table {
+.employee-list-page table {
     width: 100%;
     border-collapse: collapse;
 }
 
-th,
-td {
+.employee-list-page th,
+.employee-list-page td {
     border: 1px solid #ddd;
     padding: 8px;
     text-align: left;
 }
 
-th {
+.employee-list-page th {
     background-color: #f4f4f4;
 }
 

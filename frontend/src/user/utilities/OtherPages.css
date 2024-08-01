@@ -71,7 +71,7 @@
 
 /* OtherPages.css */
 
-.verify-container {
+.ver-container {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -80,7 +80,7 @@
     padding: 20px;
 }
 
-.verify-container img {
+.ver-container img {
     max-width: 200px;
     margin: auto;
     max-height: 200px;
@@ -88,7 +88,7 @@
     height: 100%;
 }
 
-.verify {
+.ver {
     background-color: #ffffff;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -98,13 +98,13 @@
     width: 100%;
 }
 
-.verify h2 {
+.ver h2 {
     margin-bottom: 10px;
     font-size: 24px;
     color: #333;
 }
 
-.verify p {
+.ver p {
     margin-bottom: 20px;
     font-size: 16px;
     color: #666;

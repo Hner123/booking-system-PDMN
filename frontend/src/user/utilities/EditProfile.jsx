@@ -239,6 +239,7 @@ const EditProfile = () => {
                   placeholder="Enter your new email address"
                   disabled={!emailEditable}
                   required
+                  className="emailInput "
                 />
               </div>
               {emailEditable ? (

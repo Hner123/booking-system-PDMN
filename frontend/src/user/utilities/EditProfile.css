@@ -140,7 +140,8 @@
 }
 
 /* General styles for password input fields */
-.passwordInput {
+.passwordInput,
+.emailInput {
     width: 100%;
     padding: 8px;
     margin-top: 0px;
