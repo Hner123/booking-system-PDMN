@@ -28,7 +28,10 @@ const Verify = () => {
           );
   
           if (updateResponse.status === 201) {
-            toast.success("Email updated successfully!");
+            localStorage.removeItem("resetId");
+            localStorage.removeItem("newEmail");
+            localStorage.removeItem("emailToken");
+            toast.success("Email updated successfully!");   
           } else {
             toast.error("Failed to update email.");
           }
