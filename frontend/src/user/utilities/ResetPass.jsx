@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import './OtherPages.css'; // Import the specific CSS file
 
-const ResetPass = () => {
+const ResetPassword = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -14,27 +15,27 @@ const ResetPass = () => {
     };
 
     return (
-        <div className="verify-container">
-            <div className="verify" >
+        <div className="reset-container">
+            <div className="reset-form">
                 <h2>Change Password</h2>
                 <p>Input your new password</p>
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
-                    <h4 style={{margin:'0', textAlign:'left'}}>New Password:</h4>
+                        <h4>New Password:</h4>
                         <input
                             type="password"
-                            id="confirmPassword"
-                            name="confirmPassword"
+                            id="newPassword"
+                            name="newPassword"
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
                             required
                         />
                     </div>
-                    <button style={{fontSize:"15px", marginTop:'5px'}} type="submit">Submit</button>
+                    <button type="submit" className="reset-form-button">Submit</button>
                 </form>
             </div>
         </div>
     );
 };
 
-export default ResetPass;
+export default ResetPassword;
