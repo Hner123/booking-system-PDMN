@@ -53,7 +53,7 @@ const CreateNotification = async (req, res) => {
     });
 
     const io = req.app.get('socketio');
-    io.to(notif.receiver).emit('newNotification', result);
+    io.to(notif.receiver._id).emit('newNotification', result);
 
     res.status(201).json({ result });
   } catch (err) {

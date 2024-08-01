@@ -15,7 +15,7 @@ const transporter = mailer.createTransport({
   },
 });
 
-const LogChangePass = async (req, res) => {
+const ChangePass = async (req, res) => {
   try {
     const { email } = req.body;
 
@@ -27,14 +27,11 @@ const LogChangePass = async (req, res) => {
       const passToken = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
         expiresIn: "5m",
       });
-      const username = user.userName;
-      const id = user._id;
+      const name = user.firstName + " " + user.surName;
 
-      // Direct URL of the company logo image. Copy the id of the drive link paste it after id=
       const companyLogoUrl =
         "https://drive.google.com/uc?id=108JoeqEjPR7HKfbNjXdV30wvvy9oDk_B";
 
-      // HTML content with embedded image and username
       const htmlContent = `
         <!DOCTYPE html>
         <html lang="en">
@@ -42,18 +39,18 @@ const LogChangePass = async (req, res) => {
             <meta charset="UTF-8">
             <meta http-equiv="X-UA-Compatible" content="IE=edge">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Welcome to GDS Booking System</title>
+            <title>Password Change - GDS Booking System</title>
         </head>
         <body style="font-family: Arial, sans-serif;">
             <div style="max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f4f4f4; color: #000; font-size: 16px;">
                 <img src="${companyLogoUrl}" alt="Company Logo" style="max-width: 200px; margin: 0 auto 20px; display: block;">
-                <h2 style="margin-bottom: 20px; text-align: center; color: #000;">Password Reset</h2>
-                <p>Hello ${username},</p>
-                <p>Welcome to GDS Booking System! We are excited to have you on board. To access the application, please set up your password by clicking the button below:</p>
+                <h2 style="margin-bottom: 20px; text-align: center; color: #000;">Password Change Request</h2>
+                <p>Hello ${name},</p>
+                <p>We received a request to change the password associated with your GDS Booking System account. If you made this request, please click the button below to reset your password:</p>
                 <p style="text-align: center;">
-                    <a href="https://tiktok.com" style="display: inline-block; padding: 10px 20px; background-color: rgb(234, 88, 12); color: #fff; text-decoration: none; border-radius: 5px;">Set Up Password</a>
+                    <a href="http://localhost:5173/reset-pass" style="display: inline-block; padding: 10px 20px; background-color: rgb(234, 88, 12); color: #fff; text-decoration: none; border-radius: 5px;">Reset Password</a>
                 </p>
-                <p>If you did not create an account, please ignore this email.</p>
+                <p>If you did not request this change, please ignore this email or contact our support team immediately.</p>
                 <p>Best regards,</p>
                 <p>Management</p>
             </div>
@@ -72,7 +69,6 @@ const LogChangePass = async (req, res) => {
       res.status(201).json({
         message: "An email has been sent into your account",
         passToken,
-        passId: id,
       });
     } else {
       // Send error response indicating user not found
@@ -330,7 +326,7 @@ const CheckPassWithAuth = (req, res) => {
 };
 
 module.exports = {
-  LogChangePass,
+  ChangePass,
   ChangeEmail,
   Approval,
   ValidateUserData,

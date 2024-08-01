@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const ReserveModel = require("../models/ReserveModel");
 const NotifModel = require("../models/NotifModel");
 const requireAuth = require("../utils/requireAuth");
+const cron = require('node-cron');
 
 const GetAllReserve = async (req, res) => {
   try {
@@ -133,6 +134,34 @@ const DeleteReserve = async (req, res) => {
   }
 };
 
+const deleteInvalidReservations = async () => {
+  try {
+    const invalidReservations = await ReserveModel.find({
+      $or: [
+        { title: "" },
+        { scheduleDate: null },
+      ]
+    });
+
+    const invalidReserveIds = invalidReservations.map(reservation => reservation._id);
+
+    const result = await ReserveModel.deleteMany({
+      _id: { $in: invalidReserveIds }
+    });
+
+    await NotifModel.deleteMany({ 'booking': { $in: invalidReserveIds } });
+
+    console.log(`Deleted ${result.deletedCount} invalid reservations.`);
+  } catch (err) {
+    console.error(`Error deleting invalid reservations: ${err.message}`);
+  }
+};
+
+// Schedule the task to run at 8 AM and 8 PM every day
+cron.schedule('0 8,20 * * *', () => {
+  console.log('Running deleteInvalidReservations at', new Date());
+  deleteInvalidReservations();
+});
 
 const GetAllReserveWithAuth = (req, res) => {
   requireAuth(req, res, async () => {
