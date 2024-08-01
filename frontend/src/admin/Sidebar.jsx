@@ -28,12 +28,10 @@ const Sidebar = () => {
 
   useEffect(() => {
     const adminId = localStorage.getItem("adminId");
-    if (!adminId) return;
 
     socket = io(ENDPOINT);
     socket.emit("setup", { _id: adminId });
 
-    socket.on("connected", () => setSocketConnected(true));
     socket.on("newNotification", (newNotification) => {
       if (newNotification.receiver._id === adminId) {
         setNotifications((prevNotifications) => [
@@ -44,7 +42,7 @@ const Sidebar = () => {
     });
 
     return () => {
-      if (socket) socket.disconnect();
+      socket.disconnect();
     };
   }, []);
 

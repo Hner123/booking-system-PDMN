@@ -281,8 +281,39 @@ const ReservationFormsDetails = () => {
       );
 
       if (updateResponse.status === 200) {
-        toast.success("Reservation successfully updated.");
-        navigate("/confirmation");
+        if(updatedReserve.confirmation){
+          toast.success("Successfully updated information.");
+          navigate("/confirmation");
+        } else {
+          const messageContent = `A new reservation titled '${updateResponse.data.title}' by ${updateResponse.data.user.firstName} ${updateResponse.data.user.surName} for the ${updateResponse.data.roomName} room needs approval.`
+          const notifData = {
+            booking: updateResponse.data._id,
+            message: messageContent,
+            sender: updateResponse.data.user._id,
+            senderType: "user",
+            receiver: "66861570dd3fc08ab2a6557d",
+            receiverType: "admin",
+          };
+  
+          try {
+      
+            const notifResponse = await axios.post(
+              `https://booking-system-ge1i.onrender.com/api/notif/new`,
+              notifData,
+              { headers }
+            );
+      
+            if (notifResponse.status === 201) {
+              toast.success("Successfully updated information.");
+              navigate("/confirmation");
+            }
+          } catch (error) {
+            console.log(error)
+            toast.error("Error updating information. Please try again later.");
+          }
+        }
+      } else {
+        toast.error("An error occurred while updating the reservation.");
       }
     } catch (error) {
       toast.error("An error occurred while updating the reservation.");
@@ -293,8 +324,34 @@ const ReservationFormsDetails = () => {
     setShowDiscardModal(true);
   };
 
-  const handleConfirmDiscard = () => {
-    navigate("/reservation");
+  const handleConfirmDiscard = async (e) => {
+    setShowDiscardModal(false);
+
+    try {
+      const reserveId = localStorage.getItem("reserveToken");
+      const token = localStorage.getItem("authToken");
+
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      };
+
+      const updateResponse = await axios.delete(
+        `https://booking-system-ge1i.onrender.com/api/book/delete/${reserveId}`,
+        { headers }
+      );
+
+      if (updateResponse.status === 200) {
+        localStorage.removeItem("reserveToken");
+        navigate("/dashboard");
+      }
+    } catch (error) {
+      console.error("Error during delete:", error);
+    }
+  };
+
+  const handleCancelDiscard = () => {
+    setShowDiscardModal(false);
   };
 
   return (

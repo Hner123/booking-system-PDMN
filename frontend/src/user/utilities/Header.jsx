@@ -1,13 +1,12 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useNavigate, useLocation, UNSAFE_NavigationContext as NavigationContext } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import * as FaIcons from "react-icons/fa";
 import logo from "../../assets/logos/GDSLogo.png";
 import profile from "../../assets/Default Avatar.png";
 import "./Header.css";
 import axios from "axios";
-import WithAuth from '../../auth/WithAuth';
+import Modal from "./Modal";
 import io from 'socket.io-client';
-// import Modal from "./Modal";
 
 const ENDPOINT = 'https://booking-system-ge1i.onrender.com';
 let socket;
@@ -18,6 +17,10 @@ const Header = () => {
   const [isMenuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+
+  const [showModal, setShowModal] = useState(false);
+  const reserve = localStorage.getItem("reserveToken");
+
   const profileModalRef = useRef(null);
   const notifModalRef = useRef(null);
 
@@ -31,10 +34,9 @@ const Header = () => {
     socket = io(ENDPOINT);
     socket.emit("setup", { _id: userId });
 
-    socket.on("connected", () => setSocketConnected(true));
     socket.on("newNotification", (newNotification) => {
       if (newNotification.receiver._id === userId) {
-        setNotifications((prevNotifications) => [newNotification, ...prevNotifications]);
+        setNotifications(prev => [newNotification, ...prev]);
       }
     });
 
@@ -97,45 +99,43 @@ const Header = () => {
     };
   }, []);
 
+  const [prevLocation, setPrevLocation] = useState(null);
+  const [nextLocation, setNextLocation] = useState(location.pathname);
+
   useEffect(() => {
-    // Log the current path when the component mounts
-    console.log("Current Path:", location.pathname);
-    if(location.pathname === "/reserve")
-      console.log("eyyy")
-  }, [location]);
+    const currentPath = location.pathname;
+    const excludedPaths = ['/reserve', '/reserveform', '/confirmation'];
 
-  // const [prevLocation, setPrevLocation] = useState(location.pathname);
-  // useEffect(() => {
-  //   const currentPath = location.pathname;
-  //   if (currentPath !== prevLocation) {
-  //     console.log(`Navigated from ${prevLocation} to ${currentPath}`);
-  //     setPrevLocation(currentPath); // Update previous location
-  //   }
-  // }, [location, prevLocation]);
+    if (excludedPaths.includes(currentPath)) {
+      setPrevLocation(currentPath);
+    } else if (prevLocation && !excludedPaths.includes(prevLocation)) {
+      setPrevLocation(prevLocation);
+    }
 
-  // const [prevLocation, setPrevLocation] = useState(location.pathname);
-  // const [nextLocation, setNextLocation] = useState(null);
-  // const [showModal, setShowModal] = useState(false);
+    if (excludedPaths.includes(prevLocation) && !excludedPaths.includes(currentPath) && !showModal) {
+      if (reserve) {
+        setNextLocation(currentPath);
+        setShowModal(true);
+      }
+    }
+  }, [location, reserve, showModal, prevLocation]);
+  
 
-  // useEffect(() => {
-  //   const currentPath = location.pathname;
-  //   if (prevLocation === '/reserve' && currentPath !== '/reserve' && !showModal) {
-  //     setNextLocation(currentPath);
-  //     setShowModal(true);
-  //     navigate(prevLocation); // Revert back to the reserve page
-  //   }
-  // }, [location, prevLocation, showModal, navigate]);
-
-  // const handleConfirm = () => {
-  //   setShowModal(false);
-  //   setPrevLocation(nextLocation); // Confirm the navigation
-  // };
-
-  // const handleCancel = () => {
-  //   setShowModal(false);
-  //   navigate(prevLocation); // Stay on the current page
-  // };
-
+  const handleConfirm = () => {
+    setShowModal(false);
+    setPrevLocation(nextLocation);
+    localStorage.removeItem("reserveToken");
+  };
+  
+  const handleCancel = () => {
+    setShowModal(false);
+    if (prevLocation !== nextLocation) {
+      navigate(prevLocation);
+    } else {
+      navigate('/reserve');
+    }
+  };
+  
   const handleModalToggle = () => {
     setProfileOpen(!isProfileOpen);
     setNotifOpen(false);
@@ -180,11 +180,11 @@ const Header = () => {
         <img src={logo} alt="Logo" />
       </div>
 
-      {/* <Modal
+      <Modal
         show={showModal}
         onConfirm={handleConfirm}
         onCancel={handleCancel}
-      /> */}
+      />
 
       <div className="header-actions">
         <div className="user-list-icon" onClick={navigateUserList}>

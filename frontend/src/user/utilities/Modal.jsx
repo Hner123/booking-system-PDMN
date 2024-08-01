@@ -7,7 +7,7 @@ const Modal = ({ show, onConfirm, onCancel }) => {
   return (
     <div className="modal-overlay">
       <div className="modal-content">
-        <h2>Are you sure you want to leave this page?</h2>
+        <h2>You have unsaved changes in your reservation. <br/> Are you sure you want to leave?</h2>
         <button onClick={onConfirm}>Yes</button>
         <button onClick={onCancel}>No</button>
       </div>

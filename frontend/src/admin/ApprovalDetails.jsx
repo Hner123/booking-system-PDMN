@@ -51,14 +51,26 @@ const ApprovalDetails = ({ sidebarOpen }) => {
     const endTime = new Date(booking.endTime);
     const duration = (endTime - startTime) / (1000 * 60 * 60); // Duration in hours
 
-    if (duration > 1 && booking.caps.pax === "8-More") {
-      return "Reservation is for more than 1 hour and requires both rooms.";
-    } else if (duration > 1) {
-      return "Reservation is for more than 1 hour.";
-    } else if (booking.caps.pax === "8-More") {
-      return "Reservation is for both rooms.";
+    if(roomName === "Palawan and Boracay"){
+      if (duration > 1 && booking.caps.pax === "8-More") {
+        return "Reservation is for more than 1 hour and requires both rooms.";
+      } else if (duration > 1) {
+        return "Reservation is for more than 1 hour.";
+      } else if (booking.caps.pax === "8-More") {
+        return "Reservation is for both rooms.";
+      } else {
+        return booking.reason || "No specific reason provided.";
+      }
     } else {
-      return booking.reason || "No specific reason provided.";
+      if (duration > 1 && booking.caps.pax === "1-2") {
+        return "Reservation is for more than 1 hour and only 1-2 people.";
+      } else if (duration > 1) {
+        return "Reservation is for more than 1 hour.";
+      } else if (booking.caps.pax === "1-2") {
+        return "Reservation is for only 1-2 people.";
+      } else {
+        return booking.reason || "No specific reason provided.";
+      }
     }
   };
 

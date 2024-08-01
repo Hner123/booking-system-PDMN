@@ -233,6 +233,7 @@ import { useNavigate } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import './AdminPages.css';
 import { toast } from 'react-toastify';
+import WithAuthAdmin from '../auth/WithAuthAdmin';
 
 const EmployeeList = () => {
   const navigate = useNavigate();
@@ -284,101 +285,90 @@ const EmployeeList = () => {
   }, []);
 
   const deleteUser = async (userId) => {
-	try {
-	  const token = localStorage.getItem("adminToken");
-	  const headers = {
-		Authorization: `Bearer ${token}`,
-		"Content-Type": "application/json",
-	  };
-  
-	  const response = await axios.delete(
-		`https://booking-system-ge1i.onrender.com/api/user/delete/${userId}`,
-		{ headers }
-	  );
-  
-	  if (response.status === 200) {
-		// Remove the deleted user from the state
-		setUsers(prevUsers => prevUsers.filter(user => user._id !== userId));
-		setSortedUsers(prevSortedUsers => prevSortedUsers.filter(user => user._id !== userId));
-		toast.success("User deleted successfully.");
-	  }
-	} catch (error) {
-	  console.error("Error deleting user:", error);
-	  toast.error("Failed to delete user.");
-	}
+    try {
+      const token = localStorage.getItem("adminToken");
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      };
+
+      const response = await axios.delete(
+        `https://booking-system-ge1i.onrender.com/api/user/delete/${userId}`,
+        { headers }
+      );
+
+      if (response.status === 200) {
+        // Remove the deleted user from the state
+        setUsers(prevUsers => prevUsers.filter(user => user._id !== userId));
+        setSortedUsers(prevSortedUsers => prevSortedUsers.filter(user => user._id !== userId));
+        toast.success("User deleted successfully.");
+      }
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      toast.error("Failed to delete user.");
+    }
   };
-  
+
   const handleEditDeptClick = (userId) => {
-	const user = users.find(user => user._id === userId);
-	setSelectedUser(user);
-	setSelectedDept(user?.department || '');
-	setEditDeptModal(true);
+    const user = users.find(user => user._id === userId);
+    setSelectedUser(user);
+    setSelectedDept(user?.department || '');
+    setEditDeptModal(true);
   };
-  
-  const saveDeptChange = async () => {
-	if (!selectedUser || !selectedDept) return;
-  
-	try {
-	  const token = localStorage.getItem("adminToken");
-	  const headers = {
-		Authorization: `Bearer ${token}`,
-		"Content-Type": "application/json",
-	  };
-  
-	  const response = await axios.put(
-		`https://booking-system-ge1i.onrender.com/api/user/update/${selectedUser._id}`,
-		{ department: selectedDept },
-		{ headers }
-	  );
-  
-	  if (response.status === 200) {
-		// Update the user list
-		setUsers(prevUsers => prevUsers.map(user =>
-		  user._id === selectedUser._id ? { ...user, department: selectedDept } : user
-		));
-		setSortedUsers(prevSortedUsers => prevSortedUsers.map(user =>
-		  user._id === selectedUser._id ? { ...user, department: selectedDept } : user
-		));
-		toast.success("Department updated successfully.");
-		setEditDeptModal(false);
-	  }
-	} catch (error) {
-	  console.error("Error updating department:", error);
-	  toast.error("Failed to update department.");
-	}
+
+  const saveDeptChange = async (userId) => {
+    console.log(userId)
+
+    try {
+      const token = localStorage.getItem("adminToken");
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      };
+
+      const response = await axios.patch(
+        `https://booking-system-ge1i.onrender.com/api/user/edit/${userId}`,
+        { department: selectedDept },
+        { headers }
+      );
+
+      if (response.status === 201) {
+        setUsers(prevUsers => prevUsers.map(user =>
+          user._id === userId ? { ...user, department: selectedDept } : user
+        ));
+        setSortedUsers(prevSortedUsers => prevSortedUsers.map(user =>
+          user._id === userId ? { ...user, department: selectedDept } : user
+        ));
+        toast.success("Department updated successfully.");
+        setEditDeptModal(false);
+      }
+    } catch (error) {
+      console.error("Error updating department:", error);
+      toast.error("Failed to update department.");
+    }
   };
-  
 
   useEffect(() => {
-	console.log("Users:", users); // Debugging line
-	console.log("Sort Criteria:", sortCriteria); // Debugging line
-  
-	let sorted;
-	if (sortCriteria) {
-	  sorted = users.filter(user => user.department === sortCriteria);
-	} else {
-	  sorted = users;
-	}
-	
-	console.log("Sorted Users:", sorted); // Debugging line
-	setSortedUsers(sorted);
-  }, [sortCriteria, users]);
-  
+    let sorted;
+    if (sortCriteria) {
+      sorted = users.filter(user => user.department === sortCriteria);
+    } else {
+      sorted = users;
+    }
 
-useEffect(() => {
-  if (users.length > 0) {
-    console.log("Users:", users); // Debugging line
-    console.log("Sort Criteria:", sortCriteria); // Debugging line
-
-    const sorted = sortCriteria
-      ? users.filter(user => user.department === sortCriteria)
-      : users;
-
-    console.log("Sorted Users:", sorted); // Debugging line
     setSortedUsers(sorted);
-  }
-}, [sortCriteria, users]);
+  }, [sortCriteria, users]);
 
+  useEffect(() => {
+    if (users.length > 0) {
+
+      const sorted = sortCriteria
+        ? users.filter(user => user.department === sortCriteria)
+        : users;
+
+      setSortedUsers(sorted);
+    }
+  }, [sortCriteria, users]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -458,13 +448,13 @@ useEffect(() => {
                     <td>{user.department}</td>
                     <td>
                       <button
-                        onClick={() => setEditDeptModal(true)}
+                        onClick={() => handleEditDeptClick(user._id)}
                         className="action-button edit"
                       >
                         Edit Dept
                       </button>
                       <button
-                        onClick={() => setShowDeleteModal(true)}
+                        onClick={() => { setShowDeleteModal(true); setUserToDelete(user) }}
                         className="action-button delete"
                       >
                         Delete
@@ -478,7 +468,7 @@ useEffect(() => {
         )}
       </div>
 
-      {editDeptModal && (
+      {editDeptModal && selectedUser && (
         <div className="edit-dept-modal">
           <div className="modal-content">
             <h2>Edit Department</h2>
@@ -495,7 +485,7 @@ useEffect(() => {
               ))}
             </select>
             <div className="modal-actions">
-              <button onClick={saveDeptChange} className="confirm-button">
+              <button onClick={() => saveDeptChange(selectedUser._id)} className="confirm-button">
                 Save
               </button>
               <button
@@ -509,26 +499,31 @@ useEffect(() => {
         </div>
       )}
 
-      {showDeleteModal && (
+
+      {showDeleteModal && userToDelete && (
         <div className="delete-confirmation-modal">
           <div className="modal-content">
             <h2>Confirm Deletion</h2>
             <p>
               Are you sure you want to delete the user{" "}
-              <strong>{userToDelete?.userName}</strong>?
+              <strong>{userToDelete.userName}</strong>?
             </p>
             <div className="modal-actions">
               <button
                 onClick={() => {
                   deleteUser(userToDelete._id);
                   setShowDeleteModal(false);
+                  setUserToDelete(null); // Clear userToDelete after deletion
                 }}
                 className="confirm-button"
               >
                 Yes, Delete
               </button>
               <button
-                onClick={() => setShowDeleteModal(false)}
+                onClick={() => {
+                  setShowDeleteModal(false);
+                  setUserToDelete(null);
+                }}
                 className="cancel-button"
               >
                 Cancel
@@ -537,8 +532,9 @@ useEffect(() => {
           </div>
         </div>
       )}
+
     </div>
   );
 };
 
-export default EmployeeList;
+export default WithAuthAdmin(EmployeeList);

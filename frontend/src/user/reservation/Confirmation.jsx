@@ -88,7 +88,7 @@ const BookingConfirmation = () => {
             View Details
           </button>
           <button className="dashboard-btn" onClick={handleReturnToDashboard}>
-            Return to Dashboard
+            Submit and Return
           </button>
         </div>
       </div>

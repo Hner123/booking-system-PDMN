@@ -6,8 +6,10 @@ import WithAuth from "../../auth/WithAuth";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 
-const Settings = () => {
+const EditProfile = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [showPassword2, setShowPassword2] = useState(false);
+  const [showPassword3, setShowPassword3] = useState(false);
   const [emailEditable, setEmailEditable] = useState(false);
   const [passwordEditable, setPasswordEditable] = useState(false);
   const [userData, setUserData] = useState(null);
@@ -20,6 +22,24 @@ const Settings = () => {
   });
   const [disabled, setDisabled] = useState(false);
   const [disabled2, setDisabled2] = useState(false);
+
+  const cancelEmailEdit = () => {
+    setEmailEditable(false);
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      email: userData.email,
+    }));
+  };
+
+  const cancelPassEdit = () => {
+    setPasswordEditable(false);
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      currPass: "",
+      passWord: "",
+      retype: ""
+    }));
+  };
 
   const userId = localStorage.getItem("userId");
 
@@ -192,9 +212,6 @@ const Settings = () => {
   return (
     <div className="">
       <ToastContainer />
-      {/* <div>
-        <h1>Edit Profile</h1>
-      </div> */}
       <div className="area">
         <div>
           <h1>Edit Profile</h1>
@@ -203,7 +220,6 @@ const Settings = () => {
           <div className="upload">
             <div className="profile-details">
               <p className="name"><strong>{`${userData.firstName} ${userData.surName}`}</strong> @{userData.userName}</p>
-              {/* <h3>@{userData.userName}</h3> */}
               <p><strong>Department:</strong> {userData.department}</p>
               <p><strong>Email:</strong> {userData.email}</p>
             </div>
@@ -236,7 +252,7 @@ const Settings = () => {
                   </button>
                   <button
                     type="button"
-                    onClick={() => setEmailEditable(false)}
+                    onClick={(cancelEmailEdit)}
                     className="edit_email"
                   >
                     Cancel
@@ -276,6 +292,11 @@ const Settings = () => {
                   {showPassword ? <FaEyeSlash /> : <FaEye />}
                 </button>
               </div>
+              {passwordEditable && (
+                <p style={{ textAlign: 'left', marginTop: '10px' }}>
+                  <a href="/forgot-pass">Forgot password?</a>
+                </p>
+              )}
               {passwordEditable ? (
                 <>
                   <button
@@ -287,7 +308,7 @@ const Settings = () => {
                   </button>
                   <button
                     type="button"
-                    onClick={() => setPasswordEditable(false)}
+                    onClick={(cancelPassEdit)}
                     className="edit_email"
                   >
                     Cancel
@@ -308,7 +329,7 @@ const Settings = () => {
                 <div className="formGroup1" style={{ position: "relative" }}>
                   <label htmlFor="password">New Password:</label>
                   <input
-                    type={showPassword ? "text" : "password"}
+                    type={showPassword2 ? "text" : "password"}
                     id="password"
                     name="passWord"
                     value={formData.passWord}
@@ -318,11 +339,11 @@ const Settings = () => {
                   />
                   <button
                     type="button"
-                    onClick={() => setShowPassword(!showPassword)}
+                    onClick={() => setShowPassword2(!showPassword2)}
                     className="togglePassword"
                     style={{ position: "absolute", right: "10px", top: "50%" }}
                   >
-                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                    {showPassword2 ? <FaEyeSlash /> : <FaEye />}
                   </button>
                 </div>
               </div>
@@ -332,7 +353,7 @@ const Settings = () => {
                 <div className="formGroup1" style={{ position: "relative" }}>
                   <label htmlFor="retype">Retype New Password:</label>
                   <input
-                    type={showPassword ? "text" : "password"}
+                    type={showPassword3 ? "text" : "password"}
                     id="retype"
                     name="retype"
                     value={formData.retype}
@@ -341,11 +362,11 @@ const Settings = () => {
                     className="passwordInput"
                   />
                   <button
-                    onClick={() => setShowPassword(!showPassword)}
+                    onClick={() => setShowPassword3(!showPassword3)}
                     className="togglePassword"
                     style={{ position: "absolute", right: "10px", top: "50%" }}
                   >
-                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                    {showPassword3 ? <FaEyeSlash /> : <FaEye />}
                   </button>
                 </div>
               </div>
@@ -357,4 +378,4 @@ const Settings = () => {
   );
 };
 
-export default WithAuth(Settings);
+export default WithAuth(EditProfile);

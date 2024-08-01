@@ -271,7 +271,6 @@ const Dashboard = () => {
     []
   );
 
-
   const otherMeetingsColumns = React.useMemo(
     () => [
       { Header: "Meeting Title", accessor: "title" },
@@ -368,6 +367,7 @@ const Dashboard = () => {
       if (updateResponse.status === 201) {
         toast.success("Successfully changed info.");
         setFirstLogin(false);
+        window.location.reload();
       }
     } catch (error) {
       console.error("Error during patch:", error);
