@@ -1,497 +1,366 @@
-html body{
-    height: 0%;
-}
-
-button[type="redirect"]{
+button[type="redirect"] {
     padding: 0px;
     background-color: white;
     color: black;
     border: none;
     text-decoration: underline;
-    margin: 2ch 0px;
-
+    margin: 16px 0px;
 }
-button[type="redirect"]:hover{
+
+button[type="redirect"]:hover {
     color: #9c0b0b;
     background-color: white;
 }
-.sidebar{
+
+/* Sidebar.css */
+:root {
+    --sidebar-width: 60px;
+}
+
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    width: var(--sidebar-width);
+    height: 100%;
     background-color: white;
+    color: black;
     position: fixed;
     top: 0;
     left: 0;
-    padding: 2rem 0;
-    width: 15rem;
-    height: 100%;
-    justify-content: center;
-    z-index: 5;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    transition: width 0.2s cubic-bezier(0.18, 0.89, 0.32, 1.28), opacity 0.3s ease
+    transition: width 0.3s ease;
+    border-right: 2px solid #ddd;
+    z-index: 1000;
 }
 
-ul{
+.sidebar.closed {
+    width: 60px;
+}
+
+.sidebar.open {
+    width: 250px;
+}
+
+.sidebar-header {
     display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
     flex-direction: column;
+    width: 100%;
+}
+
+.logo {
+    width: 100%;
+}
+
+.sidebar ul {
     list-style-type: none;
     padding: 0;
-    margin:20px;
-    font-size: 18px;
-}
-.line, .line2{
-    content: '';
-    position: absolute;
-    right: 10px;
-    z-index: 0;
-    width: 5.5rem;
-    background-color: gray;
-    height: 1px;
-}
-.line{
-    top:225px;
-}
-.line2{
-    top:375px;
-}
-li .li{
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    flex-direction: column;
-    margin: 0.75rem 0;
-    width: 100%;
-    border-radius: 1rem;
+    flex: 1;
 }
 
-a, .notif-icon{
-    text-decoration: none;
+.sidebar ul li {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
     color: black;
-    font-size:15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin:  0 0 0 0.5rem;
-    gap:15px;
-    padding: 0;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.logodbs{
+.sidebar ul li a {
     display: flex;
     align-items: center;
-    justify-content: center;
-
+    color: black;
+    text-decoration: none;
+    width: 100%;
 }
-.logodbs img{
-    height: 40px;
+
+.sidebar ul li a:hover,
+.sidebar ul li:hover {
+    background-color: #f0f0f0;
+    color: #9c0b0b;
+}
+
+.sidebar ul li svg {
     margin-right: 10px;
 }
 
-.logodbss{
-    display: none;
-}
-.logodbss img{
-    height: 50px;
+.sidebar ul li span {
+    display: inline-block;
+    transition: opacity 0.3s ease;
 }
 
-.profileDetail{
-    margin: 35px 20px;
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-}
-
-.notification-modal{
-    position: absolute;
-    top: 250px;
-    left: 50px;
-    background-color: #fff;
-    padding: 0px 20px 30px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-
-    .closenotif{
-        position: relative;
-        top: 5px;
-        left: 140px;
-        border-radius: 20px;
-        border:none;
-        color: white;
-        background-color: gray;
-    }
-    .notifContnn{
-        
-        font-size: 10px;
-        overflow: hidden;
-        text-decoration: ellipse;
-        display: -webkit-box;
-        -webkit-line-clamp: 1;      /* Number of lines to show */
-        -webkit-box-orient: vertical;
-        margin-top: 10px;
-        margin-bottom: 10px; /* Space between notifications */
-        border-bottom: 1px solid #ccc; /* Light grey line, adjust color as needed */
-    }
-    .seeread{
-        display: flex;
-        gap: 2px;
-        justify-content: center;
-        button{
-            font-size: 10px;
-            border: none;
-            margin: 5px 2px 0px ;
-            border-radius: 2px;
-        }
-        button:hover{
-            background-color: #9c0b0b;
-            color: white;
-            border: none;
-        }
-    }
-}
-
-.Contain{
-    content:'';
-    background-color: #9c0b0b;
-    position: absolute;
-    right:-20px;
-    top:20px;
-    width: 35px;
-    height: 35px;
-    border-radius: 2rem;
-    z-index: 1;
-}
-.ContTrigger{
-    content: "";
-    width: 35px;
-    height: 35px;
-    background-color: #9c0b0b;
-    cursor: pointer;
-    z-index: 2;
+.sidebar.closed ul li span {
     opacity: 0;
 }
-.ContMenu{
- content: "";
- background-color: #9c0b0b;
- position: relative;
- z-index: 1;
- width: 20px;
- height: 3px;
- border-radius: 2rem;
- bottom: 19px;
- left:0.46rem;
 
+.sidebar.closed ul li svg {
+    margin-right: 0px;
 }
 
-.ContMenu::after{
-    content: "";
-    background-color: white;
-    position: absolute;
-    width: 20px;
-    height: 3px;
-    border-radius: 2rem;
-    top:0.4rem;
-    transform: translateY(-0.4rem) rotate(45deg);
-}
-.ContMenu::before{
-    content: "";
-    background-color: white;
-    position: absolute;
-    width: 20px;
-    height: 3px;
-    border-radius: 2rem;
-    top:-0.4rem;
-    transform: translateY(0.4rem) rotate(-45deg);
-}
-
-.menuContainer{
-    margin:3rem 0 0 0;
-}
-.last{
-    position:relative;
-    bottom:-400px;
-    left:0px;
-}
-
-.sidebar.active{
-    width: 5rem;
-    p.hed{
-        opacity: 0;
-    }
-    .logodbs{
-        display: none;
-    }
-    .logodbss{
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 83px 0px;
-    }
-    .last{
-        bottom: -150px;
-    }
-    .last a{
-        font-size: 25px;
-    }
-    .last p{
-        display: none;
-    }
-}
-
-.Contain.active{
-    .ContMenu{
-        background-color: #F9F6EE;
-    }
-    .ContMenu::before{
-        transform:translateY(0rem) rotate(0deg);
-    }
-    .ContMenu::after{
-        transform: translateY(0rem) rotate(0deg);
-    }
-}
-.profileDetail.active{
-    display: none;
-}
-.menuContainer.active{
-    p{
-        font-size: 0px;
-        opacity: 0;
-    }
-    a, .notif-icon{
-        margin-top:10px;
-        font-size: 30px;
-    }
-    li{
-        margin:20px 0px;
-    }
-
-
-    ul:first-child{
-        margin-top:100px;
-        margin-inline: 15px;
-    }
-    ul:last-child{
-        margin-inline: 15px;
-    }
-    .line{
-        top:260px;
-    }
-    .line2{
-        top:440px;
-    }
-}
-
-
-p.hed{
-    margin:0;
-}
-/*EMPLOYEE LIST*/
-
-
-.listButtonG{
+.sidebar-footer {
+    margin-top: auto;
+    padding: 10px;
+    border-top: 1px solid #ddd;
     display: flex;
-    gap:20px;
-    justify-content: flex-end;
-    margin: 30px 100px;
-    padding: 0px 5rem;
+    flex-direction: column;
+    align-items: start;
 }
 
-.listButtonG button{
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: background-color 0.3s;
-    width: 300px;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-
-}
-.listButtonG button:hover{
-    background-color: #B62626;
-    color: white;
-}
-
-.editBtn{
-    background-color: #B62626;
-    color: white;
-}
-
-.mainBtn {
-    background-color: #B62626;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: background-color 0.3s;
-    width: auto;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-}
-
-.secondBtn {
-    background-color: white;
+.logout-button {
+    margin: 5px 0;
+    padding: 10px 6px;
+    background-color: #f0f0f0;
     color: black;
     border: none;
-    padding: 10px 20px;
-    font-size: 16px;
     cursor: pointer;
-    border-radius: 4px;
-    transition: background-color 0.3s;
-    width: auto;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-}
-
-.mainBtn:hover {
-    background-color: #8c1d1d; 
-    color: white;
-}
-
-
-  /* TABLE */
-
-.horizonscroll{
-    
-    width: 80%;
-    margin: 0 auto;
-    padding: 0;
-}
-  .listTable {
-    width: 100%;
-    margin-top: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    border-collapse: collapse;
-    overflow-x: auto;
-  }
-
-  /* .horizonscroll table thead th{
-    position:absolute;
-  } */
-  .listTable th, .listTable td{
-    padding: 15px 20px;
-    text-align: center;
-    text-overflow: ellipsis;
-    width: auto;
-  }
-  td.tName, th.tName{
-    width: 450px;
-  }
-  td.tUname, th.tUname{
-    width: 250px;
-  }
-  td.tDept, th.tDept{
-    width: 650px;
-  }
-
-  .listTable th {
-    background-color: #f8f8f8;
-    font-weight: bold;
-    border-bottom: 2px solid #eee;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-  }
-  
-  .dropbtn{
+    transition: background-color 0.3s ease, color 0.3s ease;
     display: flex;
     align-items: center;
-    justify-content: center;
-    text-align: center;
-  }
-  .listTable td {
-    border-bottom: 1px solid #eee;
-  }
-  
-  .listTable tr:last-child td {
-    background-color: #f8f8f8;
-    border-radius: 10px;
-  }
-
-  .listTable tbody{
-    overflow: auto;
-  }
-
-
-.listMod{
-    display: flex;
-    flex-direction: row;
-    gap:20px;
-    justify-content: center;
-    margin: 10px 0px;
-    width: 20px;
-}
-.listMod button{
-    border: none;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: background-color 0.3s;
-    width: 400px;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    width: 100%;
 }
 
-.listMod button:hover{
-    background-color: #B62626;
-    color: white;
-}
-
-.editBtnadd{
+.logout-button:hover {
     background-color: #9c0b0b;
     color: white;
 }
-/* Sidebar.css */
 
-.dropdown {
-    position: relative;
-    display: inline-block;
-    width: 100%; /* Ensure the dropdown takes full width available */
-    max-width: 300px; 
+.menu-toggle-button {
+    background: none;
+    border: none;
+    color: black;
+    cursor: pointer;
+    font-size: 18px;
+    text-align: right;
 }
 
-.dropdown button {
-    background-color: #ffffff;
+.sidebar-footer svg {
+    margin-right: 10px;
+}
+
+.notifications {
+    position: fixed;
+    bottom: 15px;
+    right: 15px;
+    background-color: #f0f0f0;
     color: black;
-    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    z-index: 1001;
+    max-width: 300px;
+    overflow-y: auto;
+}
+
+.notification {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+    .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+        border-right: none;
+        border-bottom: 2px solid #ddd;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .sidebar-header {
+        border-bottom: none;
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 10px;
+        background-color: white;
+    }
+
+    .logo {
+        width: auto;
+        max-width: 120px;
+    }
+
+    .menu-toggle-button {
+        font-size: 1.5rem;
+    }
+
+    .sidebar ul {
+        display: flex;
+        flex-direction: column;
+        padding: 0;
+        margin: 0;
+    }
+
+    .sidebar ul li {
+        padding: 10px 15px;
+        border-bottom: none;
+        flex: 1;
+    }
+
+    .logout-button {
+        margin: 0;
+        padding: 10px;
+        width: 100%;
+        border-top: 1px solid #ddd;
+        background-color: #f0f0f0;
+    }
+
+    .notifications {
+        position: absolute;
+        bottom: 60px;
+        right: 10px;
+    }
+}
+
+/* EmployeeList.css */
+.employee-list-page {
+    display: flex;
+    height: 100vh;
+}
+
+.employee-list-content {
+    margin-left: var(--sidebar-width);
+    padding: 20px;
+    flex: 1;
+    transition: margin-left 0.3s ease;
+}
+
+.employee-list-page .sidebar.open+.employee-list-content {
+    margin-left: 250px;
+}
+
+.employee-list-page .sidebar.closed+.employee-list-content {
+    margin-left: 60px;
+}
+
+.button-group {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    margin: 10px 0px;
+}
+
+.add-button {
     padding: 10px 20px;
-    font-size: 16px;
+    border: none;
+    background-color: #9c0b0b;
+    color: white;
     cursor: pointer;
     border-radius: 4px;
-    transition: background-color 0.3s;
-    width: 100%; /* Button takes full width of parent .dropdown */
-    text-align: center; /* Align text to the left */
 }
 
-.dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #f9f9f9;
-    width: 100%;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
+.add-button:hover {
+    background-color: #770909;
 }
 
-.dropdown-content button {
-    color: black;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-    background-color: white;
+/* Dropdown Styles */
+.dropdown-container {
+    position: relative;
+}
+
+.sort-button {
+    padding: 10px;
     border: none;
-    width: 100%;
-    text-align: left;
+    background-color: #9c0b0b;
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.sort-button:hover {
+    background-color: #770909;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: white;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    z-index: 1000;
+    border-radius: 4px;
+}
+
+.dropdown-menu li {
+    padding: 10px;
     cursor: pointer;
 }
 
-.dropdown-content button:hover {
-    background-color: #f1f1f1;
-    color: #9c0b0b;}
+.dropdown-menu li:hover {
+    background-color: #f4f4f4;
+}
 
-.dropdown:hover .dropdown-content {display: block;}
+/* Table Styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
 
+th,
+td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #f4f4f4;
+}
+
+/* Action Buttons */
+.action-button {
+    padding: 5px 10px;
+    border: none;
+    color: white;
+    cursor: pointer;
+    margin: 2px;
+    border-radius: 4px;
+}
+
+.action-button:hover {
+    opacity: 0.8;
+}
+
+.action-button.edit {
+    background-color: #d65d5d; 
+}
+
+.action-button.delete {
+    background-color: #d81010;
+}
+
+.delete-confirmation-modal,
+.edit-dept-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px;
+    max-width: 90%;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
 
 /*add employee*/
 .addForm {
@@ -507,18 +376,18 @@ p.hed{
     box-shadow: 0px 4px 4px 0px #7c8b9d;
 }
 
-.formGroup{
+.formGroup {
     display: flex;
     align-items: center;
     margin-bottom: 30px;
 }
 
-.formGroup label{
+.formGroup label {
     flex: 1;
     margin-right: 10px;
 }
 
-.formGroup input{
+.formGroup input {
     flex: 2;
     padding: 8px;
     border: 1px solid #ccc;
@@ -526,18 +395,21 @@ p.hed{
     font-size: 16px;
 }
 
-.addGroup{
+.addGroup {
     display: flex;
     justify-content: flex-end;
-    gap:20px;
+    gap: 20px;
     margin-top: 50px;
 }
 
-.listCont h1, .listCont1 h1, .listCont3 h1{
+.listCont h1,
+.listCont1 h1,
+.listCont3 h1 {
     font-size: 30px;
     text-align: center;
 }
-.listCont3{
+
+.listCont3 {
     margin: 100px 50px;
     display: flex;
     flex-direction: column;
@@ -546,18 +418,20 @@ p.hed{
 
 /* Example CSS for customizing select element */
 .formControl {
-    flex:2;
+    flex: 2;
     padding: 0.5rem;
     font-size: 1rem;
     border: 1px solid #ccc;
     border-radius: 4px;
     background-color: #fff;
     color: #333;
-    outline: none; /* Remove default outline */
+    outline: none;
+    /* Remove default outline */
 }
 
 .formControl:focus {
-    border-color: #007bff; /* Custom focus style */
+    border-color: #007bff;
+    /* Custom focus style */
 }
 
 .formControl option {
@@ -568,7 +442,8 @@ p.hed{
 }
 
 .formControl option:hover {
-    background-color: #007bff; /* Custom hover style */
+    background-color: #007bff;
+    /* Custom hover style */
     color: #fff;
 }
 
@@ -584,45 +459,52 @@ p.hed{
     outline: none;
     padding: 0;
     font-size: 1rem;
-    color: #333; /* Adjust color as needed */
+    color: #333;
+    /* Adjust color as needed */
 }
 
 
 /*approval*/
-.listCont2{
-    margin:0px 100px;
+.listCont2 {
+    margin: 0px 100px;
     font-size: 30px;
 }
-.approvalGroup{
+
+.approvalGroup {
     display: flex;
     flex-direction: column;
-    gap:30px;
+    gap: 30px;
     justify-content: center;
     align-items: center;
 
 }
-.approvalMeets{
+
+.approvalMeets {
     display: flex;
     flex-direction: row;
     align-items: center;
-    
+
 }
-.approvalDeets{
-    width:30em;
+
+.approvalDeets {
+    width: 30em;
     height: auto;
     padding: 20px 50px 30px;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
-.approvalDeets h2{
-    margin:0px 0px 20px;
+
+.approvalDeets h2 {
+    margin: 0px 0px 20px;
 }
-.approvalGrp{
+
+.approvalGrp {
     display: flex;
-    margin:30px 5px 10px;
+    margin: 30px 5px 10px;
     gap: 10px;
     justify-content: flex-end;
 }
-.approvalGrp button{
+
+.approvalGrp button {
     width: 10em;
     height: 3em;
     border: none;
@@ -630,26 +512,29 @@ p.hed{
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
 
-.approvalGrp button[type='approve']:hover, .gen_modal-content button[type='approve']:hover{
+.approvalGrp button[type='approve']:hover,
+.gen_modal-content button[type='approve']:hover {
     background-color: #008000;
-    color: white;   
+    color: white;
 }
 
-.approvalGrp button[type='reject']:hover, .reject_modal-content button[type='reject'], .gen_modal-content button[type='reject']:hover{
+.approvalGrp button[type='reject']:hover,
+.reject_modal-content button[type='reject'],
+.gen_modal-content button[type='reject']:hover {
     background-color: #9c0b0b;
     color: white;
 }
 
- 
+
 .approval-card-container {
     display: flex;
     gap: 50px;
     margin: auto;
     margin-top: 30px;
     flex: 1 1 1;
-  }
-  
-  .approveRooms {
+}
+
+.approveRooms {
     flex: 1;
     background-size: cover;
     background-position: center;
@@ -660,14 +545,14 @@ p.hed{
     align-items: center;
     justify-content: center;
     transition: transform 0.3s, box-shadow 0.3s;
-  }
-  
-  .approveRooms:hover {
+}
+
+.approveRooms:hover {
     transform: translateY(-10px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  }
-  
-  .approveRooms .overlayy {
+}
+
+.approveRooms .overlayy {
     background: linear-gradient(90deg, rgba(255, 186, 186, 0.5) 0%, rgba(255, 84, 84, 0.5) 100%);
     border-radius: 10px;
     padding: 20px;
@@ -680,9 +565,9 @@ p.hed{
     justify-content: center;
     align-items: center;
     position: relative;
-  }
-  
-  .approveRooms .overlayy button.forApproval-btn {
+}
+
+.approveRooms .overlayy button.forApproval-btn {
     position: absolute;
     bottom: 20px;
     left: 50%;
@@ -696,32 +581,36 @@ p.hed{
     cursor: pointer;
     transition: opacity 0.3s, bottom 0.3s;
     width: 90%;
-  }
-  
-  .approveRooms h3 {
+}
+
+.approveRooms h3 {
     font-weight: bolder;
     font-size: 40px;
-    text-shadow: 2px 4px 5px rgba(0, 0, 0, 0.25); /* Add a subtle text shadow */
+    text-shadow: 2px 4px 5px rgba(0, 0, 0, 0.25);
+    /* Add a subtle text shadow */
     transition: font-size 0.3s, margin-bottom 0.3s;
-  }
-  
-  .approveRooms:hover .overlayy button.forApproval-btn {
-    opacity: 1;
-    bottom: 40px; /* Adjust position when hovered */
-  }
-  
-  .approveRooms:hover h3 {
-    font-size: 44px; /* Adjust the size as needed */
-    margin-bottom: 80px; /* Adjust margin to make space for the button */
-  }
+}
 
-  .gen_modal {
+.approveRooms:hover .overlayy button.forApproval-btn {
+    opacity: 1;
+    bottom: 40px;
+    /* Adjust position when hovered */
+}
+
+.approveRooms:hover h3 {
+    font-size: 44px;
+    /* Adjust the size as needed */
+    margin-bottom: 80px;
+    /* Adjust margin to make space for the button */
+}
+
+.gen_modal {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); 
+    background-color: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -746,32 +635,35 @@ p.hed{
 }
 
 
-button[type='appr']{
+button[type='appr'] {
     background-color: #008000;
     color: white;
     cursor: pointer;
     transition: transform 0.1s ease-in-out;
 }
 
-button[type='not-appr']{
+button[type='not-appr'] {
     background-color: #9c0b0b;
     color: white;
     cursor: pointer;
     transition: transform 0.2s ease-in-out;
 }
-button[type='not-appr']:hover{
+
+button[type='not-appr']:hover {
     transform: scale(1.10);
 }
-button[type='appr']:hover{
+
+button[type='appr']:hover {
     transform: scale(1.10);
 }
-.gen_modal-content button[type='cancel']:hover{
+
+.gen_modal-content button[type='cancel']:hover {
     background-color: #58595a;
     color: white;
 }
 
 /* edit profile */
-.upload_edit{
+.upload_edit {
     width: auto;
     height: auto;
     margin-inline: 2%;
@@ -784,6 +676,7 @@ button[type='appr']:hover{
     color: #9c0b0b;
     width: auto;
 }
+
 .togglePasswordBtn_admin {
     position: absolute;
     right: 5px;
@@ -795,34 +688,38 @@ button[type='appr']:hover{
     outline: none;
     padding: 0;
     font-size: 1rem;
-    color: #333; /* Adjust color as needed */
+    color: #333;
+    /* Adjust color as needed */
 }
-.upload_edit{
+
+.upload_edit {
     display: flex;
     flex-direction: column;
 
-    h2{
-         font-size: 64px;
+    h2 {
+        font-size: 64px;
         margin: auto;
     }
-    h3{
+
+    h3 {
         margin: auto;
         font-size: 20px;
     }
-    h4{
-        margin-inline:40px;
+
+    h4 {
+        margin-inline: 40px;
         margin-bottom: 10px;
         margin-top: 40px;
     }
 }
 
-.upload_edit div:last-child{
+.upload_edit div:last-child {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
 }
 
-.changeFields_admin{
+.changeFields_admin {
     display: flex;
     flex-direction: column;
     width: auto;
@@ -835,14 +732,16 @@ button[type='appr']:hover{
     box-shadow: 0px 4px 4px 0px #7C8B9D;
 }
 
-.formGroup_admin{
+.formGroup_admin {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     margin-bottom: 30px;
 }
 
- input, option, select{
+input,
+option,
+select {
     flex: 2;
     padding: 8px;
     border: 1px solid #ccc;
@@ -851,40 +750,45 @@ button[type='appr']:hover{
     width: 100%;
 }
 
-.changeFields_admin form{
+.changeFields_admin form {
     margin: 2% 6%;
 }
 
-input[type='reject']{
+input[type='reject'] {
     width: 300px;
     height: 70px;
 }
-.changeFields_admin form>div{
+
+.changeFields_admin form>div {
     margin: 20px;
 }
 
-  @media (max-width:500px){
-    .sidebar{
+@media (max-width:500px) {
+    .sidebar {
         position: fixed;
     }
-    .sidebar.active{
+
+    .sidebar.active {
         width: 10%;
 
-        ul{
+        ul {
             font-size: 10px;
         }
-        a, .notif-icon{
+
+        a,
+        .notif-icon {
             text-decoration: none;
             color: black;
-            font-size:15px;
+            font-size: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin:  0 0 0 0;
-            gap:15px;
+            margin: 0 0 0 0;
+            gap: 15px;
             padding: 0;
         }
-        li .li{
+
+        li .li {
             display: flex;
             align-items: flex-start;
             justify-content: center;
@@ -893,127 +797,151 @@ input[type='reject']{
             width: 100%;
             border-radius: 1rem;
         }
-        .logodbss img{
+
+        .logodbss img {
             height: 30px;
         }
-        .line{
+
+        .line {
             display: none;
         }
-        .last{
-            position:relative;
-            bottom:-400px;
-            left:0px;
+
+        .last {
+            position: relative;
+            bottom: -400px;
+            left: 0px;
         }
     }
 
-    .horizonscroll{
+    .horizonscroll {
         height: 500px;
         overflow: auto;
     }
 
-    .nav-icons{
+    .nav-icons {
         display: none;
     }
-    .profileDetail > div{
-        margin:0px 0px;
+
+    .profileDetail>div {
+        margin: 0px 0px;
     }
 
-    .listButtonG{
-     justify-content: center;   
+    .listButtonG {
+        justify-content: center;
     }
-    .tableContainer{
+
+    .tableContainer {
         padding: 0px 30px;
     }
-    .listTable th, .listTable td {
+
+    .listTable th,
+    .listTable td {
         padding: 5px 10px;
         font-size: 12px;
     }
 
-    .listMod button{
-        width:70px;
+    .listMod button {
+        width: 70px;
         font-size: 10px;
         padding: 5px;
     }
 
-    .listTable td:last-child{
+    .listTable td:last-child {
         padding: 0px 100px;
     }
-    .notifCount{
-        top:418px;
-    }
-       /*add employee*/
-    .formGroup input{
-        width: 200px;
-        }
-    .dropdown button{
-        padding:10px 60px;
-    }
-    .listCont1{
 
-        h1{
+    .notifCount {
+        top: 418px;
+    }
+
+    /*add employee*/
+    .formGroup input {
+        width: 200px;
+    }
+
+    .dropdown button {
+        padding: 10px 60px;
+    }
+
+    .listCont1 {
+
+        h1 {
             font-size: large;
         }
-       margin:50px 0px;
-       text-align: center;
-       font-size: 20px;          
-        }
-        /*approval*/
-        .approvalMeets{
-            margin: auto;
-        }
-        .approvalDeets{
-            width:15em;
-        }
-        .approvalDeets h2{
-            font-size: 25px;
-        }
-        .approvalDeets p{
-            font-size: 10px;
-            text-align: left;
-        }
-        .approvalGrp{
-            display: flex;
-            margin:20px 5px 1px;
-            gap: 10px;
-            justify-content: flex-end;
-        }
-        .approvalGrp button{
-            font-size: 10px;
-        }
-        /*APPROVAL ROOMS*/
-        .listCont3{
-            margin:50px 20px 0px;
 
-            h1{
-                margin-bottom: 20px ;
-                font-size: 20px;
-                text-align: center;
-            }
-            .approval-card-container{
-                flex-direction: column;
-                margin: 0px 70px;
-            }
-            .approveRooms{
-                font-size: 11px;
-            }
-            .approveRooms {
-                width: 300px;
-                height:230px;
-            }
-            .overlayy button.forApproval-btn{
-                padding: 5px 0px;
-                width: 50%;
-                font-size: 11px;
-            }          
+        margin:50px 0px;
+        text-align: center;
+        font-size: 20px;
+    }
+
+    /*approval*/
+    .approvalMeets {
+        margin: auto;
+    }
+
+    .approvalDeets {
+        width: 15em;
+    }
+
+    .approvalDeets h2 {
+        font-size: 25px;
+    }
+
+    .approvalDeets p {
+        font-size: 10px;
+        text-align: left;
+    }
+
+    .approvalGrp {
+        display: flex;
+        margin: 20px 5px 1px;
+        gap: 10px;
+        justify-content: flex-end;
+    }
+
+    .approvalGrp button {
+        font-size: 10px;
+    }
+
+    /*APPROVAL ROOMS*/
+    .listCont3 {
+        margin: 50px 20px 0px;
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 20px;
+            text-align: center;
         }
-        
+
+        .approval-card-container {
+            flex-direction: column;
+            margin: 0px 70px;
+        }
+
+        .approveRooms {
+            font-size: 11px;
+        }
+
+        .approveRooms {
+            width: 300px;
+            height: 230px;
+        }
+
+        .overlayy button.forApproval-btn {
+            padding: 5px 0px;
+            width: 50%;
+            font-size: 11px;
+        }
+    }
+
 }
 
 
 @media (min-width:1900px) {
-    .listCont h1{
+    .listCont h1 {
         font-size: 50px;
     }
+
     .sidebar-collapsed {
         background-color: #f9fbfd;
         color: #333;
@@ -1022,21 +950,111 @@ input[type='reject']{
         flex-direction: column;
         border-bottom: solid 1px #d1d9e2;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        position: fixed; 
+        position: fixed;
         left: 0;
-        top: 0; 
-        bottom: 0; 
+        top: 0;
+        bottom: 0;
         width: 75px;
-        gap:170px;
-        transition: width 0.3s ease; 
+        gap: 170px;
+        transition: width 0.3s ease;
     }
-    .formGroup input{
+
+    .formGroup input {
         width: 650px;
     }
-    .approvalGroup{
+
+    .approvalGroup {
         display: flex;
         flex-wrap: wrap;
         flex-direction: row;
-        gap:30px;
+        gap: 30px;
     }
 }
+
+/* Modal styles */
+/* .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 300px;
+    text-align: center;
+    position: relative;
+}
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 24px;
+    color: #888;
+}
+
+.close:hover {
+    color: #000;
+}
+
+.save-btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.save-btn:hover {
+    background-color: #45a049;
+} */
+
+/* Dropdown styles for department selection */
+/* .modal-content select {
+    width: 100%;
+    padding: 8px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+
+.delete-btn {
+    background-color: #e53935;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 0 5px;
+}
+
+.delete-btn:hover {
+    background-color: #d32f2f;
+}
+
+.cancel-btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 0 5px;
+}
+
+.cancel-btn:hover {
+    background-color: #45a049;
+} */

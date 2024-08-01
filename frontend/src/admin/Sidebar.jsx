@@ -1,27 +1,28 @@
-import React, { useState, useEffect } from "react";
-import logo from "../assets/logos/GDSLogo.png";
-import logosmall from "../assets/logos/GDSLoog2.png";
-import * as FaIcons from "react-icons/fa";
-import * as MdIcons from "react-icons/md";
-import { HiUserAdd } from "react-icons/hi";
-import { useNavigate } from "react-router-dom";
+// Sidebar.jsx
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
-import WithAuthAdmin from "../auth/WithAuthAdmin";
-import io from 'socket.io-client';
+import { io } from 'socket.io-client';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUserFriends, faUserPlus, faBell, faSignOutAlt, faBars } from '@fortawesome/free-solid-svg-icons';
+import logoOpen from "../assets/logos/GDSLogo.png";
+import logoClosed from "../assets/logos/GDSLoog2.png";
 
 const ENDPOINT = 'https://booking-system-ge1i.onrender.com';
 let socket;
 
 const Sidebar = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [notif, setNotif] = useState(false);
-  const [closeMenu, setCloseMenu] = useState(false);
+  const [closeMenu, setCloseMenu] = useState(true);
   const [userData, setUserData] = useState(null);
   const [notifications, setNotifications] = useState([]);
   const [socketConnected, setSocketConnected] = useState(false);
 
   useEffect(() => {
     const adminId = localStorage.getItem("adminId");
+    if (!adminId) return;
 
     socket = io(ENDPOINT);
     socket.emit("setup", { _id: adminId });
@@ -34,12 +35,12 @@ const Sidebar = () => {
     });
 
     return () => {
-      socket.disconnect();
+      if (socket) socket.disconnect();
     };
   }, []);
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchData = async () => {
       try {
         const adminId = localStorage.getItem("adminId");
         const token = localStorage.getItem("adminToken");
@@ -48,35 +49,36 @@ const Sidebar = () => {
           "Content-Type": "application/json",
         };
 
-        const response = await axios.get(
+        const userResponse = await axios.get(
           `https://booking-system-ge1i.onrender.com/api/admin/${adminId}`,
           { headers }
         );
-        if (response.status === 200) {
-          setUserData(response.data);
+        if (userResponse.status === 200) {
+          setUserData(userResponse.data);
         }
+
+        const notifResponse = await axios.get('https://booking-system-ge1i.onrender.com/api/notif');
+        const userNotifications = notifResponse.data.filter(notif => notif.receiver._id === adminId);
+        setNotifications(userNotifications);
+
       } catch (error) {
-        console.error("Error fetching users:", error);
+        console.error("Error fetching data:", error);
       }
     };
 
-    fetchUsers();
+    fetchData();
   }, []);
 
   useEffect(() => {
-    const fetchNotifications = async () => {
-      try {
-        const adminId = localStorage.getItem("adminId");
-        const response = await axios.get('https://booking-system-ge1i.onrender.com/api/notif');
-        const userNotifications = response.data.filter(notif => notif.receiver._id === adminId);
-        setNotifications(userNotifications);
-      } catch (error) {
-        console.error('Error fetching notifications:', error);
-      }
-    };
+    document.documentElement.style.setProperty(
+      '--sidebar-width',
+      closeMenu ? '60px' : '250px'
+    );
+  }, [closeMenu]);
 
-    fetchNotifications();
-  }, []);
+  useEffect(() => {
+    setCloseMenu(true);
+  }, [location]);
 
   const handleLogout = (event) => {
     event.preventDefault();
@@ -84,90 +86,62 @@ const Sidebar = () => {
     navigate("/admin");
   };
 
-  const toggleCloseMenu = () => {
-    setCloseMenu(!closeMenu);
-  };
-
-  const toggleNotif = () => {
-    setNotif(!notif);
-  };
+  const toggleCloseMenu = () => setCloseMenu(prevState => !prevState);
+  const toggleNotif = () => setNotif(!notif);
 
   return (
-    <div className={closeMenu ? "sidebar active" : "sidebar"}>
-      <div className="logodbs">
-        <img src={logo} alt="Logo" />
+    <div className={`sidebar ${closeMenu ? "closed" : "open"}`}>
+      <div className="sidebar-header">
+        <img src={closeMenu ? logoClosed : logoOpen} alt="Logo" className="logo" />
+        {!closeMenu && <h2>{userData?.adminUser}</h2>}
       </div>
-      <div className="logodbss">
-        <img src={logosmall} alt="Logo" />
+      <ul>
+        <li title="Employee List">
+          <a href="/admin/employee-list">
+            <FontAwesomeIcon icon={faUserFriends} />
+            {!closeMenu && <span>Employee List</span>}
+          </a>
+        </li>
+        <li title="Add Employee">
+          <a href="/admin/add-employee">
+            <FontAwesomeIcon icon={faUserPlus} />
+            {!closeMenu && <span>Add Employee</span>}
+          </a>
+        </li>
+        <li title="For Approval">
+          <a href="/admin/approval-rooms">
+            <FontAwesomeIcon icon={faUserPlus} />
+            {!closeMenu && <span>For Approval</span>}
+          </a>
+        </li>
+        <li title={`Notifications (${notifications.length})`}>
+          <a onClick={toggleNotif}>
+            <FontAwesomeIcon icon={faBell} />
+            {!closeMenu && <span>Notifications ({notifications.length})</span>}
+          </a>
+        </li>
+      </ul>
+      <div className="sidebar-footer">
+        <button onClick={toggleCloseMenu} className="menu-toggle-button" title="Toggle Menu">
+          <FontAwesomeIcon icon={faBars} />
+          {!closeMenu && <span>Close Sidebar</span>}
+        </button>
+        <button onClick={handleLogout} className="logout-button" title="Logout">
+          <FontAwesomeIcon icon={faSignOutAlt} />
+          {!closeMenu && <span> Logout</span>}
+        </button>
       </div>
-      <div className={closeMenu ? "Contain active" : "Contain"} onClick={toggleCloseMenu}>
-        <div className="ContTrigger"></div>
-        <div className="ContMenu"></div>
-      </div>
-      <div className={closeMenu ? "profileDetail active" : "profileDetail"}>
-        <h2 style={{ margin: "0" }}>{userData && userData.adminUser}</h2>
-      </div>
-      <div className={closeMenu ? "menuContainer active" : "menuContainer"}>
-        <ul>
-          <p className="hed">Admin Menu</p>
-          <div className="line" />
-          <li className="li" onClick={toggleNotif}>
-            <div className="notif-icon">
-              <FaIcons.FaBell />
-              <p>Notifications</p>
-            </div>
-          </li>
-          <li className="li">
-            <a href="/admin/approval-rooms">
-              <FaIcons.FaCalendarCheck />
-              <p>For Approval</p>
-            </a>
-          </li>
-          <li className="li">
-            <a href="/admin/employee-list">
-              <MdIcons.MdGroups />
-              <p>Employee List</p>
-            </a>
-          </li>
-          <li className="li">
-            <a href="/admin/add-employee">
-              <HiUserAdd />
-              <p>Add Employee</p>
-            </a>
-          </li>
-        </ul>
-      </div>
-      <div className="last">
-        <a href="/admin" onClick={handleLogout} className="logout-link">
-          <FaIcons.FaSignOutAlt />
-          <p style={{ margin: "0" }}>Log-Out</p>
-        </a>
-      </div>
-
-      {/* Notification Modal */}
       {notif && (
-        <div className="notification-modal">
-          <button className="closenotif" onClick={toggleNotif}>X</button>
-          <h3 style={{margin:'0', padding:'0', textAlign:'center'}}>Notifications</h3>
-          <div>
-            {notifications.map((notification) => (
-              <div key={notification._id} className="notifContnn">
-                {notification.message}
-              </div>
-            ))}
-          </div>
-          <div className="seeread">
-            <button className="see">
-              See All
-            </button>
-            <button className="read">
-              Mark All as Read
-            </button>
-          </div>
+        <div className="notifications">
+          {notifications.map((notification, index) => (
+            <div key={index} className="notification">
+              {notification.message}
+            </div>
+          ))}
         </div>
       )}
     </div>
   );
 };
 
-export default WithAuthAdmin(Sidebar);
+export default Sidebar;
