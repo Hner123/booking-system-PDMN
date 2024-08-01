@@ -8,9 +8,9 @@ const Verify = () => {
             <div className="verify">
                 <img src={GIF} alt="Verification GIF" /> 
                 <h2>Email Verification</h2>
-                <p>A Verification link has been sent to your new e-mail</p>
+                <p>You have successfully changed your email!</p>
                 <button className="back-button">
-                    Back to Edit Profile
+                    Back to Dashboard
                 </button>
             </div>
         </div>

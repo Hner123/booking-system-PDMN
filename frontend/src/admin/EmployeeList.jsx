@@ -386,86 +386,78 @@ const EmployeeList = () => {
       <Sidebar />
       <div className="employee-list-content">
         <h1>Employee List</h1>
-        {loading ? (
-          <p>Loading...</p>
-        ) : error ? (
-          <p className="error">{error}</p>
-        ) : (
-          <>
-            <div className="button-group">
-              <button
-                onClick={() => navigate("/admin/add-employee")}
-                className="add-button"
-              >
-                Add Employee
-              </button>
-              <div className="dropdown-container" ref={dropdownRef}>
-                <button
-                  onClick={() => setShowDropdown(!showDropdown)}
-                  className="sort-button"
-                >
-                  Sort by Department
-                </button>
-                {showDropdown && (
-                  <ul className="dropdown-menu">
-                    {departments.map((dept) => (
-                      <li
-                        key={dept}
-                        onClick={() => {
-                          setSortCriteria(dept);
-                          setShowDropdown(false);
-                        }}
-                      >
-                        {dept}
-                      </li>
-                    ))}
-                    <li
-                      onClick={() => {
-                        setSortCriteria("");
-                        setShowDropdown(false);
-                      }}
-                    >
-                      Show All
-                    </li>
-                  </ul>
-                )}
-              </div>
-            </div>
-            <table>
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Username</th>
-                  <th>Department</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {sortedUsers.map((user) => (
-                  <tr key={user._id}>
-                    <td>{`${user.firstName} ${user.surName}`}</td>
-                    <td>{user.userName}</td>
-                    <td>{user.department}</td>
-                    <td>
-                      <button
-                        onClick={() => handleEditDeptClick(user._id)}
-                        className="action-button edit"
-                      >
-                        Edit Dept
-                      </button>
-                      <button
-                        onClick={() => { setShowDeleteModal(true); setUserToDelete(user) }}
-                        className="action-button delete"
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
+        <div className="button-group">
+          <button
+            onClick={() => navigate("/admin/add-employee")}
+            className="add-button"
+          >
+            Add Employee
+          </button>
+          <div className="dropdown-container" ref={dropdownRef}>
+            <button
+              onClick={() => setShowDropdown(!showDropdown)}
+              className="sort-button"
+            >
+              Sort by Department
+            </button>
+            {showDropdown && (
+              <ul className="dropdown-menu">
+                {departments.map((dept) => (
+                  <li
+                    key={dept}
+                    onClick={() => {
+                      setSortCriteria(dept);
+                      setShowDropdown(false);
+                    }}
+                  >
+                    {dept}
+                  </li>
                 ))}
-              </tbody>
-            </table>
-          </>
-        )}
+                <li
+                  onClick={() => {
+                    setSortCriteria("");
+                    setShowDropdown(false);
+                  }}
+                >
+                  Show All
+                </li>
+              </ul>
+            )}
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Username</th>
+              <th>Department</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {sortedUsers.map((user) => (
+              <tr key={user._id}>
+                <td>{`${user.firstName} ${user.surName}`}</td>
+                <td>{user.userName}</td>
+                <td>{user.department}</td>
+                <td>
+                  <button
+                    onClick={() => handleEditDeptClick(user._id)}
+                    className="action-button edit"
+                  >
+                    Edit Dept
+                  </button>
+                  <button
+                    onClick={() => { setShowDeleteModal(true); setUserToDelete(user) }}
+                    className="action-button delete"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
 
       {editDeptModal && selectedUser && (

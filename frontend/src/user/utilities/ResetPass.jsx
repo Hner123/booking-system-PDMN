@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './OtherPages.css'; // Import the specific CSS file
+import NotFoundAuth from '../../auth/NotFoundAuthReset';
 
 const ResetPassword = () => {
     const [email, setEmail] = useState('');
@@ -38,4 +38,4 @@ const ResetPassword = () => {
     );
 };
 
-export default ResetPassword;
+export default NotFoundAuth(ResetPassword);

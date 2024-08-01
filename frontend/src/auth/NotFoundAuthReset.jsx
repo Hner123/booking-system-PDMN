@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Loader from '../assets/quircomloading.gif';
 
 const NotFoundAuth = (WrappedComponent) => {
   const NotFoundAuthWrapper = (props) => {
