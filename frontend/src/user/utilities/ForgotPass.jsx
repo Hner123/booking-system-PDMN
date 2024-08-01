@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 
@@ -8,64 +8,61 @@ const ForgotPass = () => {
   const [remainingTime, setRemainingTime] = useState(0);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [userData, setUserData] = useState(null);
-  const [userFetched, setUserFetched] = useState(false);
   const [message, setMessage] = useState('');
-  const hasChangedPasswordRef = useRef(false); // Ref to track password change
+  const [hasSentEmail, setHasSentEmail] = useState(false);
 
   const userId = localStorage.getItem("userId");
 
   useEffect(() => {
     const fetchUserData = async () => {
-      if (userId) {
-        try {
-          const token = localStorage.getItem("authToken");
-          const headers = {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          };
+      try {
+        const token = localStorage.getItem("authToken");
+        const headers = {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        };
 
-          const response = await axios.get(
-            `https://booking-system-ge1i.onrender.com/api/user/${userId}`,
-            { headers }
-          );
+        const response = await axios.get(
+          `https://booking-system-ge1i.onrender.com/api/user/${userId}`,
+          { headers }
+        );
 
-          if (response.status === 200) {
-            setUserData(response.data);
-            setUserFetched(true);
-            setMessage('An email has been sent to your account');
+        if (response.status === 200) {
+          setUserData(response.data);
+          setMessage('An email has been sent to your account');
+          
+          if (!hasSentEmail) {
+            await sendEmail(response.data.email);
           }
-        } catch (error) {
-          console.error("Error fetching user data:", error);
         }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
       }
     };
 
-    fetchUserData();
-  }, [userId]);
-
-  useEffect(() => {
-    const changePassword = async () => {
-      if (userFetched && userData && userData.email && !hasChangedPasswordRef.current) {
-        try {
-          const response = await axios.post('https://booking-system-ge1i.onrender.com/api/auth/changepass', { email: userData.email });
-          const { message, passToken } = response.data;
-          localStorage.setItem('resetToken', passToken);
-          toast.success(message);
-          hasChangedPasswordRef.current = true; // Set ref to true after change
-        } catch (error) {
-          if (error.response && error.response.status === 404) {
-            toast.error('No user found.');
-          } else {
-            toast.error(`Error: ${error.message}`);
-          }
-        }
-      }
-    };
-
-    if (userFetched && userData && userData.email && !isButtonDisabled) {
-      changePassword();
+    if (userId && !hasSentEmail) {
+      fetchUserData();
     }
-  }, [userFetched, userData, isButtonDisabled]);
+  }, [userId, hasSentEmail]);
+
+  const sendEmail = async (email) => {
+    try {
+      const response = await axios.post(
+        'https://booking-system-ge1i.onrender.com/api/auth/changepass',
+        { email }
+      );
+      const { message, passToken } = response.data;
+      localStorage.setItem('resetToken', passToken);
+      toast.success(message);
+      setHasSentEmail(true);
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
+        toast.error('No user found.');
+      } else {
+        toast.error(`Error: ${error.message}`);
+      }
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -98,21 +95,11 @@ const ForgotPass = () => {
     setTimer(timerId);
   };
 
-  useEffect(() => {
-    if (isButtonDisabled) {
-      setRemainingTime(30000);
-      const intervalId = setInterval(() => {
-        setRemainingTime((prevTime) => prevTime - 1000);
-      }, 1000);
-      return () => clearInterval(intervalId);
-    }
-  }, [isButtonDisabled]);
-
   return (
     <div className="verify-container">
       <div className="verify">
         <h2>Reset Password</h2>
-        <p>{userId && userFetched ? message : 'Input your email to reset your password'}</p>
+        <p>{userId && hasSentEmail ? message : 'Input your email to reset your password'}</p>
         {!userId ? (
           <form onSubmit={handleSubmit}>
             <h4 style={{ margin: '0', textAlign: 'left' }}>Email:</h4>
