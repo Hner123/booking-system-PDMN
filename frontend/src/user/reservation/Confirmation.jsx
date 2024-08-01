@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import roomBg from "../../assets/palawan2.jpg";
 import axios from "axios";
 import { ToastContainer } from "react-toastify";
-
+import WithAuthReserve from "../../auth/WithAuthReserve";
 
 const BookingConfirmation = () => {
   const [showModal, setShowModal] = useState(false);
@@ -158,4 +158,4 @@ const BookingConfirmation = () => {
   );
 };
 
-export default BookingConfirmation;
+export default WithAuthReserve(BookingConfirmation);

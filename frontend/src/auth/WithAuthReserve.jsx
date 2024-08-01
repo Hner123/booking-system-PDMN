@@ -2,12 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios'; 
 
-const WithoutAuthReserve = (WrappedComponent) => {
+const WithAuthReserve = (WrappedComponent) => {
   const WrapperComponent = (props) => {
     const navigate = useNavigate();
 
     const [userData, setUserData] = useState();
-    const [isLoading, setIsLoading] = useState(true);
 
     const userId = localStorage.getItem("userId");
     const token = localStorage.getItem("authToken");
@@ -88,4 +87,4 @@ const WithoutAuthReserve = (WrappedComponent) => {
   return WrapperComponent;
 };
 
-export default WithoutAuthReserve;
+export default WithAuthReserve;
