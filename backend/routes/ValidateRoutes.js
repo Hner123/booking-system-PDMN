@@ -3,20 +3,22 @@ const router = express.Router();
 const requireAuth = require("../utils/requireAuth");
 
 const {
-  ChangePass,
+  ForgotPass,
   ChangeEmail,
   ValidateUserData,
   LoginUser,
   LoginAdmin,
   Approval,
   CheckPass,
+  ResetPassword,
 
   ChangeEmailWithAuth,
   ApprovalWithAuth,
   CheckPassWithAuth,
+  ResetPasswordWithAuth
 } = require("../controllers/Validate");
 
-router.post("/changepass", ChangePass);
+router.post("/forgotpass", ForgotPass);
 router.post("/validate", ValidateUserData);
 router.post("/login/user", LoginUser);
 router.post("/login/admin", LoginAdmin);
@@ -24,5 +26,6 @@ router.post("/login/admin", LoginAdmin);
 router.post("/changeemail", ChangeEmail);
 router.post("/approval", Approval);
 router.post("/check", CheckPass);
+router.post("/resetpass", ResetPassword);
 
 module.exports = router;

@@ -48,11 +48,12 @@ const ForgotPass = () => {
   const sendEmail = async (email) => {
     try {
       const response = await axios.post(
-        'https://booking-system-ge1i.onrender.com/api/auth/changepass',
+        'https://booking-system-ge1i.onrender.com/api/auth/forgotpass',
         { email }
       );
-      const { message, passToken } = response.data;
+      const { message, passToken, passId } = response.data;
       localStorage.setItem('resetToken', passToken);
+      localStorage.setItem('resetId', passId);
       toast.success(message);
       setHasSentEmail(true);
     } catch (error) {
@@ -71,9 +72,10 @@ const ForgotPass = () => {
       if (email.trim() === '') {
         toast.error('Please enter your email address.');
       } else {
-        const response = await axios.post('https://booking-system-ge1i.onrender.com/api/auth/changepass', { email });
-        const { message, passToken } = response.data;
+        const response = await axios.post('https://booking-system-ge1i.onrender.com/api/auth/forgotpass', { email });
+        const { message, passToken, passId } = response.data;
         localStorage.setItem('resetToken', passToken);
+        localStorage.setItem('resetId', passId);
         toast.success(message);
         setIsButtonDisabled(true);
         startTimer();

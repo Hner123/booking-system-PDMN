@@ -15,7 +15,7 @@ const transporter = mailer.createTransport({
   },
 });
 
-const ChangePass = async (req, res) => {
+const ForgotPass = async (req, res) => {
   try {
     const { email } = req.body;
 
@@ -28,6 +28,7 @@ const ChangePass = async (req, res) => {
         expiresIn: "5m",
       });
       const name = user.firstName + " " + user.surName;
+      const passId = user._id;
 
       const companyLogoUrl =
         "https://drive.google.com/uc?id=108JoeqEjPR7HKfbNjXdV30wvvy9oDk_B";
@@ -48,7 +49,7 @@ const ChangePass = async (req, res) => {
                 <p>Hello ${name},</p>
                 <p>We received a request to change the password associated with your GDS Booking System account. If you made this request, please click the button below to reset your password:</p>
                 <p style="text-align: center;">
-                    <a href="http://localhost:5173/reset-pass" style="display: inline-block; padding: 10px 20px; background-color: rgb(234, 88, 12); color: #fff; text-decoration: none; border-radius: 5px;">Reset Password</a>
+                    <a href="https://gdsbooking.netlify.app/reset-pass" style="display: inline-block; padding: 10px 20px; background-color: rgb(234, 88, 12); color: #fff; text-decoration: none; border-radius: 5px;">Reset Password</a>
                 </p>
                 <p>If you did not request this change, please ignore this email or contact our support team immediately.</p>
                 <p>Best regards,</p>
@@ -69,6 +70,7 @@ const ChangePass = async (req, res) => {
       res.status(201).json({
         message: "An email has been sent into your account",
         passToken,
+        passId,
       });
     } else {
       // Send error response indicating user not found
@@ -78,6 +80,34 @@ const ChangePass = async (req, res) => {
     res.status(404).json({ message: error.message });
   }
 };
+
+const ResetPassword = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(404).json({ message: "Invalid ID" });
+    }
+
+    // Find the user in the UserModel
+    const user = await UserModel.findById(id);
+
+    if (user) {
+      const { passWord } = req.body;
+      user.passWord = passWord;
+      await user.save();
+      return res
+        .status(200)
+        .json({ message: "Password reset successfully" });
+    }
+
+    // If user is not found, return error
+    res.status(404).json({ message: "User not found" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 
 const ChangeEmail = async (req, res) => {
   try {
@@ -90,7 +120,8 @@ const ChangeEmail = async (req, res) => {
         expiresIn: "5m",
       });
       const name = user.firstName + " " + user.surName;
-      const id = user._id;
+      const emailId = user._id;
+      const newEmail = email;
 
       const companyLogoUrl =
         "https://drive.google.com/uc?id=108JoeqEjPR7HKfbNjXdV30wvvy9oDk_B";
@@ -111,7 +142,7 @@ const ChangeEmail = async (req, res) => {
                 <p>Hello ${name},</p>
                 <p>We received a request to change the email associated with your GDS Booking System account. If you made this request, please click the button below to confirm your new email address:</p>
                 <p style="text-align: center;">
-                    <a href="https://tiktok.com" style="display: inline-block; padding: 10px 20px; background-color: rgb(234, 88, 12); color: #fff; text-decoration: none; border-radius: 5px;">Confirm Email Change</a>
+                    <a href="https://gdsbooking.netlify.app/verify" style="display: inline-block; padding: 10px 20px; background-color: rgb(234, 88, 12); color: #fff; text-decoration: none; border-radius: 5px;">Confirm Email Change</a>
                 </p>
                 <p>If you did not request this change, please ignore this email or contact our support team immediately.</p>
                 <p>Best regards,</p>
@@ -131,7 +162,8 @@ const ChangeEmail = async (req, res) => {
       res.status(201).json({
         message: "An email has been sent into your account",
         emailToken,
-        emailId: id,
+        emailId,
+        newEmail
       });
     } else {
       // Send error response indicating user not found
@@ -324,17 +356,24 @@ const CheckPassWithAuth = (req, res) => {
     await CheckPass(req, res);
   });
 };
+const ResetPasswordWithAuth = (req, res) => {
+  requireAuth(req, res, async () => {
+    await ResetPassword(req, res);
+  });
+};
 
 module.exports = {
-  ChangePass,
+  ForgotPass,
   ChangeEmail,
   Approval,
   ValidateUserData,
   LoginUser,
   LoginAdmin,
   CheckPass,
+  ResetPassword,
 
   ChangeEmailWithAuth,
   ApprovalWithAuth,
   CheckPassWithAuth,
+  ResetPasswordWithAuth
 };
