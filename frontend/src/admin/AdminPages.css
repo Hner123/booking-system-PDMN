@@ -362,6 +362,234 @@ th {
     position: relative;
 }
 
+/* AdminPages.css */
+
+.approval-room-page {
+    display: flex;
+    height: 100vh;
+    overflow: hidden; /* Ensure no scrollbars appear */
+  }
+  
+  .approval-room-content {
+    margin-left: var(--sidebar-width); /* Adjust based on your sidebar width */
+    padding: 20px;
+    flex: 1;
+    transition: margin-left 0.3s ease;
+    overflow-y: auto; /* Enable vertical scrolling if content overflows */
+  }
+  
+  .sidebar-open + .approval-room-content {
+    margin-left: 250px; /* Adjust based on the width of the open sidebar */
+  }
+  
+  .sidebar-closed + .approval-room-content {
+    margin-left: 60px; /* Adjust based on the width of the closed sidebar */
+  }
+  
+  .room-list {
+    display: flex;
+    flex-wrap: wrap; /* Allow items to wrap to the next line */
+    gap: 20px;
+    justify-content: center; /* Center items horizontally */
+    max-height: 300px;
+    height: 100%;
+  }
+  
+  .room-item {
+    background-size: cover;
+    background-position: center;
+    padding: 20px;
+    border-radius: 8px;
+    color: white;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    width: calc(33% - 20px);
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    justify-content: center; 
+  }
+  
+  .room-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(290deg, rgba(255, 82, 82, 0.5) 0%, rgba(255, 186, 186, 0.5) 75%);
+    z-index: 1; /* Ensures overlay is behind the content */
+    transition: background 0.3s ease;
+  }
+  
+  .room-item:hover {
+    transform: scale(1.05); 
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); 
+  }
+  
+  .room-item h2 {
+    margin: 0;
+    font-size: 1.5em;
+    z-index: 1;
+  }
+  
+  .room-item button {
+    background-color: #b62626;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+    z-index: 1;
+  }
+  
+  .room-item button:hover {
+    background-color: #b62626;
+  }
+  
+  .approval-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #b62626; 
+    color: white;
+    width: 30px; 
+    height: 30px; 
+    border-radius: 50%; /* Ensures the element is circular */
+    font-size: 0.9rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    z-index: 1;
+  }
+  
+  .pending-approvals-list {
+    margin-top: 20px; /* Adjust spacing as needed */
+  }
+  
+  .pending-approvals-info {
+    background-color: rgba(167, 167, 167, 0.7); /* Semi-transparent background */
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    margin-bottom: 10px; /* Spacing between each info block */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); 
+  }
+
+  @media (max-width: 768px) {
+    .room-item {
+      width: calc(50% - 20px); /* Adjust for smaller screens */
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .room-item {
+      width: calc(100% - 20px); /* Full width on very small screens */
+    }
+  }
+  
+/* Aproval Details  */
+.approval-room-page {
+    display: flex;
+  }
+  
+  .approval-room-content {
+    flex: 1;
+    padding: 20px;
+  }
+  
+  .booking-details {
+    border: 1px solid #ddd;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    background: #f9f9f9;
+  }
+  
+  .approval-actions {
+    margin-top: 10px;
+  }
+  
+  .approval-actions button {
+    margin-right: 10px;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .approval-actions button:first-child {
+    background: #28a745;
+    color: white;
+  }
+  
+  .approval-actions button:last-child {
+    background: #dc3545;
+    color: white;
+  }
+  
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  .modal-content textarea {
+    width: 100%;
+    height: 100px;
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    resize: none;
+  }
+  
+  .modal-actions {
+    margin-top: 20px;
+  }
+  
+  .modal-actions button {
+    margin: 0 10px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .modal-actions button:first-child {
+    background: #28a745;
+    color: white;
+  }
+  
+  .modal-actions button:last-child {
+    background: #dc3545;
+    color: white;
+  }
+  
 /*add employee*/
 .addForm {
     display: flex;
@@ -970,91 +1198,3 @@ input[type='reject'] {
         gap: 30px;
     }
 }
-
-/* Modal styles */
-/* .modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
-
-.modal-content {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    width: 300px;
-    text-align: center;
-    position: relative;
-}
-
-.close {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    cursor: pointer;
-    font-size: 24px;
-    color: #888;
-}
-
-.close:hover {
-    color: #000;
-}
-
-.save-btn {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.save-btn:hover {
-    background-color: #45a049;
-} */
-
-/* Dropdown styles for department selection */
-/* .modal-content select {
-    width: 100%;
-    padding: 8px;
-    margin: 10px 0;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-}
-
-
-.delete-btn {
-    background-color: #e53935;
-    color: white;
-    padding: 10px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    margin: 0 5px;
-}
-
-.delete-btn:hover {
-    background-color: #d32f2f;
-}
-
-.cancel-btn {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    margin: 0 5px;
-}
-
-.cancel-btn:hover {
-    background-color: #45a049;
-} */

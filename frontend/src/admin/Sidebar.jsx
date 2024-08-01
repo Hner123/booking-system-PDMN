@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { io } from 'socket.io-client';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserFriends, faUserPlus, faBell, faSignOutAlt, faBars } from '@fortawesome/free-solid-svg-icons';
+import { faUserFriends, faUserPlus, faBell, faSignOutAlt, faBars, faClipboardCheck } from '@fortawesome/free-solid-svg-icons';
 import logoOpen from "../assets/logos/GDSLogo.png";
 import logoClosed from "../assets/logos/GDSLoog2.png";
 
@@ -96,31 +96,31 @@ const Sidebar = () => {
         {!closeMenu && <h2>{userData?.adminUser}</h2>}
       </div>
       <ul>
-        <li title="Employee List">
-          <a href="/admin/employee-list">
-            <FontAwesomeIcon icon={faUserFriends} />
-            {!closeMenu && <span>Employee List</span>}
-          </a>
-        </li>
-        <li title="Add Employee">
-          <a href="/admin/add-employee">
-            <FontAwesomeIcon icon={faUserPlus} />
-            {!closeMenu && <span>Add Employee</span>}
-          </a>
-        </li>
-        <li title="For Approval">
-          <a href="/admin/approval-rooms">
-            <FontAwesomeIcon icon={faUserPlus} />
-            {!closeMenu && <span>For Approval</span>}
-          </a>
-        </li>
-        <li title={`Notifications (${notifications.length})`}>
-          <a onClick={toggleNotif}>
-            <FontAwesomeIcon icon={faBell} />
-            {!closeMenu && <span>Notifications ({notifications.length})</span>}
-          </a>
-        </li>
-      </ul>
+  <li title="Employee List">
+    <a href="/admin/employee-list">
+      <FontAwesomeIcon icon={faUserFriends} />
+      {!closeMenu && <span>Employee List</span>}
+    </a>
+  </li>
+  <li title="Add Employee">
+    <a href="/admin/add-employee">
+      <FontAwesomeIcon icon={faUserPlus} />
+      {!closeMenu && <span>Add Employee</span>}
+    </a>
+  </li>
+  <li title="For Approval">
+    <a href="/admin/approval-rooms">
+      <FontAwesomeIcon icon={faClipboardCheck} /> {/* Updated icon */}
+      {!closeMenu && <span>For Approval</span>}
+    </a>
+  </li>
+  <li title={`Notifications (${notifications.length})`}>
+    <a onClick={toggleNotif}>
+      <FontAwesomeIcon icon={faBell} />
+      {!closeMenu && <span>Notifications ({notifications.length})</span>}
+    </a>
+  </li>
+</ul>
       <div className="sidebar-footer">
         <button onClick={toggleCloseMenu} className="menu-toggle-button" title="Toggle Menu">
           <FontAwesomeIcon icon={faBars} />

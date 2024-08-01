@@ -14,6 +14,7 @@ import Confirmation from './user/reservation/Confirmation';
 import AdminLogin from './admin/AdminLogin.jsx';
 import EmployeeList from './admin/EmployeeList.jsx';
 import AddEmployee from './admin/AddEmployee.jsx';
+import ApprovalDetails from './admin/ApprovalDetails.jsx';
 import ApprovalPalawan from './admin/ApprovalPalawan.jsx';
 import ApprovalBoracay from './admin/ApprovalBoracay.jsx';
 import ApprovalBoth from './admin/ApprovalBoth.jsx';
@@ -166,7 +167,15 @@ function App() {
             </>
           }
         />
-
+        <Route
+          path="/admin/approval/:roomName"
+          element={
+            <>
+              <Sidebar />
+              <ApprovalDetails />
+            </>
+          }
+        />
         <Route
           path="/verify"
           element={
