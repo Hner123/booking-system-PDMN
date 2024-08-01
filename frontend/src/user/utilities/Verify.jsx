@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 
 const Verify = () => {
   const navigate = useNavigate();
-  const userId = localStorage.getItem("emailId");
+  const userId = localStorage.getItem("resetId");
   const newEmail = localStorage.getItem("newEmail");
   const token = localStorage.getItem("emailToken");
 

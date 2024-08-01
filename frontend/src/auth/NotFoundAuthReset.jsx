@@ -8,8 +8,7 @@ const NotFoundAuth = (WrappedComponent) => {
 
     useEffect(() => {
       const token = localStorage.getItem('resetToken');
-      const token2 = localStorage.getItem('emailToken');
-      if (!token || !token2) {
+      if (!token) {
         navigate('/page-not-found');
 
       } else {
@@ -18,7 +17,6 @@ const NotFoundAuth = (WrappedComponent) => {
 
         if (isExpired) {
           localStorage.removeItem('resetToken');
-          localStorage.removeItem('emailToken');
           navigate('/page-not-found');
 
         } else {
