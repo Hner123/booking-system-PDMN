@@ -18,11 +18,8 @@ const transporter = mailer.createTransport({
 const ForgotPass = async (req, res) => {
   try {
     const { email } = req.body;
-
-    // Check for existing user in UserModel
     const user = await UserModel.findOne({ email });
 
-    // If user is found in UserModel
     if (user) {
       const passToken = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
         expiresIn: "5m",
@@ -58,13 +55,12 @@ const ForgotPass = async (req, res) => {
         </body>
         </html>`;
 
-      // Sending email without attachment and disable reply to this email
       await transporter.sendMail({
         from: process.env.GMAIL_SENDER,
         to: user.email,
         subject: "Reset Password",
         html: htmlContent,
-        replyTo: "", // Set an empty reply-to address to disable reply functionality
+        replyTo: "",
         disableReplyTo: true,
       });
       res.status(201).json({
@@ -73,7 +69,6 @@ const ForgotPass = async (req, res) => {
         passId,
       });
     } else {
-      // Send error response indicating user not found
       res.status(404).json({ message: "User not found" });
     }
   } catch (error) {
@@ -98,7 +93,6 @@ const ResetPassword = async (req, res) => {
       return res.status(200).json({ message: "Password reset successfully" });
     }
 
-    // If user is not found, return error
     res.status(404).json({ message: "User not found" });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -122,6 +116,8 @@ const ChangeEmail = async (req, res) => {
       const companyLogoUrl =
         "https://drive.google.com/uc?id=108JoeqEjPR7HKfbNjXdV30wvvy9oDk_B";
 
+      const verificationLink = `https://gdsbooking.netlify.app/verify-success/${emailId}?token=${emailToken}?email=${newEmail}`;
+
       const htmlContent = `
         <!DOCTYPE html>
         <html lang="en">
@@ -138,7 +134,7 @@ const ChangeEmail = async (req, res) => {
                 <p>Hello ${name},</p>
                 <p>We received a request to change the email associated with your GDS Booking System account. If you made this request, please click the button below to confirm your new email address:</p>
                 <p style="text-align: center;">
-                    <a href="https://gdsbooking.netlify.app/verify" style="display: inline-block; padding: 10px 20px; background-color: rgb(234, 88, 12); color: #fff; text-decoration: none; border-radius: 5px;">Confirm Email Change</a>
+                    <a href="${verificationLink}" style="display: inline-block; padding: 10px 20px; background-color: rgb(234, 88, 12); color: #fff; text-decoration: none; border-radius: 5px;">Confirm Email Change</a>
                 </p>
                 <p>If you did not request this change, please ignore this email or contact our support team immediately.</p>
                 <p>Best regards,</p>
@@ -162,7 +158,6 @@ const ChangeEmail = async (req, res) => {
         newEmail,
       });
     } else {
-      // Send error response indicating user not found
       res.status(404).json({ message: "User not found" });
     }
   } catch (error) {
@@ -187,7 +182,7 @@ const Approval = async (req, res) => {
       const companyLogoUrl =
         "https://drive.google.com/uc?id=108JoeqEjPR7HKfbNjXdV30wvvy9oDk_B";
 
-      const htmlContent = `
+      let htmlContent = `
         <!DOCTYPE html>
         <html lang="en">
         <head>
@@ -200,12 +195,17 @@ const Approval = async (req, res) => {
             <div style="max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f4f4f4; color: #000; font-size: 16px;">
                 <img src="${companyLogoUrl}" alt="Company Logo" style="max-width: 200px; margin: 0 auto 20px; display: block;">
                 <h2 style="margin-bottom: 20px; text-align: center; color: #000;">Reservation Status for ${roomName}</h2>
-                <p>Hello ${name},</p>
-                <p>Your reservation request for the room ${roomName}, titled "${title}", has been ${
-        status
-          ? "approved. You can proceed with your reservation on the scheduled date."
-          : `rejected. The reason provided is: <span style="color: red;">${reason}</span>. If you have any questions or need further assistance, please contact our support team.`
-      }</p>
+                <p>Hello ${name},</p>`;
+
+      if (status === "Approved") {
+        htmlContent += `
+                <p>Your reservation request for the room ${roomName}, titled "${title}", has been approved. You can proceed with your reservation on the scheduled date.</p>`;
+      } else if (status === "Declined") {
+        htmlContent += `
+                <p>Your reservation request for the room ${roomName}, titled "${title}", has been rejected. The reason provided is: <span style="color: red;">${reason}</span>. If you have any questions or need further assistance, please contact our support team.</p>`;
+      }
+
+      htmlContent += `
                 <p>If you have any questions or need further assistance, please contact our support team.</p>
                 <p>Best regards,</p>
                 <p>Management</p>
@@ -222,16 +222,16 @@ const Approval = async (req, res) => {
         disableReplyTo: true,
       });
       res.status(201).json({
-        message: "An email has been sent into your account",
+        message: "An email has been sent to your account",
       });
     } else {
-      // Send error response indicating user not found
       res.status(404).json({ message: "User not found" });
     }
   } catch (error) {
-    res.status(404).json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
+
 
 const ValidateUserData = async (req, res) => {
   try {
@@ -259,19 +259,16 @@ const LoginUser = async (req, res) => {
   try {
     const { userName, passWord } = req.body;
 
-    // Check if the user exists
     const foundUser = await UserModel.findOne({ userName });
     if (!foundUser) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Check if the password is correct
     const isPasswordValid = await bcrypt.compare(passWord, foundUser.passWord);
     if (!isPasswordValid) {
       return res.status(401).json({ message: "Invalid password" });
     }
 
-    // Generate JWT token
     const authToken = jwt.sign({ _id: foundUser._id }, process.env.JWT_SECRET, {
       // expiresIn: "1h",
     });
@@ -292,7 +289,6 @@ const LoginAdmin = async (req, res) => {
   try {
     const { adminUser, adminPass } = req.body;
 
-    // Check if the admin exists
     const foundAdmin = await AdminModel.findOne({ adminUser });
     if (!foundAdmin) {
       return res.status(404).json({ message: "User not found" });
@@ -305,8 +301,7 @@ const LoginAdmin = async (req, res) => {
     if (!isPasswordValid) {
       return res.status(401).json({ message: "Invalid password" });
     }
-
-    // Generate JWT token
+    
     const authToken = jwt.sign(
       { _id: foundAdmin._id },
       process.env.JWT_SECRET,

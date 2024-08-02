@@ -119,10 +119,7 @@ const EditProfile = () => {
       );
 
       if (updateResponse.status === 201) {
-        const { message, emailToken, emailId, newEmail  } = updateResponse.data;
-        localStorage.setItem('resetToken', emailToken);
-        localStorage.setItem('resetId', emailId);
-        localStorage.setItem('newEmail', newEmail)
+        const { message  } = updateResponse.data;
         setEmailEditable(false);
         toast.success(message);
       }

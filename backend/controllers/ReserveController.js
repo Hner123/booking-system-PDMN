@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const ReserveModel = require("../models/ReserveModel");
 const NotifModel = require("../models/NotifModel");
+const UserModel = require("../models/UserModel");
 const requireAuth = require("../utils/requireAuth");
 const cron = require('node-cron');
 
@@ -157,11 +158,69 @@ const deleteInvalidReservations = async () => {
   }
 };
 
-// Schedule the task to run at 8 AM and 8 PM every day
 cron.schedule('0 8,20 * * *', () => {
   console.log('Running deleteInvalidReservations at', new Date());
   deleteInvalidReservations();
 });
+
+const GetEmails = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json("Invalid reservation ID");
+    }
+
+    const reservation = await ReserveModel.findById(id).populate("user");
+    if (!reservation) {
+      return res.status(404).json("Reservation not found");
+    }
+
+    // Check if there are any attendees
+    if (reservation.attendees.length === 0) {
+      return res.status(200).json({
+        ...reservation.toObject(),
+        attendees: [] // No attendees found
+      });
+    }
+
+    // Extract and map attendee names to query
+    const attendeeQueries = reservation.attendees.map(name => {
+      const [firstName, ...rest] = name.split(' ');
+      const surName = rest.join(' ');
+      return { firstName, surName };
+    });
+
+    // Find users by their full names
+    const users = await UserModel.find({
+      $or: attendeeQueries.map(query => ({
+        firstName: query.firstName,
+        surName: query.surName
+      }))
+    });
+
+    // Map attendees to their emails
+    const attendeesEmails = reservation.attendees.map(name => {
+      const [firstName, ...rest] = name.split(' ');
+      const surName = rest.join(' ');
+      const user = users.find(user => 
+        user.firstName === firstName && user.surName === surName
+      );
+      return {
+        fullName: name,
+        email: user ? user.email : 'Email not found',
+        username: user ? user.userName : "not found",
+      };
+    });
+
+    res.status(200).json({
+      ...reservation.toObject(),
+      attendees: attendeesEmails,
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
 
 const GetAllReserveWithAuth = (req, res) => {
   requireAuth(req, res, async () => {
@@ -186,7 +245,7 @@ const DeleteReserveWithAuth = (req, res) => {
 
 module.exports = {
   CreateReserve,
-
+  GetEmails,
   GetAllReserve,
   GetSpecificReserve,
   EditReserve,

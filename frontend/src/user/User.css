@@ -641,6 +641,18 @@
   }
 }
 
+.loading {
+  background-color: grey;
+  cursor: not-allowed;
+  pointer-events: none;
+  color: white; /* Ensures text is still readable */
+  user-select: none; /* Prevent text selection */
+}
+
+button:disabled {
+  user-select: none; /* Prevent text selection */
+}
+
 .loading-container {
   display: flex;
   justify-content: center;

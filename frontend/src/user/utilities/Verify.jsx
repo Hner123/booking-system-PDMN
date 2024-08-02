@@ -1,42 +1,58 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './OtherPages.css';
 import GIF from '../../assets/32.gif';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import NotFoundAuth from '../../auth/NotFoundAuthReset';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 
 const Verify = () => {
   const navigate = useNavigate();
-  const userId = localStorage.getItem("resetId");
-  const newEmail = localStorage.getItem("newEmail");
-  const token = localStorage.getItem("emailToken");
+  const { userId } = useParams();
+  const { search } = useLocation();
+  const queryParams = new URLSearchParams(search);
+  const newEmail = queryParams.get("email");
+  const token = queryParams.get("token");
 
-  const handleVerify = async () => {
-    try {
-      const headers = {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json"
-      };
+  const [loading, setLoading] = useState(true);
 
-      const updateResponse = await axios.patch(
-        `https://booking-system-ge1i.onrender.com/api/user/edit/${userId}`,
-        { email: newEmail },
-        { headers }
-      );
+  useEffect(() => {
+    const handleVerify = async () => {
+      try {
+        const headers = {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
+        };
 
-      if (updateResponse.status === 201) {
-        localStorage.removeItem("resetId");
-        localStorage.removeItem("newEmail");
-        localStorage.removeItem("emailToken");
-        navigate('/dashboard');
-      } else {
+        const updateResponse = await axios.patch(
+          `https://booking-system-ge1i.onrender.com/api/user/edit/${userId}`,
+          { email: newEmail },
+          { headers }
+        );
+
+        if (updateResponse.status === 200) {
+          localStorage.removeItem("resetId");
+          localStorage.removeItem("newEmail");
+          localStorage.removeItem("emailToken");
+        } else {
+          toast.error("Failed to update email.");
+        }
+      } catch (error) {
         toast.error("Failed to update email.");
+      } finally {
+        setLoading(false);
       }
-
-    } catch (error) {
-      toast.error("Failed to update email.");
+    };
+    if (userId && token) {
+      handleVerify();
     }
+  }, [userId, token, newEmail]);
+
+  const handleBackToLogin = () => {
+    localStorage.removeItem("resetId");
+    localStorage.removeItem("newEmail");
+    localStorage.removeItem("emailToken");
+    navigate('/dashboard');
   };
 
   return (
@@ -44,8 +60,18 @@ const Verify = () => {
       <div className="ver">
         <img src={GIF} alt="Verification GIF" />
         <h2>Email Verification</h2>
-        <p>You have successfully changed your email!</p>
-        <button className="back-button" onClick={handleVerify}>
+        {loading ? (
+          <p>Please wait a minute...</p>
+        ) : (
+          <>
+            <p>You have successfully changed your email!</p>
+          </>
+        )}
+        <button
+          className="back-button"
+          onClick={handleBackToLogin}
+          disabled={loading}
+        >
           Back to Dashboard
         </button>
       </div>

@@ -4,7 +4,7 @@ const requireAuth = require("../utils/requireAuth");
 
 const {
   CreateReserve,
-
+  GetEmails,
   GetAllReserve,
   GetSpecificReserve,
   EditReserve,
@@ -17,6 +17,7 @@ const {
 } = require("../controllers/ReserveController.js");
 
 // router.use(requireAuth);
+router.get("/email/:id", GetEmails);
 router.post("/create", CreateReserve);
 router.get("/", GetAllReserve);
 router.get("/:id", GetSpecificReserve);

@@ -39,7 +39,7 @@ const Dashboard = () => {
     department: "",
   });
 
-  const [userData, setUsers] = useState(null);
+  const [userData, setUsers] = useState("");
   const [bookData, setBookData] = useState([]);
   const [roomData, setRoomName] = useState("");
 
@@ -129,19 +129,23 @@ const Dashboard = () => {
         agenda: book.agenda,
         dateTime: new Date(book.scheduleDate),
       }))
-      .sort((a, b) => a.dateTime - b.dateTime); 
+      .sort((a, b) => a.dateTime - b.dateTime);
   
     setReservations(initialReservations);
-
+  
     const now = new Date();
+    const name = `${userData.firstName} ${userData.surName}`;
+    console.log(name); // Debugging: Log the full name to verify
+  
     const initialOtherMeetings = bookData
       .filter(
         (book) =>
           book.user._id !== userId &&
           book.title &&
+          book.attendees.includes(name) &&
           book.scheduleDate !== null &&
           book.startTime !== null &&
-          new Date(book.scheduleDate) >= now 
+          new Date(book.scheduleDate) >= now
       )
       .map((book) => ({
         id: book._id,
@@ -163,10 +167,9 @@ const Dashboard = () => {
         department: book.user.department,
         pax: book.caps.pax,
         agenda: book.agenda,
-       
         dateTime: new Date(book.scheduleDate),
       }))
-      .sort((a, b) => a.dateTime - b.dateTime); 
+      .sort((a, b) => a.dateTime - b.dateTime);
   
     setOtherMeetings(initialOtherMeetings);
   }, [bookData]);

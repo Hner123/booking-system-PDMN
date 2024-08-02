@@ -15,11 +15,12 @@ const UserLogin = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setLoading(true); // Start loading
+    setError(""); // Clear previous errors
+
     try {
       const trimmedUserName = userName.trim();
       const trimmedPassWord = passWord.trim();
-
-      // setLoading(true);
 
       const response = await axios.post(
         "https://booking-system-ge1i.onrender.com/api/auth/login/user",
@@ -36,12 +37,14 @@ const UserLogin = () => {
         localStorage.setItem("authToken", authToken);
         localStorage.setItem("userId", _id);
 
-        // setLoading(false);
         navigate("/dashboard");
+      } else {
+        setError("Login failed, please try again.");
       }
     } catch (error) {
-      // setLoading(false);
-      setError(error.response.data.message);
+      setError(error.response?.data?.message || "An error occurred, please try again.");
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
 
@@ -61,6 +64,7 @@ const UserLogin = () => {
             value={userName}
             onChange={(e) => setUsername(e.target.value)}
             placeholder="Enter your username"
+            disabled={loading} // Disable input when loading
           />
           <label htmlFor="password">Password</label>
           <input
@@ -71,10 +75,13 @@ const UserLogin = () => {
             value={passWord}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Enter your password"
+            disabled={loading} // Disable input when loading
           />
-          <button type="submit">Log In</button>
-          <button type="redirect">
-              <a href="/forgot-pass" >Forgot password?</a>
+          <button type="submit" disabled={loading} className={loading ? "loading" : ""}>
+            {loading ? "Logging In..." : "Log In"}
+          </button>
+          <button type="redirect" disabled={loading} className={loading ? "loading" : ""}>
+            <Link to="/forgot-pass">Forgot password?</Link>
           </button>
         </form>
       </div>

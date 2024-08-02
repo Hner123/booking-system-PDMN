@@ -177,7 +177,7 @@ function App() {
           }
         />
         <Route
-          path="/verify"
+          path="/verify-success/:userId"
           element={
             <>
               <Verify />
