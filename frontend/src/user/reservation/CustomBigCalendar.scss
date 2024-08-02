@@ -123,7 +123,7 @@ $border-color: #dddddd9f;
 $current-time-color: #6de73c4b; // Color for current time indicator
 
 .rbc-calendar {
-  background-color: $background-color;
+  background-color: #fff;
 
   // Styles for header row
   .rbc-header {
@@ -220,6 +220,15 @@ $current-time-color: #6de73c4b; // Color for current time indicator
     display: none;
   }
 
+  .room-reservation-calendar {
+    .rbc-header:nth-child(1),
+    .rbc-day-slot:nth-child(1),
+    .rbc-time-slot-group:nth-child(1) {
+      display: none;
+    }
+  }
+  
+
   // Style for current time indicator
   .rbc-current-time-indicator {
     background-color: $current-time-color;
@@ -228,6 +237,10 @@ $current-time-color: #6de73c4b; // Color for current time indicator
     z-index: 1; // Make sure it appears above other content
   }
 
+
+ .rbc-time-header-gutter{
+    background-color: #f9f9f9;
+  }
   // Responsive adjustments
   @media (max-width: 768px) {
     .rbc-header {

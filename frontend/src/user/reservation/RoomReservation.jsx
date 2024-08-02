@@ -17,8 +17,6 @@ const RoomReservation = () => {
   const localizer = momentLocalizer(moment);
   const navigate = useNavigate();
 
-  // State variable
-  // Function to initialize hour with minutes set to 00
   const initializeHour = (hoursToAdd = 0) => {
     return moment().startOf("hour").add(hoursToAdd, "hours");
   };
@@ -116,7 +114,6 @@ const RoomReservation = () => {
       }
     };
 
-    // Call fetchBookData only if origData is available
     if (origData) {
       fetchBookData();
     }
@@ -124,18 +121,11 @@ const RoomReservation = () => {
 
   const startOfWeek = new Date();
   startOfWeek.setHours(0, 0, 0, 0);
-  startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay() + 1); // Set to Monday of this week
-
+  startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay() + 1); 
   const endOfWeek = new Date(startOfWeek);
-  endOfWeek.setDate(startOfWeek.getDate() + 6); // End of week (Sunday)
+  endOfWeek.setDate(startOfWeek.getDate() + 6); 
 
-  const filteredEvents = events.filter((event) => {
-    const eventStart = new Date(event.start);
-    const eventDay = eventStart.getDay();
-    return eventDay !== 0; // Exclude Sundays (0)
-  });
-
-  const handleReserve = () => {
+  const handleReserve = async () => {
     const start = moment(startDate).set({
       hour: startTime.hour(),
       minute: startTime.minute(),
@@ -144,13 +134,13 @@ const RoomReservation = () => {
       hour: endTime.hour(),
       minute: endTime.minute(),
     });
-
+  
     const durationHours = moment.duration(end.diff(start)).asHours();
     if (durationHours <= 0 || start.isSameOrAfter(end)) {
       setFeedbackMessage("Please select a valid start and end time.");
       return;
     }
-
+  
     const overlap = events.some(
       (event) =>
         moment(start).isBetween(event.start, event.end, null, "[]") ||
@@ -159,27 +149,16 @@ const RoomReservation = () => {
         moment(event.end).isBetween(start, end, null, "[]")
     );
     if (overlap) {
-      setFeedbackMessage("Time slot overlaps with an existing reservation.");
+      setFeedbackMessage("The selected time slot overlaps with an existing reservation. Please choose a different time.");
       return;
     }
-
-    if (durationHours > 1) {
+  
+    if (durationHours > 1 && !agenda) {
+      setFeedbackMessage("Your meeting exceeds 1 hour. Please provide your reason below.");
       setShowAgendaForm(true);
-    } else {
-      reserveEvent();
-    }
-  };
-
-  const reserveEvent = async (e) => {
-    if (e && e.preventDefault) {
-      e.preventDefault();
-    }
-
-    if (!agenda && moment.duration(moment(endTime).diff(moment(startTime))).asHours() > 1) {
-      setFeedbackMessage("Please provide an agenda for meetings longer than 1 hour.");
       return;
     }
-
+  
     const startDateTime = moment(startDate).set({
       hour: startTime.hour(),
       minute: startTime.minute(),
@@ -193,7 +172,7 @@ const RoomReservation = () => {
       second: 0,
       millisecond: 0,
     }).toDate();
-
+  
     const newEvent = {
       start: startDateTime,
       end: endDateTime,
@@ -201,19 +180,13 @@ const RoomReservation = () => {
       agenda: agenda,
       status: "pending",
     };
-
+  
     setEvents([...events, newEvent]);
     setShowAgendaForm(false);
     setAgenda("");
-    setFeedbackMessage("Appointment request submitted for approval.");
-
-    let confirmationStatus;
-    if (!agenda) {
-      confirmationStatus = origData.roomName === "Palawan and Boracay" ? false : true;
-    } else {
-      confirmationStatus = false;
-    }
-
+    
+    let confirmationStatus = !agenda && origData.roomName !== "Palawan and Boracay";
+  
     const reserveData = {
       scheduleDate: moment(startDate).format("YYYY-MM-DD"),
       startTime: startDateTime.toISOString(),
@@ -234,18 +207,18 @@ const RoomReservation = () => {
     try {
       const reserveId = localStorage.getItem("reserveToken");
       const token = localStorage.getItem("authToken");
-
+  
       const headers = {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       };
-
+  
       const updateResponse = await axios.patch(
         `https://booking-system-ge1i.onrender.com/api/book/edit/${reserveId}`,
         reserveData,
         { headers }
       );
-
+  
       if (updateResponse.status === 200) {
         navigate("/reserveform");
       }
@@ -284,8 +257,8 @@ const RoomReservation = () => {
     }
   };
 
-  const minTime = 8; // 8:00 AM
-  const maxTime = 21; // 9:00 PM
+  const minTime = 8; 
+  const maxTime = 21;
 
   const disabledHours = () => {
     const hours = [];
@@ -316,16 +289,6 @@ const RoomReservation = () => {
 
   const handleEventClick = (event) => {
     setExpandedEvent(event);
-  };
-
-  const handleConfirm = () => {
-    setShowModal(false);
-    setPrevLocation(nextLocation); // Confirm the navigation
-  };
-
-  const handleCancel = () => {
-    setShowModal(false);
-    navigate(prevLocation); // Stay on the current page
   };
 
   return (
@@ -359,7 +322,7 @@ const RoomReservation = () => {
                   format="h:mm a"
                   disabledHours={disabledHours}
                   disabledMinutes={disabledMinutes}
-                  minuteStep={10}
+                  minuteStep={5}
                   hideDisabledOptions
                   placeholder="Select Time"
                   defaultValue={moment()} // Set default to current time
@@ -376,7 +339,7 @@ const RoomReservation = () => {
                   format="h:mm a"
                   disabledHours={disabledHours}
                   disabledMinutes={disabledMinutes}
-                  minuteStep={10}
+                  minuteStep={5}
                   hideDisabledOptions
                   placeholder="Select Time"
                   defaultValue={moment().add(1, "hours")} // Set default to 1 hour after current time
@@ -384,34 +347,32 @@ const RoomReservation = () => {
                 />
               </div>
             </div>
-
-            <div className="rsrv-buttons">
-              <button className="cancel-btn" onClick={handleCancelTime}>
-                Cancel
-              </button>
-              <button className="reserve-btn" onClick={handleReserve}>
-                Reserve
-              </button>
-            </div>
-            {showAgendaForm && (
-              <div className="agenda-form">
-                <label>Provide Agenda</label>
-                <input
-                  type="text"
-                  value={agenda}
-                  onChange={(e) => setAgenda(e.target.value)}
-                  placeholder="Enter agenda or reason"
-                />
-                <button onClick={reserveEvent}>Submit</button>
-              </div>
-            )}
-            {feedbackMessage && (
-              <div className="feedback-message">{feedbackMessage}</div>
-            )}
             <p>
               The maximum meeting duration is 1 hour. If it exceeds this limit,
               please state your reason.
             </p>
+            {feedbackMessage && (
+              <div className="feedback-message">{feedbackMessage}</div>
+            )}
+            {showAgendaForm && (
+              <div className="agenda-form">
+                <label htmlFor="agenda">Reason:</label>
+                <input
+                  id="agenda"
+                  value={agenda}
+                  onChange={(e) => setAgenda(e.target.value)}
+                  placeholder="Enter reason"
+                />
+              </div>
+            )}
+            <div className="rsrv-buttons">
+              <button className="cancel-btn" onClick={handleCancelTime}>
+                Cancel
+              </button>
+              <button className="reserve-button" onClick={handleReserve}>
+                Reserve
+              </button>
+            </div>
           </div>
 
           <div className="legend-controls">
@@ -419,6 +380,10 @@ const RoomReservation = () => {
               <div className="legend-item">
                 <span className="pdmn"></span>
                 <p>Philippine Dragon Media Network</p>
+              </div>
+              <div className="legend-item">
+                <span className="bvp"></span>
+                <p>GDS Capital</p>
               </div>
               <div className="legend-item">
                 <span className="gds"></span>
@@ -433,10 +398,6 @@ const RoomReservation = () => {
                 <p>STARLIGHT</p>
               </div>
               <div className="legend-item">
-                <span className="bvp"></span>
-                <p>BIG VISION PRODS.</p>
-              </div>
-              <div className="legend-item">
                 <span className="sn"></span>
                 <p>SuperNova</p>
               </div>
@@ -449,7 +410,7 @@ const RoomReservation = () => {
         </div>
 
         <div className="calendar-column">
-          <h3>Meetings For This Week</h3>
+          <h3>Meetings for the Week</h3>
           <div className="calendar-container">
             <Calendar
               localizer={localizer}
@@ -490,7 +451,6 @@ const RoomReservation = () => {
       {expandedEvent && (
         <div className="expanded-event-modal">
           <div className="expanded-event-content">
-
             <h2>{expandedEvent.title}</h2>
             <p>
               <strong>Room:</strong> {expandedEvent.room}
@@ -516,7 +476,6 @@ const RoomReservation = () => {
             </div>
           </div>
         </div>
-
       )}
 
       {/* Discard Changes Modal */}

@@ -1,327 +1,138 @@
-/* Dashboard Styles */
-.dashboard {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-}
-
-.dashboard-header {
-  background-color: #f9fbfd;
-  color: #333;
-  padding: 1rem;
+header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: solid 1px #d1d9e2;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+  color: #000000;
+  padding: 10px 20px;
   position: relative;
 }
 
-.logodb {
-  font-size: 24px;
-  font-weight: bold;
-  margin-right: 20px;
-  padding: 10px;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-}
-
-.logodb img {
+.headerlogo img {
   height: 40px;
-  margin-right: 10px;
-}
-
-.header-actions {
-  display: flex;
-  align-items: center;
-  margin-right: 10px;
-}
-
-/* Profile Icon and Modal */
-.profile-icon {
-  font-size: 24px;
   cursor: pointer;
-  color: #9e2424;
+  margin-bottom: 0;
+}
+
+.nav {
   display: flex;
   align-items: center;
-  padding: 10px;
-  border-radius: 10px;
-  transition: background-color 0.3s;
 }
 
-
-
-.profile-icon:hover {
-  color: #ccc;
-}
-
-.user-name {
-  font-size: 16px;
-  margin-left: 10px;
-  color: #9e2424;
-}
-
-.notif-icon,
-.user-list-icon {
-  font-size: 24px;
-  cursor: pointer;
-  color: #000;
-  display: flex;
-  align-items: center;
-  padding: 10px;
-  border-radius: 10px;
+.nav-item {
+  margin: 0 10px;
   position: relative;
-  transition: background-color 0.3s;
-}
-
-.notif-icon:hover,
-.user-list-icon:hover {
-  color: #ccc;
-}
-
-.notif-count {
-  font-size: 12px;
-  font-weight: bold;
-  color: #fff;
-  position: absolute;
-  top: 2px;
-  right: 2px;
-  background-color: #9c0b0b;
-  border-radius: 50%;
-  padding: 2px 6px;
-  border: 1px solid #fff;
-}
-
-/* Header Modal (Dropdown) */
-.headermodal {
-  position: absolute;
-  top: 60px;
-  /* Adjust the top position to place it under the profile tab */
-  right: 0;
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
-}
-
-.headermodal-content {
-  padding: 20px;
-}
-
-.headermodal-content h2 {
-  margin-top: 0;
-}
-
-.headermodal-buttons{
-  justify-content: center;
-}
-
-.headermodal-content button {
-  text-align: center;
-  width: auto;
-  padding: 10px;
-  color: #58595a;
-  background-color: white;
-  border: #58595a solid 0.1px;
-  border-radius: 6px;
-  box-shadow: 0px 4px 4px 0px #7c8b9d;
-}
-
-.headermodal-content button:hover {
-  color: white;
-  background-color: #ee3e38;
-  border: #ee3e38 solid 0.1px;
-}
-
-.profileCont {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.profileCont img {
-  width: 100px;
-  /* Minimal width */
-  height: 100px;
-  /* Minimal height */
-  object-fit: cover;
-  /* Maintain aspect ratio */
-  border-radius: 50%;
-  /* Round the image */
-  border: 2px solid #7c8b9d;
-  /* Border color */
-}
-
-.tooltip-text {
-  visibility: hidden;
-  width: 100px;
-  background-color: #ccc;
-  color: #fff;
-  text-align: center;
-  border-radius: 6px;
-  padding: 5px 0;
-  position: absolute;
-  z-index: 1;
-  bottom: 80%;
-  /* Position the tooltip above the icon */
-  left: 50%;
-  margin-left: -60px;
-  opacity: 0;
-  transition: opacity 0.3s;
-  font-size: 12px;
-}
-
-.user-list-icon:hover .tooltip-text,
-.notif-icon:hover .tooltip-text {
-  visibility: visible;
-  opacity: 1;
-}
-
-/* Burger Menu */
-.burger-menu {
-  display: none;
   cursor: pointer;
-  font-size: 24px;
-  margin-left: auto;
-}
-
-.burger-menu-content {
-  display: flex;
-  flex-direction: column;
-  background-color: #f7f7f7;
-  position: absolute;
-  top: 60px;
-  right: 0px;
-  width: 40%;
-  padding: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
-}
-
-.burger-menu-content .user-list-icon,
-.burger-menu-content .notif-icon,
-.burger-menu-content .profile-icon {
   display: flex;
   align-items: center;
-  padding: 10px;
-  cursor: pointer;
-  font-size: 18px;
 }
 
-.burger-menu-content .tooltip-text {
-  visibility: hidden;
-  width: 100px;
-  background-color: #ccc;
-  color: #fff;
-  text-align: center;
-  border-radius: 6px;
-  padding: 5px 0;
-  position: absolute;
-  z-index: 1;
-  bottom: 80%;
-  /* Position the tooltip above the icon */
-  left: 50%;
-  opacity: 0;
-  transition: opacity 0.3s;
-  font-size: 12px;
+.profile-img {
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
 }
 
-.user-list-icon:hover .tooltip-text,
-.notif-icon:hover .tooltip-text {
-  visibility: visible;
-  opacity: 1;
-}
-
-/* Mobile Styles */
-@media (max-width: 768px) {
-  .burger-menu {
-    display: block;
-  }
-
-  .user-list-icon,
-  .notif-icon,
-  .profile-icon {
-    display: none;
-  }
-}
-
-@media screen and (max-width: 768px) {
-  .logodb {
-    display: block;
-    /* Show logo on smaller screens */
-    padding: 0%;
-    margin: 0%;
-    height: auto;
-  }
-
-  .logodb img {
-    content: url("../../assets/logos/GDSLoog2.png");
-    /* Use mobile logo */
-  }
-
-  .header-actions {
-    margin-right: 0;
-  }
-
-  .profile-icon,
-  .notif-icon,
-  .user-list-icon {
-    display: none;
-    /* Hide profile, notification, and user list icons on smaller screens */
-  }
-
-  .burger-menu {
-    display: flex;
-    /* Show burger menu on smaller screens */
-  }
-
-  .dashboard-header {
-    flex-direction: row;
-    /* Stack items vertically in header on smaller screens */
-    align-items: flex-start;
-  }
-
-  .dashboard-header .header-actions {
-    order: 1;
-    /* Move header actions (like search bar) below logo or burger menu */
-    margin-top: 10px;
-    /* Add space between logo/burger and header actions */
-  }
-
-  .headermodal {
-    top: 60px;
-    /* Adjust modal position to fit under burger menu */
-    right: 10px;
-  }
-}
-
-.notifications-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.notification-item {
-  padding: 10px;
-  border-bottom: 1px solid #ccc;
-}
-
-.notification-item.unread {
-  background-color: #f9f9f9;
-}
-
-.notification-item.read {
-  background-color: #fff;
-}
-
-.notification-item p {
+.profile-name {
   margin: 0;
   font-size: 14px;
 }
 
-.notification-item span {
-  display: block;
+.dropdown {
+  position: absolute;
+  top: 100%;
+  background-color: #fff;
+  color: #000;
+  padding: 10px;
+  border-radius: 4px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  min-width: 300px;
+  right: 0;
+}
+
+.notif-dropdown {
+  right: 0;
+}
+
+.profile-dropdown {
+  right: 0;
+}
+
+.profile-text {
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+}
+
+.profile-text p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.2;
+}
+
+.profile-btn {
+  flex-direction: row;
+  display: flex;
+  margin-top: 10px;
+  gap: 10px;
+}
+
+.dropdown button {
+  width: 100%;
+  background-color: #d6271e; 
+  border: none; 
+  border-radius: 4px; 
+  padding: 10px;
+  text-align: left;
+  cursor: pointer;
+  font-size: 14px; 
+  color: #ffffff;
+  transition: background-color 0.3s, border-color 0.3s; 
+  text-align: center;
+}
+
+.dropdown button:first-child {
+  background-color: #e84c3d; 
+  color: #ffffff; 
+}
+
+.dropdown button:hover {
+  background-color: #c62828; 
+}
+
+.dropdown button:first-child:hover {
+  background-color: #d84315; 
+}
+
+.dropdown button:focus {
+  outline: none; /* Remove default outline */
+  box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.5); 
+}
+
+.dropdown button:active {
+  background-color: #b71c1c; /* Darker background on click */
+}
+
+.dropdown button:first-child:active {
+  background-color: #b71c1c; /* Darker background on click for the first button */
+}
+
+
+.clear-btn {
+  background-color: #f00;
+  color: #fff;
+  border: none;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.notif-count {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: red;
+  color: #fff;
+  border-radius: 50%;
+  padding: 2px 5px;
   font-size: 12px;
-  color: #888;
 }
