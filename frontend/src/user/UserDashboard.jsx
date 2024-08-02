@@ -135,7 +135,6 @@ const Dashboard = () => {
   
     const now = new Date();
     const name = `${userData.firstName} ${userData.surName}`;
-    console.log(name); // Debugging: Log the full name to verify
   
     const initialOtherMeetings = bookData
       .filter(
