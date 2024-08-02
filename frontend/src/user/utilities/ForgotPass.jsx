@@ -98,14 +98,14 @@ const ForgotPass = () => {
   };
 
   return (
-    <div className="verify-container">
-      <div className="verify">
+    <div className="ver-container">
+      <div className="ver">
         <h2>Reset Password</h2>
         <p>{userId && hasSentEmail ? message : 'Input your email to reset your password'}</p>
         {!userId ? (
           <form onSubmit={handleSubmit}>
-            <h4 style={{ margin: '0', textAlign: 'left' }}>Email:</h4>
-            <div className="form-groupss">
+            <div className="form-group">
+            <h4>Email:</h4>
               <input
                 placeholder='Enter your valid email'
                 type="email"
@@ -117,9 +117,9 @@ const ForgotPass = () => {
               />
             </div>
             <button
-              style={{ fontSize: "15px", marginTop: '5px' }}
               type="submit"
               disabled={isButtonDisabled}
+              className='ver-button'
             >
               Verify
             </button>

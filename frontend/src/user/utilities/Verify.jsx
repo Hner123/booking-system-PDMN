@@ -40,8 +40,8 @@ const Verify = () => {
   };
 
   return (
-    <div className="verify-container">
-      <div className="verify">
+    <div className="ver-container">
+      <div className="ver">
         <img src={GIF} alt="Verification GIF" />
         <h2>Email Verification</h2>
         <p>You have successfully changed your email!</p>
