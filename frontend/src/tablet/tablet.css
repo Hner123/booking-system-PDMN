@@ -1,3 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Danfo&family=Oswald:wght@200..700&family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,900;1,900&family=Oswald:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+.column-container {
+  display: flex;
+  width: 100%;
+}
+
 .meeting-room-schedule {
   color: white;
   border-radius: 10px;
@@ -13,20 +20,23 @@
 }
 
 .default-state {
-  background-color: #f0f0f0; 
+  background-color: #f0f0f0;
   flex-direction: column;
   display: flex;
   justify-content: center;
   align-items: center;
+
 }
 
 .meeting-room-schedule.in-use {
-  background: rgb(114, 8, 0);
+  background: #d84944;
 }
 
 .meeting-room-schedule.available {
-  background: rgb(0, 114, 62);
+  background: rgb(32, 167, 106);
 }
+
+
 
 .first-column {
   position: relative;
@@ -50,14 +60,14 @@
 }
 
 .meeting-room-schedule.in-use .first-column::before {
-  background: rgba(238, 64, 58, 0.3);
+  background: rgba(189, 86, 84, 0.288);
 }
 
 .meeting-room-schedule.available .first-column::before {
   background: rgba(0, 114, 62, 0.3);
 }
 
-.first-column>* {
+.first-column > * {
   position: relative;
   z-index: 2;
 }
@@ -66,59 +76,108 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  padding-left: 15px;
 }
 
-.availability {
-  font-size: 160px;
-  margin: 0;
+.status2 {
+  margin: 2px 0;
+  padding: 0;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 700;
+}
+
+.status2 p{
+  margin: 0px;
+  padding: 0;
+}
+.availability{
+  margin: -30px 0 0 0;
   transition: color 0.3s, text-shadow 0.3s;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  font-weight: 900; /* or specify another weight like 400 */
 }
 
+
+.availability h1{
+  font-size: 200px;
+  margin: -20px 0 0 0;
+  transition: color 0.3s, text-shadow 0.3s;
+  text-shadow: 5px 5px 4px rgba(0, 0, 0, 0.5);
+  font-weight: 900;
+}
+
+
+.meeting-room-schedule.in-use .availability {
+  color: #d84944;
+  text-shadow: 3px 3px 0px #ffffff;
+}
+
+.meeting-room-schedule.available .availability {
+  color: rgb(32, 167, 106);
+  margin-top: 50px;
+  text-shadow: 3px 3px 0px rgb(255, 255, 255);
+}
+
+.meeting-title {
+  border-bottom: 1px solid #ffff;
+}
 .room-name {
-  font-size: 192px;
+  font-size: 200px;
   margin: 0;
+  padding: 0;
   transition: color 0.3s, text-shadow 0.3s;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  font-family: 'Roboto', sans-serif;
+}
+
+.room-name h1 {
+  font-size: 200px;
+  margin: 0;
+  padding: 0;
+  transition: color 0.3s, text-shadow 0.3s;
+  font-family: 'Roboto', sans-serif;
 }
 
 .meeting-room-schedule.in-use .room-name {
-  color: #EE3E38;
-  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7);
+  color: #ffffff;
+  text-shadow: 5px 5px 0px #d84944;
+  margin-bottom: 30px;
 }
 
 .meeting-room-schedule.available .room-name {
-  color: #1E8C45;
-  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7);
+  color: rgb(255, 255, 255);
+  text-shadow: 5px 5px 0px rgba(0, 114, 51, 0.753);
+  margin-bottom: 30px;
 }
 
 .room-info table {
   width: 100%;
   border-collapse: collapse;
   margin: 0;
-  font-size: 40px;
   text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
   font-weight: bold;
-}
+  font-family: 'Danfo', sans-serif;
+  padding: 0%;
 
-.room-info table td {
-  padding: 16px;
 }
 
 .room-info table td:first-child {
-  width: 48px;
+  width: 30px;
   text-align: center;
 }
 
 .room-info table td:last-child {
-  padding-left: 16px;
+  padding: 0 0 0 16px;
+  font-size: 25px;
+}
+
+.room-info td {
+  height: 30px;
 }
 
 .room-info table .fa-calendar-day,
 .room-info table .fa-clock,
 .room-info table .fa-user {
   color: #ffffff;
-  font-size: 40px;
+  font-size: 25px;
 }
 
 .second-column {
@@ -134,12 +193,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  font-family: 'Oswald', sans-serif;
 }
 
 .clock h1 {
   font-size: 120px;
   margin: 0;
   padding: 0%;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 500;
 }
 
 .date-info {
@@ -147,13 +209,15 @@
   text-align: center;
   margin: 0;
   padding: 0%;
+  font-family: 'Oswald', sans-serif;
 }
 
-.ddate{
+.ddate {
   font-size: 40px;
   text-align: center;
-  margin: 0;
+  margin: -10px 0 15px 0;
   padding: 0%;
+  font-family: 'Oswald', sans-serif;
 }
 
 .meeting-list {
@@ -193,6 +257,7 @@
   margin: 5px;
   text-align: left;
 }
+
 .meeting h3 {
   font-size: 30px;
   margin: 0%;
@@ -213,6 +278,18 @@
   font-size: 30px;
 }
 
+.availability-message {
+  text-align: center;
+  margin: 0px;
+  font-size: 24px;
+  color: #ffffff;
+  font-family: 'Roboto', sans-serif;
+}
+.availability-message h2 {
+  margin: 0px;
+}
+
+
 @media (max-width: 768px) {
   .clock h1 {
     font-size: 64px;
@@ -227,15 +304,18 @@
     padding: 0 16px;
   }
 }
+
 @media (max-width: 1180px) {
   .first-column {
     padding: 10px;
   }
+
   .room-name {
     font-size: 120px;
   }
-  .availability{
-    font-size:  100px;
+
+  .availability {
+    font-size: 100px;
   }
 
   .room-info table {
@@ -266,7 +346,6 @@
     font-size: 24px;
   }
 }
-
 
 /* Centering the room selector */
 .subtle-room-selector {

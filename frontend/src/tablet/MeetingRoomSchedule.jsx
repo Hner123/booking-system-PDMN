@@ -120,7 +120,6 @@ const MeetingRoomSchedule = () => {
       weekday: "long",
       day: "numeric",
       month: "long",
-      year: "numeric",
     };
     return date.toLocaleDateString("en-GB", options);
   };
@@ -191,6 +190,31 @@ const MeetingRoomSchedule = () => {
 
   const backgroundImage = selectedRoom === "Palawan" ? bgPalawan : bgBoracay;
 
+  const getAvailabilityMessage = () => {
+    const now = new Date();
+
+    if (currentMeeting) {
+      const endTime = new Date(currentMeeting.endTime);
+      return `Room will be available after ${endTime.toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit',
+      })}`;
+    }
+
+    // Find the next upcoming meeting
+    const upcomingMeeting = bookData.find(meeting => new Date(meeting.startTime) > now);
+    if (upcomingMeeting) {
+      const startTime = new Date(upcomingMeeting.startTime);
+      return `Available until ${startTime.toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit',
+      })}`;
+    }
+
+    // If no meetings are found for the rest of the day
+    return 'Available for the rest of the day';
+  };
+
   return (
     <div className={containerClassName}>
       {!roomSelected && (
@@ -220,7 +244,13 @@ const MeetingRoomSchedule = () => {
               {currentMeeting ? (
                 <>
                   <h1 className="room-name">{currentMeeting.roomName}</h1>
-                  <h1 className="availability">In Use</h1>
+                  <div>
+                    <p className="status2">Room Status:</p>
+                    <h1 className="availability">In Use</h1>
+                    <div className="availability-message">
+              
+            </div>
+                  </div>
                   <h2 className="meeting-title">{currentMeeting.title}</h2>
                   <table>
                     <tbody>
@@ -257,11 +287,15 @@ const MeetingRoomSchedule = () => {
                       </tr>
                     </tbody>
                   </table>
+                  {/* <h2>{getAvailabilityMessage()}</h2> */}
                 </>
               ) : (
                 <>
                   <h1 className="room-name">{selectedRoom}</h1>
-                  <h1 className="availability">AVAILABLE</h1>
+                  <h1 className="availability">Available</h1>
+                  <div className="availability-message">
+              <h2>{getAvailabilityMessage()}</h2>
+            </div>
                 </>
               )}
             </div>
@@ -274,15 +308,16 @@ const MeetingRoomSchedule = () => {
               <h2 className="ddate">{formatDate(currentTime)}</h2>
             </div>
             <div className="meeting-list">
-              <h2 className="upcoming-meetings">Upcoming Meetings Today</h2>
+              <h2 className="upcoming-meetings">Upcoming Meetings</h2>
               {renderUpcomingMeetings().length > 0 ? (
                 renderUpcomingMeetings()
               ) : (
                 <div className="upcoming-content">
-                  <h4 className="meetings">No upcoming meetings today</h4>
+                  <h4 className="meetings">No upcoming meetings</h4>
                 </div>
               )}
             </div>
+
           </div>
         </>
       )}
