@@ -297,22 +297,21 @@ let socket;
 const Header = () => {
   const [isProfileOpen, setProfileOpen] = useState(false);
   const [isNotifOpen, setNotifOpen] = useState(false);
-  const [isMenuOpen, setMenuOpen] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [userData, setUserData] = useState(null);
   const [notifications, setNotifications] = useState([]);
   const [loadingNotifications, setLoadingNotifications] = useState(false);
-  
+
   const profileDropdownRef = useRef(null);
   const notifDropdownRef = useRef(null);
-  
+
   const navigate = useNavigate();
   const location = useLocation();
   const reserve = localStorage.getItem("reserveToken");
-  
+
   useEffect(() => {
     const userId = localStorage.getItem("userId");
-    
+
     socket = io(ENDPOINT);
     socket.emit("setup", { _id: userId });
     socket.on("newNotification", (newNotification) => {
@@ -320,10 +319,10 @@ const Header = () => {
         setNotifications(prev => [newNotification, ...prev]);
       }
     });
-    
+
     return () => socket.disconnect();
   }, []);
-  
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -336,10 +335,10 @@ const Header = () => {
         console.error("Error fetching user data:", error);
       }
     };
-    
+
     fetchUserData();
   }, []);
-  
+
   useEffect(() => {
     const fetchNotifications = async () => {
       setLoadingNotifications(true);
@@ -354,31 +353,31 @@ const Header = () => {
         setLoadingNotifications(false);
       }
     };
-    
+
     fetchNotifications();
   }, []);
-  
+
   useEffect(() => {
     const handleOutsideClick = (event) => {
       if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target)) setProfileOpen(false);
       if (notifDropdownRef.current && !notifDropdownRef.current.contains(event.target)) setNotifOpen(false);
     };
-    
+
     document.addEventListener("mousedown", handleOutsideClick);
-    
+
     return () => document.removeEventListener("mousedown", handleOutsideClick);
   }, []);
-  
+
   const handleProfileToggle = () => {
     setProfileOpen(!isProfileOpen);
     setNotifOpen(false);
   };
-  
+
   const handleNotifToggle = () => {
     setNotifOpen(!isNotifOpen);
     setProfileOpen(false);
   };
-  
+
   const handleClearNotifications = async () => {
     try {
       const userId = localStorage.getItem("userId");
@@ -388,7 +387,7 @@ const Header = () => {
       console.error('Error clearing notifications:', error);
     }
   };
-  
+
   const navigateEdit = () => navigate("/user/edit");
   const navigateUserList = () => navigate("/employee-list");
   const handleLogoClick = () => navigate("/dashboard");
@@ -396,10 +395,10 @@ const Header = () => {
     localStorage.clear();
     navigate("/");
   };
-  
+
   return (
     <header>
-      <div className="headerlogo" onClick={handleLogoClick}>
+      <div className="headerlogo" onClick={handleLogoClick} style={{ cursor: "pointer" }}>
         <img src={logo} alt="Logo" />
       </div>
       <nav className="nav">
@@ -440,13 +439,16 @@ const Header = () => {
                   <h3>Hello, {userData.firstName} {userData.surName}</h3>
                   <p><strong>Department:</strong> {userData.department}</p>
                 </div>
-              )}<div className="profile-btn">
-              <button onClick={navigateEdit}>Edit Profile</button>
-              <button onClick={handleLogout}>Logout</button>
+              )}
+              <div className="profile-btn">
+                <button onClick={navigateEdit}>Edit Profile</button>
+                <button onClick={handleLogout}>Logout</button>
+                <button onClick={navigateUserList}>User List</button>
               </div>
             </div>
           )}
         </div>
+
       </nav>
       {showModal && <Modal onConfirm={() => setShowModal(false)} onCancel={() => setShowModal(false)} />}
     </header>

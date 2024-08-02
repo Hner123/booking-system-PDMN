@@ -1,8 +1,7 @@
 .user-list {
   padding: 20px;
-  background-color: #f4f4f9;
+  background-color: #ffffff;
   border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   max-width: 100%;
   margin: 0 auto;
 }
@@ -10,7 +9,7 @@
 .user-list h2 {
   font-size: 28px;
   margin-bottom: 20px;
-  color: #333;
+  color: #000000;
   text-align: center;
   font-weight: 700;
 }
@@ -25,7 +24,6 @@
   border-bottom: 2px solid #ddd;
   padding-bottom: 10px;
   font-weight: bolder;
-  text-shadow: 2px 2px 3px #00000059;
 }
 
 .user-table-container {
@@ -58,11 +56,11 @@
 .user-table th {
   background-color: #f7f7f7;
   font-weight: bold;
-  color: #333;
+  color: #000000;
 }
 
 .user-table td {
-  color: #555;
+  color: #000000;
 }
 
 .user-table tbody tr:hover {
@@ -97,4 +95,18 @@
   .user-table td {
     padding: 10px;
   }
+}
+
+.toggle-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: #d6271e; /* Match with your button color */
+  padding: 0;
+  margin: 0;
+}
+
+.toggle-button:hover {
+  text-decoration: underline;
 }

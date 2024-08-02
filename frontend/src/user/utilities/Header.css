@@ -136,3 +136,96 @@ header {
   padding: 2px 5px;
   font-size: 12px;
 }
+/* Adjustments for mobile */
+@media (max-width: 768px) {
+  header {
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 10px;
+  }
+
+  .headerlogo img {
+    height: 30px;
+  }
+
+  .nav-menu {
+    display: none; /* Hide navigation items by default on mobile */
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .nav-item {
+    margin: 5px 0;
+  }
+
+  .nav-item:first-child {
+    opacity: 0; 
+    
+  }
+  
+  .profile-img {
+    height: 35px;
+  }
+
+  .profile-name {
+    font-size: 12px;
+  }
+
+  .dropdown {
+    min-width: 200px;
+    right: auto;
+    left: 0;
+  }
+
+  .dropdown button {
+    width: 100%;
+    padding: 8px;
+    font-size: 12px;
+  }
+
+  .dropdown button:first-child {
+    background-color: #e84c3d;
+  }
+
+  .dropdown button:hover {
+    background-color: #c62828;
+  }
+
+  .dropdown button:focus {
+    box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.5);
+  }
+
+  .dropdown button:active {
+    background-color: #b71c1c;
+  }
+
+  .clear-btn {
+    padding: 3px;
+    font-size: 12px;
+  }
+
+  .notif-count {
+    top: -3px;
+    right: -3px;
+    padding: 2px 4px;
+    font-size: 10px;
+  }
+
+  /* Menu button visible on mobile */
+  .menu-button {
+    display: block;
+  }
+}
+
+/* Menu button icon (default styles) */
+.menu-button {
+  font-size: 24px;
+  background: none;
+  border: none;
+  color: #000;
+  cursor: pointer;
+}
+
+.menu-button:hover {
+  color: #d6271e; /* Change color on hover */
+}
