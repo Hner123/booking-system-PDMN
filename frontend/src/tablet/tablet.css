@@ -76,7 +76,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding-left: 15px;
+  padding: 0 15px;
 }
 
 .status2 {
@@ -119,7 +119,9 @@
 
 .meeting-title {
   border-bottom: 1px solid #ffff;
+  margin: 0%;
 }
+
 .room-name {
   font-size: 200px;
   margin: 0;
@@ -256,6 +258,17 @@
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
   margin: 5px;
   text-align: left;
+}
+
+.meetingbg {
+  padding: 10px;
+  background: rgba(78, 29, 29, 0.315);
+  margin-bottom: 16px;
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+
+  text-align: left;
+  width: 100%;
 }
 
 .meeting h3 {

@@ -642,7 +642,7 @@
 }
 
 .loading {
-  background-color: grey;
+  background-color: none;
   cursor: not-allowed;
   pointer-events: none;
   color: white; /* Ensures text is still readable */
