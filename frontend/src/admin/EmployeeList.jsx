@@ -1,232 +1,3 @@
-// import { React, useState, useEffect } from "react";
-// import { useNavigate } from "react-router-dom";
-// import "./AdminPages.css";
-// import { IoMdArrowDropdown } from "react-icons/io";
-// import WithAuthAdmin from "../auth/WithAuthAdmin";
-// import axios from "axios";
-// import { ToastContainer, toast } from "react-toastify";
-
-// const EmployeeList = () => {
-//   const navigate = useNavigate();
-//   const [showDropdown, setShowDropdown] = useState(false);
-//   const [users, setUsers] = useState([]);
-//   const [sortedUsers, setSortedUsers] = useState([]);
-//   const [sortCriteria, setSortCriteria] = useState('');
-//   const [editDeptModal, setEditDeptModal] = useState(false);
-//   const [selectedUser, setSelectedUser] = useState(null);
-//   const [selectedDept, setSelectedDept] = useState('');
-//   const [departments, setDepartments] = useState([
-//     "Philippine Dragon Media Network",
-//     "GDS Travel Agency",
-//     "FEILONG Legal",
-//     "STARLIGHT",
-//     "BIG VISION PRODS.",
-//     "SuperNova",
-//     "ClearPath",
-//     "Dragon AI",
-//   ]);
-
-//   const toggleEditDeptModal = (userId) => {
-//     if (editDeptModal && selectedUser === userId) {
-//       setEditDeptModal(false);
-//       setSelectedUser(null);
-//     } else {
-//       setSelectedUser(userId);
-//       setEditDeptModal(true);
-//     }
-//   };
-
-//   const toggleDropdown = () => {
-//     setShowDropdown(!showDropdown);
-//   };
-
-//   const goAdd = () => {
-//     navigate("/admin/add-employee");
-//   };
-
-//   const handleDeptChange = (e) => {
-//     setSelectedDept(e.target.value);
-//   };
-
-//   const saveDeptChange = async () => {
-//     if (!selectedUser || !selectedDept) return;
-
-//     try {
-//       const token = localStorage.getItem("adminToken");
-//       const headers = {
-//         Authorization: `Bearer ${token}`,
-//         "Content-Type": "application/json",
-//       };
-
-//       const response = await axios.put(
-//         `https://booking-system-ge1i.onrender.com/api/user/update/${selectedUser}`,
-//         { department: selectedDept },
-//         { headers }
-//       );
-
-//       if (response.status === 200) {
-//         setUsers(users.map(user =>
-//           user._id === selectedUser ? { ...user, department: selectedDept } : user
-//         ));
-//         setSortedUsers(sortedUsers.map(user =>
-//           user._id === selectedUser ? { ...user, department: selectedDept } : user
-//         ));
-//         setEditDeptModal(false);
-//         setSelectedUser(null);
-//         setSelectedDept('');
-//         toast.success("Department updated successfully.");
-//       }
-//     } catch (error) {
-//       console.error("Error updating department:", error);
-//       toast.error("Failed to update department.");
-//     }
-//   };
-
-//   const deleteUser = async (userId) => {
-//     const confirmDelete = window.confirm("Are you sure you want to delete this user?");
-//     if (!confirmDelete) return;
-
-//     try {
-//       const token = localStorage.getItem("adminToken");
-//       const headers = {
-//         Authorization: `Bearer ${token}`,
-//         "Content-Type": "application/json",
-//       };
-
-//       const response = await axios.delete(
-//         `https://booking-system-ge1i.onrender.com/api/user/delete/${userId}`,
-//         { headers }
-//       );
-
-//       if (response.status === 200) {
-//         setUsers(users.filter(user => user._id !== userId));
-//         setSortedUsers(sortedUsers.filter(user => user._id !== userId));
-//         toast.success("User deleted successfully.");
-//       }
-//     } catch (error) {
-//       console.error("Error deleting user:", error);
-//       toast.error("Failed to delete user.");
-//     }
-//   };
-
-//   useEffect(() => {
-//     const fetchUsers = async () => {
-//       try {
-//         const token = localStorage.getItem("adminToken");
-//         const headers = {
-//           Authorization: `Bearer ${token}`,
-//           "Content-Type": "application/json",
-//         };
-
-//         const response = await axios.get("https://booking-system-ge1i.onrender.com/api/user/", { headers });
-//         if (response.status === 200) {
-//           setUsers(response.data);
-//           setSortedUsers(response.data); // Initialize sorted users
-//         }
-//       } catch (error) {
-//         console.error("Error fetching users:", error);
-//       }
-//     };
-
-//     fetchUsers();
-//   }, []);
-
-//   const handleSort = (criteria) => {
-//     setSortCriteria(criteria);
-//   };
-
-//   useEffect(() => {
-//     let sorted;
-//     if (sortCriteria) {
-//       sorted = users.filter(user => user.department === sortCriteria);
-//     } else {
-//       sorted = users;
-//     }
-//     console.log("Sorted Users:", sorted); // Debugging line
-//     setSortedUsers(sorted);
-//   }, [sortCriteria, users]);
-
-//   return (
-//     <div>
-//       <ToastContainer />
-//       <h1>Employee List</h1>
-
-//       <div className="">
-//         <button className="" onClick={goAdd}>
-//           Add New Employee
-//         </button>
-
-//         <div className="">
-//           <button onClick={toggleDropdown} className="">
-//             Sort Company
-//             <IoMdArrowDropdown/>
-//           </button>
-//           {showDropdown && (
-//             <div className="">
-//               <button className="" onClick={() => handleSort("")}>Clear Filter</button>
-//               {departments.map(dept => (
-//                 <button className="" key={dept} onClick={() => handleSort(dept)}>
-//                   {dept}
-//                 </button>
-//               ))}
-//             </div>
-//           )}
-//         </div>
-//       </div>
-
-//       <div>
-//         <div className="">
-//           <table className="">
-//             <thead>
-//               <tr>
-//                 <th className="">Name</th>
-//                 <th className="">Username</th>
-//                 <th className="">Department</th>
-//                 <th></th>
-//               </tr>
-//             </thead>
-//             <tbody>
-//               {sortedUsers.map(user => (
-//                 <tr key={user._id}>
-//                   <td className="">{user.firstName} {user.surName}</td>
-//                   <td className="">{user.userName}</td>
-//                   <td className="">{user.department}</td>
-//                   <td>
-//                     <div className="">
-//                       <button className='' onClick={() => toggleEditDeptModal(user._id)}>
-//                         {editDeptModal && selectedUser === user._id ? 'Close Edit' : 'Edit Department'}
-//                       </button>
-//                       <button onClick={() => deleteUser(user._id)}>Delete</button>
-//                     </div>
-//                     {editDeptModal && selectedUser === user._id && (
-//                       <div className="modal">
-//                         <div className="modal-content">
-//                           <span className="close" onClick={() => setEditDeptModal(false)}>&times;</span>
-//                           <h2>Edit Department</h2>
-//                           <select value={selectedDept} onChange={handleDeptChange}>
-//                             <option value="">Select department</option>
-//                             {departments.map(dept => (
-//                               <option key={dept} value={dept}>{dept}</option>
-//                             ))}
-//                           </select>
-//                           <button onClick={saveDeptChange} className="save-btn">Save</button>
-//                         </div>
-//                       </div>
-//                     )}
-//                   </td>
-//                 </tr>
-//               ))}
-//             </tbody>
-//           </table>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default WithAuthAdmin(EmployeeList);
-
-
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -285,6 +56,11 @@ const EmployeeList = () => {
   }, []);
 
   const deleteUser = async (userId) => {
+    if (!userId) {
+      toast.error("User ID is not valid.");
+      return;
+    }
+
     try {
       const token = localStorage.getItem("adminToken");
       const headers = {
@@ -298,7 +74,6 @@ const EmployeeList = () => {
       );
 
       if (response.status === 200) {
-        // Remove the deleted user from the state
         setUsers(prevUsers => prevUsers.filter(user => user._id !== userId));
         setSortedUsers(prevSortedUsers => prevSortedUsers.filter(user => user._id !== userId));
         toast.success("User deleted successfully.");
@@ -311,13 +86,15 @@ const EmployeeList = () => {
 
   const handleEditDeptClick = (userId) => {
     const user = users.find(user => user._id === userId);
-    setSelectedUser(user);
-    setSelectedDept(user?.department || '');
-    setEditDeptModal(true);
+    if (user) {
+      setSelectedUser(user);
+      setSelectedDept(user.department || '');
+      setEditDeptModal(true);
+    }
   };
 
   const saveDeptChange = async (userId) => {
-    console.log(userId)
+    if (!userId || !selectedDept) return;
 
     try {
       const token = localStorage.getItem("adminToken");
@@ -357,17 +134,6 @@ const EmployeeList = () => {
     }
 
     setSortedUsers(sorted);
-  }, [sortCriteria, users]);
-
-  useEffect(() => {
-    if (users.length > 0) {
-
-      const sorted = sortCriteria
-        ? users.filter(user => user.department === sortCriteria)
-        : users;
-
-      setSortedUsers(sorted);
-    }
   }, [sortCriteria, users]);
 
   useEffect(() => {
@@ -491,7 +257,6 @@ const EmployeeList = () => {
         </div>
       )}
 
-
       {showDeleteModal && userToDelete && (
         <div className="delete-confirmation-modal">
           <div className="modal-content">
@@ -503,7 +268,9 @@ const EmployeeList = () => {
             <div className="modal-actions">
               <button
                 onClick={() => {
-                  deleteUser(userToDelete._id);
+                  if (userToDelete?._id) {
+                    deleteUser(userToDelete._id);
+                  }
                   setShowDeleteModal(false);
                   setUserToDelete(null); // Clear userToDelete after deletion
                 }}

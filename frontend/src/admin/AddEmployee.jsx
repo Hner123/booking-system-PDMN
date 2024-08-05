@@ -16,7 +16,31 @@ const AddEmployee = () => {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [statusMessages, setStatusMessages] = useState([]);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Retrieve status messages from local storage
+    const storedMessages = localStorage.getItem('statusMessages');
+    const storedDate = localStorage.getItem('statusMessagesDate');
+    const currentDate = new Date().toISOString().split('T')[0];
+
+    if (storedDate === currentDate && storedMessages) {
+      setStatusMessages(JSON.parse(storedMessages));
+    } else {
+      // Clear old messages if date has changed
+      localStorage.removeItem('statusMessages');
+      localStorage.removeItem('statusMessagesDate');
+    }
+  }, []);
+
+  useEffect(() => {
+    // Update local storage whenever status messages change
+    const currentDate = new Date().toISOString().split('T')[0];
+    localStorage.setItem('statusMessages', JSON.stringify(statusMessages));
+    localStorage.setItem('statusMessagesDate', currentDate);
+  }, [statusMessages]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -25,54 +49,61 @@ const AddEmployee = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
+      // Validate username uniqueness
       const validationResponse = await axios.post(
         `https://booking-system-ge1i.onrender.com/api/auth/validate`,
         { userName: formData.userName }
       );
 
       if (validationResponse.data.userName.exists) {
-        toast.error("Username is already registered");
+        toast.error('Username is already registered');
+        setLoading(false);
+        setStatusMessages((prevMessages) => [
+          ...prevMessages,
+          { message: `Username ${formData.userName} is already registered.`, isError: true },
+        ]);
         return;
       }
-    } catch (error) {
-      toast.error("Failed to validate username");
-      return;
-    }
 
-    const employeeData = {
-      userName: formData.userName,
-      passWord: formData.passWord,
-    };
-
-    try {
-      const token = localStorage.getItem("adminToken");
+      // Create new employee
+      const token = localStorage.getItem('adminToken');
       const headers = {
         Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       };
 
-      const updateResponse = await axios.post(
+      const createResponse = await axios.post(
         `https://booking-system-ge1i.onrender.com/api/user/create`,
-        employeeData,
+        formData,
         { headers }
       );
 
-      if (updateResponse.status === 201) {
-        toast.success("Employee has been added successfully!", {
-          autoClose: 1500,
-          onClose: () => navigate("/admin/employee-list")
-        });        
+      if (createResponse.status === 201) {
+        const successMessage = `Employee <strong>${formData.userName}</strong> has been added successfully!`;
+        toast.success(`Employee ${formData.userName} has been added successfully!`);
+        setStatusMessages((prevMessages) => [
+          ...prevMessages,
+          { message: successMessage, isError: false },
+        ]);
       }
+
     } catch (error) {
-      console.error("Error during employee creation:", error);
-      toast.error("Error creating employee");
+      console.error('Error during employee creation:', error);
+      toast.error('Error creating employee. Please try again later.');
+      setStatusMessages((prevMessages) => [
+        ...prevMessages,
+        { message: 'Error creating employee. Please try again later.', isError: true },
+      ]);
+    } finally {
+      setLoading(false);
     }
   };
 
   const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
+    setShowPassword((prevShowPassword) => !prevShowPassword);
   };
 
   return (
@@ -97,7 +128,7 @@ const AddEmployee = () => {
             <label htmlFor="passWord">Password:</label>
             <div className="password-wrapper">
               <input
-                type={showPassword ? "text" : "password"}
+                type={showPassword ? 'text' : 'password'}
                 id="passWord"
                 name="passWord"
                 value={formData.passWord}
@@ -114,9 +145,25 @@ const AddEmployee = () => {
             </div>
           </div>
           <div className="form-actions">
-            <button type="submit">Add Employee</button>
+            <button type="submit" disabled={loading}>
+              {loading ? 'Adding employee...' : 'Add Employee'}
+            </button>
           </div>
         </form>
+        {statusMessages.length > 0 && (
+          <div className="status-messages">
+            <h2>Recently Added Accounts</h2>
+            <ul>
+              {statusMessages.map((status, index) => (
+                <li key={index} className={status.isError ? 'error' : 'success'}>
+                  <span
+                    dangerouslySetInnerHTML={{ __html: status.message }}
+                  />
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
     </div>
   );
