@@ -25,7 +25,8 @@ const Dashboard = () => {
   const [showOtherMeetings, setShowOtherMeetings] = useState(true);
   const [firstLogin, setFirstLogin] = useState(false); 
   const [showConfirmModal, setShowConfirmModal] = useState(false); 
-  const [meetingToDelete, setMeetingToDelete] = useState(null); 
+  const [meetingToDelete, setMeetingToDelete] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const formRef = useRef();
   const userId = localStorage.getItem("userId");
@@ -43,10 +44,18 @@ const Dashboard = () => {
   const [bookData, setBookData] = useState([]);
   const [roomData, setRoomName] = useState("");
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+  const capitalize = (str) => {
+    return str.replace(/\b\w/g, (char) => char.toUpperCase());
   };
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: (name === "firstName" || name === "surName") ? capitalize(value) : value,
+    }));
+  };
+  
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -314,6 +323,7 @@ const Dashboard = () => {
 
   const handleRegistrationSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     if (
       formData.firstName.trim() === "" ||
@@ -373,6 +383,8 @@ const Dashboard = () => {
       }
     } catch (error) {
       console.error("Error during patch:", error);
+    } finally {
+      setLoading(false)
     }
   };
 
@@ -435,6 +447,7 @@ const Dashboard = () => {
                     onChange={handleChange}
                     placeholder="First Name"
                     required
+                    disabled={loading}
                     onInvalid={(e) =>
                       e.target.setCustomValidity(
                         "Please input your first name."
@@ -453,6 +466,7 @@ const Dashboard = () => {
                     onChange={handleChange}
                     placeholder="Last Name"
                     required
+                    disabled={loading}
                     onInvalid={(e) =>
                       e.target.setCustomValidity("Please input your last name.")
                     }
@@ -470,6 +484,7 @@ const Dashboard = () => {
                   onChange={handleChange}
                   placeholder="Email Address"
                   required
+                  disabled={loading}
                   onInvalid={(e) =>
                     e.target.setCustomValidity(
                       "Please enter your email address so we can notify you about confirmations, advisory, etc."
@@ -486,6 +501,7 @@ const Dashboard = () => {
                   value={formData.department}
                   onChange={handleChange}
                   required
+                  disabled={loading}
                   onInvalid={(e) =>
                     e.target.setCustomValidity(
                       "Please enter your designated department for specification of the meeting."
@@ -523,11 +539,14 @@ const Dashboard = () => {
                       "Please enter your new password for your security and privacy."
                     )
                   }
+                  disabled={loading}
                   onInput={(e) => e.target.setCustomValidity("")}
                 />
               </div>
               <div className="reg-group">
-                <button className="reg-btn">Confirm</button>
+              <button type="submit" disabled={loading} className={loading ? "reg-btn" : "reg-btn"}>
+                {loading ? "Please wait..." : "Confirm"}
+              </button>
                 <button className="out-button" onClick={handleLogout}>
                   Not Now? Log Out.
                 </button>
