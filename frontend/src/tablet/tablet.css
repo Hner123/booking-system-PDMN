@@ -86,6 +86,14 @@
   font-weight: 700;
 }
 
+
+.meeting-room-schedule.available .status2 {
+  margin-top: 120px;
+  padding: 0;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 700;
+}
+
 .status2 p{
   margin: 0px;
   padding: 0;
@@ -113,7 +121,6 @@
 
 .meeting-room-schedule.available .availability {
   color: rgb(32, 167, 106);
-  margin-top: 50px;
   text-shadow: 3px 3px 0px rgb(255, 255, 255);
 }
 
@@ -147,7 +154,6 @@
 .meeting-room-schedule.available .room-name {
   color: rgb(255, 255, 255);
   text-shadow: 5px 5px 0px rgba(0, 114, 51, 0.753);
-  margin-bottom: 30px;
 }
 
 .room-info table {
@@ -251,12 +257,11 @@
 }
 
 .meeting {
-  padding: 10px;
+  padding: 5px;
   background: rgba(255, 255, 255, 0.1);
-  margin-bottom: 16px;
+  margin: 5px 0 10px 0;
   border-radius: 5px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-  margin: 5px;
   text-align: left;
 }
 
@@ -278,7 +283,7 @@
 
 .meeting p {
   font-size: 20px;
-  margin: 1%;
+  margin: 0%;
 }
 
 .meetings {
@@ -298,6 +303,7 @@
   color: #ffffff;
   font-family: 'Roboto', sans-serif;
 }
+
 .availability-message h2 {
   margin: 0px;
 }

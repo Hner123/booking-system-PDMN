@@ -82,7 +82,7 @@ const FirstColumn = ({ currentMeeting, selectedRoom, formatDate, backgroundImage
         <>
           <h1 className="room-name">{currentMeeting.roomName}</h1>
           <div>
-            <p className="status">Room Status:</p>
+            <p className="status2">Room Status:</p>
             <h1 className="availability">In Use</h1>
           </div>
           <div className="meetingbg">
@@ -112,6 +112,7 @@ const FirstColumn = ({ currentMeeting, selectedRoom, formatDate, backgroundImage
       ) : (
         <>
           <h1 className="room-name">{selectedRoom}</h1>
+          <p className="status2">Room Status:</p>
           <h1 className="availability">Available</h1>
         </>
       )}
