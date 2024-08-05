@@ -126,12 +126,22 @@ const EmployeeList = () => {
   };
 
   useEffect(() => {
-    let sorted;
+    let sorted = [...users];
+
     if (sortCriteria) {
-      sorted = users.filter(user => user.department === sortCriteria);
-    } else {
-      sorted = users;
+      // Filter users based on department
+      sorted = sorted.filter(user => user.department === sortCriteria);
     }
+
+    // Sort users so that those without names come last
+    sorted.sort((a, b) => {
+      const aName = `${a.firstName} ${a.surName}`.trim();
+      const bName = `${b.firstName} ${b.surName}`.trim();
+
+      if (!aName && bName) return 1; // a without name comes after b with name
+      if (aName && !bName) return -1; // a with name comes before b without name
+      return 0; // names are equal or both are missing
+    });
 
     setSortedUsers(sorted);
   }, [sortCriteria, users]);
@@ -146,6 +156,12 @@ const EmployeeList = () => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+const isUserRegistered = (user) => {
+  // Consider user registered if they have a non-empty username and department
+  return Boolean(user.userName && user.userName.trim() !== '') && 
+         Boolean(user.department && user.department.trim() !== '');
+};
 
   return (
     <div className="employee-list-page">
@@ -194,18 +210,28 @@ const EmployeeList = () => {
         <table>
           <thead>
             <tr>
-              <th>Name</th>
               <th>Username</th>
+              <th>Name</th>
               <th>Department</th>
+              <th>Status</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             {sortedUsers.map((user) => (
               <tr key={user._id}>
-                <td>{`${user.firstName} ${user.surName}`}</td>
                 <td>{user.userName}</td>
+                <td>{`${user.firstName} ${user.surName}`.trim()}</td>
                 <td>{user.department}</td>
+                <td>
+                  {isUserRegistered(user) ? (
+                    <span className="status-registered">Registered</span>
+                  ) : (
+                    <span className="status-not-registered">
+                      Not Registered
+                    </span>
+                  )}
+                </td>
                 <td>
                   <button
                     onClick={() => handleEditDeptClick(user._id)}
@@ -214,7 +240,10 @@ const EmployeeList = () => {
                     Edit Dept
                   </button>
                   <button
-                    onClick={() => { setShowDeleteModal(true); setUserToDelete(user) }}
+                    onClick={() => {
+                      setShowDeleteModal(true);
+                      setUserToDelete(user);
+                    }}
                     className="action-button delete"
                   >
                     Delete
@@ -243,7 +272,10 @@ const EmployeeList = () => {
               ))}
             </select>
             <div className="modal-actions">
-              <button onClick={() => saveDeptChange(selectedUser._id)} className="confirm-button">
+              <button
+                onClick={() => saveDeptChange(selectedUser._id)}
+                className="confirm-button"
+              >
                 Save
               </button>
               <button
@@ -291,7 +323,6 @@ const EmployeeList = () => {
           </div>
         </div>
       )}
-
     </div>
   );
 };

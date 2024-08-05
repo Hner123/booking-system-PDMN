@@ -1,18 +1,18 @@
-import React, { useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import WithAuthAdmin from '../auth/WithAuthAdmin';
-import Sidebar from './Sidebar';
-import './AdminPages.css';
+import React, { useState, useEffect } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import WithAuthAdmin from "../auth/WithAuthAdmin";
+import Sidebar from "./Sidebar";
+import "./AdminPages.css";
 
 const AddEmployee = () => {
   const [formData, setFormData] = useState({
     userName: "",
-    passWord: ""
+    passWord: "",
   });
   const [showPassword, setShowPassword] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -22,24 +22,24 @@ const AddEmployee = () => {
 
   useEffect(() => {
     // Retrieve status messages from local storage
-    const storedMessages = localStorage.getItem('statusMessages');
-    const storedDate = localStorage.getItem('statusMessagesDate');
-    const currentDate = new Date().toISOString().split('T')[0];
+    const storedMessages = localStorage.getItem("statusMessages");
+    const storedDate = localStorage.getItem("statusMessagesDate");
+    const currentDate = new Date().toISOString().split("T")[0];
 
     if (storedDate === currentDate && storedMessages) {
       setStatusMessages(JSON.parse(storedMessages));
     } else {
       // Clear old messages if date has changed
-      localStorage.removeItem('statusMessages');
-      localStorage.removeItem('statusMessagesDate');
+      localStorage.removeItem("statusMessages");
+      localStorage.removeItem("statusMessagesDate");
     }
   }, []);
 
   useEffect(() => {
     // Update local storage whenever status messages change
-    const currentDate = new Date().toISOString().split('T')[0];
-    localStorage.setItem('statusMessages', JSON.stringify(statusMessages));
-    localStorage.setItem('statusMessagesDate', currentDate);
+    const currentDate = new Date().toISOString().split("T")[0];
+    localStorage.setItem("statusMessages", JSON.stringify(statusMessages));
+    localStorage.setItem("statusMessagesDate", currentDate);
   }, [statusMessages]);
 
   const handleChange = (e) => {
@@ -59,20 +59,23 @@ const AddEmployee = () => {
       );
 
       if (validationResponse.data.userName.exists) {
-        toast.error('Username is already registered');
+        toast.error("Username is already registered");
         setLoading(false);
         setStatusMessages((prevMessages) => [
           ...prevMessages,
-          { message: `Username ${formData.userName} is already registered.`, isError: true },
+          {
+            message: `Username ${formData.userName} is already registered.`,
+            isError: true,
+          },
         ]);
         return;
       }
 
       // Create new employee
-      const token = localStorage.getItem('adminToken');
+      const token = localStorage.getItem("adminToken");
       const headers = {
         Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       };
 
       const createResponse = await axios.post(
@@ -89,13 +92,15 @@ const AddEmployee = () => {
           { message: successMessage, isError: false },
         ]);
       }
-
     } catch (error) {
-      console.error('Error during employee creation:', error);
-      toast.error('Error creating employee. Please try again later.');
+      console.error("Error during employee creation:", error);
+      toast.error("Error creating employee. Please try again later.");
       setStatusMessages((prevMessages) => [
         ...prevMessages,
-        { message: 'Error creating employee. Please try again later.', isError: true },
+        {
+          message: "Error creating employee. Please try again later.",
+          isError: true,
+        },
       ]);
     } finally {
       setLoading(false);
@@ -107,58 +112,65 @@ const AddEmployee = () => {
   };
 
   return (
-    <div className={`admin-page ${sidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}>
+    <div
+      className={`admin-page ${
+        sidebarOpen ? "sidebar-open" : "sidebar-closed"
+      }`}
+    >
       <Sidebar sidebarOpen={sidebarOpen} />
       <div className="admin-content">
         <ToastContainer />
         <h1>Add New Employee</h1>
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="userName">Username:</label>
-            <input
-              type="text"
-              id="userName"
-              name="userName"
-              value={formData.userName}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="passWord">Password:</label>
-            <div className="password-wrapper">
+        <div className="new-container">
+          <form onSubmit={handleSubmit}>
+            <div className="form-group">
+              <label htmlFor="userName">Username:</label>
               <input
-                type={showPassword ? 'text' : 'password'}
-                id="passWord"
-                name="passWord"
-                value={formData.passWord}
+                type="text"
+                id="userName"
+                name="userName"
+                value={formData.userName}
                 onChange={handleChange}
                 required
               />
-              <button
-                type="button"
-                onClick={togglePasswordVisibility}
-                className="password-toggle"
-              >
-                <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
+            </div>
+            <div className="form-group">
+              <label htmlFor="passWord">Password:</label>
+              <div className="password-wrapper">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  id="passWord"
+                  name="passWord"
+                  value={formData.passWord}
+                  onChange={handleChange}
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={togglePasswordVisibility}
+                  className="password-toggle"
+                >
+                  <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
+                </button>
+              </div>
+            </div>
+            <div className="form-actions">
+              <button type="submit" disabled={loading}>
+                {loading ? "Adding employee..." : "Add Employee"}
               </button>
             </div>
-          </div>
-          <div className="form-actions">
-            <button type="submit" disabled={loading}>
-              {loading ? 'Adding employee...' : 'Add Employee'}
-            </button>
-          </div>
-        </form>
+          </form>
+        </div>
         {statusMessages.length > 0 && (
           <div className="status-messages">
             <h2>Recently Added Accounts</h2>
             <ul>
               {statusMessages.map((status, index) => (
-                <li key={index} className={status.isError ? 'error' : 'success'}>
-                  <span
-                    dangerouslySetInnerHTML={{ __html: status.message }}
-                  />
+                <li
+                  key={index}
+                  className={status.isError ? "error" : "success"}
+                >
+                  <span dangerouslySetInnerHTML={{ __html: status.message }} />
                 </li>
               ))}
             </ul>
