@@ -262,6 +262,7 @@ button[type="redirect"]:hover {
     justify-content: flex-end;
     align-items: center;
     margin: 10px 0px;
+    gap: 10px;
 }
 
 .add-button {

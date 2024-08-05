@@ -499,7 +499,7 @@
     gap: 10px;
   }
   
-  .read-only {
+  .read-only-btn {
     border: 1px solid #ccc;
     padding: 8px; 
     border-radius: 4px;

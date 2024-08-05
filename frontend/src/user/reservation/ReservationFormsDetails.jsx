@@ -387,6 +387,12 @@ const ReservationFormsDetails = () => {
               ref={formRef}
               onSubmit={handleSubmit}
             >
+              <div>
+                <div className="read-only-group ">
+                    <button className="read-only-btn">Book for me</button>
+                    <button className="read-only-btn">Book for someoneelse</button>
+                </div>
+              </div>
               <div className="read-only-group">
                 <div style={{ flex: 1 }}>
                   <label htmlFor="name">Username:</label>
@@ -420,7 +426,9 @@ const ReservationFormsDetails = () => {
               <div>
                 <div className="pax">
                   <label htmlFor="pax">Number of Pax *</label>
-                  <p className="note">The count includes the person making the booking.</p>
+                  <p className="note">
+                    The count includes the person making the booking.
+                  </p>
                 </div>
                 <div className="radio-group" style={{ display: "flex" }}>
                   <div className="radio-option half-width">
@@ -434,7 +442,7 @@ const ReservationFormsDetails = () => {
                       disabled={
                         selectedRoom !== "Boracay" && selectedRoom !== "Palawan"
                       }
-                      style={{ width: "auto", marginRight: "10px"}}
+                      style={{ width: "auto", marginRight: "10px" }}
                     />
                     <label htmlFor="pax-1-2">1-2 attendees</label>
                   </div>
@@ -449,7 +457,7 @@ const ReservationFormsDetails = () => {
                       disabled={
                         selectedRoom !== "Boracay" && selectedRoom !== "Palawan"
                       }
-                      style={{ width: "auto", marginRight: "10px"}}
+                      style={{ width: "auto", marginRight: "10px" }}
                     />
                     <label htmlFor="pax-3-more">3 - 8 attendees</label>
                   </div>
@@ -489,12 +497,10 @@ const ReservationFormsDetails = () => {
                   />
                 </div>
               )}
-
-              
               <div className="attendees-container">
                 <div className="a-title">
-              <label htmlFor="attendees">Attendees:</label>
-              </div>
+                  <label htmlFor="attendees">Attendees:</label>
+                </div>
                 <Autosuggest
                   suggestions={suggestions}
                   onSuggestionsFetchRequested={onSuggestionsFetchRequested}
@@ -531,7 +537,7 @@ const ReservationFormsDetails = () => {
                       type="checkbox"
                       checked={showGuestInput}
                       onChange={() => setShowGuestInput(!showGuestInput)}
-                      style={{ width: "auto", marginRight: "10px"}}
+                      style={{ width: "auto", marginRight: "10px" }}
                     />
                     <label className="checkbox-label">Have any Guest</label>
                   </div>
