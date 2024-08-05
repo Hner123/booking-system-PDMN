@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import logo from '../assets/logos/GDSLogo.png';
-import mascot from '../assets/mascot.png';
-import axios from 'axios';
-import WithoutAuthAdmin from '../auth/WithoutAuthAdmin';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import "../user/User.css";
+import logo from "../assets/logos/GDSLogo.png";
+import mascot from "../assets/33.gif";
+import WithoutAuthAdmin from "../auth/WithoutAuth";
 
 const AdminLogin = () => {
     const [adminUser, setUsername] = useState('');
@@ -14,11 +15,11 @@ const AdminLogin = () => {
 
     const handleLogin = async (e) => {
         e.preventDefault();
+        setLoading(true); // Start loading
+        setError(""); // Clear previous errors
         try {
             const trimmedUserName = adminUser.trim();
             const trimmedPassWord = adminPass.trim();
-
-            setLoading(true);
 
             const response = await axios.post(
                 "https://booking-system-ge1i.onrender.com/api/auth/login/admin",
@@ -33,14 +34,14 @@ const AdminLogin = () => {
                 const { _id } = response.data.user;
 
                 localStorage.setItem("adminToken", authToken);
-                localStorage.setItem("adminId", _id)
+                localStorage.setItem("adminId", _id);
 
-                setLoading(false);
                 navigate('/admin/employee-list');
             }
         } catch (error) {
-            setLoading(false);
             setError(error.response.data.message);
+        } finally {
+            setLoading(false); // Stop loading
         }
     };
 
@@ -77,16 +78,17 @@ const AdminLogin = () => {
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="Enter your password"
                     />
-                    <button type="submit">Log In</button>
+                    <button type="submit" disabled={loading}>
+                        {loading ? "Logging In..." : "Log In"}
+                    </button>
                     {/* Use a simple anchor tag for "Not an Admin?" */}
                     <button type="redirect">
                         <a href="/" onClick={handleNotAdminClick}>Not an Admin?</a>
                     </button>
-
                 </form>
             </div>
             <div className="right-column">
-                <div className="overlay">
+                <div className="overlay1">
                     <h2>Effortless Meeting Room Reservations for Your Team!</h2>
                     <img className="mascot" src={mascot} alt="Mascot" />
                 </div>
