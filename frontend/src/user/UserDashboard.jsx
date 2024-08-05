@@ -29,7 +29,7 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(false);
 
   const formRef = useRef();
-  const userId = localStorage.getItem("userId");
+  const userId = localStorage.getItem("userId") || null;
   
 
   const [formData, setFormData] = useState({
@@ -112,7 +112,7 @@ const Dashboard = () => {
     const initialReservations = bookData
       .filter(
         (book) =>
-          book.user._id === userId &&
+          book.user?._id === userId &&
           book.title &&
           book.scheduleDate !== null &&
           book.startTime !== null
@@ -149,7 +149,7 @@ const Dashboard = () => {
     const initialOtherMeetings = bookData
       .filter(
         (book) =>
-          book.user._id !== userId &&
+          book.user?._id !== userId &&
           book.title &&
           book.attendees.includes(name) &&
           book.scheduleDate !== null &&
