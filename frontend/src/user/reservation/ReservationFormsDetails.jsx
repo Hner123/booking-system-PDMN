@@ -538,7 +538,9 @@ const ReservationFormsDetails = () => {
                       onChange={() => setShowGuestInput(!showGuestInput)}
                       style={{ width: "auto", marginRight: "10px" }}
                     />
-                    <label className="checkbox-label">Have any Guest</label>
+                    <label className="checkbox-label">
+                      Do you have any Guest/s?
+                    </label>
                   </div>
                   {showGuestInput && (
                     <div className="guest-input-wrapper">
@@ -587,7 +589,10 @@ const ReservationFormsDetails = () => {
               <div className="overlay"></div>
               {bookData && (
                 <>
-                  <div className="details" style={{textShadow:'2px 2px 5px black'}}>
+                  <div
+                    className="details"
+                    style={{ textShadow: "2px 2px 5px black" }}
+                  >
                     <h1>{bookData.roomName}</h1>
                     <div className="separator"></div>
                     <p>
