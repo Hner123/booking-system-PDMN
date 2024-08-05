@@ -387,12 +387,11 @@ const ReservationFormsDetails = () => {
               ref={formRef}
               onSubmit={handleSubmit}
             >
-              <div>
+{/* 
                 <div className="read-only-group ">
                     <button className="read-only-btn">Book for me</button>
                     <button className="read-only-btn">Book for someoneelse</button>
-                </div>
-              </div>
+                </div> */}
               <div className="read-only-group">
                 <div style={{ flex: 1 }}>
                   <label htmlFor="name">Username:</label>

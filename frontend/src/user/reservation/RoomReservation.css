@@ -499,7 +499,16 @@
     gap: 10px;
   }
   
-  .read-only-btn {
+  .read-only{
+    border: 1px solid #ccc;
+    padding: 8px; 
+    border-radius: 4px;
+    background-color: #f9f9f9;
+    margin-bottom: 16px;
+    font-size: 14px;
+  }
+
+  .read-only-btn{
     border: 1px solid #ccc;
     padding: 8px; 
     border-radius: 4px;
