@@ -175,7 +175,7 @@ const UpcomingMeetings = ({ bookData, currentTime }) => {
       )}
       {remainingMeetingsCount > 0 && (
         <div className="more-meetings">
-          <h4 className="more-meetings-text">... {remainingMeetingsCount} more meetings</h4>
+          <p style={{margin:'0px'}}className="more-meetings-text">... {remainingMeetingsCount} more meetings</p>
         </div>
       )}
     </>
