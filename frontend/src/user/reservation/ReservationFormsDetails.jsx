@@ -241,6 +241,8 @@ const ReservationFormsDetails = () => {
         ? "Approved"
         : "Pending";
 
+    const archiveStatus = approvalStatus === "Approved" ? true : false;
+
     const updatedReserve = {
       caps: {
         pax: formData.caps.pax,
@@ -251,7 +253,7 @@ const ReservationFormsDetails = () => {
       title: formData.title,
       confirmation: confirmationStatus,
       approval: {
-        archive: false,
+        archive: archiveStatus,
         status: approvalStatus,
         reason: "",
       },
