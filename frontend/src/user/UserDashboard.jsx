@@ -45,9 +45,11 @@ const Dashboard = () => {
   const [roomData, setRoomName] = useState("");
 
   const capitalize = (str) => {
-    return str.replace(/\b\w/g, (char) => char.toUpperCase());
+    return str.replace(/\b\w+/g, (word) => {
+      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    });
   };
-
+  
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData((prevData) => ({
@@ -55,7 +57,6 @@ const Dashboard = () => {
       [name]: (name === "firstName" || name === "surName") ? capitalize(value) : value,
     }));
   };
-  
 
   useEffect(() => {
     const fetchUsers = async () => {
