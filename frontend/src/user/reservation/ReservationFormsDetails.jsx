@@ -387,12 +387,11 @@ const ReservationFormsDetails = () => {
               ref={formRef}
               onSubmit={handleSubmit}
             >
-              <div>
+              {/* 
                 <div className="read-only-group ">
                     <button className="read-only-btn">Book for me</button>
                     <button className="read-only-btn">Book for someoneelse</button>
-                </div>
-              </div>
+                </div> */}
               <div className="read-only-group">
                 <div style={{ flex: 1 }}>
                   <label htmlFor="name">Username:</label>
@@ -539,7 +538,9 @@ const ReservationFormsDetails = () => {
                       onChange={() => setShowGuestInput(!showGuestInput)}
                       style={{ width: "auto", marginRight: "10px" }}
                     />
-                    <label className="checkbox-label">Have any Guest</label>
+                    <label className="checkbox-label">
+                      Do you have any Guest/s?
+                    </label>
                   </div>
                   {showGuestInput && (
                     <div className="guest-input-wrapper">
@@ -585,23 +586,37 @@ const ReservationFormsDetails = () => {
               className="background-image"
               style={{ backgroundImage: `url(${roomBg})` }}
             >
-              <div className="color-overlay"></div>
+              <div className="overlay"></div>
               {bookData && (
                 <>
-                  <div className="details">
+                  <div
+                    className="details"
+                    style={{ textShadow: "2px 2px 5px black" }}
+                  >
                     <h1>{bookData.roomName}</h1>
                     <div className="separator"></div>
                     <p>
                       <strong>Date: </strong>{" "}
-                      {new Date(bookData.scheduleDate).toLocaleDateString()}
+                      {new Date(bookData.scheduleDate).toLocaleDateString([], {
+                        weekday: "long",
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      })}
                     </p>
                     <p>
                       <strong>Meeting Start: </strong>{" "}
-                      {new Date(bookData.startTime).toLocaleTimeString()}
+                      {new Date(bookData.startTime).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
                     </p>
                     <p>
                       <strong>Meeting End: </strong>{" "}
-                      {new Date(bookData.endTime).toLocaleTimeString()}
+                      {new Date(bookData.endTime).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
                     </p>
                     <p>
                       <strong>Meeting Title: </strong> {formData.title}

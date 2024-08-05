@@ -71,6 +71,17 @@
   transition: background-color 0.3s;
 }
 
+.reg-btn {
+  /* Your existing styles for the button */
+  cursor: pointer;
+  /* ... */
+}
+
+.reg-btn:disabled {
+  cursor: not-allowed; /* Changes cursor to indicate the button is disabled */
+  opacity: 0.6; /* Optional: reduces opacity to give a visual cue that it's disabled */
+}
+
 .login-form button:hover {
   background-color: #e44e4e;
 }
