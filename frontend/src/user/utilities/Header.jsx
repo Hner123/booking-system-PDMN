@@ -119,14 +119,14 @@
 //       }
 //     }
 //   }, [location, reserve, showModal, prevLocation]);
-  
+
 
 //   const handleConfirm = () => {
 //     setShowModal(false);
 //     setPrevLocation(nextLocation);
 //     localStorage.removeItem("reserveToken");
 //   };
-  
+
 //   const handleCancel = () => {
 //     setShowModal(false);
 //     if (prevLocation !== nextLocation) {
@@ -135,7 +135,7 @@
 //       navigate('/reserve');
 //     }
 //   };
-  
+
 //   const handleModalToggle = () => {
 //     setProfileOpen(!isProfileOpen);
 //     setNotifOpen(false);
@@ -441,9 +441,9 @@ const Header = () => {
                 </div>
               )}
               <div className="profile-btn">
+                <button onClick={navigateUserList}>User List</button>
                 <button onClick={navigateEdit}>Edit Profile</button>
                 <button onClick={handleLogout}>Logout</button>
-                <button onClick={navigateUserList}>User List</button>
               </div>
             </div>
           )}
