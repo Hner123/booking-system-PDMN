@@ -352,6 +352,8 @@ const Dashboard = () => {
     } catch (error) {
       toast.error("Failed to validate email");
       return;
+    } finally {
+      setLoading(false)
     }
 
     const updatedUser = {
@@ -511,16 +513,16 @@ const Dashboard = () => {
                   onInput={(e) => e.target.setCustomValidity("")}
                 >
                   <option value="">Select Department</option>
+                  <option value="GDS Capital">GDS Capital.</option>
                   <option value="Philippine Dragon Media Network">
                     Philippine Dragon Media Network
                   </option>
+                  <option value="Dragon AI">Dragon AI</option>
+                  <option value="STARLIGHT">STARLIGHT</option>
                   <option value="GDS Travel Agency">GDS Travel Agency</option>
                   <option value="FEILONG Legal">FEILONG Legal</option>
-                  <option value="STARLIGHT">STARLIGHT</option>
-                  <option value="BIG VISION PRODS.">BIG VISION PRODS.</option>
                   <option value="SuperNova">SuperNova</option>
                   <option value="ClearPath">ClearPath</option>
-                  <option value="Dragon AI">Dragon AI</option>
                 </select>
               </div>
               <div className="form-section">
@@ -545,9 +547,10 @@ const Dashboard = () => {
                 />
               </div>
               <div className="reg-group">
-              <button type="submit" disabled={loading} className={loading ? "reg-btn" : "reg-btn"}>
-                {loading ? "Please wait..." : "Confirm"}
-              </button>
+                <button type="submit" disabled={loading} className="reg-btn">
+                  {loading ? "Please wait..." : "Confirm"}
+                </button>
+
                 <button className="out-button" onClick={handleLogout}>
                   Not Now? Log Out.
                 </button>
@@ -613,7 +616,8 @@ const Dashboard = () => {
             >
               <thead>
                 {myReservationsTable.headerGroups.map((headerGroup) => {
-                  const { key, ...headerProps } = headerGroup.getHeaderGroupProps();
+                  const { key, ...headerProps } =
+                    headerGroup.getHeaderGroupProps();
                   return (
                     <tr key={key} {...headerProps}>
                       {headerGroup.headers.map((column) => {
@@ -676,7 +680,8 @@ const Dashboard = () => {
             >
               <thead>
                 {otherMeetingsTable.headerGroups.map((headerGroup) => {
-                  const { key, ...headerProps } = headerGroup.getHeaderGroupProps();
+                  const { key, ...headerProps } =
+                    headerGroup.getHeaderGroupProps();
                   return (
                     <tr key={key} {...headerProps}>
                       {headerGroup.headers.map((column) => {
