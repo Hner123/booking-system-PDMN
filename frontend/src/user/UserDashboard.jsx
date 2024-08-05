@@ -432,7 +432,7 @@ const Dashboard = () => {
   return (
     <div className="dashboard">
       {firstLogin && (
-
+        <div className="reg-overlay">
           <div className="registration-form-modal">
             {userData && <h2>Welcome, {userData.userName}!</h2>}
             <p>Please make sure to fill out the form to proceed.</p>
@@ -554,6 +554,7 @@ const Dashboard = () => {
               </div>
             </form>
           </div>
+        </div>
       )}
       <main className="dashboard-main">
         <ToastContainer />
