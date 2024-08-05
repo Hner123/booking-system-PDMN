@@ -388,6 +388,43 @@ const Header = () => {
     }
   };
 
+  const [prevLocation, setPrevLocation] = useState(null);
+  const [nextLocation, setNextLocation] = useState(location.pathname);
+
+  useEffect(() => {
+    const currentPath = location.pathname;
+    const excludedPaths = ['/reserve', '/reserveform', '/confirmation'];
+
+    if (excludedPaths.includes(currentPath)) {
+      setPrevLocation(currentPath);
+    } else if (prevLocation && !excludedPaths.includes(prevLocation)) {
+      setPrevLocation(prevLocation);
+    }
+
+    if (excludedPaths.includes(prevLocation) && !excludedPaths.includes(currentPath) && !showModal) {
+      if (reserve) {
+        setNextLocation(currentPath);
+        setShowModal(true);
+      }
+    }
+  }, [location, reserve, showModal, prevLocation]);
+
+
+  const handleConfirm = () => {
+    setShowModal(false);
+    setPrevLocation(nextLocation);
+    localStorage.removeItem("reserveToken");
+  };
+
+  const handleCancel = () => {
+    setShowModal(false);
+    if (prevLocation !== nextLocation) {
+      navigate(prevLocation);
+    } else {
+      navigate('/reserve');
+    }
+  };
+
   const navigateEdit = () => navigate("/user/edit");
   const navigateUserList = () => navigate("/employee-list");
   const handleLogoClick = () => navigate("/dashboard");
@@ -398,6 +435,12 @@ const Header = () => {
 
   return (
     <header>
+      <Modal
+        show={showModal}
+        onConfirm={handleConfirm}
+        onCancel={handleCancel}
+      />
+
       <div className="headerlogo" onClick={handleLogoClick} style={{ cursor: "pointer" }}>
         <img src={logo} alt="Logo" />
       </div>
