@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { io } from "socket.io-client";
@@ -25,6 +25,7 @@ const Sidebar = () => {
   const [userData, setUserData] = useState(null);
   const [notifications, setNotifications] = useState([]);
   const [socketConnected, setSocketConnected] = useState(false);
+  const notifRef = useRef(null); // Ref for notification dropdown
 
   useEffect(() => {
     const adminId = localStorage.getItem("adminId");
@@ -36,10 +37,11 @@ const Sidebar = () => {
     socket.on("connected", () => setSocketConnected(true));
     socket.on("newNotification", (newNotification) => {
       if (newNotification.receiver._id === adminId) {
-        setNotifications((prevNotifications) => [
-          ...prevNotifications,
-          newNotification,
-        ]);
+        setNotifications((prevNotifications) =>
+          [...prevNotifications, newNotification].filter(
+            (notif) => !notif.done
+          )
+        );
       }
     });
 
@@ -69,9 +71,11 @@ const Sidebar = () => {
         const notifResponse = await axios.get(
           "https://booking-system-ge1i.onrender.com/api/notif"
         );
-        const userNotifications = notifResponse.data.filter(
-          (notif) => notif.receiver._id === adminId
-        );
+        const userNotifications = notifResponse.data
+          .filter((notif) => notif.receiver._id === adminId)
+          .filter((notif) => !notif.done) // Filter out done notifications
+          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // Sort by date
+
         setNotifications(userNotifications);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -79,6 +83,16 @@ const Sidebar = () => {
     };
 
     fetchData();
+
+    // Set up auto-refresh for notifications
+    const interval = setInterval(() => {
+      console.log('Fetching notifications...'); // Debugging
+      fetchData();
+    }, 60000); // Refresh every 60 seconds
+
+    return () => {
+      clearInterval(interval); // Cleanup interval on component unmount
+    };
   }, []);
 
   useEffect(() => {
@@ -92,6 +106,19 @@ const Sidebar = () => {
     setCloseMenu(true);
   }, [location]);
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (notifRef.current && !notifRef.current.contains(event.target)) {
+        setNotif(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   const handleLogout = (event) => {
     event.preventDefault();
     localStorage.clear();
@@ -99,7 +126,7 @@ const Sidebar = () => {
   };
 
   const toggleCloseMenu = () => setCloseMenu((prevState) => !prevState);
-  const toggleNotif = () => setNotif(!notif);
+  const toggleNotif = () => setNotif((prevState) => !prevState);
 
   return (
     <div className={`sidebar ${closeMenu ? "closed" : "open"}`}>
@@ -136,12 +163,14 @@ const Sidebar = () => {
             {!closeMenu && <span>Notifications ({notifications.length})</span>}
           </a>
           {notif && (
-            <div className="notifications">
+            <div className="notifications" ref={notifRef}>
               {notifications.length ? (
                 notifications.map((notification, index) => (
-                  <div key={index} className="notification">
-                    {notification.message}
-                  </div>
+                  <div
+                    key={index}
+                    className="notification"
+                    dangerouslySetInnerHTML={{ __html: notification.message }}
+                  />
                 ))
               ) : (
                 <div className="notification">No new notifications</div>

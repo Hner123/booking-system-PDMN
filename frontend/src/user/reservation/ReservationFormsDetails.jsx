@@ -212,17 +212,17 @@ const ReservationFormsDetails = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (formData.caps.pax === "") {
       toast.error("Please select number of attendees");
       return;
     }
-
+  
     const additionalAttendees = guestNames
       .split(",")
       .map((name) => name.trim())
       .filter((name) => name);
-
+  
     const confirmationStatus =
       bookData.confirmation === false && formData.caps.pax === "3-More"
         ? false
@@ -231,7 +231,7 @@ const ReservationFormsDetails = () => {
         : bookData.confirmation === true && formData.caps.pax === "3-More"
         ? true
         : false;
-
+  
     const approvalStatus =
       bookData.confirmation === false && formData.caps.pax === "3-More"
         ? "Pending"
@@ -240,9 +240,9 @@ const ReservationFormsDetails = () => {
         : bookData.confirmation === true && formData.caps.pax === "3-More"
         ? "Approved"
         : "Pending";
-
-    const archiveStatus = approvalStatus === "Approved" ? true : false;
-
+  
+    const archiveStatus = approvalStatus === "Approved";
+  
     const updatedReserve = {
       caps: {
         pax: formData.caps.pax,
@@ -258,16 +258,14 @@ const ReservationFormsDetails = () => {
         reason: "",
       },
     };
-
-    const totalAttendees = attendees.length + additionalAttendees.length;
-
+  
+    const totalAttendees = formData.attendees.length + additionalAttendees.length;
+  
     if (selectedRoom === "Palawan and Boracay" && totalAttendees < 7) {
-      toast.error(
-        "For 'Palawan and Boracay', you must have at least 8 attendees."
-      );
+      toast.error("For 'Palawan and Boracay', you must have at least 8 attendees.");
       return;
     }
-
+  
     if (
       formData.caps.pax === "3-More" &&
       (totalAttendees < 2 || totalAttendees > 7)
@@ -275,33 +273,55 @@ const ReservationFormsDetails = () => {
       toast.error("You must have between 3 and 7 people accompanying you.");
       return;
     }
-
+  
     if (formData.caps.pax === "1-2" && totalAttendees !== 1) {
       toast.error("You must have exactly 1 person accompanying you.");
       return;
     }
-
+  
     try {
       const reserveId = localStorage.getItem("reserveToken");
       const token = localStorage.getItem("authToken");
-
+  
       const headers = {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       };
-
+  
       const updateResponse = await axios.patch(
         `https://booking-system-ge1i.onrender.com/api/book/edit/${reserveId}`,
         updatedReserve,
         { headers }
       );
-
+  
       if (updateResponse.status === 200) {
         if (updatedReserve.confirmation) {
           toast.success("Successfully updated information.");
           navigate("/confirmation");
         } else {
-          const messageContent = `A new reservation titled '${updateResponse.data.title}' by ${updateResponse.data.user.firstName} ${updateResponse.data.user.surName} for the ${updateResponse.data.roomName} room needs approval.`;
+          let roomDescription = '';
+          if (selectedRoom === 'Palawan') {
+            roomDescription = 'Palawan meeting room';
+          } else if (selectedRoom === 'Boracay') {
+            roomDescription = 'Boracay meeting room';
+          } else if (selectedRoom === 'Palawan and Boracay') {
+            roomDescription = 'combined Palawan and Boracay rooms';
+          }
+  
+          const messageContent = `
+            <a href="/admin/approval/${selectedRoom}">
+          <div style="padding: 5px; border: 1px solid #ddd; border-radius: 5px; background-color: #f9f9f9;">
+            <p style="font-size: 16px; font-weight: bold; color: #333;">
+              A new reservation titled '<strong>${updateResponse.data.title}</strong>'
+            </p>
+            <p style="font-size: 14px; color: #555;">
+              by <strong>${updateResponse.data.user.firstName} ${updateResponse.data.user.surName}</strong> for the <strong>${updateResponse.data.roomName} meeting room</strong> needs approval.
+            </p>
+
+          </div>
+            </a>
+          `;
+  
           const notifData = {
             booking: updateResponse.data._id,
             message: messageContent,
@@ -310,14 +330,14 @@ const ReservationFormsDetails = () => {
             receiver: "66861570dd3fc08ab2a6557d",
             receiverType: "admin",
           };
-
+  
           try {
             const notifResponse = await axios.post(
               `https://booking-system-ge1i.onrender.com/api/notif/new`,
               notifData,
               { headers }
             );
-
+  
             if (notifResponse.status === 201) {
               toast.success("Successfully updated information.");
               navigate("/confirmation");
@@ -334,7 +354,7 @@ const ReservationFormsDetails = () => {
       toast.error("An error occurred while updating the reservation.");
     }
   };
-
+  
   const handleCancelTime = () => {
     setShowDiscardModal(true);
   };
