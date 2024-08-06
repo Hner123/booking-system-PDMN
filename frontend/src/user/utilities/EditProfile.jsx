@@ -113,7 +113,7 @@ const EditProfile = () => {
       };
 
       const updateResponse = await axios.post(
-        `https://booking-system-ge1i.onrender.com/api/auth/changeemail`,
+        `https://booking-system-ge1i.onrender.com/api/email/changeemail`,
         sendEmail,
         { headers }
       );

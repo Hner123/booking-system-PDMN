@@ -10,6 +10,8 @@ const AdminRoutes = require("./routes/AdminRoutes");
 const ReserveRoutes = require("./routes/ReserveRoutes");
 const ValidateRoutes = require("./routes/ValidateRoutes");
 const NotifRoutes = require("./routes/NotifRoutes");
+const EmailsRoutes = require("./routes/EmailsRoutes");
+const FileRoutes = require("./routes/FileRoutes");
 
 const app = express();
 
@@ -44,6 +46,8 @@ app.use("/api/admin", AdminRoutes);
 app.use("/api/book", ReserveRoutes);
 app.use("/api/auth", ValidateRoutes);
 app.use("/api/notif", NotifRoutes);
+app.use("/api/email", EmailsRoutes);
+app.use("/api/file", FileRoutes);
 
 const io = initializeSocket(server);
 app.set("socketio", io);

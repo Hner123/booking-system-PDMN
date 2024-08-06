@@ -60,7 +60,7 @@ const ApprovalDetails = ({ sidebarOpen }) => {
       } else if (booking.caps.pax === "8-More") {
         return "Reservation is for both rooms.";
       } else {
-        return booking.reason || "No specific reason provided.";
+        return booking.caps.reason || "No specific reason provided.";
       }
     } else {
       if (duration > 1 && booking.caps.pax === "1-2") {
@@ -70,7 +70,7 @@ const ApprovalDetails = ({ sidebarOpen }) => {
       } else if (booking.caps.pax === "1-2") {
         return "Reservation is for only 1-2 people.";
       } else {
-        return booking.reason || "No specific reason provided.";
+        return booking.caps.reason || "No specific reason provided.";
       }
     }
   };
@@ -138,7 +138,7 @@ const ApprovalDetails = ({ sidebarOpen }) => {
           };
 
           const emailResponse = await axios.post(
-            `https://booking-system-ge1i.onrender.com/api/auth/approval`,
+            `https://booking-system-ge1i.onrender.com/api/email/approval`,
             emailData,
             { headers }
           );
@@ -164,10 +164,22 @@ const ApprovalDetails = ({ sidebarOpen }) => {
               );
 
               if (notifResponse.status === 201) {
-                const { message } = emailResponse.data;
-                setBookings(bookings.filter(booking => booking._id !== selectedBooking._id));
-                toast.success(message);
-                setAcceptModal(false);
+                try {
+                  const inviteResponse = await axios.post(
+                    `https://booking-system-ge1i.onrender.com/api/email/invite/${selectedBooking._id}`,
+                    { headers }
+                  );
+      
+                  if (inviteResponse.status === 201) {
+                    const { message } = emailResponse.data;
+                    setBookings(bookings.filter(booking => booking._id !== selectedBooking._id));
+                    toast.success(message);
+                    setAcceptModal(false);
+                  }
+                } catch (error) {
+                  // console.error("Error sending invites:", error);
+                  toast.error("Unexpected error occured. Please try again later.");
+                }
               }
             } catch (error) {
               toast.error("Error updating information. Please try again later.");
@@ -221,7 +233,7 @@ const ApprovalDetails = ({ sidebarOpen }) => {
           };
 
           const emailResponse = await axios.post(
-            `https://booking-system-ge1i.onrender.com/api/auth/approval`,
+            `https://booking-system-ge1i.onrender.com/api/email/approval`,
             emailData,
             { headers }
           );

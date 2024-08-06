@@ -299,21 +299,19 @@ const ReservationFormsDetails = () => {
           if (attendees.length > 0) {
             try {
               const inviteResponse = await axios.post(
-                `https://booking-system-ge1i.onrender.com/api/auth/invite/${reserveId}`,
+                `https://booking-system-ge1i.onrender.com/api/email/invite/${reserveId}`,
                 { headers }
               );
   
-              if (inviteResponse.status === 200) {
-                toast.success("Successfully updated information and sent invites.");
-                // navigate("/confirmation");
+              if (inviteResponse.status === 201) {
+                navigate("/confirmation");
               }
             } catch (error) {
-              console.error("Error sending invites:", error);
-              toast.warn("Reservation updated but failed to send invites.");
+              // console.error("Error sending invites:", error);
+              toast.error("Unexpected error occured. Please try again later.");
             }
           } else {
-            toast.success("no attendee");
-            // navigate("/confirmation");
+            navigate("/confirmation");
           }
         } else {
           let roomDescription = '';
@@ -356,12 +354,23 @@ const ReservationFormsDetails = () => {
             );
   
             if (notifResponse.status === 201) {
-              toast.success("New reservation created.");
-              navigate("/confirmation");
+              try {
+                const pendingResponse = await axios.post(
+                  `https://booking-system-ge1i.onrender.com/api/email/pending/${reserveId}`,
+                  { headers }
+                );
+    
+                if (pendingResponse.status === 201) {
+                  navigate("/confirmation");
+                }
+              } catch (error) {
+                // console.error("Error sending invites:", error);
+                toast.error("Unexpected error occured. Please try again later.");
+              }
             }
           } catch (error) {
-            console.log(error);
-            toast.error("Error updating information. Please try again later.");
+            // console.log(error);
+            toast.error("Unexpected error occured. Please try again later.");
           }
         }
       } else {
@@ -371,8 +380,7 @@ const ReservationFormsDetails = () => {
       toast.error("An error occurred while updating the reservation.");
     }
   };
-    
-
+  
   const handleCancelTime = () => {
     setShowDiscardModal(true);
   };

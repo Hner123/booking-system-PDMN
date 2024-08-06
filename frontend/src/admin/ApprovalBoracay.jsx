@@ -127,7 +127,7 @@ const ApprovalBoracay = () => {
           };
 
           const emailResponse = await axios.post(
-            `https://booking-system-ge1i.onrender.com/api/auth/approval`,
+            `https://booking-system-ge1i.onrender.com/api/email/approval`,
             emailData,
             { headers }
           );
@@ -213,7 +213,7 @@ const ApprovalBoracay = () => {
           };
 
           const emailResponse = await axios.post(
-            `https://booking-system-ge1i.onrender.com/api/auth/approval`,
+            `https://booking-system-ge1i.onrender.com/api/email/approval`,
             emailData,
             { headers }
           );
