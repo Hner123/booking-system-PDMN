@@ -114,6 +114,11 @@ const DeleteUser = async (req, res) => {
   }
 };
 
+const CreateUserWithAuth = (req, res) => {
+  requireAuth(req, res, async () => {
+    await CreateUser(req, res);
+  });
+};
 const GetAllUsersWithAuth = (req, res) => {
   requireAuth(req, res, async () => {
     await GetAllUsers(req, res);
@@ -137,12 +142,12 @@ const DeleteUserWithAuth = (req, res) => {
 
 module.exports = {
   CreateUser,
-
   GetAllUsers,
   GetSpecificUser,
   EditUser,
   DeleteUser,
 
+  CreateUserWithAuth,
   GetAllUsersWithAuth,
   GetSpecificUserWithAuth,
   EditUserWithAuth,

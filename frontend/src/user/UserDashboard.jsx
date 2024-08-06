@@ -23,14 +23,14 @@ const Dashboard = () => {
   const [selectedMeeting, setSelectedMeeting] = useState(null);
   const [showMyReservations, setShowMyReservations] = useState(true);
   const [showOtherMeetings, setShowOtherMeetings] = useState(true);
-  const [firstLogin, setFirstLogin] = useState(false); 
-  const [showConfirmModal, setShowConfirmModal] = useState(false); 
+  const [firstLogin, setFirstLogin] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [meetingToDelete, setMeetingToDelete] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const formRef = useRef();
   const userId = localStorage.getItem("userId") || null;
-  
+
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -49,7 +49,7 @@ const Dashboard = () => {
       return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
     });
   };
-  
+
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData((prevData) => ({
@@ -94,9 +94,9 @@ const Dashboard = () => {
           "Content-Type": "application/json",
         };
 
-        const response = await axios.get(`https://booking-system-ge1i.onrender.com/api/book/`, {
-          headers,
-        });
+        const response = await axios.get(`https://booking-system-ge1i.onrender.com/api/book/`,
+          { headers }
+        );
         if (response.status === 200) {
           setBookData(response.data);
         }
@@ -140,12 +140,12 @@ const Dashboard = () => {
         dateTime: new Date(book.scheduleDate),
       }))
       .sort((a, b) => a.dateTime - b.dateTime);
-  
+
     setReservations(initialReservations);
-  
+
     const now = new Date();
     const name = `${userData.firstName} ${userData.surName}`;
-  
+
     const initialOtherMeetings = bookData
       .filter(
         (book) =>
@@ -179,7 +179,7 @@ const Dashboard = () => {
         dateTime: new Date(book.scheduleDate),
       }))
       .sort((a, b) => a.dateTime - b.dateTime);
-  
+
     setOtherMeetings(initialOtherMeetings);
   }, [bookData]);
 

@@ -33,6 +33,8 @@ const RoomReservation = () => {
   const [showDiscardModal, setShowDiscardModal] = useState(false);
   const [bookData, setBookData] = useState(null);
   const [origData, setOrigData] = useState();
+  const [roomName, setRoomName] = useState(""); // or initialize it with a default value if applicable
+
 
   const departmentColors = {
     "Philippine Dragon Media Network": "#dc3545",
@@ -42,6 +44,9 @@ const RoomReservation = () => {
     "BIG VISION PRODS.": "#28a745",
     SuperNova: "#272727",
     ClearPath: "#2a8fc7",
+    Palawan: "#dc3545",
+    Boracay:'#2a8fc7',
+    'Palawan and Boracay':'#fccd32',
   };
 
   useEffect(() => {
@@ -60,6 +65,7 @@ const RoomReservation = () => {
         );
         if (response.status === 200) {
           setOrigData(response.data);
+          setRoomName(response.data.roomName); // Ensure roomName is set
         }
       } catch (error) {
         console.error("Error fetching book data:", error);
@@ -69,6 +75,9 @@ const RoomReservation = () => {
     fetchOrigData();
   }, []);
 
+  // Make sure to use roomName after it's set
+  const headerColor = departmentColors[roomName] || "#000";
+  
   useEffect(() => {
     const fetchBookData = async () => {
       try {
@@ -294,7 +303,15 @@ const RoomReservation = () => {
   return (
     <div className="room-reservation-container">
       <ToastContainer />
-      <h1>Reserve Room</h1>
+      <h1>
+        Reserve{" "}
+        {roomName ? (
+          <span style={{ color: headerColor }}>{roomName}</span>
+        ) : (
+          "Room"
+        )}{" "}
+        Room
+      </h1>
       <div className="main-container">
         <div className="rsrv-column">
           <div className="booking-controls">

@@ -224,6 +224,48 @@ const GetEmails = async (req, res) => {
   }
 };
 
+const CreateReserveWithAuth = (req, res) => {
+  requireAuth(req, res, async () => {
+    await CreateReserve(req, res);
+  });
+};
+const GetAllReserveWithAuth = (req, res) => {
+  requireAuth(req, res, async () => {
+    await GetAllReserve(req, res);
+  });
+};
+const GetSpecificReserveWithAuth = (req, res) => {
+  requireAuth(req, res, async () => {
+    await GetSpecificReserve(req, res);
+  });
+};
+const EditReserveWithAuth = (req, res) => {
+  requireAuth(req, res, async () => {
+    await EditReserve(req, res);
+  });
+};
+const DeleteReserveWithAuth = (req, res) => {
+  requireAuth(req, res, async () => {
+    await DeleteReserve(req, res);
+  });
+};
+
+module.exports = {
+  GetEmails,
+  
+  CreateReserve,
+  GetAllReserve,
+  GetSpecificReserve,
+  EditReserve,
+  DeleteReserve,
+
+  CreateReserveWithAuth,
+  GetAllReserveWithAuth,
+  GetSpecificReserveWithAuth,
+  EditReserveWithAuth,
+  DeleteReserveWithAuth,
+};
+
 // const GetEmails = async (req, res) => {
 //   try {
 //     const { id } = req.params;
@@ -283,38 +325,3 @@ const GetEmails = async (req, res) => {
 //     res.status(500).json({ message: `Internal server error: ${err.message}` });
 //   }
 // };
-
-const GetAllReserveWithAuth = (req, res) => {
-  requireAuth(req, res, async () => {
-    await GetAllReserve(req, res);
-  });
-};
-const GetSpecificReserveWithAuth = (req, res) => {
-  requireAuth(req, res, async () => {
-    await GetSpecificReserve(req, res);
-  });
-};
-const EditReserveWithAuth = (req, res) => {
-  requireAuth(req, res, async () => {
-    await EditReserve(req, res);
-  });
-};
-const DeleteReserveWithAuth = (req, res) => {
-  requireAuth(req, res, async () => {
-    await DeleteReserve(req, res);
-  });
-};
-
-module.exports = {
-  CreateReserve,
-  GetEmails,
-  GetAllReserve,
-  GetSpecificReserve,
-  EditReserve,
-  DeleteReserve,
-
-  GetAllReserveWithAuth,
-  GetSpecificReserveWithAuth,
-  EditReserveWithAuth,
-  DeleteReserveWithAuth,
-};

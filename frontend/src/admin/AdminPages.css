@@ -396,20 +396,7 @@ button[type="redirect"]:hover {
 
 /* AdminPages.css */
 
-.approval-room-page {
-    display: flex;
-    height: 100vh;
-    overflow: hidden; /* Ensure no scrollbars appear */
-  }
-  
-  .approval-room-content {
-    margin-left: var(--sidebar-width); /* Adjust based on your sidebar width */
-    padding: 20px;
-    flex: 1;
-    transition: margin-left 0.3s ease;
-    overflow-y: auto; /* Enable vertical scrolling if content overflows */
-  }
-  
+
   .sidebar-open + .approval-room-content {
     margin-left: 250px; /* Adjust based on the width of the open sidebar */
   }
@@ -545,14 +532,58 @@ button[type="redirect"]:hover {
   
 /* Aproval Details  */
 .approval-room-page {
-    display: flex;
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
   }
   
   .approval-room-content {
-    flex: 1;
+    margin-left: var(--sidebar-width); /* Adjust based on your sidebar width */
     padding: 20px;
+    flex: 1;
+    transition: margin-left 0.3s ease;
+    overflow-y: auto; /* Enable vertical scrolling if content overflows */
+    
+  }
+
+  .reason-room-page {
+    display: flex;
+    height: 100vh;
+    overflow: hidden; /* Ensure no scrollbars appear */
+    margin-left: var(--sidebar-width);
+    flex-direction: column;
+    padding: 20px;
+    overflow-y: auto
   }
   
+  .reason-room-content {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 20px; 
+    padding: 20px;
+    width: 100%;
+    box-sizing: border-box; 
+    height: 100%;
+    max-height: 00px;
+}
+
+
+@media (max-width: 900px) {
+  .reason-room-content {
+      grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) { 
+  .reason-room-content {
+      grid-template-columns: repeat(1, 1fr);
+  }
+}
+  .reason-room-content {
+    flex: 1;
+   
+  }
+
   .booking-details {
     border: 1px solid #ddd;
     padding: 20px;

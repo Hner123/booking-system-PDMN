@@ -447,6 +447,7 @@ const PendingApprovalWithAuth = (req, res) => {
 
 module.exports = {
   ForgotPass,
+  
   ChangeEmail,
   Approval,
   SendInvite,
