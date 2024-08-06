@@ -232,6 +232,104 @@ const Approval = async (req, res) => {
   }
 };
 
+const SendInvite = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json("Invalid reservation ID");
+    }
+
+    const reservation = await ReserveModel.findById(id).populate("user");
+    if (!reservation) {
+      return res.status(404).json("Reservation not found");
+    }
+
+    if (reservation.attendees.length === 0) {
+      return res.status(200).json({
+        ...reservation.toObject(),
+        attendees: []
+      });
+    }
+
+    const checkUserExistenceAndEmail = async (firstName, surName) => {
+      try {
+        const user = await UserModel.findOne({
+          firstName: { $regex: new RegExp(`^${firstName}$`, 'i') },
+          surName: { $regex: new RegExp(`^${surName}$`, 'i') }
+        });
+        if (user) {
+          return user.email || null;
+        }
+      } catch (err) {
+        console.error(`Error querying the database for "${firstName} ${surName}": ${err.message}`);
+      }
+      return null;
+    };
+
+    const emailPromises = reservation.attendees.map(async attendeeName => {
+      const nameParts = attendeeName.split(' ');
+      for (let i = 1; i < nameParts.length; i++) {
+        const firstName = nameParts.slice(0, i).join(' ');
+        const surName = nameParts.slice(i).join(' ');
+        const email = await checkUserExistenceAndEmail(firstName, surName);
+        if (email) {
+          return { name: attendeeName, email };
+        }
+      }
+      return { name: attendeeName, email: null };
+    });
+
+    const emailResults = await Promise.all(emailPromises);
+
+    const validEmails = emailResults.filter(result => result.email !== null);
+
+    const title = reservation.title;
+    const date = new Date(reservation.scheduleDate).toLocaleDateString();
+    const companyLogoUrl = "https://drive.google.com/uc?id=108JoeqEjPR7HKfbNjXdV30wvvy9oDk_B";
+    const time = `${new Date(reservation.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} to ${new Date(reservation.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+
+    for (const { name, email } of validEmails) {
+      let htmlContent = `
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Invitation to Reservation - GDS Booking System</title>
+        </head>
+        <body style="font-family: Arial, sans-serif;">
+            <div style="max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f4f4f4; color: #000; font-size: 16px;">
+                <img src="${companyLogoUrl}" alt="Company Logo" style="max-width: 200px; margin: 0 auto 20px; display: block;">
+                <h2 style="margin-bottom: 20px; text-align: center; color: #000;">Invitation to Reservation: ${title}</h2>
+                <p>Hello ${name},</p>
+                <p>You are invited to the reservation titled "${title}" scheduled on ${date} at ${time}.</p>
+                <p>If you have any questions or need further assistance, please contact our support team.</p>
+                <p>Best regards,</p>
+                <p>Management</p>
+            </div>
+        </body>
+        </html>`;
+
+      await transporter.sendMail({
+        from: process.env.GMAIL_SENDER,
+        to: email,
+        subject: "Invitation to Reservation",
+        html: htmlContent,
+        replyTo: "",
+        disableReplyTo: true,
+      });
+    }
+
+    res.status(201).json({
+      message: "Invitation emails have been sent to all attendees",
+      validEmails
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
 
 const ValidateUserData = async (req, res) => {
   try {
@@ -362,6 +460,7 @@ module.exports = {
   LoginAdmin,
   CheckPass,
   ResetPassword,
+  SendInvite,
 
   ChangeEmailWithAuth,
   ApprovalWithAuth,

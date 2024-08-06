@@ -139,13 +139,13 @@ const ReservationFormsDetails = () => {
     return inputLength === 0
       ? []
       : userData.filter(
-          (user) =>
-            (
-              user.firstName.toLowerCase() +
-              " " +
-              user.surName.toLowerCase()
-            ).includes(inputValue) && !user.disabled
-        );
+        (user) =>
+          (
+            user.firstName.toLowerCase() +
+            " " +
+            user.surName.toLowerCase()
+          ).includes(inputValue) && !user.disabled
+      );
   };
 
   const onSuggestionsFetchRequested = ({ value }) => {
@@ -212,7 +212,7 @@ const ReservationFormsDetails = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+    
     if (formData.caps.pax === "") {
       toast.error("Please select number of attendees");
       return;
@@ -227,21 +227,21 @@ const ReservationFormsDetails = () => {
       bookData.confirmation === false && formData.caps.pax === "3-More"
         ? false
         : bookData.confirmation === true && formData.caps.pax === "1-2"
-        ? false
-        : bookData.confirmation === true && formData.caps.pax === "3-More"
-        ? true
-        : false;
+          ? false
+          : bookData.confirmation === true && formData.caps.pax === "3-More"
+            ? true
+            : false;
   
     const approvalStatus =
       bookData.confirmation === false && formData.caps.pax === "3-More"
         ? "Pending"
         : bookData.confirmation === true && formData.caps.pax === "1-2"
-        ? "Pending"
-        : bookData.confirmation === true && formData.caps.pax === "3-More"
-        ? "Approved"
-        : "Pending";
+          ? "Pending"
+          : bookData.confirmation === true && formData.caps.pax === "3-More"
+            ? "Approved"
+            : "Pending";
   
-    const archiveStatus = approvalStatus === "Approved";
+    const archiveStatus = approvalStatus === "Approved" ? true : false;
   
     const updatedReserve = {
       caps: {
@@ -259,7 +259,7 @@ const ReservationFormsDetails = () => {
       },
     };
   
-    const totalAttendees = formData.attendees.length + additionalAttendees.length;
+    const totalAttendees = attendees.length + additionalAttendees.length;
   
     if (selectedRoom === "Palawan and Boracay" && totalAttendees < 7) {
       toast.error("For 'Palawan and Boracay', you must have at least 8 attendees.");
@@ -296,8 +296,25 @@ const ReservationFormsDetails = () => {
   
       if (updateResponse.status === 200) {
         if (updatedReserve.confirmation) {
-          toast.success("Successfully updated information.");
-          navigate("/confirmation");
+          if (attendees.length > 0) {
+            try {
+              const inviteResponse = await axios.post(
+                `https://booking-system-ge1i.onrender.com/api/auth/invite/${reserveId}`,
+                { headers }
+              );
+  
+              if (inviteResponse.status === 200) {
+                toast.success("Successfully updated information and sent invites.");
+                // navigate("/confirmation");
+              }
+            } catch (error) {
+              console.error("Error sending invites:", error);
+              toast.warn("Reservation updated but failed to send invites.");
+            }
+          } else {
+            toast.success("no attendee");
+            // navigate("/confirmation");
+          }
         } else {
           let roomDescription = '';
           if (selectedRoom === 'Palawan') {
@@ -339,7 +356,7 @@ const ReservationFormsDetails = () => {
             );
   
             if (notifResponse.status === 201) {
-              toast.success("Successfully updated information.");
+              toast.success("New reservation created.");
               navigate("/confirmation");
             }
           } catch (error) {
@@ -354,7 +371,8 @@ const ReservationFormsDetails = () => {
       toast.error("An error occurred while updating the reservation.");
     }
   };
-  
+    
+
   const handleCancelTime = () => {
     setShowDiscardModal(true);
   };
