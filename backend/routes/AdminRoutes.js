@@ -4,15 +4,15 @@ const requireAuth = require("../utils/requireAuth");
 
 const {
   CreateAdmin,
-  GetAllAdminWithAuth,
-  GetSpecificAdminWithAuth,
-  EditAdminWithAuth,
-  DeleteAdminWithAuth,
-
   GetAllAdmin,
   GetSpecificAdmin,
   EditAdmin,
   DeleteAdmin,
+
+  GetAllAdminWithAuth,
+  GetSpecificAdminWithAuth,
+  EditAdminWithAuth,
+  DeleteAdminWithAuth,
 } = require("../controllers/AdminController.js");
 
 router.post("/create", CreateAdmin);

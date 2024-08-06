@@ -3,8 +3,9 @@ const router = express.Router();
 const requireAuth = require("../utils/requireAuth");
 
 const {
-  CreateReserve,
   GetEmails,
+  
+  CreateReserve,
   GetAllReserve,
   GetSpecificReserve,
   EditReserve,
@@ -16,8 +17,8 @@ const {
   DeleteReserveWithAuth,
 } = require("../controllers/ReserveController.js");
 
-// router.use(requireAuth);
 router.get("/email/:id", GetEmails);
+// router.use(requireAuth);
 router.post("/create", CreateReserve);
 router.get("/", GetAllReserve);
 router.get("/:id", GetSpecificReserve);

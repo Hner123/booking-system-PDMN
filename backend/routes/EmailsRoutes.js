@@ -4,6 +4,7 @@ const requireAuth = require("../utils/requireAuth");
 
 const {
   ForgotPass,
+  
   ChangeEmail,
   Approval,
   SendInvite,

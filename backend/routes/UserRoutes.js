@@ -16,8 +16,8 @@ const {
   DeleteUserWithAuth
 } = require("../controllers/UserController.js");
 
-router.post("/create", CreateUser);
 // router.use(requireAuth);
+router.post("/create", CreateUser);
 router.get("/", GetAllUsers);
 router.get("/:id", GetSpecificUser);
 router.patch("/edit/:id", EditUser);
