@@ -28,28 +28,28 @@ const generatePDFContent = (doc, reservations, title) => {
 
   // Table header
   doc.fontSize(12)
-     .text('Date', 50, 100, { continued: true })
-     .text('Booked By', 150, 100, { continued: true })
-     .text('Title', 250, 100, { continued: true })
-     .text('Duration', 350, 100, { continued: true })
-     .text('Members', 450, 100);
+     .text('Date', 50, 150, { continued: true })
+     .text('Booked By', 150, 150, { continued: true })
+     .text('Title', 210, 150, { continued: true })
+     .text('Duration', 290, 150, { continued: true })
+     .text('Members', 350, 150);
   
   doc.lineWidth(1)
-     .moveTo(50, 110)
-     .lineTo(500, 110)
+     .moveTo(30, 160)
+     .lineTo(600, 160)
      .stroke();
 
   // Table rows
-  let yPosition = 120;
+  let yPosition = 170;
   reservations.forEach((reservation, index) => {
     if (yPosition > doc.page.height - 100) {
       doc.addPage();
       doc.fontSize(12)
          .text('Date', 50, 100, { continued: true })
          .text('Booked By', 150, 100, { continued: true })
-         .text('Title', 250, 100, { continued: true })
-         .text('Duration', 350, 100, { continued: true })
-         .text('Members', 450, 100);
+         .text('Title', 210, 100, { continued: true })
+         .text('Duration', 290, 100, { continued: true })
+         .text('Members', 350, 100);
       
       doc.lineWidth(1)
          .moveTo(50, 110)
@@ -61,10 +61,10 @@ const generatePDFContent = (doc, reservations, title) => {
     
     doc.fontSize(10)
        .text(formatDate(reservation.scheduleDate), 50, yPosition, { continued: true })
-       .text(`${reservation.user.firstName} ${reservation.user.surName}`, 150, yPosition, { continued: true })
-       .text(reservation.title, 250, yPosition, { continued: true })
-       .text(formatDuration(reservation.startTime, reservation.endTime), 350, yPosition, { continued: true })
-       .text([...reservation.attendees, reservation.guest].join(', '), 450, yPosition);
+       .text(`${reservation.user.firstName} ${reservation.user.surName}`, 110, yPosition, { continued: true })
+       .text(reservation.title, 170, yPosition, { continued: true, width:50 })
+       .text(formatDuration(reservation.startTime, reservation.endTime),  250, yPosition, { continued: true })
+       .text([...reservation.attendees, reservation.guest].join(', '), 300, yPosition);
     
     yPosition += 30; // Move to the next row
   });
