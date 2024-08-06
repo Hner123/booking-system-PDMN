@@ -11,6 +11,7 @@ const {
   Approval,
   CheckPass,
   ResetPassword,
+  SendInvite,
 
   ChangeEmailWithAuth,
   ApprovalWithAuth,
@@ -26,6 +27,7 @@ router.post("/login/admin", LoginAdmin);
 router.post("/changeemail", ChangeEmail);
 router.post("/approval", Approval);
 router.post("/check", CheckPass);
+router.post("/invite/:id", SendInvite);
 router.patch("/resetpass/:id", ResetPassword);
 
 module.exports = router;
