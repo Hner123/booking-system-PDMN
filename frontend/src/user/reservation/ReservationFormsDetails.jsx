@@ -18,6 +18,8 @@ const ReservationFormsDetails = () => {
   const [showGuestInput, setShowGuestInput] = useState(false);
   const [guestNames, setGuestNames] = useState("");
   const [showDiscardModal, setShowDiscardModal] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [inputFocused, setInputFocused] = useState(false);
 
   const navigate = useNavigate();
 
@@ -139,17 +141,29 @@ const ReservationFormsDetails = () => {
     return inputLength === 0
       ? []
       : userData.filter(
-        (user) =>
-          (
-            user.firstName.toLowerCase() +
-            " " +
-            user.surName.toLowerCase()
-          ).includes(inputValue) && !user.disabled
-      );
+          (user) =>
+            (
+              user.firstName.toLowerCase() +
+              " " +
+              user.surName.toLowerCase()
+            ).includes(inputValue) && !user.disabled
+        );
   };
 
+  const onInputFocus = () => {
+    setInputFocused(true);
+    onSuggestionsFetchRequested({ value: attendeeInput });
+  };
+  
+  const onInputBlur = () => {
+    setInputFocused(false);
+    // Optionally clear suggestions on blur if needed
+  };
+ 
   const onSuggestionsFetchRequested = ({ value }) => {
-    setSuggestions(getSuggestions(value));
+    if (inputFocused) {
+      setSuggestions(getSuggestions(value));
+    }
   };
 
   const onSuggestionsClearRequested = () => {
@@ -207,14 +221,18 @@ const ReservationFormsDetails = () => {
     placeholder: "Type attendee names",
     value: attendeeInput || "",
     onChange: onAttendeeInputChange,
+    onFocus: onInputFocus,
+    onBlur: onInputBlur,
     style: { width: "100%" },
   };
-
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+    setSubmitting(true); // Set submitting to true
+  
     if (formData.caps.pax === "") {
       toast.error("Please select number of attendees");
+      setSubmitting(false); // Reset submitting state
       return;
     }
   
@@ -227,21 +245,21 @@ const ReservationFormsDetails = () => {
       bookData.confirmation === false && formData.caps.pax === "3-More"
         ? false
         : bookData.confirmation === true && formData.caps.pax === "1-2"
-          ? false
-          : bookData.confirmation === true && formData.caps.pax === "3-More"
-            ? true
-            : false;
+        ? false
+        : bookData.confirmation === true && formData.caps.pax === "3-More"
+        ? true
+        : false;
   
     const approvalStatus =
       bookData.confirmation === false && formData.caps.pax === "3-More"
         ? "Pending"
         : bookData.confirmation === true && formData.caps.pax === "1-2"
-          ? "Pending"
-          : bookData.confirmation === true && formData.caps.pax === "3-More"
-            ? "Approved"
-            : "Pending";
+        ? "Pending"
+        : bookData.confirmation === true && formData.caps.pax === "3-More"
+        ? "Approved"
+        : "Pending";
   
-    const archiveStatus = approvalStatus === "Approved" ? true : false;
+    const archiveStatus = approvalStatus === "Approved";
   
     const updatedReserve = {
       caps: {
@@ -262,7 +280,10 @@ const ReservationFormsDetails = () => {
     const totalAttendees = attendees.length + additionalAttendees.length;
   
     if (selectedRoom === "Palawan and Boracay" && totalAttendees < 7) {
-      toast.error("For 'Palawan and Boracay', you must have at least 8 attendees.");
+      toast.error(
+        "For 'Palawan and Boracay', you must have at least 8 attendees."
+      );
+      setSubmitting(false); // Reset submitting state
       return;
     }
   
@@ -271,11 +292,13 @@ const ReservationFormsDetails = () => {
       (totalAttendees < 2 || totalAttendees > 7)
     ) {
       toast.error("You must have between 3 and 7 people accompanying you.");
+      setSubmitting(false); // Reset submitting state
       return;
     }
   
     if (formData.caps.pax === "1-2" && totalAttendees !== 1) {
       toast.error("You must have exactly 1 person accompanying you.");
+      setSubmitting(false); // Reset submitting state
       return;
     }
   
@@ -307,23 +330,22 @@ const ReservationFormsDetails = () => {
                 navigate("/confirmation");
               }
             } catch (error) {
-              // console.error("Error sending invites:", error);
-              toast.error("Unexpected error occured. Please try again later.");
+              toast.error("Unexpected error occurred. Please try again later.");
             }
           } else {
             navigate("/confirmation");
           }
         } else {
-          let roomDescription = '';
-          if (selectedRoom === 'Palawan') {
-            roomDescription = 'Palawan meeting room';
-          } else if (selectedRoom === 'Boracay') {
-            roomDescription = 'Boracay meeting room';
-          } else if (selectedRoom === 'Palawan and Boracay') {
-            roomDescription = 'combined Palawan and Boracay rooms';
+          let roomDescription = "";
+          if (selectedRoom === "Palawan") {
+            roomDescription = "Palawan meeting room";
+          } else if (selectedRoom === "Boracay") {
+            roomDescription = "Boracay meeting room";
+          } else if (selectedRoom === "Palawan and Boracay") {
+            roomDescription = "combined Palawan and Boracay rooms";
           }
-          const sentAt = new Date().toLocaleString(); // Capture current date and time
-
+          const sentAt = new Date().toLocaleString();
+  
           const messageContent = `
             <a href="/admin/approval/${selectedRoom}">
               <div style="padding: 5px; border: 1px solid #ddd; border-radius: 5px; background-color: #f9f9f9;">
@@ -339,7 +361,7 @@ const ReservationFormsDetails = () => {
               </div>
             </a>
           `;
-          
+  
           const notifData = {
             booking: updateResponse.data._id,
             message: messageContent,
@@ -347,9 +369,9 @@ const ReservationFormsDetails = () => {
             senderType: "user",
             receiver: "66861570dd3fc08ab2a6557d",
             receiverType: "admin",
-            createdAt: new Date().toISOString(), // Use ISO format for backend
+            createdAt: new Date().toISOString(),
           };
-          
+  
           try {
             const notifResponse = await axios.post(
               `https://booking-system-ge1i.onrender.com/api/notif/new`,
@@ -363,18 +385,16 @@ const ReservationFormsDetails = () => {
                   `https://booking-system-ge1i.onrender.com/api/email/pending/${reserveId}`,
                   { headers }
                 );
-    
+  
                 if (pendingResponse.status === 201) {
                   navigate("/confirmation");
                 }
               } catch (error) {
-                // console.error("Error sending invites:", error);
-                toast.error("Unexpected error occured. Please try again later.");
+                toast.error("Unexpected error occurred. Please try again later.");
               }
             }
           } catch (error) {
-            // console.log(error);
-            toast.error("Unexpected error occured. Please try again later.");
+            toast.error("Unexpected error occurred. Please try again later.");
           }
         }
       } else {
@@ -382,9 +402,12 @@ const ReservationFormsDetails = () => {
       }
     } catch (error) {
       toast.error("An error occurred while updating the reservation.");
+    } finally {
+      setSubmitting(false); // Reset submitting state after the process is complete
     }
   };
   
+
   const handleCancelTime = () => {
     setShowDiscardModal(true);
   };
@@ -472,6 +495,8 @@ const ReservationFormsDetails = () => {
                   onChange={handleChange}
                   placeholder="Enter meeting title"
                   required
+                  disabled={submitting}
+                  maxLength={116}
                 />
               </div>
               <div>
@@ -491,7 +516,9 @@ const ReservationFormsDetails = () => {
                       checked={formData.caps.pax === "1-2"}
                       onChange={handlePaxChange}
                       disabled={
-                        selectedRoom !== "Boracay" && selectedRoom !== "Palawan"
+                        submitting ||
+                        (selectedRoom !== "Boracay" &&
+                          selectedRoom !== "Palawan")
                       }
                       style={{ width: "auto", marginRight: "10px" }}
                     />
@@ -506,7 +533,9 @@ const ReservationFormsDetails = () => {
                       checked={formData.caps.pax === "3-More"}
                       onChange={handlePaxChange}
                       disabled={
-                        selectedRoom !== "Boracay" && selectedRoom !== "Palawan"
+                        submitting || // Disable button while submitting
+                        (selectedRoom !== "Boracay" &&
+                          selectedRoom !== "Palawan") // Disable if room is neither Boracay nor Palawan
                       }
                       style={{ width: "auto", marginRight: "10px" }}
                     />
@@ -523,6 +552,7 @@ const ReservationFormsDetails = () => {
                         onChange={handlePaxChange}
                         style={{ width: "auto" }}
                         required
+                        disabled={submitting}
                       />
                       <label htmlFor="pax-8-more">8 or more attendees</label>
                     </div>
@@ -545,6 +575,7 @@ const ReservationFormsDetails = () => {
                     onChange={handleChange}
                     placeholder="Enter reason"
                     required={pax === "1-2"}
+                    disabled={submitting}
                   />
                 </div>
               )}
@@ -566,15 +597,21 @@ const ReservationFormsDetails = () => {
                     suggestionsList: "suggestions-list",
                     suggestion: "suggestion-chip",
                   }}
+                  disabled={submitting}
                 />
                 <div className="attendees-row">
                   {attendees.map((attendee, index) => (
-                    <div key={index} className="attendee-chip">
+                    <div
+                      key={index}
+                      className="attendee-chip"
+                      disabled={submitting}
+                    >
                       <span className="attendee-text">{attendee}</span>
                       <button
                         type="button"
                         className="remove-button"
                         onClick={() => removeAttendee(index)}
+                        disabled={submitting}
                       >
                         ×
                       </button>
@@ -589,6 +626,7 @@ const ReservationFormsDetails = () => {
                       checked={showGuestInput}
                       onChange={() => setShowGuestInput(!showGuestInput)}
                       style={{ width: "auto", marginRight: "10px" }}
+                      disabled={submitting}
                     />
                     <label className="checkbox-label">
                       Do you have any Guest/s?
@@ -619,21 +657,25 @@ const ReservationFormsDetails = () => {
               <div className="reservation-button-group">
                 <button
                   className="reserve-button"
+                  type="submit"
                   style={{ alignItems: "center" }}
+                  disabled={submitting}
                 >
-                  Book
+                  {submitting ? "Booking your reservation..." : "Book"}
                 </button>
-                <button className="cancel-button" onClick={handleCancelTime}>
+
+                <button
+                  className="cancel-button"
+                  onClick={handleCancelTime}
+                  disabled={submitting}
+                >
                   Cancel
                 </button>
               </div>
             </form>
           </div>
 
-          <div
-            className="details-column"
-            style={{ flex: "1", position: "relative" }}
-          >
+          <div className="details-column">
             <div
               className="background-image"
               style={{ backgroundImage: `url(${roomBg})` }}
@@ -670,7 +712,16 @@ const ReservationFormsDetails = () => {
                         minute: "2-digit",
                       })}
                     </p>
-                    <p>
+                    <p
+                      style={{
+                        fontSize: "32px",
+                        margin: "0px",
+                        color: "#ffffff",
+                        wordBreak: "break-word",
+                        width: "100%",
+                        overflowWrap: "break-word",
+                      }}
+                    >
                       <strong>Meeting Title: </strong> {formData.title}
                     </p>
                   </div>
@@ -679,26 +730,32 @@ const ReservationFormsDetails = () => {
             </div>
           </div>
           {showDiscardModal && (
-            <div className="discard-modal">
-              <div className="discard-content">
-                <h2>Discard Changes</h2>
-                <p>
-                  Are you sure you want to discard your changes and go back to
-                  the dashboard?
-                </p>
-                <div className="rsrv-buttons">
-                  <button
-                    className="reserve-btn"
-                    onClick={handleConfirmDiscard}
-                  >
-                    Yes, Discard
-                  </button>
-                  <button className="cancel-btn" onClick={handleCancelDiscard}>
-                    No, Keep Working
-                  </button>
+            <>
+              <div className="discard-overlay"></div>
+              <div className="discard-modal">
+                <div className="discard-content">
+                  <h2>Discard Changes</h2>
+                  <p>
+                    Are you sure you want to discard your changes and go back to
+                    the dashboard?
+                  </p>
+                  <div className="rsrv-buttons">
+                    <button
+                      className="reserve-btn"
+                      onClick={handleConfirmDiscard}
+                    >
+                      Yes, Discard
+                    </button>
+                    <button
+                      className="cancel-btn"
+                      onClick={handleCancelDiscard}
+                    >
+                      No, Keep Working
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
+            </>
           )}
         </div>
       </main>

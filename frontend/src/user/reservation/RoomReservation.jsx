@@ -33,7 +33,9 @@ const RoomReservation = () => {
   const [showDiscardModal, setShowDiscardModal] = useState(false);
   const [bookData, setBookData] = useState(null);
   const [origData, setOrigData] = useState();
-  const [roomName, setRoomName] = useState(""); // or initialize it with a default value if applicable
+  const [roomName, setRoomName] = useState(""); 
+  const [loading, setLoading] = useState(false);
+
 
 
   const departmentColors = {
@@ -135,6 +137,8 @@ const RoomReservation = () => {
   endOfWeek.setDate(startOfWeek.getDate() + 6); 
 
   const handleReserve = async () => {
+    setLoading(true); // Start loading
+  
     const start = moment(startDate).set({
       hour: startTime.hour(),
       minute: startTime.minute(),
@@ -147,6 +151,7 @@ const RoomReservation = () => {
     const durationHours = moment.duration(end.diff(start)).asHours();
     if (durationHours <= 0 || start.isSameOrAfter(end)) {
       setFeedbackMessage("Please select a valid start and end time.");
+      setLoading(false); // Stop loading
       return;
     }
   
@@ -159,12 +164,14 @@ const RoomReservation = () => {
     );
     if (overlap) {
       setFeedbackMessage("The selected time slot overlaps with an existing reservation. Please choose a different time.");
+      setLoading(false); // Stop loading
       return;
     }
   
     if (durationHours > 1 && !agenda) {
       setFeedbackMessage("Your meeting exceeds 1 hour. Please provide your reason below.");
       setShowAgendaForm(true);
+      setLoading(false); // Stop loading
       return;
     }
   
@@ -233,8 +240,11 @@ const RoomReservation = () => {
       }
     } catch (error) {
       console.error("Error during patch:", error);
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
+  
 
   const handleCancelTime = () => {
     setShowDiscardModal(true);
@@ -300,6 +310,15 @@ const RoomReservation = () => {
     setExpandedEvent(event);
   };
 
+  const handleStartTimeChange = (value) => {
+    setStartTime(value);
+  
+    // Calculate the new end time as one hour after the start time
+    const newEndTime = moment(value).add(1, "hour");
+    setEndTime(newEndTime);
+  };
+  
+  
   return (
     <div className="room-reservation-container">
       <ToastContainer />
@@ -308,14 +327,14 @@ const RoomReservation = () => {
         {roomName ? (
           <span style={{ color: headerColor }}>{roomName}</span>
         ) : (
-          "Room"
+          " "
         )}{" "}
         Room
       </h1>
       <div className="main-container">
         <div className="rsrv-column">
           <div className="booking-controls">
-            <h2>Book a Room</h2>
+            <h2>Book {roomName}</h2>
             <div className="date-time-picker">
               <div className="date-picker">
                 <DatePicker
@@ -326,6 +345,7 @@ const RoomReservation = () => {
                   inline
                   calendarClassName="custom-calendar"
                   filterDate={isNotSunday}
+                  disabled={loading}
                 />
                 <p>Reservation of meeting can't be made prior 1 week ahead.</p>
               </div>
@@ -333,7 +353,7 @@ const RoomReservation = () => {
                 <h3>Start Time</h3>
                 <TimePicker
                   value={startTime}
-                  onChange={(value) => setStartTime(value)}
+                  onChange={handleStartTimeChange} // Use the new function
                   showSecond={false}
                   use12Hours
                   format="h:mm a"
@@ -342,8 +362,9 @@ const RoomReservation = () => {
                   minuteStep={5}
                   hideDisabledOptions
                   placeholder="Select Time"
-                  defaultValue={moment()} // Set default to current time
-                  defaultOpenValue={moment()} // Set default open panel value to current time
+                  defaultValue={moment()} 
+                  defaultOpenValue={moment()} 
+                  disabled={loading}
                 />
               </div>
               <div className="custom-time-picker">
@@ -359,9 +380,10 @@ const RoomReservation = () => {
                   minuteStep={5}
                   hideDisabledOptions
                   placeholder="Select Time"
-                  defaultValue={moment().add(1, "hours")} // Set default to 1 hour after current time
-                  defaultOpenValue={moment().add(1, "hours")} // Set default open panel value to 1 hour after current time
-                />
+                  defaultValue={moment().add(1, "hours")}
+                  defaultOpenValue={moment().add(1, "hours")}
+                  disabled={loading}                
+                  />
               </div>
             </div>
             <p>
@@ -383,11 +405,15 @@ const RoomReservation = () => {
               </div>
             )}
             <div className="rsrv-buttons">
-              <button className="cancel-btn" onClick={handleCancelTime}>
+              <button className="cancel-btn" onClick={handleCancelTime} disabled={loading}> 
                 Cancel
               </button>
-              <button className="reserve-button" onClick={handleReserve}>
-                Reserve
+              <button
+                className="reserve-button"
+                onClick={handleReserve}
+                disabled={loading}
+              >
+                {loading ? "Reserving..." : "Reserve"}
               </button>
             </div>
           </div>

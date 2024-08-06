@@ -273,7 +273,7 @@ const Dashboard = () => {
                 className="delete-btn"
                 onClick={() => handleShowConfirmModal(row.original)}
               >
-                <i className="fas fa-trash-alt"></i> Cancel Meeting
+                <i className="fas fa-trash-alt"></i> Cancel Reservation
               </button>
             </>
           );
@@ -780,21 +780,21 @@ const Dashboard = () => {
           >
             <div className="cancel-content">
               <h2 id="modal-title">Cancel Reservation?</h2>
-              <p id="modal-description">This will cancel your reservation.</p>
+              <p id="modal-description">You won’t be able to recover this reservation once it’s canceled.</p>
               <div className="selection">
                 <button
                   onClick={handleCancelDelete}
                   className="no-btn"
                   aria-label="Close the modal and go back"
                 >
-                  No, Go Back
+                  No, Return
                 </button>
                 <button
                   onClick={handleConfirmDiscard}
                   className="confirm-btn"
                   aria-label="Confirm cancellation of the meeting"
                 >
-                  Cancel my Meeting
+                  Cancel My Reservation
                 </button>
               </div>
             </div>
