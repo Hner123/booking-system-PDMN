@@ -322,21 +322,24 @@ const ReservationFormsDetails = () => {
           } else if (selectedRoom === 'Palawan and Boracay') {
             roomDescription = 'combined Palawan and Boracay rooms';
           }
-  
+          const sentAt = new Date().toLocaleString(); // Capture current date and time
+
           const messageContent = `
             <a href="/admin/approval/${selectedRoom}">
-          <div style="padding: 5px; border: 1px solid #ddd; border-radius: 5px; background-color: #f9f9f9;">
-            <p style="font-size: 16px; font-weight: bold; color: #333;">
-              A new reservation titled '<strong>${updateResponse.data.title}</strong>'
-            </p>
-            <p style="font-size: 14px; color: #555;">
-              by <strong>${updateResponse.data.user.firstName} ${updateResponse.data.user.surName}</strong> for the <strong>${updateResponse.data.roomName} meeting room</strong> needs approval.
-            </p>
-
-          </div>
+              <div style="padding: 5px; border: 1px solid #ddd; border-radius: 5px; background-color: #f9f9f9;">
+                <p style="font-size: 16px; font-weight: bold; color: #333;">
+                  A new reservation titled '<strong>${updateResponse.data.title}</strong>'
+                </p>
+                <p style="font-size: 14px; color: #555; margin:0px;">
+                  by <strong>${updateResponse.data.user.firstName} ${updateResponse.data.user.surName}</strong> for the <strong>${updateResponse.data.roomName} meeting room</strong> needs approval.
+                </p>
+                <p style="font-size: 12px; color: #888; margin:0px;">
+                  Sent at: <strong>${sentAt}</strong>
+                </p>
+              </div>
             </a>
           `;
-  
+          
           const notifData = {
             booking: updateResponse.data._id,
             message: messageContent,
@@ -344,8 +347,9 @@ const ReservationFormsDetails = () => {
             senderType: "user",
             receiver: "66861570dd3fc08ab2a6557d",
             receiverType: "admin",
+            createdAt: new Date().toISOString(), // Use ISO format for backend
           };
-  
+          
           try {
             const notifResponse = await axios.post(
               `https://booking-system-ge1i.onrender.com/api/notif/new`,

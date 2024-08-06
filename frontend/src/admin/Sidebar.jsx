@@ -25,7 +25,7 @@ const Sidebar = () => {
   const [userData, setUserData] = useState(null);
   const [notifications, setNotifications] = useState([]);
   const [socketConnected, setSocketConnected] = useState(false);
-  const notifRef = useRef(null); // Ref for notification dropdown
+  const notifRef = useRef(null); 
 
   useEffect(() => {
     const adminId = localStorage.getItem("adminId");
@@ -73,8 +73,8 @@ const Sidebar = () => {
         );
         const userNotifications = notifResponse.data
           .filter((notif) => notif.receiver._id === adminId)
-          .filter((notif) => !notif.done) // Filter out done notifications
-          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // Sort by date
+          .filter((notif) => !notif.done) 
+          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); 
 
         setNotifications(userNotifications);
       } catch (error) {
@@ -84,14 +84,13 @@ const Sidebar = () => {
 
     fetchData();
 
-    // Set up auto-refresh for notifications
     const interval = setInterval(() => {
-      console.log('Fetching notifications...'); // Debugging
+      console.log('Fetching notifications...'); 
       fetchData();
-    }, 60000); // Refresh every 60 seconds
+    }, 10000); 
 
     return () => {
-      clearInterval(interval); // Cleanup interval on component unmount
+      clearInterval(interval); 
     };
   }, []);
 
