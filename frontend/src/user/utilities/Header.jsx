@@ -120,7 +120,6 @@
 //     }
 //   }, [location, reserve, showModal, prevLocation]);
 
-
 //   const handleConfirm = () => {
 //     setShowModal(false);
 //     setPrevLocation(nextLocation);
@@ -289,9 +288,9 @@ import profile from "../../assets/Default Avatar.png";
 import "./Header.css";
 import axios from "axios";
 import Modal from "./Modal";
-import io from 'socket.io-client';
+import io from "socket.io-client";
 
-const ENDPOINT = 'https://booking-system-ge1i.onrender.com';
+const ENDPOINT = "https://booking-system-ge1i.onrender.com";
 let socket;
 
 const Header = () => {
@@ -316,7 +315,7 @@ const Header = () => {
     socket.emit("setup", { _id: userId });
     socket.on("newNotification", (newNotification) => {
       if (newNotification.receiver._id === userId) {
-        setNotifications(prev => [newNotification, ...prev]);
+        setNotifications((prev) => [newNotification, ...prev]);
       }
     });
 
@@ -328,8 +327,14 @@ const Header = () => {
       try {
         const userId = localStorage.getItem("userId");
         const token = localStorage.getItem("authToken");
-        const headers = { Authorization: `Bearer ${token}`, "Content-Type": "application/json" };
-        const response = await axios.get(`https://booking-system-ge1i.onrender.com/api/user/${userId}`, { headers });
+        const headers = {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        };
+        const response = await axios.get(
+          `https://booking-system-ge1i.onrender.com/api/user/${userId}`,
+          { headers }
+        );
         if (response.status === 200) setUserData(response.data);
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -344,11 +349,15 @@ const Header = () => {
       setLoadingNotifications(true);
       try {
         const userId = localStorage.getItem("userId");
-        const response = await axios.get('https://booking-system-ge1i.onrender.com/api/notif');
-        const userNotifications = response.data.filter(notif => notif.receiver._id === userId);
+        const response = await axios.get(
+          "https://booking-system-ge1i.onrender.com/api/notif"
+        );
+        const userNotifications = response.data.filter(
+          (notif) => notif.receiver._id === userId
+        );
         setNotifications(userNotifications);
       } catch (error) {
-        console.error('Error fetching notifications:', error);
+        console.error("Error fetching notifications:", error);
       } finally {
         setLoadingNotifications(false);
       }
@@ -359,8 +368,16 @@ const Header = () => {
 
   useEffect(() => {
     const handleOutsideClick = (event) => {
-      if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target)) setProfileOpen(false);
-      if (notifDropdownRef.current && !notifDropdownRef.current.contains(event.target)) setNotifOpen(false);
+      if (
+        profileDropdownRef.current &&
+        !profileDropdownRef.current.contains(event.target)
+      )
+        setProfileOpen(false);
+      if (
+        notifDropdownRef.current &&
+        !notifDropdownRef.current.contains(event.target)
+      )
+        setNotifOpen(false);
     };
 
     document.addEventListener("mousedown", handleOutsideClick);
@@ -381,10 +398,12 @@ const Header = () => {
   const handleClearNotifications = async () => {
     try {
       const userId = localStorage.getItem("userId");
-      await axios.delete(`https://booking-system-ge1i.onrender.com/api/notif/${userId}`);
+      await axios.delete(
+        `https://booking-system-ge1i.onrender.com/api/notif/${userId}`
+      );
       setNotifications([]);
     } catch (error) {
-      console.error('Error clearing notifications:', error);
+      console.error("Error clearing notifications:", error);
     }
   };
 
@@ -393,7 +412,7 @@ const Header = () => {
 
   useEffect(() => {
     const currentPath = location.pathname;
-    const excludedPaths = ['/reserve', '/reserveform', '/confirmation'];
+    const excludedPaths = ["/reserve", "/reserveform", "/confirmation"];
 
     if (excludedPaths.includes(currentPath)) {
       setPrevLocation(currentPath);
@@ -401,14 +420,17 @@ const Header = () => {
       setPrevLocation(prevLocation);
     }
 
-    if (excludedPaths.includes(prevLocation) && !excludedPaths.includes(currentPath) && !showModal) {
+    if (
+      excludedPaths.includes(prevLocation) &&
+      !excludedPaths.includes(currentPath) &&
+      !showModal
+    ) {
       if (reserve) {
         setNextLocation(currentPath);
         setShowModal(true);
       }
     }
   }, [location, reserve, showModal, prevLocation]);
-
 
   const handleConfirm = () => {
     setShowModal(false);
@@ -421,7 +443,7 @@ const Header = () => {
     if (prevLocation !== nextLocation) {
       navigate(prevLocation);
     } else {
-      navigate('/reserve');
+      navigate("/reserve");
     }
   };
 
@@ -483,14 +505,41 @@ const Header = () => {
                     Clear All
                   </button>
                   <ul>
-                    {notifications.map((notif, index) => (
-                      <li key={index}>
-                        <p>{notif.message}</p>
-                        <span>
-                          {new Date(notif.createdAt).toLocaleString()}
-                        </span>
-                      </li>
-                    ))}
+                    {notifications.map((notif, index) => {
+                      let message = notif.message;
+                      // Replace "approved" and "rejected" with styled versions
+                      message = message.replace(
+                        /(approved)/gi,
+                        '<span class="status-approved">$1</span>'
+                      );
+                      message = message.replace(
+                        /(rejected)/gi,
+                        '<span class="status-rejected">$1</span>'
+                      );
+
+                      return (
+                        <li key={index}>
+                          <p dangerouslySetInnerHTML={{ __html: message }} />
+                          <span>
+                            {new Date(notif.createdAt).toLocaleDateString(
+                              "en-US",
+                              {
+                                year: "numeric",
+                                month: "long",
+                                day: "numeric",
+                              }
+                            )}{" "}
+                            {new Date(notif.createdAt).toLocaleTimeString(
+                              "en-US",
+                              {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              }
+                            )}
+                          </span>
+                        </li>
+                      );
+                    })}
                   </ul>
                 </>
               ) : (

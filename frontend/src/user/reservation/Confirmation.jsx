@@ -88,28 +88,30 @@ const BookingConfirmation = () => {
       <div className="confirmation-text">
         {bookData && isConfirmed ? (
           <>
-            <h1>
-              Your {bookData.roomName} Room reservation has been confirmed.
+            <h1 style={{ color: "green" }}>
+              Your {bookData.roomName} Room reservation has been confirmed!
             </h1>
             <p>
-              Your booking for {bookData.roomName} room has been successfully
-              confirmed. You can now rest assured that your reservation is
-              locked in and ready for your upcoming event. You can view the
-              details of your meeting or head back to the dashboard.
+              Great news! Your booking for the {bookData.roomName} room is
+              officially confirmed. Your reservation is now secured, and you can
+              look forward to your upcoming event. Feel free to view the details
+              of your meeting or return to the dashboard.
             </p>
           </>
         ) : (
           <>
-            <h1>
-              Your {bookData.roomName} Room reservation has not yet been confirmed.
+            <h1 style={{ color: "red" }}>
+              Your {bookData.roomName} Room reservation is still pending.
             </h1>
             <p>
-              Your booking for {bookData.roomName} room is pending confirmation. Rest
-              assured, we are processing your reservation. You can view the
-              details of your meeting or head back to the dashboard.
+              Your booking for the {bookData.roomName} room is currently
+              awaiting confirmation. We are processing your reservation and will
+              notify you once it is confirmed. In the meantime, you can view the
+              details of your meeting or go back to the dashboard.
             </p>
           </>
         )}
+
         <div className="buttons">
           <button className="details-btn" onClick={handleViewDetails}>
             View Details
@@ -168,8 +170,7 @@ const BookingConfirmation = () => {
                       {new Date(bookData.endTime).toLocaleTimeString()}
                     </p>
                     <p>
-                      <strong>Reason: </strong>{" "}
-                      {calculateReason(bookData)}
+                      <strong>Reason: </strong> {calculateReason(bookData)}
                     </p>
                   </div>
                 </div>
