@@ -441,27 +441,54 @@ const Header = () => {
         onCancel={handleCancel}
       />
 
-      <div className="headerlogo" onClick={handleLogoClick} style={{ cursor: "pointer" }}>
+      <div
+        className="headerlogo"
+        onClick={handleLogoClick}
+        style={{ cursor: "pointer" }}
+      >
         <img src={logo} alt="Logo" />
       </div>
       <nav className="nav">
-        <div className="nav-item" onClick={navigateUserList} aria-label="User List">
+        <div
+          className="nav-item"
+          onClick={navigateUserList}
+          aria-label="User List"
+        >
           <FaIcons.FaUsers />
         </div>
-        <div className="nav-item" onClick={handleNotifToggle} aria-label="Notifications">
+        <div
+          className="nav-item"
+          onClick={handleNotifToggle}
+          aria-label="Notifications"
+        >
           <FaIcons.FaBell />
-          {notifications.length > 0 && <span className="notif-count">{notifications.length}</span>}
+          {notifications.length > 0 && (
+            <span className="notif-count">{notifications.length}</span>
+          )}
           {isNotifOpen && (
-            <div ref={notifDropdownRef} className="dropdown notif-dropdown" aria-labelledby="notification-button">
+            <div
+              ref={notifDropdownRef}
+              className="dropdown notif-dropdown"
+              aria-labelledby="notification-button"
+            >
               <h3>Notifications</h3>
-              {loadingNotifications ? <p>Loading...</p> : notifications.length > 0 ? (
+              {loadingNotifications ? (
+                <p>Loading...</p>
+              ) : notifications.length > 0 ? (
                 <>
-                  <button className="clear-btn" onClick={handleClearNotifications}>Clear All</button>
+                  <button
+                    className="clear-btn"
+                    onClick={handleClearNotifications}
+                  >
+                    Clear All
+                  </button>
                   <ul>
                     {notifications.map((notif, index) => (
                       <li key={index}>
                         <p>{notif.message}</p>
-                        <span>{new Date(notif.createdAt).toLocaleString()}</span>
+                        <span>
+                          {new Date(notif.createdAt).toLocaleString()}
+                        </span>
                       </li>
                     ))}
                   </ul>
@@ -472,17 +499,34 @@ const Header = () => {
             </div>
           )}
         </div>
-        <div className="nav-item" onClick={handleProfileToggle} aria-label="Profile">
+        <div
+          className="nav-item"
+          onClick={handleProfileToggle}
+          aria-label="Profile"
+        >
           <img src={profile} alt="Profile" className="profile-img" />
-          {userData && <p className="profile-name">{userData.firstName} {userData.surName}</p>}
+          {userData && (
+            <p className="profile-name">
+              {userData.firstName} {userData.surName}
+            </p>
+          )}
           {isProfileOpen && (
-            <div ref={profileDropdownRef} className="dropdown profile-dropdown" aria-labelledby="profile-button">
+            <div
+              ref={profileDropdownRef}
+              className="dropdown profile-dropdown"
+              aria-labelledby="profile-button"
+            >
               {userData && (
                 <div className="profile-text">
-                  <h3>Hello, {userData.firstName} {userData.surName}</h3>
-                  <p><strong>Department:</strong> {userData.department}</p>
+                  <h3>
+                    Hello, {userData.firstName} {userData.surName}!
+                  </h3>
+                  <p>
+                    Department: <strong>{userData.department}</strong>
+                  </p>
                 </div>
               )}
+
               <div className="profile-btn">
                 <button onClick={navigateUserList}>User List</button>
                 <button onClick={navigateEdit}>Edit Profile</button>
@@ -491,9 +535,13 @@ const Header = () => {
             </div>
           )}
         </div>
-
       </nav>
-      {showModal && <Modal onConfirm={() => setShowModal(false)} onCancel={() => setShowModal(false)} />}
+      {showModal && (
+        <Modal
+          onConfirm={() => setShowModal(false)}
+          onCancel={() => setShowModal(false)}
+        />
+      )}
     </header>
   );
 };

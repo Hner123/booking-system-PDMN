@@ -371,7 +371,7 @@
   .overlay {
     width: 100%;
     height: 200px; /* Adjust height for mobile */
-    background: linear-gradient(90deg, rgba(255, 186, 186, 0.7) 0%, rgba(255, 84, 84, 0.7) 100%);
+    background: #1f1f1f60;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -556,20 +556,21 @@
 .reservation-table1 th:nth-child(1),
 .reservation-table1 td:nth-child(1) {
   width: 20%;
+  word-break: break-word;
 }
 
 .reservation-table th:nth-child(2),
 .reservation-table td:nth-child(2),
 .reservation-table1 th:nth-child(2),
 .reservation-table1 td:nth-child(2) {
-  width: 10%;
+  width: 8%;
 }
 
 .reservation-table th:nth-child(3),
 .reservation-table td:nth-child(3),
 .reservation-table1 th:nth-child(3),
 .reservation-table1 td:nth-child(3) {
-  width: 10%;
+  width: 8%;
 }
 
 .reservation-table th:nth-child(4),
@@ -597,7 +598,7 @@
 .reservation-table td:nth-child(7),
 .reservation-table1 th:nth-child(7),
 .reservation-table1 td:nth-child(7) {
-  width: 15%;
+  width: 18%;
 }
 
 /* Status styles */

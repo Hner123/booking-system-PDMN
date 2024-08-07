@@ -54,6 +54,34 @@ const BookingConfirmation = () => {
 
   const isConfirmed = bookData.confirmation === true;
 
+  const calculateReason = (booking) => {
+    const startTime = new Date(booking.startTime);
+    const endTime = new Date(booking.endTime);
+    const duration = (endTime - startTime) / (1000 * 60 * 60); // Duration in hours
+
+    if (booking.roomName === "Palawan and Boracay") {
+      if (duration > 1 && booking.caps.pax === "8-More") {
+        return "Reservation is for more than 1 hour and requires both rooms.";
+      } else if (duration > 1) {
+        return "Reservation is for more than 1 hour.";
+      } else if (booking.caps.pax === "8-More") {
+        return "Reservation is for both rooms.";
+      } else {
+        return booking.caps.reason || "No specific reason provided.";
+      }
+    } else {
+      if (duration > 1 && booking.caps.pax === "1-2") {
+        return "Reservation is for more than 1 hour and only 1-2 attendees.";
+      } else if (duration > 1) {
+        return "Reservation is for more than 1 hour.";
+      } else if (booking.caps.pax === "1-2") {
+        return "Reservation is for only 1-2 attendees.";
+      } else {
+        return booking.caps.reason || "No specific reason provided.";
+      }
+    }
+  };
+
   return (
     <div className="booking-confirmation">
       <ToastContainer />
@@ -64,22 +92,21 @@ const BookingConfirmation = () => {
               Your {bookData.roomName} Room reservation has been confirmed.
             </h1>
             <p>
-              Your booking for the dedicated room has been successfully
+              Your booking for {bookData.roomName} room has been successfully
               confirmed. You can now rest assured that your reservation is
               locked in and ready for your upcoming event. You can view the
-              details of your meeting, or head back to the dashboard.
+              details of your meeting or head back to the dashboard.
             </p>
           </>
         ) : (
           <>
             <h1>
-              Your {bookData.roomName} Room reservation has yet to be confirmed.
+              Your {bookData.roomName} Room reservation has not yet been confirmed.
             </h1>
             <p>
-              Your booking for the dedicated room has been successfully
-              confirmed. You can now rest assured that your reservation is
-              locked in and ready for your upcoming event. You can view the
-              details of your meeting, or head back to the dashboard.
+              Your booking for {bookData.roomName} room is pending confirmation. Rest
+              assured, we are processing your reservation. You can view the
+              details of your meeting or head back to the dashboard.
             </p>
           </>
         )}
@@ -114,20 +141,17 @@ const BookingConfirmation = () => {
                     <p>
                       <strong>Number of PAX:</strong> {bookData.caps.pax}
                     </p>
-                    {bookData.attendees &&
-                      bookData.attendees.length > 0 && (
-                        <p>
-                          <strong>Attendees:</strong>{" "}
-                          {bookData.attendees.join(", ")}
-                        </p>
-                      )}
-                    {bookData.guest &&
-                      bookData.guest.length > 0 && (
-                        <p>
-                          <strong>Guests:</strong>{" "}
-                          {bookData.guest.join(", ")}
-                        </p>
-                      )}
+                    {bookData.attendees && bookData.attendees.length > 0 && (
+                      <p>
+                        <strong>Attendees:</strong>{" "}
+                        {bookData.attendees.join(", ")}
+                      </p>
+                    )}
+                    {bookData.guest && bookData.guest.length > 0 && (
+                      <p>
+                        <strong>Guests:</strong> {bookData.guest.join(", ")}
+                      </p>
+                    )}
                   </div>
                   <div className="right-content">
                     <h3>{bookData.roomName}</h3>
@@ -142,6 +166,10 @@ const BookingConfirmation = () => {
                     <p>
                       <strong>Meeting End: </strong>{" "}
                       {new Date(bookData.endTime).toLocaleTimeString()}
+                    </p>
+                    <p>
+                      <strong>Reason: </strong>{" "}
+                      {calculateReason(bookData)}
                     </p>
                   </div>
                 </div>

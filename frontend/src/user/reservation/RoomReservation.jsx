@@ -111,7 +111,9 @@ const RoomReservation = () => {
               agenda: event.agenda,
               status: event.confirmation,
               department: event.user.department,
-              room: event.roomName
+              room: event.roomName,
+              user: `${event.user.firstName} ${event.user.surName}`,
+              attendees: event.attendees,
             }));
 
             setEvents(fetchedEvents);
@@ -362,8 +364,8 @@ const RoomReservation = () => {
                   minuteStep={5}
                   hideDisabledOptions
                   placeholder="Select Time"
-                  defaultValue={moment()} 
-                  defaultOpenValue={moment()} 
+                  defaultValue={moment()}
+                  defaultOpenValue={moment()}
                   disabled={loading}
                 />
               </div>
@@ -382,8 +384,8 @@ const RoomReservation = () => {
                   placeholder="Select Time"
                   defaultValue={moment().add(1, "hours")}
                   defaultOpenValue={moment().add(1, "hours")}
-                  disabled={loading}                
-                  />
+                  disabled={loading}
+                />
               </div>
             </div>
             <p>
@@ -405,7 +407,11 @@ const RoomReservation = () => {
               </div>
             )}
             <div className="rsrv-buttons">
-              <button className="cancel-btn" onClick={handleCancelTime} disabled={loading}> 
+              <button
+                className="cancel-btn"
+                onClick={handleCancelTime}
+                disabled={loading}
+              >
                 Cancel
               </button>
               <button
@@ -469,7 +475,6 @@ const RoomReservation = () => {
                 style: {
                   backgroundColor:
                     departmentColors[event.department] || "#45813",
-                  borderRadius: "4px",
                   color: "#fff",
                   cursor: "pointer",
                   transition: "background-color 0.3s",
@@ -479,9 +484,21 @@ const RoomReservation = () => {
                 event: ({ event }) => (
                   <div
                     onClick={() => handleEventClick(event)}
-                    style={{ cursor: "pointer" }}
+                    style={{
+                      cursor: "pointer",
+                      padding: "5px",
+                      backgroundColor:
+                        departmentColors[event.department] || "#45813",
+                      color: "#fff",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      height: "100%", // Ensures full height is clickable
+                      overflow: "hidden", // Avoids overflow issues
+                      borderRadius: "4px", // Optional: For better visuals
+                    }}
                   >
-                    <strong>{event.title}</strong>
+                      <strong>{event.title}</strong>
                   </div>
                 ),
               }}
@@ -495,20 +512,35 @@ const RoomReservation = () => {
         <div className="expanded-event-modal">
           <div className="expanded-event-content">
             <h2>{expandedEvent.title}</h2>
-            <p>
-              <strong>Room:</strong> {expandedEvent.room}
-            </p>
-            <p>
-              <strong>Start Time:</strong>{" "}
-              {moment(expandedEvent.start).format("MMMM D, YYYY h:mm A")}
-            </p>
-            <p>
-              <strong>End Time:</strong>{" "}
-              {moment(expandedEvent.end).format("MMMM D, YYYY h:mm A")}
-            </p>
-            <p>
-              <strong>Department:</strong> {expandedEvent.department}
-            </p>
+            <div className="modal-columns">
+              <div className="left-content">
+                <p>
+                  <strong>Booked by:</strong> {expandedEvent.user}
+                </p>
+                <p>
+                  <strong>Department:</strong> {expandedEvent.department}
+                </p>
+                <p>
+                  <strong>Attendees:</strong>{" "}
+                  {expandedEvent.attendees && expandedEvent.attendees.length > 0
+                    ? expandedEvent.attendees.join(", ")
+                    : "No attendees listed"}
+                </p>
+              </div>
+              <div className="right-content">
+                <h3 style={{ margin: "0" }}>{expandedEvent.room}</h3>
+                <p>
+                  <strong>Date:</strong>{" "}
+                  {moment(expandedEvent.start).format("MMMM D, YYYY")}
+                </p>
+                <p>
+                  <strong>Time:</strong>{" "}
+                  {moment(expandedEvent.start).format("h:mm A")} -{" "}
+                  {moment(expandedEvent.end).format("h:mm A")}
+                </p>
+              </div>
+            </div>
+
             <div className="closetab">
               <button
                 className="close-btn"

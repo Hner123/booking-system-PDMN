@@ -173,8 +173,8 @@ header {
 
   .dropdown {
     min-width: 200px;
-    right: auto;
-    left: 0;
+    right: 0;
+    left: auto;
   }
 
   .dropdown button {
