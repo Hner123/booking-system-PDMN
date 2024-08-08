@@ -237,7 +237,9 @@ const Header = () => {
 
                       return (
                         <li key={index}>
-                          <div className="notif-item">
+                          <div className="notif-item"                               onClick={() =>
+                                handleDeleteNotification(notif._id)
+                              }>
                             <p dangerouslySetInnerHTML={{ __html: message }} />
                             <span>
                               {new Date(notif.createdAt).toLocaleDateString(
@@ -256,14 +258,6 @@ const Header = () => {
                                 }
                               )}
                             </span>
-                            <button
-                              className="notif-delete-btn"
-                              onClick={() =>
-                                handleDeleteNotification(notif._id)
-                              }
-                            >
-                              <FaTrash />
-                            </button>
                           </div>
                         </li>
                       );
