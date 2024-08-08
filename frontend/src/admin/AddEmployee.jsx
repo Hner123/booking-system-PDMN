@@ -36,7 +36,6 @@ const AddEmployee = () => {
   }, []);
 
   useEffect(() => {
-    // Update local storage whenever status messages change
     const currentDate = new Date().toISOString().split("T")[0];
     localStorage.setItem("statusMessages", JSON.stringify(statusMessages));
     localStorage.setItem("statusMessagesDate", currentDate);
@@ -52,7 +51,6 @@ const AddEmployee = () => {
     setLoading(true);
 
     try {
-      // Validate username uniqueness
       const validationResponse = await axios.post(
         `https://booking-system-ge1i.onrender.com/api/auth/validate`,
         { userName: formData.userName }
@@ -71,7 +69,6 @@ const AddEmployee = () => {
         return;
       }
 
-      // Create new employee
       const token = localStorage.getItem("adminToken");
       const headers = {
         Authorization: `Bearer ${token}`,

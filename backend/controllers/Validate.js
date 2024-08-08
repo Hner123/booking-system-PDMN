@@ -140,12 +140,13 @@ const ResetPasswordWithAuth = (req, res) => {
 };
 
 module.exports = {
+  ResetPassword,
+  CheckPass,
+
   ValidateUserData,
   LoginUser,
   LoginAdmin,
-  CheckPass,
-  ResetPassword,
-
+  
   CheckPassWithAuth,
   ResetPasswordWithAuth,
 };

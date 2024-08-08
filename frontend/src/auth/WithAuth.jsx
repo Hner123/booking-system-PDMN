@@ -93,9 +93,7 @@ const WithAuth = (WrappedComponent) => {
       );
     }
     
-
-
-    return <WrappedComponent {...props} />;
+    return <> {console.clear()} <WrappedComponent {...props} /></>;
   };
 
   return WithAuthWrapper;

@@ -33,7 +33,7 @@ const RoomReservation = () => {
   const [showDiscardModal, setShowDiscardModal] = useState(false);
   const [bookData, setBookData] = useState(null);
   const [origData, setOrigData] = useState();
-  const [roomName, setRoomName] = useState(""); 
+  const [roomName, setRoomName] = useState("");
   const [loading, setLoading] = useState(false);
 
 
@@ -47,8 +47,8 @@ const RoomReservation = () => {
     SuperNova: "#272727",
     ClearPath: "#2a8fc7",
     Palawan: "#dc3545",
-    Boracay:'#2a8fc7',
-    'Palawan and Boracay':'#fccd32',
+    Boracay: '#2a8fc7',
+    'Palawan and Boracay': '#fccd32',
   };
 
   useEffect(() => {
@@ -79,7 +79,7 @@ const RoomReservation = () => {
 
   // Make sure to use roomName after it's set
   const headerColor = departmentColors[roomName] || "#000";
-  
+
   useEffect(() => {
     const fetchBookData = async () => {
       try {
@@ -99,7 +99,7 @@ const RoomReservation = () => {
 
             if (origData.roomName !== "Palawan and Boracay") {
               filteredData = response.data.filter(
-                (event) => event.roomName === origData.roomName && event.approval.status !== "Declined" || event.roomName === "Palawan and Boracay" 
+                (event) => event.roomName === origData.roomName && event.approval.status !== "Declined" || event.roomName === "Palawan and Boracay"
               );
             }
 
@@ -109,7 +109,7 @@ const RoomReservation = () => {
               end: new Date(event.endTime),
               title: event.title,
               agenda: event.agenda,
-              status: event.confirmation,
+              status: event.approval.status,
               department: event.user.department,
               room: event.roomName,
               user: `${event.user.firstName} ${event.user.surName}`,
@@ -134,63 +134,62 @@ const RoomReservation = () => {
 
   const startOfWeek = new Date();
   startOfWeek.setHours(0, 0, 0, 0);
-  startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay() + 1); 
+  startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay() + 1);
   const endOfWeek = new Date(startOfWeek);
-  endOfWeek.setDate(startOfWeek.getDate() + 6); 
+  endOfWeek.setDate(startOfWeek.getDate() + 6);
 
   const handleReserve = async () => {
-    setLoading(true); // Start loading
-  
+    setLoading(true);
+
     const start = moment(startDate).set({
       hour: startTime.hour(),
       minute: startTime.minute(),
+      second: 0,
+      millisecond: 0
     });
     const end = moment(startDate).set({
       hour: endTime.hour(),
       minute: endTime.minute(),
+      second: 0,
+      millisecond: 0
     });
-  
+
     const durationHours = moment.duration(end.diff(start)).asHours();
     if (durationHours <= 0 || start.isSameOrAfter(end)) {
       setFeedbackMessage("Please select a valid start and end time.");
-      setLoading(false); // Stop loading
+      setLoading(false);
       return;
     }
-  
-    const overlap = events.some(
-      (event) =>
-        moment(start).isBetween(event.start, event.end, null, "[]") ||
-        moment(end).isBetween(event.start, event.end, null, "[]") ||
-        moment(event.start).isBetween(start, end, null, "[]") ||
-        moment(event.end).isBetween(start, end, null, "[]")
-    );
+
+    const overlap = events.some((event) => {
+      const eventStart = moment(event.start).set({
+        second: 0,
+        millisecond: 0
+      });
+      const eventEnd = moment(event.end).set({
+        second: 0,
+        millisecond: 0
+      });
+
+      return start.isBefore(eventEnd) && end.isAfter(eventStart);
+    });
+
     if (overlap) {
       setFeedbackMessage("The selected time slot overlaps with an existing reservation. Please choose a different time.");
-      setLoading(false); // Stop loading
+      setLoading(false);
       return;
     }
-  
+
     if (durationHours > 1 && !agenda) {
       setFeedbackMessage("Your meeting exceeds 1 hour. Please provide your reason below.");
       setShowAgendaForm(true);
-      setLoading(false); // Stop loading
+      setLoading(false);
       return;
     }
-  
-    const startDateTime = moment(startDate).set({
-      hour: startTime.hour(),
-      minute: startTime.minute(),
-      second: 0,
-      millisecond: 0,
-    }).toDate();
-  
-    const endDateTime = moment(startDate).set({
-      hour: endTime.hour(),
-      minute: endTime.minute(),
-      second: 0,
-      millisecond: 0,
-    }).toDate();
-  
+
+    const startDateTime = start.toDate();
+    const endDateTime = end.toDate();
+
     const newEvent = {
       start: startDateTime,
       end: endDateTime,
@@ -198,13 +197,13 @@ const RoomReservation = () => {
       agenda: agenda,
       status: "pending",
     };
-  
+
     setEvents([...events, newEvent]);
     setShowAgendaForm(false);
     setAgenda("");
-    
+
     let confirmationStatus = !agenda && origData.roomName !== "Palawan and Boracay";
-  
+
     const reserveData = {
       scheduleDate: moment(startDate).format("YYYY-MM-DD"),
       startTime: startDateTime.toISOString(),
@@ -221,32 +220,31 @@ const RoomReservation = () => {
       },
       confirmation: confirmationStatus,
     };
-  
+
     try {
       const reserveId = localStorage.getItem("reserveToken");
       const token = localStorage.getItem("authToken");
-  
+
       const headers = {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       };
-  
+
       const updateResponse = await axios.patch(
         `https://booking-system-ge1i.onrender.com/api/book/edit/${reserveId}`,
         reserveData,
         { headers }
       );
-  
+
       if (updateResponse.status === 200) {
         navigate("/reserveform");
       }
     } catch (error) {
       console.error("Error during patch:", error);
     } finally {
-      setLoading(false); // Stop loading
+      setLoading(false);
     }
   };
-  
 
   const handleCancelTime = () => {
     setShowDiscardModal(true);
@@ -278,7 +276,7 @@ const RoomReservation = () => {
     }
   };
 
-  const minTime = 8; 
+  const minTime = 8;
   const maxTime = 21;
 
   const disabledHours = () => {
@@ -314,13 +312,12 @@ const RoomReservation = () => {
 
   const handleStartTimeChange = (value) => {
     setStartTime(value);
-  
+
     // Calculate the new end time as one hour after the start time
     const newEndTime = moment(value).add(1, "hour");
     setEndTime(newEndTime);
   };
-  
-  
+
   return (
     <div className="room-reservation-container">
       <ToastContainer />
@@ -498,7 +495,7 @@ const RoomReservation = () => {
                       borderRadius: "4px", // Optional: For better visuals
                     }}
                   >
-                      <strong>{event.title}</strong>
+                    <strong>{event.title}</strong>
                   </div>
                 ),
               }}
@@ -538,9 +535,11 @@ const RoomReservation = () => {
                   {moment(expandedEvent.start).format("h:mm A")} -{" "}
                   {moment(expandedEvent.end).format("h:mm A")}
                 </p>
+                <p>
+                  <strong>Status:</strong> {expandedEvent.status}
+                </p>
               </div>
             </div>
-
             <div className="closetab">
               <button
                 className="close-btn"

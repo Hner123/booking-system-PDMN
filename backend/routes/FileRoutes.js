@@ -3,11 +3,13 @@ const router = express.Router();
 const requireAuth = require("../utils/requireAuth");
 
 const {
-  GenerateMonthlyPDF,
-  GenerateUserPDF
+  SendAdminAttachment,
+  SendAllAttachment,
+  SendUserAttachment
 } = require("../controllers/File");
 
-router.get('/monthly', GenerateMonthlyPDF);
-router.get('/user/:id', GenerateUserPDF);
+router.get('/attachment-admin', SendAdminAttachment);
+router.get('/attachment-all', SendAllAttachment);
+router.get('/attachment-user/:id', SendUserAttachment);
 
 module.exports = router;

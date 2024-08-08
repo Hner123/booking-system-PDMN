@@ -157,12 +157,6 @@ const EmployeeList = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-const isUserRegistered = (user) => {
-  // Consider user registered if they have a non-empty username and department
-  return Boolean(user.userName && user.userName.trim() !== '') && 
-         Boolean(user.department && user.department.trim() !== '');
-};
-
   return (
     <div className="employee-list-page">
       <Sidebar />
@@ -224,7 +218,7 @@ const isUserRegistered = (user) => {
                 <td>{`${user.firstName} ${user.surName}`.trim()}</td>
                 <td>{user.department}</td>
                 <td>
-                  {isUserRegistered(user) ? (
+                  {user.resetPass ? (
                     <span className="status-registered">Registered</span>
                   ) : (
                     <span className="status-not-registered">

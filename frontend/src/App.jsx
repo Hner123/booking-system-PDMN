@@ -16,8 +16,6 @@ import EmployeeList from './admin/EmployeeList.jsx';
 import AddEmployee from './admin/AddEmployee.jsx';
 import ApprovalDetails from './admin/ApprovalDetails.jsx';
 import ApprovalPalawan from './admin/ApprovalPalawan.jsx';
-import ApprovalBoracay from './admin/ApprovalBoracay.jsx';
-import ApprovalBoth from './admin/ApprovalBoth.jsx';
 import ApprovalRooms from './admin/ApprovalRooms.jsx';
 import NotFoundPage from './auth/NotFoundPage.jsx';
 
@@ -150,24 +148,6 @@ function App() {
           }
         />
         <Route
-          path="/admin/approval-boracay"
-          element={
-            <>
-              <Sidebar />
-              <ApprovalBoracay />
-            </>
-          }
-        />
-        <Route
-          path="/admin/approval-both"
-          element={
-            <>
-              <Sidebar />
-              <ApprovalBoth />
-            </>
-          }
-        />
-        <Route
           path="/admin/approval/:roomName"
           element={
             <>
@@ -193,7 +173,7 @@ function App() {
           }
         />
         <Route
-          path="/reset-pass"
+          path="/reset-pass/:userId"
           element={
             <>
               <ResetPass />

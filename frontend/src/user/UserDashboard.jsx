@@ -109,6 +109,9 @@ const Dashboard = () => {
   }, []);
 
   useEffect(() => {
+    const now = new Date();
+    const name = `${userData.firstName} ${userData.surName}`;
+  
     const initialReservations = bookData
       .filter(
         (book) =>
@@ -138,14 +141,19 @@ const Dashboard = () => {
         pax: book.caps.pax,
         agenda: book.agenda,
         dateTime: new Date(book.scheduleDate),
+        startTime: new Date(book.startTime), // Add startTime for sorting
       }))
-      .sort((a, b) => a.dateTime - b.dateTime);
-
+      .sort((a, b) => {
+        // First, sort by dateTime
+        if (a.dateTime.getTime() !== b.dateTime.getTime()) {
+          return a.dateTime.getTime() - b.dateTime.getTime();
+        }
+        // If dates are equal, sort by startTime
+        return a.startTime.getTime() - b.startTime.getTime();
+      });
+  
     setReservations(initialReservations);
-
-    const now = new Date();
-    const name = `${userData.firstName} ${userData.surName}`;
-
+  
     const initialOtherMeetings = bookData
       .filter(
         (book) =>
@@ -177,9 +185,17 @@ const Dashboard = () => {
         pax: book.caps.pax,
         agenda: book.agenda,
         dateTime: new Date(book.scheduleDate),
+        startTime: new Date(book.startTime), // Add startTime for sorting
       }))
-      .sort((a, b) => a.dateTime - b.dateTime);
-
+      .sort((a, b) => {
+        // First, sort by dateTime
+        if (a.dateTime.getTime() !== b.dateTime.getTime()) {
+          return a.dateTime.getTime() - b.dateTime.getTime();
+        }
+        // If dates are equal, sort by startTime
+        return a.startTime.getTime() - b.startTime.getTime();
+      });
+  
     setOtherMeetings(initialOtherMeetings);
   }, [bookData]);
 

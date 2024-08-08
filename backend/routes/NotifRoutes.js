@@ -14,7 +14,7 @@ const {
   GetNotificationByIdWithAuth,
   UpdateNotificationWithAuth,
   DeleteNotificationWithAuth,
-} = require('../controllers/notifications');
+} = require('../controllers/NotifController');
 
 // router.use(requireAuth);
 router.post("/new", CreateNotification);

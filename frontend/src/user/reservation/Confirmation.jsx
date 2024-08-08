@@ -169,9 +169,11 @@ const BookingConfirmation = () => {
                       <strong>Meeting End: </strong>{" "}
                       {new Date(bookData.endTime).toLocaleTimeString()}
                     </p>
-                    <p>
-                      <strong>Reason: </strong> {calculateReason(bookData)}
-                    </p>
+                    {!bookData.confirmation && (
+                      <p>
+                        <strong>Reason: </strong> {calculateReason(bookData)}
+                      </p>
+                    )}
                   </div>
                 </div>
               </>

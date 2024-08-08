@@ -69,7 +69,7 @@ const WithoutAuthAdmin = (WrappedComponent) => {
         </div>
       );
     }
-    return <WrappedComponent {...props} />;
+    return <> {console.clear()} <WrappedComponent {...props} /></>;
   };
 
   return WrapperComponent;

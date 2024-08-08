@@ -206,8 +206,14 @@ const ReservationFormsDetails = () => {
 
   const removeAttendee = (index) => {
     const removedAttendee = attendees[index];
-    setAttendees(attendees.filter((_, i) => i !== index));
-
+    const updatedAttendees = attendees.filter((_, i) => i !== index);
+  
+    setAttendees(updatedAttendees);
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      attendees: updatedAttendees,
+    }));
+  
     setUserData(
       userData.map((user) =>
         user.firstName + " " + user.surName === removedAttendee

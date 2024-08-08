@@ -12,6 +12,7 @@ const ApprovalDetails = ({ sidebarOpen }) => {
   const [rejectModal, setRejectModal] = useState(false);
   const [acceptModal, setAcceptModal] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     approval: {
       archive: false,
@@ -23,7 +24,7 @@ const ApprovalDetails = ({ sidebarOpen }) => {
   useEffect(() => {
     const fetchBookings = async () => {
       try {
-        const token = localStorage.getItem("authToken");
+        const token = localStorage.getItem("adminToken");
         const headers = {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -74,7 +75,6 @@ const ApprovalDetails = ({ sidebarOpen }) => {
       }
     }
   };
-  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -107,6 +107,7 @@ const ApprovalDetails = ({ sidebarOpen }) => {
 
   const handleApproveConfirm = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     const updatedReserve = {
       ...selectedBooking,
@@ -119,7 +120,7 @@ const ApprovalDetails = ({ sidebarOpen }) => {
     };
 
     try {
-      const token = localStorage.getItem("authToken");
+      const token = localStorage.getItem("adminToken");
       const headers = {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
@@ -172,9 +173,7 @@ const ApprovalDetails = ({ sidebarOpen }) => {
                   );
       
                   if (inviteResponse.status === 201) {
-                    const { message } = emailResponse.data;
                     setBookings(bookings.filter(booking => booking._id !== selectedBooking._id));
-                    toast.success(message);
                     setAcceptModal(false);
                   }
                 } catch (error) {
@@ -192,11 +191,14 @@ const ApprovalDetails = ({ sidebarOpen }) => {
       }
     } catch (error) {
       toast.error(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleRejectConfirm = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     if (!formData.approval.reason) {
       toast.error("Please state your reason.");
@@ -214,7 +216,7 @@ const ApprovalDetails = ({ sidebarOpen }) => {
     };
 
     try {
-      const token = localStorage.getItem("authToken");
+      const token = localStorage.getItem("adminToken");
       const headers = {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
@@ -260,7 +262,6 @@ const ApprovalDetails = ({ sidebarOpen }) => {
               );
 
               if (notifResponse.status === 201) {
-                const { message } = emailResponse.data;
                 setBookings(bookings.filter(booking => booking._id !== selectedBooking._id));
                 setFormData({
                   approval: {
@@ -269,7 +270,6 @@ const ApprovalDetails = ({ sidebarOpen }) => {
                     reason: "",
                   },
                 });
-                toast.success(message);
                 setRejectModal(false);
               }
             } catch (error) {
@@ -282,6 +282,8 @@ const ApprovalDetails = ({ sidebarOpen }) => {
       }
     } catch (error) {
       toast.error(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -351,7 +353,7 @@ const ApprovalDetails = ({ sidebarOpen }) => {
                 )} */}
               </p>
               <div className="approval-actions">
-                <button onClick={() => handleApprove(booking)}>Approve</button>
+                <button onClick={() => handleApprove(booking)} disabled={loading}>Approve</button>
                 <button onClick={() => handleReject(booking)}>Reject</button>
               </div>
             </div>
@@ -364,7 +366,7 @@ const ApprovalDetails = ({ sidebarOpen }) => {
             <h2>Approve Booking</h2>
             <p>Are you sure you want to approve this booking?</p>
             <div className="modal-actions">
-              <button onClick={handleApproveConfirm}>Yes</button>
+              <button onClick={handleApproveConfirm} disabled={loading}>{loading ? "Please Wait..." : "Yes"}</button>
               <button onClick={cancelApprove}>No</button>
             </div>
           </div>
@@ -382,7 +384,7 @@ const ApprovalDetails = ({ sidebarOpen }) => {
               placeholder="Enter reason for rejection"
             />
             <div className="modal-actions">
-              <button onClick={handleRejectConfirm}>Submit</button>
+              <button onClick={handleRejectConfirm}>{loading ? "Please Wait..." : "Submit"}</button>
               <button onClick={cancelReject}>Cancel</button>
             </div>
           </div>

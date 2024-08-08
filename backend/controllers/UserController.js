@@ -1,8 +1,6 @@
 const mongoose = require("mongoose");
 const UserModel = require("../models/UserModel");
 const bcrypt = require("bcryptjs");
-const DriveService = require("../utils/DriveService");
-const jwt = require("jsonwebtoken");
 const requireAuth = require("../utils/requireAuth");
 
 const GetAllUsers = async (req, res) => {

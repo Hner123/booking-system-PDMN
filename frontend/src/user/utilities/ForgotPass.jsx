@@ -51,9 +51,7 @@ const ForgotPass = () => {
         'https://booking-system-ge1i.onrender.com/api/email/forgotpass',
         { email }
       );
-      const { message, passToken, passId } = response.data;
-      localStorage.setItem('resetToken', passToken);
-      localStorage.setItem('resetId', passId);
+      const { message } = response.data;
       toast.success(message);
       setHasSentEmail(true);
     } catch (error) {

@@ -119,26 +119,26 @@ const Header = () => {
 
   useEffect(() => {
     const currentPath = location.pathname;
-    const excludedPaths = ["/reserve", "/reserveform", "/confirmation"];
-
+    const excludedPaths = ['/reserve', '/reserveform', '/confirmation'];
+  
+    if (prevLocation === '/confirmation' && !excludedPaths.includes(currentPath)) {
+      localStorage.removeItem("reserveToken");
+    }
+  
+    if ((prevLocation === '/reserve' || prevLocation === '/reserveform') && !excludedPaths.includes(currentPath)) {
+      if (reserve) {
+        setNextLocation(currentPath);
+        setShowModal(true);
+      }gfy
+    }
+  
     if (excludedPaths.includes(currentPath)) {
       setPrevLocation(currentPath);
     } else if (prevLocation && !excludedPaths.includes(prevLocation)) {
       setPrevLocation(prevLocation);
     }
-
-    if (
-      excludedPaths.includes(prevLocation) &&
-      !excludedPaths.includes(currentPath) &&
-      !showModal
-    ) {
-      if (reserve) {
-        setNextLocation(currentPath);
-        setShowModal(true);
-      }
-    }
   }, [location, reserve, showModal, prevLocation]);
-
+  
   const handleConfirm = () => {
     setShowModal(false);
     setPrevLocation(nextLocation);

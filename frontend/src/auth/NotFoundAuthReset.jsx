@@ -4,10 +4,12 @@ import { useNavigate } from 'react-router-dom';
 const NotFoundAuth = (WrappedComponent) => {
   const NotFoundAuthWrapper = (props) => {
     const navigate = useNavigate();
+    const { search } = useLocation();
+    const queryParams = new URLSearchParams(search);
+    const token = queryParams.get("token");
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-      const token = localStorage.getItem('resetToken');
       if (!token) {
         navigate('/page-not-found');
 
@@ -39,11 +41,7 @@ const NotFoundAuth = (WrappedComponent) => {
       return currentTime > exp;
     };
 
-    return (
-      <>
-          <WrappedComponent {...props} />
-      </>
-    );
+    return <> {console.clear()} <WrappedComponent {...props} /></>;
   };
 
   return NotFoundAuthWrapper;

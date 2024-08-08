@@ -93,7 +93,7 @@ const WithAuthAdmin = (WrappedComponent) => {
     //   return <div>Loading...</div>;
     // }
     
-    return <WrappedComponent {...props} />;
+    return <> {console.clear()} <WrappedComponent {...props} /></>;
   };
 
   return WithAuthWrapper;

@@ -11,8 +11,8 @@ const Verify = () => {
   const { userId } = useParams();
   const { search } = useLocation();
   const queryParams = new URLSearchParams(search);
-  const newEmail = queryParams.get("email");
   const token = queryParams.get("token");
+  const newEmail = queryParams.get("email");
 
   const [loading, setLoading] = useState(true);
 
@@ -24,34 +24,29 @@ const Verify = () => {
           "Content-Type": "application/json"
         };
 
-        const updateResponse = await axios.patch(
+        await axios.patch(
           `https://booking-system-ge1i.onrender.com/api/user/edit/${userId}`,
           { email: newEmail },
           { headers }
         );
-
-        if (updateResponse.status === 200) {
-          localStorage.removeItem("resetId");
-          localStorage.removeItem("newEmail");
-          localStorage.removeItem("emailToken");
-        } else {
-          toast.error("Failed to update email.");
-        }
+        
       } catch (error) {
         toast.error("Failed to update email.");
       } finally {
         setLoading(false);
       }
     };
-    if (userId && token) {
+    
+    if (userId && token && newEmail) {
       handleVerify();
+    } else {
+      toast.error("Invalid parameters, please try again later.");
+      setLoading(true);
+      return;
     }
   }, [userId, token, newEmail]);
 
   const handleBackToLogin = () => {
-    localStorage.removeItem("resetId");
-    localStorage.removeItem("newEmail");
-    localStorage.removeItem("emailToken");
     navigate('/dashboard');
   };
 
@@ -61,11 +56,9 @@ const Verify = () => {
         <img src={GIF} alt="Verification GIF" />
         <h2>Email Verification</h2>
         {loading ? (
-          <p>Please wait a minute...</p>
+          <p>Please wait a moment...</p>
         ) : (
-          <>
-            <p>You have successfully changed your email!</p>
-          </>
+          <p>You have successfully changed your email!</p>
         )}
         <button
           className="back-button"

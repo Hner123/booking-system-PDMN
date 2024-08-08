@@ -83,15 +83,6 @@ const Sidebar = () => {
     };
 
     fetchData();
-
-    const interval = setInterval(() => {
-      console.log('Fetching notifications...'); 
-      fetchData();
-    }, 10000); 
-
-    return () => {
-      clearInterval(interval); 
-    };
   }, []);
 
   useEffect(() => {

@@ -25,8 +25,9 @@ const ForgotPass = async (req, res) => {
       const name = user.firstName + " " + user.surName;
       const passId = user._id;
 
-      const companyLogoUrl =
-        "https://drive.google.com/uc?id=108JoeqEjPR7HKfbNjXdV30wvvy9oDk_B";
+      const companyLogoUrl = "https://drive.google.com/uc?id=108JoeqEjPR7HKfbNjXdV30wvvy9oDk_B";
+
+      const resetPassLink = `https://gdsbooking.netlify.app/reset-pass/${passId}?token=${passToken}`;
 
       const htmlContent = `
         <!DOCTYPE html>
@@ -44,7 +45,7 @@ const ForgotPass = async (req, res) => {
                 <p>Hello ${name},</p>
                 <p>We received a request to change the password associated with your GDS Booking System account. If you made this request, please click the button below to reset your password:</p>
                 <p style="text-align: center;">
-                    <a href="https://gdsbooking.netlify.app/reset-pass" style="display: inline-block; padding: 10px 20px; background-color: rgb(234, 88, 12); color: #fff; text-decoration: none; border-radius: 5px;">Reset Password</a>
+                    <a href="${resetPassLink}" style="display: inline-block; padding: 10px 20px; background-color: rgb(234, 88, 12); color: #fff; text-decoration: none; border-radius: 5px;">Reset Password</a>
                 </p>
                 <p>If you did not request this change, please ignore this email or contact our support team immediately.</p>
                 <p>Best regards,</p>
@@ -88,8 +89,7 @@ const ChangeEmail = async (req, res) => {
       const emailId = user._id;
       const newEmail = email;
 
-      const companyLogoUrl =
-        "https://drive.google.com/uc?id=108JoeqEjPR7HKfbNjXdV30wvvy9oDk_B";
+      const companyLogoUrl = "https://drive.google.com/uc?id=108JoeqEjPR7HKfbNjXdV30wvvy9oDk_B";
 
       const verificationLink = `https://gdsbooking.netlify.app/verify-success/${emailId}?token=${emailToken}?email=${newEmail}`;
 
@@ -174,10 +174,10 @@ const Approval = async (req, res) => {
 
       if (status === "Approved") {
         htmlContent += `
-                <p>Your reservation request for the room ${roomName}, titled "${title}", has been approved. You can proceed with your reservation on the scheduled date.</p>`;
+                <p>Your reservation request for the room ${roomName}, titled <strong>"${title}"</strong>, has been approved. You can proceed with your reservation on the scheduled date.</p>`;
       } else if (status === "Declined") {
         htmlContent += `
-                <p>Your reservation request for the room ${roomName}, titled "${title}", has been rejected. The reason provided is: <span style="color: red;">${reason}</span>. If you have any questions or need further assistance, please contact our support team.</p>`;
+                <p>Your reservation request for the room ${roomName}, titled <strong>"${title}"</strong>, has been rejected. The reason provided is: <span style="color: red;">${reason}</span>. If you have any questions or need further assistance, please contact our support team.</p>`;
       }
 
       htmlContent += `
@@ -274,7 +274,11 @@ const PendingApproval = async (req, res) => {
       const title = reservation.title;
       const bookedBy = `${reservation.user.firstName} ${reservation.user.surName}`;
       const date = new Date(reservation.scheduleDate).toLocaleDateString();
-      const time = `${new Date(reservation.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} to ${new Date(reservation.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+      const startTime = new Date(reservation.startTime);
+      const endTime = new Date(reservation.endTime);
+
+      const time = `${startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} to ${endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+      
       const reason = calculateReason(reservation);
       const email = ["jamesdesena27@gmail.com", "banzu572@gmail.com"];
 

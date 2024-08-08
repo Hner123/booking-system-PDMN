@@ -11,7 +11,6 @@ import {
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 
-// Create a context for the booking data and selected room
 const BookingContext = createContext();
 
 const MeetingRoomSchedule = () => {
@@ -25,7 +24,7 @@ const MeetingRoomSchedule = () => {
   }, []);
 
   const getCurrentTime = () => currentTime.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-  
+
   const formatDate = (date) => date.toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long" });
 
   const handleRoomSelection = (room) => {
@@ -86,27 +85,27 @@ const FirstColumn = ({ currentMeeting, selectedRoom, formatDate, backgroundImage
             <h1 className="availability">In Use</h1>
           </div>
           <div className="meetingbg">
-          <h2 className="meeting-title">{currentMeeting.title}</h2>
-          <table>
-            <tbody>
-              <tr>
-                <td><FontAwesomeIcon icon={faCalendarDay} /></td>
-                <td>{formatDate(new Date(currentMeeting.startTime))}</td>
-              </tr>
-              <tr>
-                <td><FontAwesomeIcon icon={faClock} /></td>
-                <td>
-                  {new Date(currentMeeting.startTime).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}{" "}
-                  -{" "}
-                  {new Date(currentMeeting.endTime).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
-                </td>
-              </tr>
-              <tr>
-                <td><FontAwesomeIcon icon={faUser} /></td>
-                <td>{`${currentMeeting.user?.firstName || "Unknown"} ${currentMeeting.user?.surName || "Unknown"}`}</td>
-              </tr>
-            </tbody>
-          </table>
+            <h2 className="meeting-title">{currentMeeting.title}</h2>
+            <table>
+              <tbody>
+                <tr>
+                  <td><FontAwesomeIcon icon={faCalendarDay} /></td>
+                  <td>{formatDate(new Date(currentMeeting.startTime))}</td>
+                </tr>
+                <tr>
+                  <td><FontAwesomeIcon icon={faClock} /></td>
+                  <td>
+                    {new Date(currentMeeting.startTime).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}{" "}
+                    -{" "}
+                    {new Date(currentMeeting.endTime).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                  </td>
+                </tr>
+                <tr>
+                  <td><FontAwesomeIcon icon={faUser} /></td>
+                  <td>{`${currentMeeting.user?.firstName || "Unknown"} ${currentMeeting.user?.surName || "Unknown"}`}</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </>
       ) : (
@@ -175,7 +174,7 @@ const UpcomingMeetings = ({ bookData, currentTime }) => {
       )}
       {remainingMeetingsCount > 0 && (
         <div className="more-meetings">
-          <p style={{margin:'0px'}}className="more-meetings-text">... {remainingMeetingsCount} more meetings</p>
+          <p style={{ margin: '0px' }} className="more-meetings-text">... {remainingMeetingsCount} more meetings</p>
         </div>
       )}
     </>
@@ -190,10 +189,11 @@ const useBooking = () => {
   const [selectedRoom, setSelectedRoom] = useState(localStorage.getItem('selectedRoom'));
   const [roomSelected, setRoomSelected] = useState(!!localStorage.getItem('selectedRoom'));
 
+  const token = import.meta.env.VITE_TABTOKEN;
+
   const fetchBookData = async () => {
     setLoading(true);
     try {
-      const token = localStorage.getItem("authToken");
       const headers = { Authorization: `Bearer ${token}`, "Content-Type": "application/json" };
 
       const response = await axios.get(`https://booking-system-ge1i.onrender.com/api/book/`, { headers });
@@ -220,7 +220,6 @@ const useBooking = () => {
   useEffect(() => {
     const updateBookingData = async () => {
       try {
-        const token = localStorage.getItem("authToken");
         const headers = { Authorization: `Bearer ${token}`, "Content-Type": "application/json" };
 
         const response = await axios.get(`https://booking-system-ge1i.onrender.com/api/book/`, { headers });
