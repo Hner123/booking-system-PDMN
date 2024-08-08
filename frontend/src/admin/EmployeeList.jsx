@@ -157,6 +157,12 @@ const EmployeeList = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  const isUserRegistered = (user) => {
+    // Consider user registered if they have a non-empty username and department
+    return Boolean(user.userName && user.userName.trim() !== '') && 
+           Boolean(user.department && user.department.trim() !== '');
+  };
+
   return (
     <div className="employee-list-page">
       <Sidebar />
@@ -227,12 +233,14 @@ const EmployeeList = () => {
                   )}
                 </td>
                 <td>
-                  <button
-                    onClick={() => handleEditDeptClick(user._id)}
-                    className="action-button edit"
-                  >
-                    Edit Dept
-                  </button>
+                  {isUserRegistered(user) && (
+                    <button
+                      onClick={() => handleEditDeptClick(user._id)}
+                      className="action-button edit"
+                    >
+                      Edit Dept
+                    </button>
+                  )}
                   <button
                     onClick={() => {
                       setShowDeleteModal(true);

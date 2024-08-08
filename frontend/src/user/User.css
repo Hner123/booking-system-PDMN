@@ -352,6 +352,23 @@
   margin-bottom: 60px; /* Adjusted margin for button space */
 }
 
+.card:hover .room-title[data-room="Palawan and Boracay"] {
+  margin: 0px; /* Adjusted margin for "Palawan and Boracay" */
+}
+
+.additional-text {
+  opacity: 0;
+  transition: opacity 0.4s ease-in-out, margin-bottom 0.4s ease-in-out;
+  margin: 0;
+  text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5);
+  font-size: 14px;
+}
+
+.card:hover .additional-text {
+  margin-bottom: 60px;
+  opacity: 1;
+}
+
 /* Mobile Version */
 @media (max-width: 768px) {
   .card-container {
