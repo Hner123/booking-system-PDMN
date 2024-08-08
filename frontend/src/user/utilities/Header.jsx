@@ -132,7 +132,7 @@ const Header = () => {
       if (reserve) {
         setNextLocation(currentPath);
         setShowModal(true);
-      }gfy
+      }
     }
   
     if (excludedPaths.includes(currentPath)) {
