@@ -440,6 +440,7 @@ const SendAllAttachment = async () => {
 
             const monthName = getCurrentMonthName();
             const name = `${user.firstName} ${user.surName}`;
+            const companyLogoUrl = "https://drive.google.com/uc?id=108JoeqEjPR7HKfbNjXdV30wvvy9oDk_B";
 
             const htmlContent = `
               <!DOCTYPE html>
@@ -452,6 +453,7 @@ const SendAllAttachment = async () => {
               </head>
               <body style="font-family: Arial, sans-serif;">
                 <div style="max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f4f4f4; color: #000; font-size: 16px;">
+                  <img src="${companyLogoUrl}" alt="Company Logo" style="max-width: 200px; margin: 0 auto 20px; display: block;">
                   <h2 style="margin-bottom: 20px; text-align: center; color: #000;">Monthly Reservations</h2>
                   <p>Hi ${name},</p>
                   <p>Attached is the summary of your reservations for the month. Please review the details below:</p>
@@ -527,11 +529,35 @@ const SendAllAttachment = async () => {
     await Promise.all(pdfPromises);
     await Promise.all(collectPDFPromises);
 
+    const companyLogoUrl = "https://drive.google.com/uc?id=108JoeqEjPR7HKfbNjXdV30wvvy9oDk_B";
+    
+    const htmlContent = `
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Monthly Reservations - GDS Booking System</title>
+      </head>
+      <body style="font-family: Arial, sans-serif;">
+        <div style="max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f4f4f4; color: #000; font-size: 16px;">
+          <img src="${companyLogoUrl}" alt="Company Logo" style="max-width: 200px; margin: 0 auto 20px; display: block;">
+          <h2 style="margin-bottom: 20px; text-align: center; color: #000;">Monthly Reservations Archive</h2>
+          <p>Hi Admin,</p>
+          <p>Attached are all the user reservation reports for the month to archive.</p>
+          <p>Best regards,</p>
+          <p>Management</p>
+        </div>
+      </body>
+      </html>
+    `;
+
     const mailOptionsToAdmin = {
       from: process.env.GMAIL_SENDER,
       to: adminEmails,
       subject: "Monthly Reservations Archive",
-      text: "Attached are all the user reservation reports for the month.",
+      html: htmlContent,
       attachments: pdfBuffers,
     };
 
@@ -653,21 +679,52 @@ const SendUserAttachment = async (req, res) => {
   }
 };
 
-cron.schedule('0 23 28-31 * *', () => {
+const DeletePrevMonth = async () => {
+  const date = new Date();
+  const startOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
+  const endOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+
+  try {
+    await ReserveModel.deleteMany({
+      scheduleDate: { $gte: startOfMonth, $lt: endOfMonth },
+    });
+
+    await NotificationModel.deleteMany({
+      createdAt: { $gte: startOfMonth, $lt: endOfMonth },
+    });
+
+    console.log("Successfully deleted reservations and notifications.");
+  } catch (error) {
+    console.error("Error deleting reservations and notifications:", error);
+  }
+};
+
+cron.schedule('0 23 28-31 * *', async () => {
   const today = new Date();
   const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
   if (today.getDate() === lastDayOfMonth) {
-    SendAdminAttachment();
+    try {
+      await Promise.all([
+        SendAdminAttachment(),
+        SendAllAttachment()
+      ]);
+      
+      await DeletePrevMonth();
+    } catch (error) {
+      console.error("Error in end-of-month tasks:", error);
+    }
   }
 });
 
-cron.schedule('0 23 28-31 * *', () => {
-  const today = new Date();
-  const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
-  if (today.getDate() === lastDayOfMonth) {
-    SendAllAttachment();
-  }
-});
+
+// cron.schedule('0 23 28-31 * *', () => {
+//   const today = new Date();
+//   const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+//   if (today.getDate() === lastDayOfMonth) {
+//     SendAllAttachment();
+//     DeletePrevMonth();
+//   }
+// });
 
 // cron.schedule('*/30 * * * * *', () => {
 //   console.log('Running SendAdminAttachment');
