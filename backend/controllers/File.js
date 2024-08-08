@@ -232,12 +232,9 @@ const GenerateMonthlyPDF = async (req, res) => {
   res.setHeader("Content-Type", "application/pdf");
 
   try {
-    const startOfMonth = new Date();
-    startOfMonth.setDate(1);
-    startOfMonth.setHours(0, 0, 0, 0);
-
-    const endOfMonth = new Date(startOfMonth);
-    endOfMonth.setMonth(endOfMonth.getMonth() + 1);
+    const date = new Date();
+    const startOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
+    const endOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0);
 
     const reservations = await ReserveModel.find({
       scheduleDate: { $gte: startOfMonth, $lt: endOfMonth },
@@ -277,9 +274,14 @@ const GenerateUserPDF = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
+    const date = new Date();
+    const startOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
+    const endOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0, 23, 59, 59, 999);
+
     const reservations = await ReserveModel.find({
       user: new mongoose.Types.ObjectId(id),
       "approval.status": "Approved",
+      scheduleDate: { $gte: startOfMonth, $lt: endOfMonth },
     }).sort({ scheduleDate: 1, startTime: 1 });
 
     generatePDFContent(
@@ -301,12 +303,9 @@ const GenerateUserPDF = async (req, res) => {
 
 const SendAdminAttachment = async (req, res) => {
   try {
-    const startOfMonth = new Date();
-    startOfMonth.setDate(1);
-    startOfMonth.setHours(0, 0, 0, 0);
-
-    const endOfMonth = new Date(startOfMonth);
-    endOfMonth.setMonth(endOfMonth.getMonth() + 1);
+    const date = new Date();
+    const startOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
+    const endOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0);
 
     const reservations = await ReserveModel.find({
       scheduleDate: { $gte: startOfMonth, $lt: endOfMonth },
@@ -332,7 +331,7 @@ const SendAdminAttachment = async (req, res) => {
     doc.on("end", async () => {
       const pdfData = Buffer.concat(buffers);
 
-      const emails = "jamesdesena27@gmail.com"; // Replace with the actual recipient email address
+      const emails = ["jamesdesena27@gmail.com"]; 
       const companyLogoUrl = "https://drive.google.com/uc?id=108JoeqEjPR7HKfbNjXdV30wvvy9oDk_B";
 
       const htmlContent = `
@@ -368,7 +367,7 @@ const SendAdminAttachment = async (req, res) => {
         html: htmlContent,
         attachments: [
           {
-            filename: `Monthly_Reservations_${monthName}.pdf`,
+            filename: `${monthName}_Reservations.pdf`,
             content: pdfData,
             contentType: "application/pdf",
           },
@@ -410,22 +409,19 @@ const SendAdminAttachment = async (req, res) => {
 
 const SendAllAttachment = async () => {
   try {
-    // Find users with resetPass set to true
     const users = await UserModel.find({ resetPass: true }).select("email firstName surName");
 
     if (!users.length) {
-      console.log("No users found");
       return;
     }
 
-    const startOfMonth = new Date();
-    startOfMonth.setDate(1);
-    startOfMonth.setHours(0, 0, 0, 0);
+    const date = new Date();
+    const startOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
+    const endOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0);
 
-    const endOfMonth = new Date(startOfMonth);
-    endOfMonth.setMonth(endOfMonth.getMonth() + 1);
+    const adminEmails = "pdmnpcdatadrmonitoring@gmail.com";
 
-    const emailPromises = users.map(async (user) => {
+    const pdfPromises = users.map(async (user) => {
       const reservations = await ReserveModel.find({
         user: user._id,
         "approval.status": "Approved",
@@ -442,7 +438,6 @@ const SendAllAttachment = async () => {
           try {
             const pdfData = Buffer.concat(buffers);
 
-            const companyLogoUrl = "https://drive.google.com/uc?id=108JoeqEjPR7HKfbNjXdV30wvvy9oDk_B";
             const monthName = getCurrentMonthName();
             const name = `${user.firstName} ${user.surName}`;
 
@@ -457,14 +452,14 @@ const SendAllAttachment = async () => {
               </head>
               <body style="font-family: Arial, sans-serif;">
                 <div style="max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f4f4f4; color: #000; font-size: 16px;">
-                  <img src="${companyLogoUrl}" alt="Company Logo" style="max-width: 200px; margin: 0 auto 20px; display: block;">
                   <h2 style="margin-bottom: 20px; text-align: center; color: #000;">Monthly Reservations</h2>
-                  <p>Attached is the summary of all reservations for the month. Please review the details below:</p>
+                  <p>Hi ${name},</p>
+                  <p>Attached is the summary of your reservations for the month. Please review the details below:</p>
                   <ul>
                     <li><strong>Number of Reservations:</strong> ${reservations.length}</li>
                     <li><strong>Period:</strong> ${startOfMonth.toLocaleDateString()} to ${endOfMonth.toLocaleDateString()}</li>
                   </ul>
-                  <p>Please find attached the detailed PDF with all reservations for the month.</p>
+                  <p>Please find attached the detailed PDF with all your reservations for the month.</p>
                   <p>Best regards,</p>
                   <p>Management</p>
                 </div>
@@ -479,7 +474,7 @@ const SendAllAttachment = async () => {
               html: htmlContent,
               attachments: [
                 {
-                  filename: `Monthly_Reservations_${monthName}.pdf`,
+                  filename: `${user.surName}_${monthName}_Reservations.pdf`,
                   content: pdfData,
                   contentType: "application/pdf",
                 },
@@ -488,7 +483,6 @@ const SendAllAttachment = async () => {
 
             try {
               await transporter.sendMail(mailOptions);
-              console.log(`Email sent successfully to ${user.email}`);
             } catch (error) {
               console.error(`Error sending email to ${user.email}:`, error.message);
             }
@@ -499,12 +493,54 @@ const SendAllAttachment = async () => {
 
         generatePDFContent(doc, reservations, `Reservations for ${user.firstName} ${user.surName}`);
         doc.end();
-      } else {
-        console.log(`No reservations found for user: ${user.email}`);
       }
     });
 
-    await Promise.all(emailPromises);
+    const pdfBuffers = [];
+    const collectPDFPromises = users.map(async (user) => {
+      const reservations = await ReserveModel.find({
+        user: user._id,
+        "approval.status": "Approved",
+        scheduleDate: { $gte: startOfMonth, $lt: endOfMonth },
+      })
+        .populate("user", "firstName surName")
+        .sort({ scheduleDate: 1, startTime: 1 });
+
+      if (reservations.length > 0) {
+        const doc = new PDFDocument();
+        const buffers = [];
+        doc.on("data", buffers.push.bind(buffers));
+        doc.on("end", () => {
+          const pdfData = Buffer.concat(buffers);
+          pdfBuffers.push({
+            filename: `${user.surName}_${getCurrentMonthName()}_Reservations.pdf`,
+            content: pdfData,
+            contentType: "application/pdf",
+          });
+        });
+
+        generatePDFContent(doc, reservations, `Reservations for ${user.firstName} ${user.surName}`);
+        doc.end();
+      }
+    });
+
+    await Promise.all(pdfPromises);
+    await Promise.all(collectPDFPromises);
+
+    const mailOptionsToAdmin = {
+      from: process.env.GMAIL_SENDER,
+      to: adminEmails,
+      subject: "Monthly Reservations Archive",
+      text: "Attached are all the user reservation reports for the month.",
+      attachments: pdfBuffers,
+    };
+
+    try {
+      await transporter.sendMail(mailOptionsToAdmin);
+      console.log("All user reservation PDFs have been sent to the admin.");
+    } catch (error) {
+      console.error("Error sending admin email:", error.message);
+    }
   } catch (error) {
     console.error("Error generating and sending user reservations PDFs:", error);
   }
@@ -542,9 +578,10 @@ const SendUserAttachment = async (req, res) => {
 
       const monthName = getCurrentMonthName();
       const name = `${user.firstName} ${user.surName}`;
+
       const date = new Date();
       const startOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
-      const endOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+      const endOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0, 23, 59, 59, 999);
 
       const htmlContent = `
         <!DOCTYPE html>
@@ -565,7 +602,7 @@ const SendUserAttachment = async (req, res) => {
               <li><strong>Number of Reservations:</strong> ${
                 reservations.length
               }</li>
-              <li><strong>Period:</strong> ${new Date(startOfMonth).toLocaleDateString()} to ${new Date(endOfMonth).toLocaleDateString()}</li>
+              <li><strong>Period:</strong> ${startOfMonth.toLocaleDateString()} to ${endOfMonth.toLocaleDateString()}</li>
             </ul>
             <p>Please find attached the detailed PDF with all your reservations for the month.</p>
             <p>Best regards,</p>
@@ -620,7 +657,6 @@ cron.schedule('0 23 28-31 * *', () => {
   const today = new Date();
   const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
   if (today.getDate() === lastDayOfMonth) {
-    console.log('Running SendAdminAttachment');
     SendAdminAttachment();
   }
 });
@@ -629,7 +665,6 @@ cron.schedule('0 23 28-31 * *', () => {
   const today = new Date();
   const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
   if (today.getDate() === lastDayOfMonth) {
-    console.log('Running SendAllAttachment');
     SendAllAttachment();
   }
 });
@@ -643,10 +678,6 @@ cron.schedule('0 23 28-31 * *', () => {
 //   console.log('Running SendAllAttachment');
 //   SendAllAttachment();
 // });
-
-cron.schedule('*/5 * * * * *', () => {
-  console.log('Hello');
-});
 
 module.exports = {
   SendAdminAttachment,

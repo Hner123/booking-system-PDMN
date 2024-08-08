@@ -272,13 +272,14 @@ const PendingApproval = async (req, res) => {
 
     if (reservation) {
       const title = reservation.title;
+      const room = reservation.roomName;
       const bookedBy = `${reservation.user.firstName} ${reservation.user.surName}`;
       const date = new Date(reservation.scheduleDate).toLocaleDateString();
       const startTime = new Date(reservation.startTime);
       const endTime = new Date(reservation.endTime);
 
       const time = `${startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} to ${endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
-      
+
       const reason = calculateReason(reservation);
       const email = ["jamesdesena27@gmail.com", "banzu572@gmail.com"];
 
@@ -298,7 +299,7 @@ const PendingApproval = async (req, res) => {
                 <img src="${companyLogoUrl}" alt="Company Logo" style="max-width: 200px; margin: 0 auto 20px; display: block;">
                 <h2 style="margin-bottom: 20px; text-align: center; color: #000;">Pending Approval</h2>
                 <p>Dear Admin,</p>
-                <p>A new reservation titled <strong>'${title}'</strong> is pending approval. Please review the details below:</p>
+                <p>A new reservation titled <strong>'${title}'</strong> for room ${room} is pending approval. Please review the details below:</p>
                 <ul>
                     <li><strong>Booked by:</strong> ${bookedBy}</li>
                     <li><strong>Date:</strong> ${date}</li>
@@ -382,6 +383,7 @@ const SendInvite = async (req, res) => {
     const validEmails = emailResults.filter(result => result.email !== null);
 
     const title = reservation.title;
+    const room = reservation.roomName;
     const date = new Date(reservation.scheduleDate).toLocaleDateString();
     const companyLogoUrl = "https://drive.google.com/uc?id=108JoeqEjPR7HKfbNjXdV30wvvy9oDk_B";
     const time = `${new Date(reservation.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} to ${new Date(reservation.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
@@ -401,7 +403,7 @@ const SendInvite = async (req, res) => {
                 <img src="${companyLogoUrl}" alt="Company Logo" style="max-width: 200px; margin: 0 auto 20px; display: block;">
                 <h2 style="margin-bottom: 20px; text-align: center; color: #000;">Invitation to Reservation: ${title}</h2>
                 <p>Hello ${name},</p>
-                <p>You are invited to the reservation titled "${title}" scheduled on ${date} at ${time}.</p>
+                <p>You are invited to the reservation titled <strong>${title}</strong> in room ${room}, scheduled for ${date} at ${time}.</p>
                 <p>If you have any questions or need further assistance, please contact our support team.</p>
                 <p>Best regards,</p>
                 <p>Management</p>
