@@ -265,7 +265,12 @@ const Dashboard = () => {
         Header: "Status",
         accessor: "status",
         Cell: ({ value }) => (
-          <span className={`status ${value.toLowerCase()}`}>{value}</span>
+          <span
+            className={`status ${value.toLowerCase()}`}
+            style={{ backgroundColor: value === "Declined" ? "red" : "" }}
+          >
+            {value}
+          </span>
         ),
       },
       { Header: "Date", accessor: "date" },
@@ -276,7 +281,8 @@ const Dashboard = () => {
         Header: "",
         accessor: "actions",
         Cell: ({ row }) => {
-          const { key, ...restProps } = row.getRowProps();
+          const { status } = row.original;
+          const buttonText = status === "Declined" ? "Delete Reservation" : "Cancel Reservation";
           return (
             <>
               <button
@@ -289,7 +295,7 @@ const Dashboard = () => {
                 className="delete-btn"
                 onClick={() => handleShowConfirmModal(row.original)}
               >
-                <i className="fas fa-trash-alt"></i> Cancel Reservation
+                <i className="fas fa-trash-alt"></i> {buttonText}
               </button>
             </>
           );
@@ -298,6 +304,7 @@ const Dashboard = () => {
     ],
     []
   );
+  
 
   const otherMeetingsColumns = React.useMemo(
     () => [
@@ -593,7 +600,15 @@ const Dashboard = () => {
               style={{ backgroundImage: `url(${roomImages[place] || roomBg})` }}
             >
               <div className="overlay">
-                <h3 className="room-title">{place}</h3>
+                <h3
+                  className="room-title"
+                  data-room={place} // Add this attribute
+                >
+                  {place}
+                </h3>
+                {place === "Palawan and Boracay" && (
+                  <p className="additional-text">Minimum of 8 attendees</p>
+                )}
                 <button
                   className="dashboard-rsrv"
                   onClick={() => handleReserveClick(place)}
@@ -796,7 +811,10 @@ const Dashboard = () => {
           >
             <div className="cancel-content">
               <h2 id="modal-title">Cancel Reservation?</h2>
-              <p id="modal-description">You won’t be able to recover this reservation once it’s canceled.</p>
+              <p id="modal-description">
+                You won’t be able to recover this reservation once it’s
+                canceled.
+              </p>
               <div className="selection">
                 <button
                   onClick={handleCancelDelete}

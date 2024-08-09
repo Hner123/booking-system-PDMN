@@ -321,7 +321,7 @@ const RoomReservation = () => {
   return (
     <div className="room-reservation-container">
       <ToastContainer />
-      <h1>
+      <h1 style={{textAlign: 'Center', margin: '0' }}>
         Reserve{" "}
         {roomName ? (
           <span style={{ color: headerColor }}>{roomName}</span>
@@ -423,6 +423,7 @@ const RoomReservation = () => {
 
           <div className="legend-controls">
             <div className="legend">
+              <h3>Legend</h3>
               <div className="legend-item">
                 <span className="pdmn"></span>
                 <p>Philippine Dragon Media Network</p>

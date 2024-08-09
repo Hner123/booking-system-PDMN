@@ -63,26 +63,29 @@ const Header = () => {
     fetchUserData();
   }, []);
 
-  useEffect(() => {
-    const fetchNotifications = async () => {
-      setLoadingNotifications(true);
-      try {
-        const userId = localStorage.getItem("userId");
-        const response = await axios.get(
-          "https://booking-system-ge1i.onrender.com/api/notif"
-        );
-        const userNotifications = response.data.filter(
-          (notif) => notif.receiver._id === userId
-        );
-        setNotifications(userNotifications);
-      } catch (error) {
-        console.error("Error fetching notifications:", error);
-      } finally {
-        setLoadingNotifications(false);
-      }
-    };
+  const fetchNotifications = async () => {
+    setLoadingNotifications(true);
+    try {
+      const userId = localStorage.getItem("userId");
+      const response = await axios.get(
+        "https://booking-system-ge1i.onrender.com/api/notif"
+      );
+      const userNotifications = response.data.filter(
+        (notif) => notif.receiver._id === userId
+      );
+      setNotifications(userNotifications);
+    } catch (error) {
+      console.error("Error fetching notifications:", error);
+    } finally {
+      setLoadingNotifications(false);
+    }
+  };
 
+  useEffect(() => {
     fetchNotifications();
+    const intervalId = setInterval(fetchNotifications, 5000); // Auto-refresh every 5 seconds
+
+    return () => clearInterval(intervalId); // Clear the interval on component unmount
   }, []);
 
   useEffect(() => {
@@ -237,9 +240,10 @@ const Header = () => {
 
                       return (
                         <li key={index}>
-                          <div className="notif-item"                               onClick={() =>
-                                handleDeleteNotification(notif._id)
-                              }>
+                          <div
+                            className="notif-item"
+                            onClick={() => handleDeleteNotification(notif._id)}
+                          >
                             <p dangerouslySetInnerHTML={{ __html: message }} />
                             <span>
                               {new Date(notif.createdAt).toLocaleDateString(
