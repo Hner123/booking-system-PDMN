@@ -106,6 +106,12 @@ const DeleteAdmin = async (req, res) => {
   }
 };
 
+
+const CreateAdminWithAuth = (req, res) => {
+  requireAuth(req, res, async () => {
+    await CreateAdmin(req, res);
+  });
+};
 const GetAllAdminWithAuth = (req, res) => {
   requireAuth(req, res, async () => {
     await GetAllAdmin(req, res);
@@ -129,12 +135,12 @@ const DeleteAdminWithAuth = (req, res) => {
 
 module.exports = {
   CreateAdmin,
-
   GetAllAdmin,
   GetSpecificAdmin,
   EditAdmin,
   DeleteAdmin,
 
+  CreateAdminWithAuth,
   GetAllAdminWithAuth,
   GetSpecificAdminWithAuth,
   EditAdminWithAuth,

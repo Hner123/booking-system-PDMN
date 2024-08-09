@@ -331,7 +331,7 @@ const SendAdminAttachment = async (req, res) => {
     doc.on("end", async () => {
       const pdfData = Buffer.concat(buffers);
 
-      const emails = ["jamesdesena27@gmail.com"]; 
+      const emails = ["mw@flw.ph", "erika@flw.ph", "demry@flw.ph", "valloso@flw.ph", "pdmnpcdatadrmonitoring@gmail.com", "abagjeanne@flw.ph", "jdesena@flw.ph", "ellaneb@flw.ph"]; 
       const companyLogoUrl = "https://drive.google.com/uc?id=108JoeqEjPR7HKfbNjXdV30wvvy9oDk_B";
 
       const htmlContent = `
@@ -715,7 +715,6 @@ cron.schedule('0 23 28-31 * *', async () => {
     }
   }
 });
-
 
 // cron.schedule('0 23 28-31 * *', () => {
 //   const today = new Date();

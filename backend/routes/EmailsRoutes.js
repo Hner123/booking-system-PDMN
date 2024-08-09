@@ -10,17 +10,16 @@ const {
   SendInvite,
   PendingApproval,
 
-  ChangeEmailWithAuth,
   ApprovalWithAuth,
   SendInviteWithAuth,
   PendingApprovalWithAuth
 } = require("../controllers/Emails");
 
 router.post("/forgotpass", ForgotPass);
-// router.use(requireAuth);
 router.post("/changeemail", ChangeEmail);
-router.post("/approval", Approval);
-router.post("/invite/:id", SendInvite);
-router.post("/pending/:id", PendingApproval)
+router.use(requireAuth);
+router.post("/approval", ApprovalWithAuth);
+router.post("/invite/:id", SendInviteWithAuth);
+router.post("/pending/:id", PendingApprovalWithAuth)
 
 module.exports = router;

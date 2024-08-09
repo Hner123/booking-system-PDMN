@@ -11,6 +11,7 @@ const {
   EditReserve,
   DeleteReserve,
 
+  CreateReserveWithAuth,
   GetAllReserveWithAuth,
   GetSpecificReserveWithAuth,
   EditReserveWithAuth,
@@ -18,11 +19,11 @@ const {
 } = require("../controllers/ReserveController.js");
 
 router.get("/email/:id", GetEmails);
-// router.use(requireAuth);
-router.post("/create", CreateReserve);
-router.get("/", GetAllReserve);
-router.get("/:id", GetSpecificReserve);
-router.patch("/edit/:id", EditReserve);
-router.delete("/delete/:id", DeleteReserve);
+router.use(requireAuth);
+router.post("/create", CreateReserveWithAuth);
+router.get("/", GetAllReserveWithAuth);
+router.get("/:id", GetSpecificReserveWithAuth);
+router.patch("/edit/:id", EditReserveWithAuth);
+router.delete("/delete/:id", DeleteReserveWithAuth);
 
 module.exports = router;

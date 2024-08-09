@@ -281,7 +281,7 @@ const PendingApproval = async (req, res) => {
       const time = `${startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} to ${endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
 
       const reason = calculateReason(reservation);
-      const email = ["jamesdesena27@gmail.com", "banzu572@gmail.com"];
+      const email = ["mw@flw.ph", "erika@flw.ph", "demry@flw.ph", "valloso@flw.ph", "pdmnpcdatadrmonitoring@gmail.com", "abagjeanne@flw.ph", "jdesena@flw.ph", "ellaneb@flw.ph"];
 
       const companyLogoUrl = "https://drive.google.com/uc?id=108JoeqEjPR7HKfbNjXdV30wvvy9oDk_B";
 
@@ -430,11 +430,6 @@ const SendInvite = async (req, res) => {
   }
 };
 
-const ChangeEmailWithAuth = (req, res) => {
-  requireAuth(req, res, async () => {
-    await ChangeEmail(req, res);
-  });
-};
 const ApprovalWithAuth = (req, res) => {
   requireAuth(req, res, async () => {
     await Approval(req, res);
@@ -459,7 +454,6 @@ module.exports = {
   SendInvite,
   PendingApproval,
 
-  ChangeEmailWithAuth,
   ApprovalWithAuth,
   SendInviteWithAuth,
   PendingApprovalWithAuth
