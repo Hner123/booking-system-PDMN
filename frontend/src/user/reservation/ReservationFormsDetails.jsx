@@ -311,7 +311,6 @@ const ReservationFormsDetails = () => {
     try {
       const reserveId = localStorage.getItem("reserveToken");
       const token = localStorage.getItem("authToken");
-  
       const headers = {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
@@ -383,6 +382,7 @@ const ReservationFormsDetails = () => {
           };
   
           try {
+            const token = localStorage.getItem("authToken");
             const headers = {
               Authorization: `Bearer ${token}`,
               "Content-Type": "application/json",
@@ -395,6 +395,7 @@ const ReservationFormsDetails = () => {
   
             if (notifResponse.status === 201) {
               try {
+                const token = localStorage.getItem("authToken");
                 const headers = {
                   Authorization: `Bearer ${token}`,
                   "Content-Type": "application/json",
