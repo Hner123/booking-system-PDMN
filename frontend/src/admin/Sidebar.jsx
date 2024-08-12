@@ -69,7 +69,8 @@ const Sidebar = () => {
         }
 
         const notifResponse = await axios.get(
-          "https://booking-system-ge1i.onrender.com/api/notif"
+          "https://booking-system-ge1i.onrender.com/api/notif",
+          { headers }
         );
         const userNotifications = notifResponse.data
           .filter((notif) => notif.receiver._id === adminId)

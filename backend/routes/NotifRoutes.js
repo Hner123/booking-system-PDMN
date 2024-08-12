@@ -16,11 +16,11 @@ const {
   DeleteNotificationWithAuth,
 } = require('../controllers/NotifController');
 
-// router.use(requireAuth);
-router.post("/new", CreateNotification);
-router.get("/", GetAllNotifications);
-router.get("/:id", GetNotificationById);
-router.patch("/:id", UpdateNotification);
-router.delete("/delete/:id", DeleteNotification);
+router.use(requireAuth);
+router.post("/new", CreateNotificationWithAuth);
+router.get("/", GetAllNotificationsWithAuth);
+router.get("/:id", GetNotificationByIdWithAuth);
+router.patch("/:id", UpdateNotificationWithAuth);
+router.delete("/delete/:id", DeleteNotificationWithAuth);
 
 module.exports = router;

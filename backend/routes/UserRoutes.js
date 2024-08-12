@@ -4,23 +4,24 @@ const upload = require("../config/Multer.js");
 const requireAuth = require("../utils/requireAuth");
 
 const {
+  CreateUser,
   GetAllUsers,
   GetSpecificUser,
-  CreateUser,
   EditUser,
   DeleteUser,
 
+  CreateUserWithAuth,
   GetAllUsersWithAuth,
   GetSpecificUserWithAuth,
   EditUserWithAuth,
   DeleteUserWithAuth
 } = require("../controllers/UserController.js");
 
-// router.use(requireAuth);
-router.post("/create", CreateUser);
-router.get("/", GetAllUsers);
-router.get("/:id", GetSpecificUser);
-router.patch("/edit/:id", EditUser);
-router.delete("/delete/:id", DeleteUser);
+router.use(requireAuth); 
+router.post("/create", CreateUserWithAuth);
+router.get("/", GetAllUsersWithAuth);
+router.get("/:id", GetSpecificUserWithAuth);
+router.patch("/edit/:id", EditUserWithAuth);
+router.delete("/delete/:id", DeleteUserWithAuth);
 
 module.exports = router;

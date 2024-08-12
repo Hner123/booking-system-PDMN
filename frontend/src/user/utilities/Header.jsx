@@ -67,8 +67,14 @@ const Header = () => {
     setLoadingNotifications(true);
     try {
       const userId = localStorage.getItem("userId");
+      const token = localStorage.getItem("authToken");
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      };
       const response = await axios.get(
-        "https://booking-system-ge1i.onrender.com/api/notif"
+        "https://booking-system-ge1i.onrender.com/api/notif",
+        { headers }
       );
       const userNotifications = response.data.filter(
         (notif) => notif.receiver._id === userId
