@@ -327,6 +327,10 @@ const ReservationFormsDetails = () => {
         if (updatedReserve.confirmation) {
           if (attendees.length > 0) {
             try {
+              const headers = {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+              };
               const inviteResponse = await axios.post(
                 `https://booking-system-ge1i.onrender.com/api/email/invite/${reserveId}`,
                 { headers }
@@ -379,6 +383,10 @@ const ReservationFormsDetails = () => {
           };
   
           try {
+            const headers = {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            };
             const notifResponse = await axios.post(
               `https://booking-system-ge1i.onrender.com/api/notif/new`,
               notifData,
@@ -387,6 +395,10 @@ const ReservationFormsDetails = () => {
   
             if (notifResponse.status === 201) {
               try {
+                const headers = {
+                  Authorization: `Bearer ${token}`,
+                  "Content-Type": "application/json",
+                };
                 const pendingResponse = await axios.post(
                   `https://booking-system-ge1i.onrender.com/api/email/pending/${reserveId}`,
                   { headers }
