@@ -104,18 +104,31 @@ const RoomReservation = () => {
               );
             }
 
-            const fetchedEvents = filteredData.map((event) => ({
-              id: event._id,
-              start: new Date(event.startTime),
-              end: new Date(event.endTime),
-              title: event.title,
-              agenda: event.agenda,
-              status: event.approval.status,
-              department: event.user.department,
-              room: event.roomName,
-              user: `${event.user.firstName} ${event.user.surName}`,
-              attendees: event.attendees,
-            }));
+            const fetchedEvents = filteredData.map((event) => {
+              // Combine attendees and guests
+              let combinedAttendees = [];
+
+              if (event.attendees && event.attendees.length > 0) {
+                combinedAttendees = [...event.attendees];
+              }
+              
+              if (event.guest && event.guest.length > 0) {
+                combinedAttendees = [...combinedAttendees, ...event.guest];
+              }
+
+              return {
+                id: event._id,
+                start: new Date(event.startTime),
+                end: new Date(event.endTime),
+                title: event.title,
+                agenda: event.agenda,
+                status: event.approval.status,
+                department: event.user?.department,
+                room: event.roomName,
+                user: `${event.user?.firstName} ${event.user?.surName}`,
+                attendees: combinedAttendees,
+              };
+            });
 
             setEvents(fetchedEvents);
             setBookData(filteredData);

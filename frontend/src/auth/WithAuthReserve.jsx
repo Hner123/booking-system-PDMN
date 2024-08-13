@@ -80,8 +80,7 @@ const WithAuthReserve = (WrappedComponent) => {
       return currentTime > exp;
     };
 
-    // Render the wrapped component if not loading
-    return <> {console.clear()} <WrappedComponent {...props} /></>;
+    return <> <WrappedComponent {...props} /></>;
   };
 
   return WrapperComponent;

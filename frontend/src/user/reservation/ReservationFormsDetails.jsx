@@ -493,7 +493,7 @@ const ReservationFormsDetails = () => {
                   <label htmlFor="name">Username:</label>
                   {bookData && (
                     <div id="name" className="read-only">
-                      {bookData.user.userName}
+                      {bookData.user?.userName}
                     </div>
                   )}
                 </div>
@@ -501,7 +501,7 @@ const ReservationFormsDetails = () => {
                   <label htmlFor="department">Department:</label>
                   {bookData && (
                     <div id="department" className="read-only">
-                      {bookData.user.department}
+                      {bookData.user?.department}
                     </div>
                   )}
                 </div>
