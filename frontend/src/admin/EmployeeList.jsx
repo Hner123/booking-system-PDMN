@@ -11,7 +11,8 @@ const EmployeeList = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [users, setUsers] = useState([]);
   const [sortedUsers, setSortedUsers] = useState([]);
-  const [sortCriteria, setSortCriteria] = useState('');
+  const [filterCriteria, setFilterCriteria] = useState('all'); // Combined state for filtering and sorting
+  const [sortCriteria, setSortCriteria] = useState(''); // To hold department sorting
   const [editDeptModal, setEditDeptModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [selectedDept, setSelectedDept] = useState('');
@@ -126,15 +127,22 @@ const EmployeeList = () => {
   };
 
   useEffect(() => {
-    let sorted = [...users];
+    let filteredUsers = [...users];
 
+    // Apply filtering by registration status
+    if (filterCriteria === 'registered') {
+      filteredUsers = filteredUsers.filter(user => user.resetPass);
+    } else if (filterCriteria === 'notRegistered') {
+      filteredUsers = filteredUsers.filter(user => !user.resetPass);
+    }
+
+    // Apply sorting by department if selected
     if (sortCriteria) {
-      // Filter users based on department
-      sorted = sorted.filter(user => user.department === sortCriteria);
+      filteredUsers = filteredUsers.filter(user => user.department === sortCriteria);
     }
 
     // Sort users so that those without names come last
-    sorted.sort((a, b) => {
+    filteredUsers.sort((a, b) => {
       const aName = `${a.firstName} ${a.surName}`.trim();
       const bName = `${b.firstName} ${b.surName}`.trim();
 
@@ -143,8 +151,8 @@ const EmployeeList = () => {
       return 0; // names are equal or both are missing
     });
 
-    setSortedUsers(sorted);
-  }, [sortCriteria, users]);
+    setSortedUsers(filteredUsers);
+  }, [filterCriteria, sortCriteria, users]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -158,7 +166,6 @@ const EmployeeList = () => {
   }, []);
 
   const isUserRegistered = (user) => {
-    // Consider user registered if they have a non-empty username and department
     return Boolean(user.userName && user.userName.trim() !== '') && 
            Boolean(user.department && user.department.trim() !== '');
   };
@@ -180,29 +187,86 @@ const EmployeeList = () => {
               onClick={() => setShowDropdown(!showDropdown)}
               className="sort-button"
             >
-              Sort by Department
+              Sort & Filter
             </button>
             {showDropdown && (
               <ul className="dropdown-menu">
-                {departments.map((dept) => (
+                {/* Filter Options Column */}
+                <div className="filter-column">
                   <li
-                    key={dept}
                     onClick={() => {
-                      setSortCriteria(dept);
+                      setFilterCriteria("all");
+                      setSortCriteria("");
                       setShowDropdown(false);
                     }}
+                    className={
+                      filterCriteria === "all" && sortCriteria === ""
+                        ? "filter-active"
+                        : ""
+                    }
                   >
-                    {dept}
+                    Show All
                   </li>
-                ))}
-                <li
-                  onClick={() => {
-                    setSortCriteria("");
-                    setShowDropdown(false);
-                  }}
-                >
-                  Show All
-                </li>
+                  <li
+                    onClick={() => {
+                      setFilterCriteria("registered");
+                      setSortCriteria("");
+                      setShowDropdown(false);
+                    }}
+                    className={
+                      filterCriteria === "registered" && sortCriteria === ""
+                        ? "filter-active"
+                        : ""
+                    }
+                  >
+                    Registered
+                  </li>
+                  <li
+                    onClick={() => {
+                      setFilterCriteria("notRegistered");
+                      setSortCriteria("");
+                      setShowDropdown(false);
+                    }}
+                    className={
+                      filterCriteria === "notRegistered" && sortCriteria === ""
+                        ? "filter-active"
+                        : ""
+                    }
+                  >
+                    Not Registered
+                  </li>
+                </div>
+
+                {/* Sorting by Department Column */}
+                <div className="sort-column">
+                  <li
+                    onClick={() => {
+                      setFilterCriteria("all");
+                      setSortCriteria("");
+                      setShowDropdown(false);
+                    }}
+                    className={
+                      sortCriteria === "" && filterCriteria === "all"
+                        ? "filter-active"
+                        : ""
+                    }
+                  >
+                    Show All Departments
+                  </li>
+                  {departments.map((dept) => (
+                    <li
+                      key={dept}
+                      onClick={() => {
+                        setFilterCriteria("all");
+                        setSortCriteria(dept);
+                        setShowDropdown(false);
+                      }}
+                      className={sortCriteria === dept ? "filter-active" : ""}
+                    >
+                      {dept}
+                    </li>
+                  ))}
+                </div>
               </ul>
             )}
           </div>
@@ -212,6 +276,7 @@ const EmployeeList = () => {
             <tr>
               <th>Username</th>
               <th>Name</th>
+              <th>Email</th>
               <th>Department</th>
               <th>Status</th>
               <th>Actions</th>
@@ -222,6 +287,7 @@ const EmployeeList = () => {
               <tr key={user._id}>
                 <td>{user.userName}</td>
                 <td>{`${user.firstName} ${user.surName}`.trim()}</td>
+                <td>{user.email}</td>
                 <td>{user.department}</td>
                 <td>
                   {user.resetPass ? (
@@ -233,20 +299,18 @@ const EmployeeList = () => {
                   )}
                 </td>
                 <td>
-                  {isUserRegistered(user) && (
-                    <button
-                      onClick={() => handleEditDeptClick(user._id)}
-                      className="action-button edit"
-                    >
-                      Edit Dept
-                    </button>
-                  )}
                   <button
+                    className="action-button edit"
+                    onClick={() => handleEditDeptClick(user._id)}
+                  >
+                    Edit Department
+                  </button>
+                  <button
+                    className="action-button delete"
                     onClick={() => {
                       setShowDeleteModal(true);
                       setUserToDelete(user);
                     }}
-                    className="action-button delete"
                   >
                     Delete
                   </button>
@@ -256,75 +320,6 @@ const EmployeeList = () => {
           </tbody>
         </table>
       </div>
-
-      {editDeptModal && selectedUser && (
-        <div className="edit-dept-modal">
-          <div className="modal-content">
-            <h2>Edit Department</h2>
-            <label htmlFor="department">Select Department:</label>
-            <select
-              id="department"
-              value={selectedDept}
-              onChange={(e) => setSelectedDept(e.target.value)}
-            >
-              {departments.map((dept) => (
-                <option key={dept} value={dept}>
-                  {dept}
-                </option>
-              ))}
-            </select>
-            <div className="modal-actions">
-              <button
-                onClick={() => saveDeptChange(selectedUser._id)}
-                className="confirm-button"
-              >
-                Save
-              </button>
-              <button
-                onClick={() => setEditDeptModal(false)}
-                className="cancel-button"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {showDeleteModal && userToDelete && (
-        <div className="delete-confirmation-modal">
-          <div className="modal-content">
-            <h2>Confirm Deletion</h2>
-            <p>
-              Are you sure you want to delete the user{" "}
-              <strong>{userToDelete.userName}</strong>?
-            </p>
-            <div className="modal-actions">
-              <button
-                onClick={() => {
-                  if (userToDelete?._id) {
-                    deleteUser(userToDelete._id);
-                  }
-                  setShowDeleteModal(false);
-                  setUserToDelete(null); // Clear userToDelete after deletion
-                }}
-                className="confirm-button"
-              >
-                Yes, Delete
-              </button>
-              <button
-                onClick={() => {
-                  setShowDeleteModal(false);
-                  setUserToDelete(null);
-                }}
-                className="cancel-button"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

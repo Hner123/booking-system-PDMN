@@ -292,39 +292,55 @@ button[type="redirect"]:hover {
 }
 
 .sort-button {
-    padding: 10px;
-    border: none;
-    background-color: #9c0b0b;
-    color: white;
-    cursor: pointer;
-    border-radius: 4px;
+  padding: 10px;
+  border: none;
+  background-color: #9c0b0b;
+  color: white;
+  cursor: pointer;
+  border-radius: 4px;
 }
 
 .sort-button:hover {
-    background-color: #770909;
+  background-color: #770909;
 }
 
 .dropdown-menu {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background-color: white;
-    border: 1px solid #ddd;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-    z-index: 1000;
-    border-radius: 4px;
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Two columns layout */
+  gap: 10px; /* Space between columns */
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  list-style-type: none;
+  padding: 10px;
+  margin: 5px 0 0 0;
+  z-index: 1000;
+  border-radius: 4px;
+  width: 500px; /* Adjust width as needed */
+}
+
+.dropdown-menu .filter-column,
+.dropdown-menu .sort-column {
+  display: flex;
+  flex-direction: column;
 }
 
 .dropdown-menu li {
-    padding: 10px;
-    cursor: pointer;
+  padding: 10px;
+  cursor: pointer;
+  width: 100%; /* Ensure full width in each column */
 }
 
 .dropdown-menu li:hover {
-    background-color: #f4f4f4;
+  background-color: #f4f4f4;
+}
+
+.filter-active {
+  background-color: #ececec;
+  font-weight: bold;
 }
 
 /* Table Styles */
