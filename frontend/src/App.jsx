@@ -15,6 +15,7 @@ import AdminLogin from './admin/AdminLogin.jsx';
 import EmployeeList from './admin/EmployeeList.jsx';
 import AddEmployee from './admin/AddEmployee.jsx';
 import ApprovalDetails from './admin/ApprovalDetails.jsx';
+import Calendar from './admin/Calendar.jsx';
 import ApprovalPalawan from './admin/ApprovalPalawan.jsx';
 import ApprovalRooms from './admin/ApprovalRooms.jsx';
 import NotFoundPage from './auth/NotFoundPage.jsx';
@@ -126,6 +127,15 @@ function App() {
             <>
               <Sidebar />
               <AddEmployee />
+            </>
+          }
+        />
+        <Route
+          path="/admin/calendar"
+          element={
+            <>
+              <Sidebar />
+              <Calendar />
             </>
           }
         />

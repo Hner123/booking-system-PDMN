@@ -10,6 +10,7 @@ import {
   faSignOutAlt,
   faBars,
   faClipboardCheck,
+  faCalendar,
 } from "@fortawesome/free-solid-svg-icons";
 import logoOpen from "../assets/logos/GDSLogo.png";
 import logoClosed from "../assets/logos/GDSLoog2.png";
@@ -140,6 +141,12 @@ const Sidebar = () => {
           <a href="/admin/add-employee">
             <FontAwesomeIcon icon={faUserPlus} />
             {!closeMenu && <span>Add Employee</span>}
+          </a>
+        </li>
+        <li title="Meetings">
+          <a href="/admin/calendar">
+            <FontAwesomeIcon icon={faCalendar} />
+            {!closeMenu && <span>View Meetings Calendar</span>}
           </a>
         </li>
         <li title="For Approval">

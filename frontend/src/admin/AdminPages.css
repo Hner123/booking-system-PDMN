@@ -840,3 +840,55 @@ button[type="redirect"]:hover {
     content: "✘ ";
   } */
   
+
+  /* calendar */
+  .tabs {
+    display: flex;
+    justify-content: start;
+    margin-bottom: 20px;
+    gap: 10px;
+  }
+  
+  .tabs button {
+    background-color: #f0f0f0;
+    color: #333;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    border-radius: 5px;
+  }
+  
+  .tabs button:hover {
+    background-color: #dcdcdc;
+  }
+  
+  .tabs .active-tab {
+    background-color: #e74c3c; /* Active tab background color */
+    color: #fff; /* Active tab text color */
+    font-weight: bold;
+  }
+  
+  .tabs .active-tab:hover {
+    background-color: #e74c3c;
+  }
+  
+/* Add this to your CSS file */
+.event-tooltip {
+  position: absolute;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  padding: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  display: none;
+}
+
+.event-hover {
+  position: relative;
+}
+
+.event-hover:hover .event-tooltip {
+  display: block;
+}

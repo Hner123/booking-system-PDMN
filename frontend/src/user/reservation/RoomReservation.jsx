@@ -40,11 +40,12 @@ const RoomReservation = () => {
 
   const departmentColors = {
     "Philippine Dragon Media Network": "#dc3545",
+    "GDS Capital": "#fd0645",
     "GDS Travel Agency": "#fccd32",
     "FEILONG Legal": "#d8a330",
     STARLIGHT: "#f0f000",
-    "BIG VISION PRODS.": "#28a745",
-    SuperNova: "#272727",
+    "Dragon AI": "#28a745",
+    SuperNova: "#F9A380",
     ClearPath: "#2a8fc7",
     Palawan: "#dc3545",
     Boracay: '#2a8fc7',
