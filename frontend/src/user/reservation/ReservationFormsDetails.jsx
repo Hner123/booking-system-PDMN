@@ -326,6 +326,7 @@ const ReservationFormsDetails = () => {
         if (updatedReserve.confirmation) {
           if (attendees.length > 0) {
             try {
+              const token = localStorage.getItem("authToken");
               const headers = {
                 Authorization: `Bearer ${token}`,
                 "Content-Type": "application/json",

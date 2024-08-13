@@ -224,7 +224,6 @@ const RoomReservation = () => {
     try {
       const reserveId = localStorage.getItem("reserveToken");
       const token = localStorage.getItem("authToken");
-
       const headers = {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
@@ -256,7 +255,6 @@ const RoomReservation = () => {
     try {
       const reserveId = localStorage.getItem("reserveToken");
       const token = localStorage.getItem("authToken");
-
       const headers = {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",

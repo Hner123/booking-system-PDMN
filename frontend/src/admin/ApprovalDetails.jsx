@@ -138,7 +138,11 @@ const ApprovalDetails = ({ sidebarOpen }) => {
             _id: selectedBooking._id,
             email: selectedBooking.user.email
           };
-
+          const token = localStorage.getItem("adminToken");
+          const headers = {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          };
           const emailResponse = await axios.post(
             `https://booking-system-ge1i.onrender.com/api/email/approval`,
             emailData,
@@ -159,6 +163,11 @@ const ApprovalDetails = ({ sidebarOpen }) => {
             };
 
             try {
+              const token = localStorage.getItem("adminToken");
+              const headers = {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+              };
               const notifResponse = await axios.post(
                 `https://booking-system-ge1i.onrender.com/api/notif/new`,
                 notifData,
@@ -167,6 +176,11 @@ const ApprovalDetails = ({ sidebarOpen }) => {
 
               if (notifResponse.status === 201) {
                 try {
+                  const token = localStorage.getItem("adminToken");
+                  const headers = {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                  };
                   const inviteResponse = await axios.post(
                     `https://booking-system-ge1i.onrender.com/api/email/invite/${selectedBooking._id}`,
                     { headers }
@@ -235,6 +249,11 @@ const ApprovalDetails = ({ sidebarOpen }) => {
             email: selectedBooking.user.email
           };
 
+          const token = localStorage.getItem("adminToken");
+          const headers = {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          };
           const emailResponse = await axios.post(
             `https://booking-system-ge1i.onrender.com/api/email/approval`,
             emailData,
@@ -255,6 +274,11 @@ const ApprovalDetails = ({ sidebarOpen }) => {
             };
 
             try {
+              const token = localStorage.getItem("adminToken");
+              const headers = {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+              };
               const notifResponse = await axios.post(
                 `https://booking-system-ge1i.onrender.com/api/notif/new`,
                 notifData,
