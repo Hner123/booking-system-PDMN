@@ -333,6 +333,7 @@ const ReservationFormsDetails = () => {
               };
               const inviteResponse = await axios.post(
                 `https://booking-system-ge1i.onrender.com/api/email/invite/${reserveId}`,
+                {},
                 { headers }
               );
   
@@ -403,6 +404,7 @@ const ReservationFormsDetails = () => {
                 };
                 const pendingResponse = await axios.post(
                   `https://booking-system-ge1i.onrender.com/api/email/pending/${reserveId}`,
+                  {},
                   { headers }
                 );
   
@@ -426,7 +428,6 @@ const ReservationFormsDetails = () => {
       setSubmitting(false); // Reset submitting state after the process is complete
     }
   };
-  
 
   const handleCancelTime = () => {
     setShowDiscardModal(true);

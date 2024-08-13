@@ -183,6 +183,7 @@ const ApprovalDetails = ({ sidebarOpen }) => {
                   };
                   const inviteResponse = await axios.post(
                     `https://booking-system-ge1i.onrender.com/api/email/invite/${selectedBooking._id}`,
+                    {},
                     { headers }
                   );
       

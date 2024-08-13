@@ -70,7 +70,10 @@ const ForgotPass = () => {
       if (email.trim() === '') {
         toast.error('Please enter your email address.');
       } else {
-        const response = await axios.post('https://booking-system-ge1i.onrender.com/api/email/forgotpass', { email });
+        const response = await axios.post(
+          'https://booking-system-ge1i.onrender.com/api/email/forgotpass', 
+          { email }
+        );
         const { message, passToken, passId } = response.data;
         localStorage.setItem('resetToken', passToken);
         localStorage.setItem('resetId', passId);
