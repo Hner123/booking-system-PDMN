@@ -900,11 +900,3 @@ button[type="redirect"]:hover {
   z-index: 1000;
   display: none;
 }
-
-.event-hover {
-  position: relative;
-}
-
-.event-hover:hover .event-tooltip {
-  display: block;
-}

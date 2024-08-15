@@ -31,12 +31,18 @@ const EventModal = ({ event, onClose }) => (
         <div className="left-content">
           <p><strong>Booked by:</strong> {event.user}</p>
           <p><strong>Department:</strong> {event.department}</p>
-          <p><strong>Attendees:</strong> {event.attendees?.length > 0 ? event.attendees.join(", ") : "No attendees listed"}</p>
+          <p>
+            <strong>Attendees:</strong> 
+            {event.attendees?.length > 0 ? event.attendees.join(", ") : "No attendees listed"}
+          </p>
         </div>
         <div className="right-content">
           <h3>{event.room}</h3>
           <p><strong>Date:</strong> {moment(event.start).format("MMMM D, YYYY")}</p>
-          <p><strong>Time:</strong> {moment(event.start).format("h:mm A")} - {moment(event.end).format("h:mm A")}</p>
+          <p>
+            <strong>Time:</strong> 
+            {moment(event.start).format("h:mm A")} - {moment(event.end).format("h:mm A")}
+          </p>
           <p><strong>Status:</strong> {event.status}</p>
         </div>
       </div>
@@ -74,12 +80,20 @@ const RoomReservation = () => {
   useEffect(() => {
     const fetchBookData = async () => {
       setState((prevState) => ({ ...prevState, loading: true }));
+
       try {
         const token = localStorage.getItem("adminToken");
         if (!token) throw new Error("No auth token found in localStorage.");
 
-        const headers = { Authorization: `Bearer ${token}`, "Content-Type": "application/json" };
-        const response = await axios.get("https://booking-system-ge1i.onrender.com/api/book/", { headers });
+        const headers = {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        };
+
+        const response = await axios.get(
+          "https://booking-system-ge1i.onrender.com/api/book/",
+          { headers }
+        );
 
         if (response.status === 200) {
           const fetchedEvents = response.data
@@ -100,7 +114,11 @@ const RoomReservation = () => {
           setState((prevState) => ({
             ...prevState,
             origData: fetchedEvents,
-            events: fetchedEvents.filter(event => event.room === state.roomName || state.roomName === "Palawan and Boracay"),
+            events: fetchedEvents.filter(
+              (event) =>
+                event.room === state.roomName ||
+                state.roomName === "Palawan and Boracay"
+            ),
             loading: false,
           }));
         } else {
@@ -121,13 +139,18 @@ const RoomReservation = () => {
       ...prevState,
       roomName: room,
       activeTab: room,
-      events: prevState.origData.filter(event => event.room === room || room === "Palawan and Boracay"),
+      events: prevState.origData.filter(
+        (event) => event.room === room || room === "Palawan and Boracay"
+      ),
     }));
   };
 
-  
   return (
-    <div className={`room-reservation admin-page ${state.sidebarOpen ? "sidebar-open" : "sidebar-closed"}`}>
+    <div
+      className={`room-reservation admin-page ${
+        state.sidebarOpen ? "sidebar-open" : "sidebar-closed"
+      }`}
+    >
       <Sidebar sidebarOpen={state.sidebarOpen} />
       <div className="admin-content">
         <ToastContainer />
@@ -142,39 +165,99 @@ const RoomReservation = () => {
                 events={state.events}
                 startAccessor="start"
                 endAccessor="end"
-                style={{ height: "100%" }}
+                style={{ height: state.activeTab === "Palawan and Boracay" ? "1100px" : "850px" }}
                 defaultView={Views.WEEK}
                 views={[Views.WEEK, Views.DAY, Views.AGENDA]}
                 min={new Date(2024, 7, 1, 7, 0)} // Limits the start time to 7 AM
                 max={new Date(2024, 7, 1, 20, 0)} // Limits the end time to 8 PM
-                eventPropGetter={(event) => ({
-                  className: 'event-hover', // Apply hover class
-                  style: {
-                    backgroundColor: departmentColors[event.department] || "#45813",
-                    color: "#fff",
-                    cursor: "pointer",
-                    transition: "background-color 0.3s",
-                  },
-                })}
+                eventPropGetter={(event) => {
+                  let backgroundColor;
+                  let borderStyle = "";
+                  let width = "auto"; // Default width
+                
+                  if (state.activeTab === "Palawan and Boracay") {
+                    if (event.room === "Palawan") {
+                      backgroundColor = "#dc3545";
+                      borderStyle = "3px solid #dc3545";
+                      width = "50%"; // Set specific width for Palawan
+                    } else if (event.room === "Boracay") {
+                      backgroundColor = "#d8a330";
+                      borderStyle = "3px solid #d8a330";
+                      width = "50%"; // Set specific width for Boracay
+                    } else {
+                      backgroundColor = "purple"; // Default for other rooms
+                      width = "100%"; // Set default width for other rooms
+                    }
+                  } else {
+                    backgroundColor = departmentColors[event.department] || "#45813";
+                    width = "auto"; // Default width for other tabs
+                  }
+                
+                  return {
+                    className: "event-hover",
+                    style: {
+                      backgroundColor,
+                      color: "#fff",
+                      cursor: "pointer",
+                      transition: "background-color 0.3s",
+                      border: borderStyle,
+                      borderRadius: "5px",
+                      width, // Apply the width
+                    },
+                  };
+                }}
                 components={{
                   event: ({ event }) => (
                     <div
-                      onClick={() => setState((prevState) => ({ ...prevState, expandedEvent: event }))}
-                      className="event-hover" // Apply hover class
+                      onClick={() =>
+                        setState((prevState) => ({
+                          ...prevState,
+                          expandedEvent: event,
+                        }))
+                      }
                       style={{
                         cursor: "pointer",
                         padding: "5px",
-                        backgroundColor: departmentColors[event.department] || "#45813",
+                        backgroundColor:
+                          state.activeTab === "Palawan and Boracay"
+                            ? event.room === "Palawan"
+                              ? "#dc3545"
+                              : event.room === "Boracay"
+                              ? "#d8a330"
+                              : "purple" // Default for other rooms
+                            : departmentColors[event.department] || "#45813",
                         color: "#fff",
                         display: "flex",
+                        flexDirection: "column",
                         alignItems: "center",
                         justifyContent: "center",
                         height: "100%",
-                        overflow: "hidden",
-                        borderRadius: "4px",
+                        position: "relative",
+                        width: "100%", // Ensure width is always 100%
                       }}
                     >
                       <strong>{event.title}</strong>
+                      {/* {state.activeTab === "Palawan and Boracay" && (
+                        <span
+                          style={{
+                            fontSize: "0.75em",
+                            position: "absolute",
+                            bottom: "5px",
+                            right: "5px",
+                            backgroundColor: "#fff",
+                            color:
+                              event.room === "Palawan"
+                                ? "blue"
+                                : event.room === "Boracay"
+                                ? "green"
+                                : "purple", // Default for other rooms
+                            padding: "2px 5px",
+                            borderRadius: "3px",
+                          }}
+                        >
+                          {event.room}
+                        </span>
+                      )} */}
                     </div>
                   ),
                 }}
@@ -183,7 +266,12 @@ const RoomReservation = () => {
           </div>
         </div>
         {state.expandedEvent && (
-          <EventModal event={state.expandedEvent} onClose={() => setState((prevState) => ({ ...prevState, expandedEvent: null }))} />
+          <EventModal
+            event={state.expandedEvent}
+            onClose={() =>
+              setState((prevState) => ({ ...prevState, expandedEvent: null }))
+            }
+          />
         )}
       </div>
     </div>
