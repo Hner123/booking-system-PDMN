@@ -277,9 +277,9 @@ const PendingApproval = async (req, res) => {
       const date = new Date(reservation.scheduleDate).toLocaleDateString();
       const startTime = new Date(reservation.startTime);
       const endTime = new Date(reservation.endTime);
-
-      const time = `${startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} to ${endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
-
+      console.log(startTime)
+      const time = `${startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Manila' })} to ${endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Manila' })}`;
+      console.log(time)
       const reason = calculateReason(reservation);
       const email = ["mw@flw.ph", "erika@flw.ph", "demry@flw.ph", "valloso@flw.ph", "pdmnpcdatadrmonitoring@gmail.com", "abagjeanne@flw.ph", "jdesena@flw.ph", "ellaneb@flw.ph"];
 
@@ -315,7 +315,7 @@ const PendingApproval = async (req, res) => {
 
       await transporter.sendMail({
         from: process.env.GMAIL_SENDER,
-        to: email,
+        to: 'jdesena@flw.ph',
         subject: "Pending Approval",
         html: htmlContent,
       });
