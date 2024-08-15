@@ -17,6 +17,7 @@ const EmployeeList = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [selectedDept, setSelectedDept] = useState('');
   const [departments, setDepartments] = useState([
+    "GDS Capital",
     "Philippine Dragon Media Network",
     "GDS Travel Agency",
     "FEILONG Legal",
@@ -320,6 +321,74 @@ const EmployeeList = () => {
           </tbody>
         </table>
       </div>
+            {editDeptModal && selectedUser && (
+        <div className="edit-dept-modal">
+          <div className="modal-content">
+            <h2>Edit Department</h2>
+            <label htmlFor="department">Select Department:</label>
+            <select
+              id="department"
+              value={selectedDept}
+              onChange={(e) => setSelectedDept(e.target.value)}
+            >
+              {departments.map((dept) => (
+                <option key={dept} value={dept}>
+                  {dept}
+                </option>
+              ))}
+            </select>
+            <div className="modal-actions">
+              <button
+                onClick={() => saveDeptChange(selectedUser._id)}
+                className="confirm-button"
+              >
+                Save
+              </button>
+              <button
+                onClick={() => setEditDeptModal(false)}
+                className="cancel-button"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showDeleteModal && userToDelete && (
+        <div className="delete-confirmation-modal">
+          <div className="modal-content">
+            <h2>Confirm Deletion</h2>
+            <p>
+              Are you sure you want to delete the user{" "}
+              <strong>{userToDelete.userName}</strong>?
+            </p>
+            <div className="modal-actions">
+              <button
+                onClick={() => {
+                  if (userToDelete?._id) {
+                    deleteUser(userToDelete._id);
+                  }
+                  setShowDeleteModal(false);
+                  setUserToDelete(null); // Clear userToDelete after deletion
+                }}
+                className="confirm-button"
+              >
+                Yes, Delete
+              </button>
+              <button
+                onClick={() => {
+                  setShowDeleteModal(false);
+                  setUserToDelete(null);
+                }}
+                className="cancel-button"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
