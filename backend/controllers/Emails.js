@@ -277,9 +277,7 @@ const PendingApproval = async (req, res) => {
       const date = new Date(reservation.scheduleDate).toLocaleDateString();
       const startTime = new Date(reservation.startTime);
       const endTime = new Date(reservation.endTime);
-      console.log(startTime)
       const time = `${startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Manila' })} to ${endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Manila' })}`;
-      console.log(time)
       const reason = calculateReason(reservation);
       const email = ["mw@flw.ph", "erika@flw.ph", "demry@flw.ph", "valloso@flw.ph", "pdmnpcdatadrmonitoring@gmail.com", "abagjeanne@flw.ph", "jdesena@flw.ph", "ellaneb@flw.ph"];
 
@@ -315,7 +313,7 @@ const PendingApproval = async (req, res) => {
 
       await transporter.sendMail({
         from: process.env.GMAIL_SENDER,
-        to: 'jdesena@flw.ph',
+        to: email,
         subject: "Pending Approval",
         html: htmlContent,
       });
@@ -386,7 +384,7 @@ const SendInvite = async (req, res) => {
     const room = reservation.roomName;
     const date = new Date(reservation.scheduleDate).toLocaleDateString();
     const companyLogoUrl = "https://drive.google.com/uc?id=108JoeqEjPR7HKfbNjXdV30wvvy9oDk_B";
-    const time = `${new Date(reservation.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} to ${new Date(reservation.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+    const time = `${new Date(reservation.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Manila' })} to ${new Date(reservation.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Manila' })}`;
 
     for (const { name, email } of validEmails) {
       let htmlContent = `
