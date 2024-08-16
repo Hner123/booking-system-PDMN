@@ -268,7 +268,7 @@ const RoomReservation = () => {
                   <p>Philippine Dragon Media Network</p>
                 </div>
                 <div className="legend-item">
-                  <span className="gdsc"></span>
+                  <span className="cptl"></span>
                   <p>GDS Capital</p>
                 </div>
                 <div className="legend-item">
