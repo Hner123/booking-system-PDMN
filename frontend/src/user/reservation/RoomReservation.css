@@ -202,13 +202,14 @@
     margin-right: 8px;
   }
   
-  .legend-item span.strlgt { background-color: #fbff00; }
-  .legend-item span.gds { background-color: #fccd32; }
-  .legend-item span.pdmn { background-color: #dc3545; }
-  .legend-item span.bvp { background-color: #28a745; }
-  .legend-item span.lgl { background-color: #d8a330; }
-  .legend-item span.sn { background-color: #272727; }
-  .legend-item span.cp { background-color: #35bbdc; }
+  .legend-item span.strlgt { background-color: #F7DC6F; }
+  .legend-item span.gds { background-color: #F39C12; }
+  .legend-item span.pdmn { background-color: #C0392B; }
+  .legend-item span.cptl { background-color: #E74C3C; }
+  .legend-item span.lgl { background-color: #D4AC0D; }
+  .legend-item span.sn { background-color: #E59866; }
+  .legend-item span.cp { background-color: #2874A6; }
+  .legend-item span.ai { background-color: #1E8449; }
   
   .legend-item p {
     margin: 0;

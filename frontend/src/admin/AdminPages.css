@@ -861,7 +861,7 @@ button[type="redirect"]:hover {
   .tabs {
     display: flex;
     justify-content: start;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     gap: 10px;
   }
   
@@ -900,3 +900,47 @@ button[type="redirect"]:hover {
   z-index: 1000;
   display: none;
 }
+
+
+/* LEGEND */
+.dpt-legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: left;
+  margin: auto;
+  flex-direction: row;
+}
+.dpt-legend h3 {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 0;
+}
+
+.dpt-legend-item {
+  display: flex;
+  align-items: center;
+  margin: 10px;
+}
+
+.dpt-legend-item span {
+  display: inline-block;
+  width: 20px; /* Adjust as needed */
+  height: 20px; /* Adjust as needed */
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.dpt-legend-item span.strlgt { background-color: #F7DC6F; }
+.dpt-legend-item span.gds { background-color: #F39C12; }
+.dpt-legend-item span.pdmn { background-color: #C0392B; }
+.dpt-legend-item span.cptl { background-color: #E74C3C; }
+.dpt-legend-item span.lgl { background-color: #D4AC0D; }
+.dpt-legend-item span.sn { background-color: #E59866; }
+.dpt-legend-item span.cp { background-color: #2874A6; }
+.dpt-legend-item span.ai { background-color: #1E8449; }
+
+.dpt-legend-item p {
+  margin: 0;
+}
+

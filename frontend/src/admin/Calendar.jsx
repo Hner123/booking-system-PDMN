@@ -67,14 +67,14 @@ const RoomReservation = () => {
   });
 
   const departmentColors = {
-    "Philippine Dragon Media Network": "#dc3545",
-    "GDS Capital": "#fd0645",
-    "GDS Travel Agency": "#fccd32",
-    "FEILONG Legal": "#d8a330",
-    STARLIGHT: "#f0f000",
-    "Dragon AI": "#28a745",
-    SuperNova: "#F9A380",
-    ClearPath: "#2a8fc7",
+    "Philippine Dragon Media Network": "#C0392B",
+    "GDS Capital": "#E74C3C",
+    "GDS Travel Agency": "#F39C12",
+    "FEILONG Legal": "#D4AC0D",
+    STARLIGHT: "#F7DC6F",
+    "Dragon AI": "#1E8449",
+    SuperNova: "#E59866",
+    ClearPath: "#2874A6",
   };
 
   useEffect(() => {
@@ -165,32 +165,31 @@ const RoomReservation = () => {
                 events={state.events}
                 startAccessor="start"
                 endAccessor="end"
-                style={{ height: state.activeTab === "Palawan and Boracay" ? "1100px" : "850px" }}
+                style={{
+                  height:
+                    state.activeTab === "Palawan and Boracay"
+                      ? "1000px"
+                      : "815px",
+                }}
                 defaultView={Views.WEEK}
                 views={[Views.WEEK, Views.DAY, Views.AGENDA]}
                 min={new Date(2024, 7, 1, 7, 0)} // Limits the start time to 7 AM
                 max={new Date(2024, 7, 1, 20, 0)} // Limits the end time to 8 PM
                 eventPropGetter={(event) => {
                   let backgroundColor;
-                  let borderStyle = "";
-                  let width = "auto"; // Default width
                 
                   if (state.activeTab === "Palawan and Boracay") {
                     if (event.room === "Palawan") {
-                      backgroundColor = "#dc3545";
-                      borderStyle = "3px solid #dc3545";
-                      width = "50%"; // Set specific width for Palawan
+                      backgroundColor = "#C0392B"; // Red color for Palawan
                     } else if (event.room === "Boracay") {
-                      backgroundColor = "#d8a330";
-                      borderStyle = "3px solid #d8a330";
-                      width = "50%"; // Set specific width for Boracay
+                      backgroundColor = "#F39C12"; // Yellow color for Boracay
+                    } else if (event.room === "Palawan and Boracay") {
+                      backgroundColor = "#2874A6"; // Blue color for combined room
                     } else {
-                      backgroundColor = "purple"; // Default for other rooms
-                      width = "100%"; // Set default width for other rooms
+                      backgroundColor = "purple"; // Default color for other rooms
                     }
                   } else {
-                    backgroundColor = departmentColors[event.department] || "#45813";
-                    width = "auto"; // Default width for other tabs
+                    backgroundColor = departmentColors[event.department] || "#45813"; // Default department color
                   }
                 
                   return {
@@ -200,12 +199,11 @@ const RoomReservation = () => {
                       color: "#fff",
                       cursor: "pointer",
                       transition: "background-color 0.3s",
-                      border: borderStyle,
                       borderRadius: "5px",
-                      width, // Apply the width
                     },
                   };
                 }}
+                
                 components={{
                   event: ({ event }) => (
                     <div
@@ -221,11 +219,13 @@ const RoomReservation = () => {
                         backgroundColor:
                           state.activeTab === "Palawan and Boracay"
                             ? event.room === "Palawan"
-                              ? "#dc3545"
+                              ? "#C0392B"
                               : event.room === "Boracay"
-                              ? "#d8a330"
-                              : "purple" // Default for other rooms
-                            : departmentColors[event.department] || "#45813",
+                              ? "#F39C12"
+                              : event.room === "Palawan and Boracay"
+                              ? "#2874A6" // Color for events where the room is "Palawan and Boracay"
+                              : "#E74C3C" // Fallback color in case none of the conditions match
+                            : departmentColors[event.department] || "#45813", // Default color for other tabs
                         color: "#fff",
                         display: "flex",
                         flexDirection: "column",
@@ -237,31 +237,65 @@ const RoomReservation = () => {
                       }}
                     >
                       <strong>{event.title}</strong>
-                      {/* {state.activeTab === "Palawan and Boracay" && (
-                        <span
-                          style={{
-                            fontSize: "0.75em",
-                            position: "absolute",
-                            bottom: "5px",
-                            right: "5px",
-                            backgroundColor: "#fff",
-                            color:
-                              event.room === "Palawan"
-                                ? "blue"
-                                : event.room === "Boracay"
-                                ? "green"
-                                : "purple", // Default for other rooms
-                            padding: "2px 5px",
-                            borderRadius: "3px",
-                          }}
-                        >
-                          {event.room}
-                        </span>
-                      )} */}
                     </div>
                   ),
                 }}
               />
+            )}
+          </div>
+
+          {/* Conditionally render the legend based on activeTab */}
+          <div className="dpt-legend">
+            {state.activeTab === "Palawan and Boracay" ? (
+              <>
+                <div className="legend-item">
+                  <span className="pdmn"></span>
+                  <p>Palawan</p>
+                </div>
+                <div className="legend-item">
+                  <span className="gds"></span>
+                  <p>Boracay</p>
+                </div>
+                <div className="legend-item">
+                  <span className="cp"></span>
+                  <p>Palawan and Boracay</p>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="legend-item">
+                  <span className="pdmn"></span>
+                  <p>Philippine Dragon Media Network</p>
+                </div>
+                <div className="legend-item">
+                  <span className="gdsc"></span>
+                  <p>GDS Capital</p>
+                </div>
+                <div className="legend-item">
+                  <span className="gds"></span>
+                  <p>GDS Travel Agency</p>
+                </div>
+                <div className="legend-item">
+                  <span className="ai"></span>
+                  <p>DragonAi</p>
+                </div>
+                <div className="legend-item">
+                  <span className="lgl"></span>
+                  <p>FEILONG Legal</p>
+                </div>
+                <div className="legend-item">
+                  <span className="strlgt"></span>
+                  <p>STARLIGHT</p>
+                </div>
+                <div className="legend-item">
+                  <span className="sn"></span>
+                  <p>SuperNova</p>
+                </div>
+                <div className="legend-item">
+                  <span className="cp"></span>
+                  <p>ClearPath</p>
+                </div>
+              </>
             )}
           </div>
         </div>

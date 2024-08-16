@@ -39,18 +39,19 @@ const RoomReservation = () => {
 
 
   const departmentColors = {
-    "Philippine Dragon Media Network": "#dc3545",
-    "GDS Capital": "#fd0645",
-    "GDS Travel Agency": "#fccd32",
-    "FEILONG Legal": "#d8a330",
-    STARLIGHT: "#f0f000",
-    "Dragon AI": "#28a745",
-    SuperNova: "#F9A380",
-    ClearPath: "#2a8fc7",
-    Palawan: "#dc3545",
-    Boracay: '#2a8fc7',
-    'Palawan and Boracay': '#fccd32',
-  };
+    "Philippine Dragon Media Network": "#C0392B",
+    "GDS Capital": "#E74C3C",
+    "GDS Travel Agency": "#F39C12",
+    "FEILONG Legal": "#D4AC0D",
+    STARLIGHT: "#F7DC6F",
+    "Dragon AI": "#1E8449",
+    SuperNova: "#E59866",
+    ClearPath: "#2874A6",
+    Palawan: "#C0392B", 
+    Boracay: "#2874A6", 
+    'Palawan and Boracay': '#F39C12',
+};
+
 
   useEffect(() => {
     const fetchOrigData = async () => {
@@ -441,12 +442,16 @@ const RoomReservation = () => {
                 <p>Philippine Dragon Media Network</p>
               </div>
               <div className="legend-item">
-                <span className="bvp"></span>
+                <span className="cptl"></span>
                 <p>GDS Capital</p>
               </div>
               <div className="legend-item">
                 <span className="gds"></span>
                 <p>GDS Travel Agency</p>
+              </div>
+              <div className="legend-item">
+                <span className="ai"></span>
+                <p>DragonAi</p>
               </div>
               <div className="legend-item">
                 <span className="lgl"></span>
