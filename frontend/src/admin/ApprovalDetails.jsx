@@ -352,7 +352,7 @@ const ApprovalDetails = ({ sidebarOpen }) => {
                 })}
               </p>
               <p>
-              <strong>Reserved By: </strong>{booking.user.firstName} {booking.user.surName}
+              <strong>Reserved By: </strong>{booking.user ? `${booking.user.firstName} ${booking.user.surName}` : "Unknown"}
               </p>
               {booking.attendees && booking.attendees.length > 0 && (
                 <p><strong>Members: </strong>{booking.attendees.join(", ")}</p>
