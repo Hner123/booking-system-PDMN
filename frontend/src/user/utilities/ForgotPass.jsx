@@ -51,9 +51,13 @@ const ForgotPass = () => {
         'https://booking-system-ge1i.onrender.com/api/email/forgotpass',
         { email }
       );
-      const { message } = response.data;
-      toast.success(message);
-      setHasSentEmail(true);
+
+      if (response.status === 201) {
+        const { message } = response.data;
+        toast.success(message);
+        setHasSentEmail(true);
+      }
+      
     } catch (error) {
       if (error.response && error.response.status === 404) {
         toast.error('No user found.');
@@ -74,12 +78,16 @@ const ForgotPass = () => {
           'https://booking-system-ge1i.onrender.com/api/email/forgotpass', 
           { email }
         );
-        const { message, passToken, passId } = response.data;
-        localStorage.setItem('resetToken', passToken);
-        localStorage.setItem('resetId', passId);
-        toast.success(message);
-        setIsButtonDisabled(true);
-        startTimer();
+
+        if (response.status === 201) {
+          const { message, passToken, passId } = response.data;
+          localStorage.setItem('resetToken', passToken);
+          localStorage.setItem('resetId', passId);
+          toast.success(message);
+          setIsButtonDisabled(true);
+          startTimer();
+        }
+
       }
     } catch (error) {
       if (error.response && error.response.status === 404) {
