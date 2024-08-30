@@ -52,7 +52,7 @@ const ApprovalDetails = ({ sidebarOpen }) => {
     const startTime = new Date(booking.startTime);
     const endTime = new Date(booking.endTime);
     const duration = (endTime - startTime) / (1000 * 60 * 60); // Duration in hours
-  
+
     if (roomName === "Palawan and Boracay") {
       if (duration > 1 && booking.caps.pax === "8-More") {
         return "Reservation is for more than 1 hour and requires both rooms.";
@@ -109,21 +109,21 @@ const ApprovalDetails = ({ sidebarOpen }) => {
     e.preventDefault();
     setLoading(true);
 
-    const updatedReserve = {
-      ...selectedBooking,
-      confirmation: true,
-      approval: {
-        archive: true,
-        status: "Approved",
-        reason: "",
-      },
-    };
-
     try {
       const token = localStorage.getItem("adminToken");
       const headers = {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
+      };
+
+      const updatedReserve = {
+        ...selectedBooking,
+        confirmation: true,
+        approval: {
+          archive: true,
+          status: "Approved",
+          reason: "",
+        },
       };
 
       const updateResponse = await axios.patch(
@@ -134,15 +134,17 @@ const ApprovalDetails = ({ sidebarOpen }) => {
 
       if (updateResponse.status === 200) {
         try {
-          const emailData = {
-            _id: selectedBooking._id,
-            email: selectedBooking.user.email
-          };
           const token = localStorage.getItem("adminToken");
           const headers = {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           };
+
+          const emailData = {
+            _id: selectedBooking._id,
+            email: selectedBooking.user.email
+          };
+
           const emailResponse = await axios.post(
             `https://booking-system-ge1i.onrender.com/api/email/approval`,
             emailData,
@@ -150,24 +152,25 @@ const ApprovalDetails = ({ sidebarOpen }) => {
           );
 
           if (emailResponse.status === 201) {
-            const date = new Date(updateResponse.data.user.scheduleDate).toLocaleDateString();
-            const messageContent = `Your reservation ${updateResponse.data.title} on ${date} has been approved`;
-            const notifData = {
-              booking: updateResponse.data._id,
-              message: messageContent,
-              sender: "66861570dd3fc08ab2a6557d",
-              senderType: "admin",
-              receiver: updateResponse.data.user._id,
-              receiverType: "user",
-              createdAt: new Date().toISOString(),
-            };
-
             try {
               const token = localStorage.getItem("adminToken");
               const headers = {
                 Authorization: `Bearer ${token}`,
                 "Content-Type": "application/json",
               };
+
+              const date = new Date(updateResponse.data.scheduleDate).toLocaleDateString();
+              const messageContent = `Your reservation <strong>${updateResponse.data.title}</strong> on <strong>${date}</strong> has been approved`;
+              const notifData = {
+                booking: updateResponse.data._id,
+                message: messageContent,
+                sender: "66861570dd3fc08ab2a6557d",
+                senderType: "admin",
+                receiver: updateResponse.data.user._id,
+                receiverType: "user",
+                createdAt: new Date().toISOString(),
+              };
+
               const notifResponse = await axios.post(
                 `https://booking-system-ge1i.onrender.com/api/notif/new`,
                 notifData,
@@ -181,16 +184,18 @@ const ApprovalDetails = ({ sidebarOpen }) => {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "application/json",
                   };
+
                   const inviteResponse = await axios.post(
                     `https://booking-system-ge1i.onrender.com/api/email/invite/${selectedBooking._id}`,
                     {},
                     { headers }
                   );
-      
+
                   if (inviteResponse.status === 201) {
                     setBookings(bookings.filter(booking => booking._id !== selectedBooking._id));
-                    setAcceptModal(false);
+                    // setAcceptModal(false);
                   }
+
                 } catch (error) {
                   // console.error("Error sending invites:", error);
                   toast.error("Unexpected error occured. Please try again later.");
@@ -219,22 +224,21 @@ const ApprovalDetails = ({ sidebarOpen }) => {
       toast.error("Please state your reason.");
       return;
     }
-
-    const updatedReserve = {
-      ...selectedBooking,
-      confirmation: false,
-      approval: {
-        archive: true,
-        status: "Declined",
-        reason: formData.approval.reason,
-      },
-    };
-
     try {
       const token = localStorage.getItem("adminToken");
       const headers = {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
+      };
+
+      const updatedReserve = {
+        ...selectedBooking,
+        confirmation: false,
+        approval: {
+          archive: true,
+          status: "Declined",
+          reason: formData.approval.reason,
+        },
       };
 
       const updateResponse = await axios.patch(
@@ -245,16 +249,17 @@ const ApprovalDetails = ({ sidebarOpen }) => {
 
       if (updateResponse.status === 200) {
         try {
-          const emailData = {
-            _id: selectedBooking._id,
-            email: selectedBooking.user.email
-          };
-
           const token = localStorage.getItem("adminToken");
           const headers = {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           };
+
+          const emailData = {
+            _id: selectedBooking._id,
+            email: selectedBooking.user.email
+          };
+
           const emailResponse = await axios.post(
             `https://booking-system-ge1i.onrender.com/api/email/approval`,
             emailData,
@@ -280,6 +285,7 @@ const ApprovalDetails = ({ sidebarOpen }) => {
                 Authorization: `Bearer ${token}`,
                 "Content-Type": "application/json",
               };
+
               const notifResponse = await axios.post(
                 `https://booking-system-ge1i.onrender.com/api/notif/new`,
                 notifData,
@@ -314,15 +320,14 @@ const ApprovalDetails = ({ sidebarOpen }) => {
 
   return (
     <div
-      className={`reason-room-page ${
-        sidebarOpen ? "sidebar-open" : "sidebar-closed"
-      }`}
+      className={`reason-room-page ${sidebarOpen ? "sidebar-open" : "sidebar-closed"
+        }`}
     >
       <Sidebar sidebarOpen={sidebarOpen} />
-      
-        <h1 style={{marginBottom:'0'}}>{roomName} Approval Page</h1>
-        <p style={{margin:'0'}} className='note'><strong>Note: </strong>Bookings are sorted by priority, with the earliest booking displayed first, from left to right.</p>
-        <div className="reason-room-content">
+
+      <h1 style={{ marginBottom: '0' }}>{roomName} Approval Page</h1>
+      <p style={{ margin: '0' }} className='note'><strong>Note: </strong>Bookings are sorted by priority, with the earliest booking displayed first, from left to right.</p>
+      <div className="reason-room-content">
         {bookings.length === 0 ? (
           <p>No pending approvals.</p>
         ) : (

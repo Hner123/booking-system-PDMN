@@ -89,9 +89,6 @@ const Header = () => {
 
   useEffect(() => {
     fetchNotifications();
-    const intervalId = setInterval(fetchNotifications, 5000); // Auto-refresh every 5 seconds
-
-    return () => clearInterval(intervalId); // Clear the interval on component unmount
   }, []);
 
   useEffect(() => {
