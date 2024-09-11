@@ -7,6 +7,7 @@ import axios from "axios";
 import Sidebar from "../admin/Sidebar";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import WithAuthAdmin from "../auth/WithAuthAdmin";
 
 // Sub-components for better structure
 const Tabs = ({ activeTab, onTabClick }) => (
@@ -23,7 +24,7 @@ const Tabs = ({ activeTab, onTabClick }) => (
   </div>
 );
 
-const EventModal = ({ event, onClose }) => (
+const EventModal = ({ event, onClose, onDelete }) => (
   <div className="expanded-event-modal">
     <div className="expanded-event-content">
       <h2>{event.title}</h2>
@@ -32,19 +33,20 @@ const EventModal = ({ event, onClose }) => (
           <p><strong>Booked by:</strong> {event.user}</p>
           <p><strong>Department:</strong> {event.department}</p>
           <p>
-            <strong>Attendees:</strong> 
+            <strong>Attendees:</strong>
             {event.attendees?.length > 0 ? event.attendees.join(", ") : "No attendees listed"}
           </p>
           <button
-                onClick={() => setEditDeptModal(false)}
-                className="cancel-button"
-              >Delete</button>
+            onClick={() => onDelete(event.id)}
+            className="cancel-button">
+            Delete
+          </button>
         </div>
         <div className="right-content">
           <h3>{event.room}</h3>
           <p><strong>Date:</strong> {moment(event.start).format("MMMM D, YYYY")}</p>
           <p>
-            <strong>Time:</strong> 
+            <strong>Time:</strong>
             {moment(event.start).format("h:mm A")} - {moment(event.end).format("h:mm A")}
           </p>
           <p><strong>Status:</strong> {event.status}</p>
@@ -138,6 +140,38 @@ const RoomReservation = () => {
     fetchBookData();
   }, [state.roomName]);
 
+  const handleDeleteEvent = async (eventId) => {
+    try {
+      const token = localStorage.getItem("adminToken");
+      if (!token) throw new Error("No auth token found in localStorage.");
+
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      };
+
+      const response = await axios.delete(
+        `https://booking-system-ge1i.onrender.com/api/book/delete/${eventId}`,
+        { headers }
+      );
+
+      if (response.status === 200) {
+        // Remove the deleted event from the state
+        setState((prevState) => ({
+          ...prevState,
+          events: prevState.events.filter((event) => event.id !== eventId),
+          expandedEvent: null, // Close the modal after deletion
+        }));
+        toast.success("Event deleted successfully.");
+      } else {
+        throw new Error("Failed to delete event.");
+      }
+    } catch (error) {
+      console.error("Error deleting event:", error);
+      toast.error("Failed to delete event. Please try again later.");
+    }
+  };
+
   const handleTabClick = (room) => {
     setState((prevState) => ({
       ...prevState,
@@ -151,9 +185,8 @@ const RoomReservation = () => {
 
   return (
     <div
-      className={`room-reservation admin-page ${
-        state.sidebarOpen ? "sidebar-open" : "sidebar-closed"
-      }`}
+      className={`room-reservation admin-page ${state.sidebarOpen ? "sidebar-open" : "sidebar-closed"
+        }`}
     >
       <Sidebar sidebarOpen={state.sidebarOpen} />
       <div className="admin-content">
@@ -181,7 +214,7 @@ const RoomReservation = () => {
                 max={new Date(2024, 7, 1, 20, 0)} // Limits the end time to 8 PM
                 eventPropGetter={(event) => {
                   let backgroundColor;
-                
+
                   if (state.activeTab === "Palawan and Boracay") {
                     if (event.room === "Palawan") {
                       backgroundColor = "#C0392B"; // Red color for Palawan
@@ -195,7 +228,7 @@ const RoomReservation = () => {
                   } else {
                     backgroundColor = departmentColors[event.department] || "#45813"; // Default department color
                   }
-                
+
                   return {
                     className: "event-hover",
                     style: {
@@ -207,7 +240,7 @@ const RoomReservation = () => {
                     },
                   };
                 }}
-                
+
                 components={{
                   event: ({ event }) => (
                     <div
@@ -225,10 +258,10 @@ const RoomReservation = () => {
                             ? event.room === "Palawan"
                               ? "#C0392B"
                               : event.room === "Boracay"
-                              ? "#F39C12"
-                              : event.room === "Palawan and Boracay"
-                              ? "#2874A6" // Color for events where the room is "Palawan and Boracay"
-                              : "#E74C3C" // Fallback color in case none of the conditions match
+                                ? "#F39C12"
+                                : event.room === "Palawan and Boracay"
+                                  ? "#2874A6" // Color for events where the room is "Palawan and Boracay"
+                                  : "#E74C3C" // Fallback color in case none of the conditions match
                             : departmentColors[event.department] || "#45813", // Default color for other tabs
                         color: "#fff",
                         display: "flex",
@@ -306,9 +339,8 @@ const RoomReservation = () => {
         {state.expandedEvent && (
           <EventModal
             event={state.expandedEvent}
-            onClose={() =>
-              setState((prevState) => ({ ...prevState, expandedEvent: null }))
-            }
+            onClose={() => setState((prevState) => ({ ...prevState, expandedEvent: null }))}
+            onDelete={handleDeleteEvent} // Pass the delete function to the modal
           />
         )}
       </div>
@@ -316,4 +348,4 @@ const RoomReservation = () => {
   );
 };
 
-export default RoomReservation;
+export default WithAuthAdmin(RoomReservation);
