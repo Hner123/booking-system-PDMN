@@ -35,6 +35,10 @@ const EventModal = ({ event, onClose }) => (
             <strong>Attendees:</strong> 
             {event.attendees?.length > 0 ? event.attendees.join(", ") : "No attendees listed"}
           </p>
+          <button
+                onClick={() => setEditDeptModal(false)}
+                className="cancel-button"
+              >Delete</button>
         </div>
         <div className="right-content">
           <h3>{event.room}</h3>
