@@ -158,6 +158,16 @@
   margin-bottom: 20px;
 }
 
+.availability2 {
+  font-size: 65px;
+  color: #ffff;
+  font-weight: bold;
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  margin-bottom: 20px;
+  text-align: start;
+}
+
 .availability-info {
   font-size: 26px;
   color: #ffff;

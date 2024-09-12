@@ -170,7 +170,7 @@ const MeetingStatus = ({ currentMeeting, availableUntil }) => (
   <div className={`meeting-status-container ${currentMeeting ? 'in-progress' : 'available'}`}>
     {currentMeeting ? (
       <>
-        <h2 className="availability">Meeting in Progress</h2>
+        <h2 className="availability2">Meeting in Progress</h2>
         <MeetingDetails meeting={currentMeeting} />
       </>
     ) : (
