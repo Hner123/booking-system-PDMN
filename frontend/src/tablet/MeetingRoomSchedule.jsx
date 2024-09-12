@@ -219,6 +219,7 @@ const UpcomingMeetings = ({ bookings, currentTime }) => {
         )}
       </div>
       <div className="qr-container">
+        <p className="item-time">Book now:</p>
         <img src={qrImage} alt="QR Code" />
       </div>
     </div>
