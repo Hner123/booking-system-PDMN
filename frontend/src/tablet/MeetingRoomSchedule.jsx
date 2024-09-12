@@ -25,7 +25,7 @@ const useBooking = () => {
   // Fetch bookings from API
   const fetchBookings = useCallback(async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/book/`, {
+      const response = await axios.get(`https://booking-system-ge1i.onrender.com/api/book/`, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -113,10 +113,11 @@ const MeetingRoomSchedule = () => {
 
   // Container CSS class based on current state
   const containerClass = !isRoomSelected
-    ? "meeting-room-schedule default-state"
-    : currentMeeting
-    ? "meeting-room-schedule in-use"
-    : "meeting-room-schedule available";
+  ? "meeting-room-schedule default-state"
+  : currentMeeting
+  ? "meeting-room-schedule in-progress"
+  : "meeting-room-schedule available";
+
 
   return (
     <div className={containerClass}>
@@ -165,14 +166,12 @@ const RoomInfo = ({ currentMeeting, selectedRoom, currentTime, bookings }) => {
   );
 };
 
-// Meeting status component
 const MeetingStatus = ({ currentMeeting, availableUntil }) => (
-  <div className="meeting-status-container">
+  <div className={`meeting-status-container ${currentMeeting ? 'in-progress' : 'available'}`}>
     {currentMeeting ? (
       <>
         <h2 className="availability">Meeting in Progress</h2>
         <MeetingDetails meeting={currentMeeting} />
-        <p className="availability-info">Please wait for the current meeting to end.</p>
       </>
     ) : (
       <>
@@ -193,8 +192,8 @@ const MeetingStatus = ({ currentMeeting, availableUntil }) => (
 const MeetingDetails = ({ meeting }) => (
   <div className="meeting-status">
     <h2 className="meeting-title">{meeting.title}</h2>
-    <p>{`${formatTime(new Date(meeting.startTime))} - ${formatTime(new Date(meeting.endTime))}`}</p>
-    <p>{`${meeting.user?.firstName || "Unknown"} ${meeting.user?.surName || "Unknown"}`}</p>
+    <p className="meeting-time">{`${formatTime(new Date(meeting.startTime))} - ${formatTime(new Date(meeting.endTime))}`}</p>
+    <p className="meeting-user">{`${meeting.user?.firstName || "Unknown"} ${meeting.user?.surName || "Unknown"}`}</p>
   </div>
 );
 
@@ -216,7 +215,7 @@ const UpcomingMeetings = ({ bookings, currentTime }) => {
             <MeetingItem key={meeting._id} meeting={meeting} />
           ))
         ) : (
-          <p>No upcoming meetings</p>
+          <p className="item-time">No upcoming meetings</p>
         )}
       </div>
       <div className="qr-container">
@@ -229,8 +228,10 @@ const UpcomingMeetings = ({ bookings, currentTime }) => {
 // Single meeting item component
 const MeetingItem = ({ meeting }) => (
   <div className="meeting-item">
-    <p className="meeting-time">{`${formatTime(new Date(meeting.startTime))} - ${formatTime(new Date(meeting.endTime))}`}</p>
     <h3>{meeting.title}</h3>
+    <p className="item-time">{`${formatTime(new Date(meeting.startTime))} - ${formatTime(new Date(meeting.endTime))}`}</p>
+    <p className="item-user">{`${meeting.user?.firstName || "Unknown"} ${meeting.user?.surName || "Unknown"}`}</p>
+    
   </div>
 );
 

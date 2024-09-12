@@ -102,11 +102,12 @@
 }
 
 .meeting-title {
-  font-size: 28px;
+  font-size: 45px;
   color: #ffffff;
   text-align: left;
   font-family: 'Inter', sans-serif;
   margin: 0%;
+  font-weight: 400;
 }
 
 .meeting-info p {
@@ -115,13 +116,54 @@
   text-align: left;
 }
 
-.meeting-status p {
+/* .meeting-status p {
   font-size: 20px;
   margin: 0;
   text-align: left;
-  color: #ffff;
+  color: #fff; 
+  font-family: 'Inter', sans-serif;
+} */
+
+.meeting-time{
+  font-size: 30px;
+  margin: 0;
+  text-align: left;
+  color: #fff; 
   font-family: 'Inter', sans-serif;
 }
+
+.meeting-user{
+  font-size: 20px;
+  margin: 0;
+  text-align: left;
+  color: #fff; 
+  font-family: 'Inter', sans-serif;
+}
+
+.meeting-item h3{
+  font-size: 30px;
+  margin: 0;
+  text-align: left;
+  color: #fff; 
+  font-family: 'Inter', sans-serif;
+}
+
+.item-time {
+  font-size: 21px;
+  margin: 0;
+  text-align: left;
+  color: #fff; 
+  font-family: 'Inter', sans-serif;
+}
+
+.item-user {
+  font-size: 18px;
+  margin: 0;
+  text-align: left;
+  color: #fff; 
+  font-family: 'Inter', sans-serif;
+}
+
 
 
 /* Availability styling */
@@ -131,6 +173,7 @@
   font-weight: bold;
   margin: 0;
   font-family: 'Inter', sans-serif;
+  margin-bottom: 20px;
 }
 
 .availability-info {
@@ -143,17 +186,32 @@
 }
 
 /* Meeting status container */
+/* Default status */
 .meeting-status-container {
-  background-color: rgba(0, 222, 121, 0.3); /* Default color */
+  background-color: rgba(0, 222, 121, 0.3);
   padding: 40px;
   border-radius: 10px;
 }
 
+/* Available status */
+.meeting-status-container.available {
+  background-color: rgba(0, 222, 121, 0.3); 
+  color: #000; /* Text color */
+}
+
+/* In-progress status */
+.meeting-status-container.in-progress {
+  background-color: rgba(255, 138, 128,0.3); /* Light red for in-progress */
+  color: #fff; /* Text color */
+}
+
+
+
 .meeting-container {
   display: flex;
-  align-items: flex-start; /* Align items along the top */
+  align-items:end; /* Align items along the top */
   justify-content: space-between; /* Add space between the meeting list and QR code */
-  gap: 20px; /* Optional: space between items */
+  gap: 10px; /* Optional: space between items */
 }
 
 .meeting-list {
@@ -161,13 +219,18 @@
 }
 
 .qr-container {
-  flex: 1; /* This will take up less space in the row */
+  display: flex; /* Enable flexbox */
+  justify-content: center; /* Center content horizontally */
+  align-items: center; /* Center content vertically */
+  flex: 1;
 }
 
 .qr-container img {
   max-width: 100%;
   height: auto;
+  padding-right: 50px; /* Optional: adjust as needed */
 }
+
 
 
 /* Upcoming Meetings List */
@@ -182,6 +245,7 @@
   font-size: 30px;
   margin: 0;
   font-weight: bold;
+  text-transform: uppercase;
 }
 
 .meeting {
