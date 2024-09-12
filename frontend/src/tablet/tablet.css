@@ -281,7 +281,7 @@
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
   .meeting-room-schedule {
     flex-direction: column;
   }
@@ -310,4 +310,4 @@
   .meeting h3 {
     font-size: 18px;
   }
-}
+} */
