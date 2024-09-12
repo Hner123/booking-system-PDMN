@@ -1,264 +1,237 @@
-import React, { useState, useEffect, createContext, useContext } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import axios from "axios";
 import "./tablet.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Loader from "../assets/7.gif";
 import bgPalawan from "../assets/palawan2.jpg";
 import bgBoracay from "../assets/boracay2.jpg";
-import {
-  faCalendarDay,
-  faClock,
-  faUser,
-} from "@fortawesome/free-solid-svg-icons";
+import qrImage from '../assets/qr.png';
 
-const BookingContext = createContext();
 
-const MeetingRoomSchedule = () => {
-  const [currentTime, setCurrentTime] = useState(new Date());
-  const { selectedRoom, roomSelected, setRoomSelected, loading, bookData, currentMeeting } = useBooking();
+// Helper functions to format time and date
+const formatTime = (date) => date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+const formatDate = (date) => date.toLocaleDateString("en-GB", {
+  weekday: "long",
+  day: "numeric",
+  month: "long",
+});
 
-  // Update current time every second
-  useEffect(() => {
-    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
-    return () => clearInterval(timer);
-  }, []);
-
-  const getCurrentTime = () => currentTime.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-
-  const formatDate = (date) => date.toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long" });
-
-  const handleRoomSelection = (room) => {
-    setRoomSelected(room);
-    localStorage.setItem('selectedRoom', room);
-  };
-
-  const containerClassName = roomSelected
-    ? currentMeeting
-      ? "meeting-room-schedule in-use"
-      : "meeting-room-schedule available"
-    : "meeting-room-schedule default-state";
-
-  const backgroundImage = selectedRoom === "Palawan" ? bgPalawan : bgBoracay;
-
-  return (
-    <div className={containerClassName}>
-      {!roomSelected && (
-        <RoomSelector handleRoomSelection={handleRoomSelection} selectedRoom={selectedRoom} />
-      )}
-      {loading ? (
-        <LoadingScreen />
-      ) : (
-        <>
-          <FirstColumn currentMeeting={currentMeeting} selectedRoom={selectedRoom} formatDate={formatDate} backgroundImage={backgroundImage} />
-          <SecondColumn currentTime={currentTime} formatDate={formatDate} getCurrentTime={getCurrentTime} bookData={bookData} />
-        </>
-      )}
-    </div>
-  );
-};
-
-const RoomSelector = ({ handleRoomSelection, selectedRoom }) => (
-  <div className="subtle-room-selector">
-    <button className={`room-button ${selectedRoom === "Palawan" ? "active" : ""}`} onClick={() => handleRoomSelection("Palawan")}>
-      Palawan
-    </button>
-    <button className={`room-button ${selectedRoom === "Boracay" ? "active" : ""}`} onClick={() => handleRoomSelection("Boracay")}>
-      Boracay
-    </button>
-  </div>
-);
-
-const LoadingScreen = () => (
-  <div className="loading-container">
-    <img src={Loader} className="loading" alt="Loading..." />
-  </div>
-);
-
-const FirstColumn = ({ currentMeeting, selectedRoom, formatDate, backgroundImage }) => (
-  <div className="first-column" style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
-    <div className="room-info">
-      {currentMeeting ? (
-        <>
-          <h1 className="room-name">{currentMeeting.roomName}</h1>
-          <div>
-            <p className="status2">Room Status:</p>
-            <h1 className="availability">In Use</h1>
-          </div>
-          <div className="meetingbg">
-            <h2 className="meeting-title">{currentMeeting.title}</h2>
-            <table>
-              <tbody>
-                <tr>
-                  <td><FontAwesomeIcon icon={faCalendarDay} /></td>
-                  <td>{formatDate(new Date(currentMeeting.startTime))}</td>
-                </tr>
-                <tr>
-                  <td><FontAwesomeIcon icon={faClock} /></td>
-                  <td>
-                    {new Date(currentMeeting.startTime).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}{" "}
-                    -{" "}
-                    {new Date(currentMeeting.endTime).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
-                  </td>
-                </tr>
-                <tr>
-                  <td><FontAwesomeIcon icon={faUser} /></td>
-                  <td>{`${currentMeeting.user?.firstName || "Unknown"} ${currentMeeting.user?.surName || "Unknown"}`}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </>
-      ) : (
-        <>
-          <h1 className="room-name">{selectedRoom}</h1>
-          <p className="status2">Room Status:</p>
-          <h1 className="availability">Available</h1>
-        </>
-      )}
-    </div>
-  </div>
-);
-
-const SecondColumn = ({ currentTime, formatDate, getCurrentTime, bookData }) => (
-  <div className="second-column">
-    <div className="clock">
-      <h1>{getCurrentTime()}</h1>
-    </div>
-    <div className="date-info">
-      <h2 className="ddate">{formatDate(currentTime)}</h2>
-    </div>
-    <div className="meeting-list">
-      <h2 className="upcoming-meetings">Upcoming Meetings</h2>
-      <UpcomingMeetings bookData={bookData} currentTime={currentTime} />
-    </div>
-  </div>
-);
-
-const UpcomingMeetings = ({ bookData, currentTime }) => {
-  const renderMeeting = (meeting) => (
-    <div key={meeting._id} className="meeting">
-      <h3>{meeting.title}</h3>
-      <p>
-        <FontAwesomeIcon icon={faClock} />{" "}
-        {new Date(meeting.startTime).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}{" "}
-        -{" "}
-        {new Date(meeting.endTime).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
-      </p>
-      <p>
-        <FontAwesomeIcon icon={faUser} />{" "}
-        {`${meeting.user?.firstName || "Unknown"} ${meeting.user?.surName || "Unknown"}`}
-      </p>
-    </div>
-  );
-
-  const now = new Date();
-  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const todayEnd = new Date(todayStart.getTime() + 24 * 60 * 60 * 1000);
-
-  const upcomingMeetings = bookData
-    .filter((meeting) => {
-      const meetingStart = new Date(meeting.startTime);
-      return meetingStart >= now && meetingStart >= todayStart && meetingStart < todayEnd;
-    })
-    .sort((a, b) => new Date(a.startTime) - new Date(b.startTime));
-
-  const displayMeetings = upcomingMeetings.slice(0, 4);
-  const remainingMeetingsCount = upcomingMeetings.length - displayMeetings.length;
-
-  return (
-    <>
-      {displayMeetings.length > 0 ? displayMeetings.map(renderMeeting) : (
-        <div className="upcoming-content">
-          <h4 className="meetings">No upcoming meetings</h4>
-        </div>
-      )}
-      {remainingMeetingsCount > 0 && (
-        <div className="more-meetings">
-          <p style={{ margin: '0px' }} className="more-meetings-text">... {remainingMeetingsCount} more meetings</p>
-        </div>
-      )}
-    </>
-  );
-};
-
-// Custom hook to handle booking data fetching and state management
+// Custom hook to manage booking data
 const useBooking = () => {
-  const [bookData, setBookData] = useState([]);
+  const [bookings, setBookings] = useState([]);
   const [currentMeeting, setCurrentMeeting] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [selectedRoom, setSelectedRoom] = useState(localStorage.getItem('selectedRoom'));
-  const [roomSelected, setRoomSelected] = useState(!!localStorage.getItem('selectedRoom'));
-
+  const [selectedRoom, setSelectedRoom] = useState(localStorage.getItem("selectedRoom") || "Palawan");
+  const [isRoomSelected, setIsRoomSelected] = useState(!!localStorage.getItem("selectedRoom"));
   const token = import.meta.env.VITE_TABTOKEN;
 
-  const fetchBookData = async () => {
-    setLoading(true);
+  // Fetch bookings from API
+  const fetchBookings = useCallback(async () => {
     try {
-      const headers = { Authorization: `Bearer ${token}`, "Content-Type": "application/json" };
-
-      const response = await axios.get(`https://booking-system-ge1i.onrender.com/api/book/`, { headers });
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/book/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
 
       if (response.status === 200) {
-        const filteredData = response.data.filter(
-          (event) => (event.roomName === selectedRoom && event.confirmation === true && event.title) || event.roomName === "Palawan and Boracay"
+        const filteredBookings = response.data.filter(
+          (event) =>
+            (event.roomName === selectedRoom && event.confirmation) ||
+            event.roomName === "Palawan and Boracay"
         );
-        setBookData(filteredData);
+        setBookings(filteredBookings);
       }
     } catch (error) {
-      console.error("Error fetching data:", error);
-    } finally {
-      setLoading(false);
+      console.error("Error fetching bookings:", error);
     }
-  };
+  }, [selectedRoom, token]);
 
+  // Fetch bookings when room changes
   useEffect(() => {
-    if (selectedRoom) {
-      fetchBookData();
-    }
-  }, [selectedRoom]);
+    if (selectedRoom) fetchBookings();
+  }, [selectedRoom, fetchBookings]);
 
-  useEffect(() => {
-    const updateBookingData = async () => {
-      try {
-        const headers = { Authorization: `Bearer ${token}`, "Content-Type": "application/json" };
-
-        const response = await axios.get(`https://booking-system-ge1i.onrender.com/api/book/`, { headers });
-
-        if (response.status === 200) {
-          const filteredData = response.data.filter(
-            (event) => (event.roomName === selectedRoom && event.confirmation === true && event.title) || event.roomName === "Palawan and Boracay"
-          );
-
-          if (JSON.stringify(filteredData) !== JSON.stringify(bookData)) {
-            setBookData(filteredData);
-          }
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    const pollingInterval = setInterval(updateBookingData, 10000);
-    return () => clearInterval(pollingInterval);
-  }, [bookData, selectedRoom]);
-
+  // Set current meeting based on time
   useEffect(() => {
     const updateCurrentMeeting = () => {
       const now = new Date();
-      const ongoingMeeting = bookData.find((meeting) => {
-        const startTime = new Date(meeting.startTime);
-        const endTime = new Date(meeting.endTime);
-        return now >= startTime && now <= endTime;
-      });
+      const ongoingMeeting = bookings.find(
+        (meeting) =>
+          new Date(meeting.startTime) <= now && new Date(meeting.endTime) >= now
+      );
       setCurrentMeeting(ongoingMeeting || null);
     };
 
-    updateCurrentMeeting();
-    const meetingInterval = setInterval(updateCurrentMeeting, 1000);
-    return () => clearInterval(meetingInterval);
-  }, [bookData]);
+    const intervalId = setInterval(updateCurrentMeeting, 1000);
+    updateCurrentMeeting(); // Initial call
 
-  return { selectedRoom, setSelectedRoom, roomSelected, setRoomSelected, loading, bookData, currentMeeting };
+    return () => clearInterval(intervalId);
+  }, [bookings]);
+
+  // Refresh booking data every 10 seconds
+  useEffect(() => {
+    const intervalId = setInterval(fetchBookings, 10000);
+    return () => clearInterval(intervalId);
+  }, [fetchBookings]);
+
+  return {
+    selectedRoom,
+    setSelectedRoom,
+    isRoomSelected,
+    setIsRoomSelected,
+    bookings,
+    currentMeeting,
+  };
 };
+
+// Main component
+const MeetingRoomSchedule = () => {
+  const [currentTime, setCurrentTime] = useState(new Date());
+  const {
+    selectedRoom,
+    isRoomSelected,
+    setIsRoomSelected,
+    bookings,
+    currentMeeting,
+    setSelectedRoom,
+  } = useBooking();
+
+  // Update current time every second
+  useEffect(() => {
+    const timerId = setInterval(() => setCurrentTime(new Date()), 1000);
+    return () => clearInterval(timerId);
+  }, []);
+
+  // Handle room selection and save to localStorage
+  const handleRoomSelection = (room) => {
+    setSelectedRoom(room);
+    setIsRoomSelected(true);
+    localStorage.setItem("selectedRoom", room);
+  };
+
+  // Background image for selected room
+  const backgroundImage = selectedRoom === "Palawan" ? bgPalawan : bgBoracay;
+
+  // Container CSS class based on current state
+  const containerClass = !isRoomSelected
+    ? "meeting-room-schedule default-state"
+    : currentMeeting
+    ? "meeting-room-schedule in-use"
+    : "meeting-room-schedule available";
+
+  return (
+    <div className={containerClass}>
+      <div className="background-image" style={{ backgroundImage: `url(${backgroundImage})` }} />
+      {!isRoomSelected && <RoomSelector onRoomSelect={handleRoomSelection} selectedRoom={selectedRoom} />}
+      <RoomInfo currentMeeting={currentMeeting} selectedRoom={selectedRoom} currentTime={currentTime} bookings={bookings} />
+    </div>
+  );
+};
+
+// Room selector component
+const RoomSelector = ({ onRoomSelect, selectedRoom }) => (
+  <div className="room-selector">
+    {["Palawan", "Boracay"].map((room) => (
+      <button
+        key={room}
+        className={`room-button ${selectedRoom === room ? "active" : ""}`}
+        onClick={() => onRoomSelect(room)}
+      >
+        {room}
+      </button>
+    ))}
+  </div>
+);
+
+// Room information component
+const RoomInfo = ({ currentMeeting, selectedRoom, currentTime, bookings }) => {
+  const nextMeeting = useMemo(() => {
+    return bookings
+      .filter((meeting) => new Date(meeting.startTime) > currentTime)
+      .sort((a, b) => new Date(a.startTime) - new Date(b.startTime))[0];
+  }, [bookings, currentTime]);
+
+  const availableUntil = nextMeeting ? formatTime(new Date(nextMeeting.startTime)) : "End of Day";
+
+  return (
+    <div className="room-info">
+      <div className="tablet-details">
+        <h1 className="room-name">{currentMeeting?.roomName || selectedRoom}</h1>
+        <h2 className="date">{formatDate(currentTime)}</h2>
+        <h1 className="time">{formatTime(currentTime)}</h1>
+      </div>
+      <MeetingStatus currentMeeting={currentMeeting} availableUntil={availableUntil} />
+      <UpcomingMeetings bookings={bookings} currentTime={currentTime} />
+    </div>
+  );
+};
+
+// Meeting status component
+const MeetingStatus = ({ currentMeeting, availableUntil }) => (
+  <div className="meeting-status-container">
+    {currentMeeting ? (
+      <>
+        <h2 className="availability">Meeting in Progress</h2>
+        <MeetingDetails meeting={currentMeeting} />
+        <p className="availability-info">Please wait for the current meeting to end.</p>
+      </>
+    ) : (
+      <>
+        <h2 className="availability">
+          Available <br /> {availableUntil === "End of Day" ? "Until End of the Day" : `Until ${availableUntil}`}
+        </h2>
+        <p className="availability-info">
+          {availableUntil === "End of Day"
+            ? " You may book this room at any time."
+            : "Feel free to book or use this room until the next scheduled meeting"}
+        </p>
+      </>
+    )}
+  </div>
+);
+
+// Current meeting details component
+const MeetingDetails = ({ meeting }) => (
+  <div className="meeting-status">
+    <h2 className="meeting-title">{meeting.title}</h2>
+    <p>{`${formatTime(new Date(meeting.startTime))} - ${formatTime(new Date(meeting.endTime))}`}</p>
+    <p>{`${meeting.user?.firstName || "Unknown"} ${meeting.user?.surName || "Unknown"}`}</p>
+  </div>
+);
+
+// Upcoming meetings list component
+const UpcomingMeetings = ({ bookings, currentTime }) => {
+  const upcomingMeetings = useMemo(() => {
+    return bookings
+      .filter((meeting) => new Date(meeting.startTime) > currentTime)
+      .sort((a, b) => new Date(a.startTime) - new Date(b.startTime))
+      .slice(0, 4);
+  }, [bookings, currentTime]);
+
+  return (
+    <div className="meeting-container">
+      <div className="meeting-list">
+        <h2>Upcoming Meeting</h2>
+        {upcomingMeetings.length > 0 ? (
+          upcomingMeetings.map((meeting) => (
+            <MeetingItem key={meeting._id} meeting={meeting} />
+          ))
+        ) : (
+          <p>No upcoming meetings</p>
+        )}
+      </div>
+      <div className="qr-container">
+        <img src={qrImage} alt="QR Code" />
+      </div>
+    </div>
+  );
+};
+
+// Single meeting item component
+const MeetingItem = ({ meeting }) => (
+  <div className="meeting-item">
+    <p className="meeting-time">{`${formatTime(new Date(meeting.startTime))} - ${formatTime(new Date(meeting.endTime))}`}</p>
+    <h3>{meeting.title}</h3>
+  </div>
+);
 
 export default MeetingRoomSchedule;
