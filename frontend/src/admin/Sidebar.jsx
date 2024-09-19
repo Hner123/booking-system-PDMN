@@ -11,6 +11,7 @@ import {
   faBars,
   faClipboardCheck,
   faCalendar,
+  faChartSimple
 } from "@fortawesome/free-solid-svg-icons";
 import logoOpen from "../assets/logos/GDSLogo.png";
 import logoClosed from "../assets/logos/GDSLoog2.png";
@@ -131,6 +132,12 @@ const Sidebar = () => {
         {!closeMenu && <h2>{userData?.adminUser}</h2>}
       </div>
       <ul>
+        <li title="Dashboard">
+          <a href="/admin/dashboard">
+          <FontAwesomeIcon icon={faChartSimple} />
+            {!closeMenu && <span>Dashboard</span>}
+          </a>
+        </li>
         <li title="Employee List">
           <a href="/admin/employee-list">
             <FontAwesomeIcon icon={faUserFriends} />

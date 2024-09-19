@@ -12,6 +12,7 @@ import UserList from './user/utilities/UserList.jsx';
 import Confirmation from './user/reservation/Confirmation';
 
 import AdminLogin from './admin/AdminLogin.jsx';
+import AdminDashboard from './admin/AdminDashboard.jsx';
 import EmployeeList from './admin/EmployeeList.jsx';
 import AddEmployee from './admin/AddEmployee.jsx';
 import ApprovalDetails from './admin/ApprovalDetails.jsx';
@@ -101,6 +102,14 @@ function App() {
           element={
             <>
               <AdminLogin />
+            </>
+          }
+        />
+        <Route
+          path="/admin/dashboard"
+          element={
+            <>
+              <AdminDashboard/>
             </>
           }
         />
