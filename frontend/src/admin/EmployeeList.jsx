@@ -22,7 +22,6 @@ const EmployeeList = () => {
     "GDS Travel Agency",
     "FEILONG Legal",
     "STARLIGHT",
-    "BIG VISION PRODS.",
     "SuperNova",
     "ClearPath",
     "Dragon AI",

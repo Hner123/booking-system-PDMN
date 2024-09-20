@@ -8,6 +8,27 @@ import { toast } from 'react-toastify';
 import { CSVLink } from 'react-csv';
 import WithAuthAdmin from '../auth/WithAuthAdmin';
 
+const fetchMockData = () => {
+  return {
+    roomData: { Palawan: 30, Boracay: 20, 'Palawan and Boracay': 50 },
+    stats: { total: 100, approved: 60, rejected: 20, pending: 20 },
+    trends: [
+      { date: '2024-09-01', count: 10 },
+      { date: '2024-09-02', count: 15 },
+      { date: '2024-09-03', count: 5 },
+      { date: '2024-09-04', count: 20 },
+    ],
+    additional: {
+      mostFrequentDepartment: 'HR',
+      mostFrequentEmployee: 'John Doe',
+      mostBookedTime: '10:00 AM',
+      mostBookedRoom: 'Boracay',
+    },
+    departments: { HR: 40, Sales: 30, IT: 20, Finance: 10 },
+    users: { total: 500, active: 350, notRegistered: 150 },
+  };
+};
+
 const useDashboardData = () => {
   const [roomUsage, setRoomUsage] = useState({
     Palawan: 0,
@@ -33,8 +54,9 @@ const useDashboardData = () => {
     active: 0,
     notRegistered: 0
   });
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  
 
   useEffect(() => {
     const fetchBookings = async () => {
@@ -66,84 +88,66 @@ const useDashboardData = () => {
 
           const approvedBookings = response.data.filter(item => {
             const bookingDate = new Date(item.scheduleDate);
-            return item.approval.status === "Approved" &&
-              bookingDate.getFullYear() === currentYear &&
+            return item.approval.status === "Approved" && 
+              bookingDate.getFullYear() === currentYear && 
               bookingDate.getMonth() === currentMonth;
           });
 
           const bookingsByDate = approvedBookings.reduce((acc, item) => {
             const bookingDate = new Date(item.scheduleDate).toISOString().split('T')[0];
-
+  
             const existingDate = acc.find(entry => entry.date === bookingDate);
             if (existingDate) {
               existingDate.count += 1;
-              // existingDate.data.push(item);
+              existingDate.data.push(item); // Push full booking data for the date
             } else {
-              acc.push({ date: bookingDate, count: 1 });
+              acc.push({ date: bookingDate, count: 1, data: [item] });
             }
-
+  
             return acc;
           }, []);
-
-          const bookingsByDepartment = approvedBookings.reduce((acc, item) => {
-            const department = item.user?.department;
-
-            if (department) {
-              const existingDepartment = acc.find(entry => entry.department === department);
-
-              if (existingDepartment) {
-                existingDepartment.count += 1;
-                // existingDepartment.data.push(item);
-              } else {
-                acc.push({ department, count: 1 }); // Initialize with data array
-              }
-            }
-
-            return acc;
-          }, []);
-
+  
           setBookingTrends(bookingsByDate);
-          setDepartmentStats(bookingsByDepartment);
 
           const stats = approvedBookings.reduce((acc, item) => {
             const username = item.user?.userName;
             const department = item.user?.department;
             const room = item.roomName;
             const time = new Date(item.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
+            
             if (username) {
               acc.employees[username] = (acc.employees[username] || 0) + 1;
               acc.employeeNames[username] = `${item.user.firstName} ${item.user.surName}`;
             }
-
+    
             if (department) {
               acc.departments[department] = (acc.departments[department] || 0) + 1;
             }
-
+    
             if (room) {
               acc.rooms[room] = (acc.rooms[room] || 0) + 1;
             }
-
+    
             if (time) {
               acc.times[time] = (acc.times[time] || 0) + 1;
             }
-
+    
             return acc;
           }, { employees: {}, employeeNames: {}, departments: {}, rooms: {}, times: {} });
-
+    
           const getMostFrequent = (data) => {
             return Object.keys(data).reduce((mostFrequent, currentKey) => (
               (data[mostFrequent] > data[currentKey] ? mostFrequent : currentKey)
             ), '');
           };
-
+    
           const mostFrequentEmployeeKey = getMostFrequent(stats.employees);
           const mostFrequentDepartmentKey = getMostFrequent(stats.departments);
           const mostBookedRoomKey = getMostFrequent(stats.rooms);
           const mostBookedTimeKey = getMostFrequent(stats.times);
 
           const fullName = stats.employeeNames[mostFrequentEmployeeKey] || 'N/A';
-
+    
           setAdditionalStats(prevStats => ({
             ...prevStats,
             mostFrequentEmployee: fullName,
@@ -151,20 +155,16 @@ const useDashboardData = () => {
             mostBookedRoom: mostBookedRoomKey || 'N/A',
             mostBookedTime: mostBookedTimeKey || 'N/A',
           }));
-
+        
           console.log(response.data);
           console.log(response.data.filter(item => item.approval.status === "Pending" && item.title !== "").length)
           console.log(response.data.length);
           console.log(additionalStats)
-          console.log(bookingTrends)
-          console.log(departmentStats)
         } else {
           console.error("Response status is not OK");
         }
       } catch (error) {
         console.error("Error fetching booking data:", error);
-      } finally {
-        setLoading(false);
       }
     };
 
@@ -172,34 +172,24 @@ const useDashboardData = () => {
   }, []);
 
   useEffect(() => {
-    const fetchUser = async () => {
+    const loadData = () => {
       try {
-        const token = localStorage.getItem("adminToken");
-        const headers = {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        };
-
-        const response = await axios.get(`https://booking-system-ge1i.onrender.com/api/user/`, { headers });
-
-        if (response.status === 200) {
-          console.log(response.data)
-          setUsersStats({
-            total: response.data.length,
-            active: response.data.filter(item => item.resetPass === true).length,
-            notRegistered: response.data.filter(item => item.resetPass === false).length
-          })
-        } else {
-          console.error("Response status is not OK");
-        }
+        const mockData = fetchMockData();
+        // setRoomUsage(mockData.roomData);
+        // setBookingStats(mockData.stats);
+        // setBookingTrends(mockData.trends);
+        // setAdditionalStats(mockData.additional);
+        setDepartmentStats(mockData.departments);
+        setUsersStats(mockData.users);
       } catch (error) {
-        console.error("Error fetching booking data:", error);
+        setError('Error loading data.');
+        toast.error('Error loading data.');
       } finally {
         setLoading(false);
       }
     };
 
-    fetchUser();
+    loadData();
   }, []);
 
   return {
@@ -331,23 +321,19 @@ const Dashboard = ({ sidebarOpen }) => {
     ],
   }), [roomUsage]);
 
-  const bookingTrendsData = useMemo(() => {
-    const sortedBookingTrends = [...bookingTrends].sort((a, b) => new Date(a.date) - new Date(b.date));
-
-    return {
-      labels: sortedBookingTrends.map((trend) => trend.date),
-      datasets: [
-        {
-          label: 'Number of Bookings',
-          data: sortedBookingTrends.map((trend) => trend.count),
-          borderColor: '#3e95cd',
-          backgroundColor: 'rgba(62, 149, 205, 0.5)',
-          fill: true,
-          tension: 0.3,
-        },
-      ],
-    };
-  }, [bookingTrends]);
+  const bookingTrendsData = useMemo(() => ({
+    labels: bookingTrends.map((trend) => trend.date),
+    datasets: [
+      {
+        label: 'Number of Bookings',
+        data: bookingTrends.map((trend) => trend.count),
+        borderColor: '#3e95cd',
+        backgroundColor: 'rgba(62, 149, 205, 0.5)',
+        fill: true,
+        tension: 0.3,
+      },
+    ],
+  }), [bookingTrends]);
 
   const bookingStatsData = useMemo(() => ({
     labels: ['Approved', 'Rejected', 'Pending'],
@@ -360,34 +346,25 @@ const Dashboard = ({ sidebarOpen }) => {
     ],
   }), [bookingStats]);
 
-  const departmentColorMap = {
-    "Philippine Dragon Media Network": '#C0392B',
-    "GDS Capital": '#E74C3C',
-    "GDS Travel Agency": '#F39C12',
-    "FEILONG Legal": '#D4AC0D',
-    "STARLIGHT": '#F7DC6F',
-    "Dragon AI": '#E59866',
-    "SuperNova": '#2874A6',
-    "ClearPath": '#1E8449',
-  };
-
-  const departmentStatsData = useMemo(() => {
-    if (!Array.isArray(departmentStats)) {
-      return { labels: [], datasets: [] };
+  const getRandomColor = () => {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
     }
-
-    const sortedDepartmentStats = [...departmentStats].sort((a, b) => b.count - a.count);
-
-    return {
-      labels: sortedDepartmentStats.map(({ department }) => department),
-      datasets: [{
-        label: 'Department Bookings',
-        data: sortedDepartmentStats.map(({ count }) => count),
-        backgroundColor: sortedDepartmentStats.map(({ department }) => departmentColorMap[department] || '#000000'),
-      }],
-    };
-  }, [departmentStats]);
-
+    return color;
+  };
+  
+  const departmentStatsData = useMemo(() => ({
+    labels: ['Departments'], // Single label for the x-axis
+    datasets: Object.keys(departmentStats).map((department, index) => ({
+      label: department, // Each department name becomes its own label
+      data: [departmentStats[department]], // Data for each department
+      backgroundColor: ['#ff7043', '#42a5f5', '#66bb6a', '#ffa726', '#8e44ad', '#2ecc71'][index % 6], // Use a color for each department
+    })),
+  }), [departmentStats]);
+  
+  
   const usersData = useMemo(() => ({
     labels: ['Users'], // Single label for the x-axis
     datasets: [
@@ -403,7 +380,7 @@ const Dashboard = ({ sidebarOpen }) => {
       },
     ],
   }), [usersStats]);
-
+  
 
   const handleApproveAll = () => {
     toast.success('All users approved');
@@ -573,6 +550,7 @@ const Dashboard = ({ sidebarOpen }) => {
   );
 };
 
+// StatsOverview Component
 const StatsOverview = ({ bookingStats, usersStats }) => (
   <div className="stats-overview">
     {['Total', 'Approved', 'Rejected', 'Pending'].map((type) => (
@@ -582,20 +560,17 @@ const StatsOverview = ({ bookingStats, usersStats }) => (
       </div>
     ))}
     <div className="stat-item">
-      <h2>All Users</h2>
+      <h2>Registered Users</h2>
       <p>{usersStats.total}</p>
     </div>
     <div className="stat-item">
-      <h2>Registered Users</h2>
+      <h2>Active Users</h2>
       <p>{usersStats.active}</p>
-    </div>
-    <div className="stat-item">
-      <h2>Not Registered Users</h2>
-      <p>{usersStats.notRegistered}</p>
     </div>
   </div>
 );
 
+// AdditionalStats Component
 const AdditionalStats = ({ additionalStats }) => (
   <div className="additional-stats">
     {Object.entries(additionalStats).map(([key, value]) => (
