@@ -152,12 +152,12 @@ const useDashboardData = () => {
             mostBookedTime: mostBookedTimeKey || 'N/A',
           }));
 
-          console.log(response.data);
-          console.log(response.data.filter(item => item.approval.status === "Pending" && item.title !== "").length)
-          console.log(response.data.length);
-          console.log(additionalStats)
-          console.log(bookingTrends)
-          console.log(departmentStats)
+          // console.log(response.data);
+          // console.log(response.data.filter(item => item.approval.status === "Pending" && item.title !== "").length)
+          // console.log(response.data.length);
+          // console.log(additionalStats)
+          // console.log(bookingTrends)
+          // console.log(departmentStats)
         } else {
           console.error("Response status is not OK");
         }
@@ -183,7 +183,6 @@ const useDashboardData = () => {
         const response = await axios.get(`https://booking-system-ge1i.onrender.com/api/user/`, { headers });
 
         if (response.status === 200) {
-          console.log(response.data)
           setUsersStats({
             total: response.data.length,
             active: response.data.filter(item => item.resetPass === true).length,
