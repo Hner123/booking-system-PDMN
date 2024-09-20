@@ -72,13 +72,22 @@ const Header = () => {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       };
+  
       const response = await axios.get(
         "https://booking-system-ge1i.onrender.com/api/notif",
         { headers }
       );
+  
+      // response.data.forEach((notif, index) => {
+      //   if (!notif.receiver || !notif.receiver._id) {
+      //     console.log(`Notification at index ${index} has missing receiver or _id`, notif);
+      //   }
+      // });
+  
       const userNotifications = response.data.filter(
-        (notif) => notif.receiver._id === userId
+        (notif) => notif.receiver && notif.receiver._id === userId
       );
+  
       setNotifications(userNotifications);
     } catch (error) {
       console.error("Error fetching notifications:", error);

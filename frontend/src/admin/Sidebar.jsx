@@ -61,32 +61,40 @@ const Sidebar = () => {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         };
-
+  
         const userResponse = await axios.get(
           `https://booking-system-ge1i.onrender.com/api/admin/${adminId}`,
           { headers }
         );
         if (userResponse.status === 200) {
-          setUserData(userResponse.data);
+          setUserData(userResponse.data);    
         }
-
+  
         const notifResponse = await axios.get(
           "https://booking-system-ge1i.onrender.com/api/notif",
           { headers }
         );
+  
+        // notifResponse.data.forEach((notif, index) => {
+        //   if (!notif.receiver || !notif.receiver._id) {
+        //     console.log(`Notification at index ${index} has missing receiver or _id`, notif);
+        //   }
+        // });
+  
         const userNotifications = notifResponse.data
-          .filter((notif) => notif.receiver._id === adminId)
-          .filter((notif) => !notif.done) 
-          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); 
-
+          .filter(notif => notif.receiver && notif.receiver._id === adminId)
+          .filter(notif => !notif.done)
+          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  
         setNotifications(userNotifications);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
-
+  
     fetchData();
   }, []);
+
 
   useEffect(() => {
     document.documentElement.style.setProperty(
