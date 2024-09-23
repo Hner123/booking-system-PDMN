@@ -5,8 +5,8 @@ import 'chart.js/auto';
 import Sidebar from './Sidebar';
 import './AdminPages.css';
 import { toast } from 'react-toastify';
-import { CSVLink } from 'react-csv';
-import WithAuthAdmin from '../auth/WithAuthAdmin';
+import * as XLSX from 'xlsx';
+import WithAuthAdmin from '../auth/WithAuthAdmin'
 
 const useDashboardData = () => {
   const [roomUsage, setRoomUsage] = useState({
@@ -93,7 +93,6 @@ const useDashboardData = () => {
 
               if (existingDepartment) {
                 existingDepartment.count += 1;
-                // existingDepartment.data.push(item);
               } else {
                 acc.push({ department, count: 1 }); // Initialize with data array
               }
@@ -152,12 +151,6 @@ const useDashboardData = () => {
             mostBookedTime: mostBookedTimeKey || 'N/A',
           }));
 
-          // console.log(response.data);
-          // console.log(response.data.filter(item => item.approval.status === "Pending" && item.title !== "").length)
-          // console.log(response.data.length);
-          // console.log(additionalStats)
-          // console.log(bookingTrends)
-          // console.log(departmentStats)
         } else {
           console.error("Response status is not OK");
         }
@@ -213,7 +206,7 @@ const useDashboardData = () => {
   };
 };
 
-// Enhanced Chart Options
+
 const chartOptions = {
   responsive: true,
   plugins: {
@@ -230,9 +223,12 @@ const chartOptions = {
       position: 'bottom',
       labels: {
         font: {
-          size: 14,
+          size: 16,  // Increased font size for readability
+          style: 'bold',
         },
+        color: '#333', // Use a dark color for better contrast
         usePointStyle: true,
+        padding: 20, // Space out the labels a bit more
       },
       onClick: (e, legendItem, legend) => {
         const index = legendItem.datasetIndex;
@@ -244,22 +240,33 @@ const chartOptions = {
     },
   },
   animation: {
-    duration: 1000,
+    duration: 1200,
     easing: 'easeInOutQuart',
   },
   scales: {
     x: {
       ticks: {
+        color: '#555', // Label color for the X-axis
+        font: {
+          size: 14,  // Slightly larger font size for ticks
+        },
         autoSkip: true,
         maxRotation: 0,
         minRotation: 0,
       },
     },
     y: {
+      ticks: {
+        color: '#555',  // Label color for the Y-axis
+        font: {
+          size: 14,  // Larger font size for ticks
+        },
+      },
       beginAtZero: true,
     },
   },
 };
+
 
 // Main Dashboard Component
 const Dashboard = ({ sidebarOpen }) => {
@@ -274,8 +281,6 @@ const Dashboard = ({ sidebarOpen }) => {
     error,
   } = useDashboardData();
 
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
   const [layout, setLayout] = useState({
     roomUsage: true,
     bookingTrends: true,
@@ -283,40 +288,6 @@ const Dashboard = ({ sidebarOpen }) => {
     bookingStats: true,
     usersData: true,
   });
-  const [searchTerm, setSearchTerm] = useState('');
-  const [sortOption, setSortOption] = useState('dateAsc');
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [selectedLayout, setSelectedLayout] = useState('roomUsage');
-
-  const handleDateChange = (e) => {
-    if (e.target.name === 'startDate') setStartDate(e.target.value);
-    if (e.target.name === 'endDate') setEndDate(e.target.value);
-  };
-
-  const handleSortChange = (e) => {
-    setSortOption(e.target.value);
-  };
-
-  const handleDropdownToggle = () => {
-    setDropdownOpen(prev => !prev);
-  };
-
-  const handleCheckboxChange = (e) => {
-    const { name, checked } = e.target;
-    setLayout(prev => ({ ...prev, [name]: checked }));
-  };
-
-  const handleLayoutChange = (e) => {
-    const layoutOption = e.target.value;
-    setSelectedLayout(layoutOption);
-    setLayout({
-      roomUsage: layoutOption === 'roomUsage',
-      bookingTrends: layoutOption === 'bookingTrends',
-      departmentStats: layoutOption === 'departmentStats',
-      bookingStats: layoutOption === 'bookingStats',
-      usersData: layoutOption === 'usersData',
-    });
-  };
 
   const roomUsageData = useMemo(() => ({
     labels: ['Palawan', 'Boracay', 'Palawan and Boracay'],
@@ -403,15 +374,6 @@ const Dashboard = ({ sidebarOpen }) => {
     ],
   }), [usersStats]);
 
-
-  const handleApproveAll = () => {
-    toast.success('All users approved');
-  };
-
-  const handleRejectAll = () => {
-    toast.error('All users rejected');
-  };
-
   const handleChartClick = (event, elements) => {
     if (elements.length && bookingTrends.length) {
       const { index } = elements[0];
@@ -424,179 +386,175 @@ const Dashboard = ({ sidebarOpen }) => {
   if (loading) return <div className="loading-message">Loading...</div>;
   if (error) return <div className="error-message">{error}</div>;
 
+
+  const handleExportToExcel = () => {
+    const bookingTrendsSheet = bookingTrends.map(item => ({
+      Date: new Date(item.date).toLocaleDateString(), // Format date
+      Count: item.count,
+    }));
+  
+    const roomUsageSheet = [
+      { Room: 'Palawan', Usage: roomUsage.Palawan },
+      { Room: 'Boracay', Usage: roomUsage.Boracay },
+      { Room: 'Palawan and Boracay', Usage: roomUsage['Palawan and Boracay'] },
+    ];
+  
+    const departmentStatsSheet = departmentStats.map(item => ({
+      Department: item.department,
+      Bookings: item.count,
+    }));
+  
+    const usersStatsSheet = [
+      { Stat: 'Total Users', Count: usersStats.total },
+      { Stat: 'Active Users', Count: usersStats.active },
+      { Stat: 'Not Registered Users', Count: usersStats.notRegistered },
+    ];
+  
+    const additionalStatsSheet = [
+      { Stat: 'Most Frequent Employee', Value: additionalStats.mostFrequentEmployee },
+      { Stat: 'Most Frequent Department', Value: additionalStats.mostFrequentDepartment },
+      { Stat: 'Most Booked Room', Value: additionalStats.mostBookedRoom },
+      { Stat: 'Most Booked Time', Value: additionalStats.mostBookedTime },
+    ];
+  
+    const wb = XLSX.utils.book_new();
+  
+    // Create sheets
+    const wsBookingTrends = XLSX.utils.json_to_sheet(bookingTrendsSheet);
+    const wsRoomUsage = XLSX.utils.json_to_sheet(roomUsageSheet);
+    const wsDepartmentStats = XLSX.utils.json_to_sheet(departmentStatsSheet);
+    const wsUsersStats = XLSX.utils.json_to_sheet(usersStatsSheet);
+    const wsAdditionalStats = XLSX.utils.json_to_sheet(additionalStatsSheet);
+  
+    // Append sheets to workbook
+    XLSX.utils.book_append_sheet(wb, wsBookingTrends, 'Booking Trends');
+    XLSX.utils.book_append_sheet(wb, wsRoomUsage, 'Room Usage');
+    XLSX.utils.book_append_sheet(wb, wsDepartmentStats, 'Department Stats');
+    XLSX.utils.book_append_sheet(wb, wsUsersStats, 'Users Stats');
+    XLSX.utils.book_append_sheet(wb, wsAdditionalStats, 'Additional Stats');
+  
+    // Set column widths
+    const setColumnWidths = (worksheet) => {
+      const cols = [
+        { wch: 25 }, // Column width for the first column
+        { wch: 15 }, // Column width for the second column
+      ];
+      worksheet['!cols'] = cols;
+    };
+  
+    // Apply column widths to each sheet
+    setColumnWidths(wsBookingTrends);
+    setColumnWidths(wsRoomUsage);
+    setColumnWidths(wsDepartmentStats);
+    setColumnWidths(wsUsersStats);
+    setColumnWidths(wsAdditionalStats);
+  
+    // Generate a timestamp for the filename
+    const timestamp = new Date().toISOString().replace(/[-:.]/g, "_").slice(0, 19);
+    const filename = `dashboard_stats_${timestamp}.xlsx`;
+  
+    // Write file
+    XLSX.writeFile(wb, filename);
+    toast.success('Excel file has been exported with all stats.');
+  };
+  
   return (
-    <div className={`admin-dashboard ${sidebarOpen ? 'sidebar-open' : ''}`}>
-      <Sidebar sidebarOpen={sidebarOpen} />
-      <div className="admin-dashboard-content">
-        <h1 className="dashboard-title">Booking System Analytics</h1>
+    <div className={`admin-dashboard ${sidebarOpen ? "sidebar-open" : ""}`}>
+    <Sidebar sidebarOpen={sidebarOpen} />
+    <div className="admin-dashboard-content">
+      <h1 className="dashboard-title">Booking System Analytics</h1>
 
-        <StatsOverview bookingStats={bookingStats} usersStats={usersStats} />
-        <AdditionalStats additionalStats={additionalStats} />
+      <StatsOverview bookingStats={bookingStats} />
+      <AdditionalStats additionalStats={additionalStats} />
 
-        {/* Date Filter */}
-        <div className="date-filters">
-          <input
-            type="date"
-            name="startDate"
-            value={startDate}
-            onChange={handleDateChange}
-            className="date-filter-input"
-          />
-          <input
-            type="date"
-            name="endDate"
-            value={endDate}
-            onChange={handleDateChange}
-            className="date-filter-input"
-          />
-        </div>
-
-        {/* Layout Dropdown with Checkboxes */}
-        <div className="db-layout-controls">
-          <button onClick={handleDropdownToggle} className="db-dropdown-toggle">
-            Select Layout
-          </button>
-          {dropdownOpen && (
-            <div className="db-dropdown-menu">
-              <label>
-                <input
-                  type="checkbox"
-                  name="roomUsage"
-                  checked={layout.roomUsage}
-                  onChange={handleCheckboxChange}
+      {/* Chart Containers */}
+      <div className="flex-container">
+        <div className="charts-container">
+          {layout.roomUsage && (
+            <ChartContainer
+              title="Room Usage Overview"
+              chart={<Pie data={roomUsageData} options={chartOptions} />}
+            />
+          )}
+          {layout.bookingTrends && (
+            <ChartContainer
+              title="Booking Trends Over Time"
+              chart={
+                <Line
+                  data={bookingTrendsData}
+                  options={{ ...chartOptions, onClick: handleChartClick }}
                 />
-                Room Usage Overview
-              </label>
-              <label>
-                <input
-                  type="checkbox"
-                  name="bookingTrends"
-                  checked={layout.bookingTrends}
-                  onChange={handleCheckboxChange}
-                />
-                Booking Trends Over Time
-              </label>
-              <label>
-                <input
-                  type="checkbox"
-                  name="departmentStats"
-                  checked={layout.departmentStats}
-                  onChange={handleCheckboxChange}
-                />
-                Department Statistics
-              </label>
-              <label>
-                <input
-                  type="checkbox"
-                  name="bookingStats"
-                  checked={layout.bookingStats}
-                  onChange={handleCheckboxChange}
-                />
-                Booking Status Distribution
-              </label>
-              <label>
-                <input
-                  type="checkbox"
-                  name="usersData"
-                  checked={layout.usersData}
-                  onChange={handleCheckboxChange}
-                />
-                User Statistics
-              </label>
-            </div>
+              }
+            />
           )}
         </div>
-
-        {/* Search */}
-        <input
-          type="text"
-          placeholder="Search Trends"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="search-input"
-        />
-
-        {/* Chart Containers */}
-        <div className='flex-container'>
-          <div className="charts-container">
-            {layout.roomUsage && (
-              <ChartContainer
-                title="Room Usage Overview"
-                chart={<Pie data={roomUsageData} options={chartOptions} />}
-              />
-            )}
-            {layout.bookingTrends && (
-              <ChartContainer
-                title="Booking Trends Over Time"
-                chart={<Line data={bookingTrendsData} options={{ ...chartOptions, onClick: handleChartClick }} />}
-              />
-            )}
-          </div>
-          <div className="charts-container">
-            {layout.departmentStats && (
-              <ChartContainer
-                title="Department Statistics"
-                chart={<Bar data={departmentStatsData} options={chartOptions} />}
-              />
-            )}
-            {layout.bookingStats && (
-              <ChartContainer
-                title="Booking Status Distribution"
-                chart={<Pie data={bookingStatsData} options={chartOptions} />}
-              />
-            )}
-          </div>
-          <div className="charts-container">
-            {layout.usersData && (
-              <ChartContainer
-                title="User Statistics"
-                chart={<Bar data={usersData} options={chartOptions} />}
-              />
-            )}
-          </div>
+        <div className="charts-container">
+          {layout.departmentStats && (
+            <ChartContainer
+              title="Department Statistics"
+              chart={<Bar data={departmentStatsData} options={chartOptions} />}
+            />
+          )}
+          {layout.bookingStats && (
+            <ChartContainer
+              title="Booking Status Distribution"
+              chart={<Pie data={bookingStatsData} options={chartOptions} />}
+            />
+          )}
         </div>
-
-        {/* Export Data Button */}
-        {layout.bookingTrends && (
-          <CSVLink
-            data={bookingTrends}
-            filename={'booking_trends.csv'}
-            className="export-button"
-            target="_blank"
-          >
-            Export Booking Trends Data
-          </CSVLink>
+      </div>
+      <div className="user-charts-container">
+        {layout.usersData && (
+          <UserChartContainer
+            title="User Statistics"
+            chart={<Bar data={usersData} options={chartOptions} />}
+          />
         )}
+        <UserOverview usersStats={usersStats} />
+      </div>
+      <div className="export-section">
+        <button onClick={handleExportToExcel} className="export-btn">
+          Export to Excel
+        </button>
       </div>
     </div>
-  );
+  </div>
+);
 };
 
-const StatsOverview = ({ bookingStats, usersStats }) => (
-  <div className="stats-overview">
-    {['Total', 'Approved', 'Rejected', 'Pending'].map((type) => (
-      <div key={type} className="stat-item">
-        <h2>{type} Bookings</h2>
-        <p>{bookingStats[type.toLowerCase()]}</p>
-      </div>
-    ))}
-    <div className="stat-item">
-      <h2>All Users</h2>
-      <p>{usersStats.total}</p>
-    </div>
-    <div className="stat-item">
-      <h2>Registered Users</h2>
-      <p>{usersStats.active}</p>
-    </div>
-    <div className="stat-item">
-      <h2>Not Registered Users</h2>
-      <p>{usersStats.notRegistered}</p>
+const StatsOverview = ({ bookingStats }) => (
+  <div className='db-overview'>
+    <div className="stats-overview grid-container">
+      {['Total', 'Approved', 'Rejected', 'Pending'].map((type) => (
+        <div key={type} className="stat-item">
+          <h2>{type} Bookings</h2>
+          <p>{bookingStats[type.toLowerCase()]}</p>
+        </div>
+      ))}
     </div>
   </div>
 );
 
+const UserOverview = ({usersStats}) => (
+  
+  <div className="user-stats">
+      <div className="user-stat-item">
+        <h2>All Users</h2>
+        <p>{usersStats.total}</p>
+      </div>
+      <div className="user-stat-item">
+        <h2>Registered Users</h2>
+        <p>{usersStats.active}</p>
+      </div>
+      <div className="user-stat-item">
+        <h2>Not Registered Users</h2>
+        <p>{usersStats.notRegistered}</p>
+      </div>
+    </div>
+);
+
 const AdditionalStats = ({ additionalStats }) => (
-  <div className="additional-stats">
+  <div className="additional-stats grid-container">
     {Object.entries(additionalStats).map(([key, value]) => (
       <div key={key} className="stat-item">
         <h2>{formatStatTitle(key)}</h2>
@@ -606,9 +564,15 @@ const AdditionalStats = ({ additionalStats }) => (
   </div>
 );
 
-// ChartContainer Component
 const ChartContainer = ({ title, chart }) => (
   <div className="chart-container">
+    <h2 className="chart-title">{title}</h2>
+    {chart}
+  </div>
+);
+
+const UserChartContainer = ({ title, chart }) => (
+  <div className="user-chart-container">
     <h2 className="chart-title">{title}</h2>
     {chart}
   </div>
