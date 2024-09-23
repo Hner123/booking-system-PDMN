@@ -36,7 +36,7 @@ const AdminLogin = () => {
                 localStorage.setItem("adminToken", authToken);
                 localStorage.setItem("adminId", _id);
 
-                navigate('/admin/employee-list');
+                navigate('/admin/dashboard');
             }
         } catch (error) {
             setError(error.response.data.message);

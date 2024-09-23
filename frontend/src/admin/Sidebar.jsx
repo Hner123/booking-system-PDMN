@@ -27,7 +27,7 @@ const Sidebar = () => {
   const [userData, setUserData] = useState(null);
   const [notifications, setNotifications] = useState([]);
   const [socketConnected, setSocketConnected] = useState(false);
-  const notifRef = useRef(null); 
+  const notifRef = useRef(null);
 
   useEffect(() => {
     const adminId = localStorage.getItem("adminId");
@@ -61,40 +61,33 @@ const Sidebar = () => {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         };
-  
+
         const userResponse = await axios.get(
           `https://booking-system-ge1i.onrender.com/api/admin/${adminId}`,
           { headers }
         );
         if (userResponse.status === 200) {
-          setUserData(userResponse.data);    
+          setUserData(userResponse.data);
         }
-  
+
         const notifResponse = await axios.get(
           "https://booking-system-ge1i.onrender.com/api/notif",
           { headers }
         );
-  
-        // notifResponse.data.forEach((notif, index) => {
-        //   if (!notif.receiver || !notif.receiver._id) {
-        //     console.log(`Notification at index ${index} has missing receiver or _id`, notif);
-        //   }
-        // });
-  
+
         const userNotifications = notifResponse.data
           .filter(notif => notif.receiver && notif.receiver._id === adminId)
           .filter(notif => !notif.done)
           .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-  
+
         setNotifications(userNotifications);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
-  
+
     fetchData();
   }, []);
-
 
   useEffect(() => {
     document.documentElement.style.setProperty(
@@ -129,6 +122,8 @@ const Sidebar = () => {
   const toggleCloseMenu = () => setCloseMenu((prevState) => !prevState);
   const toggleNotif = () => setNotif((prevState) => !prevState);
 
+  const isActive = (path) => location.pathname === path ? 'active' : '';
+
   return (
     <div className={`sidebar ${closeMenu ? "closed" : "open"}`}>
       <div className="sidebar-header">
@@ -140,37 +135,37 @@ const Sidebar = () => {
         {!closeMenu && <h2>{userData?.adminUser}</h2>}
       </div>
       <ul>
-        <li title="Dashboard">
+        <li title="Dashboard" className={isActive("/admin/dashboard")}>
           <a href="/admin/dashboard">
-          <FontAwesomeIcon icon={faChartSimple} />
+            <FontAwesomeIcon icon={faChartSimple} />
             {!closeMenu && <span>Dashboard</span>}
           </a>
         </li>
-        <li title="Employee List">
+        <li title="Employee List" className={isActive("/admin/employee-list")}>
           <a href="/admin/employee-list">
             <FontAwesomeIcon icon={faUserFriends} />
             {!closeMenu && <span>Employee List</span>}
           </a>
         </li>
-        <li title="Add Employee">
+        <li title="Add Employee" className={isActive("/admin/add-employee")}>
           <a href="/admin/add-employee">
             <FontAwesomeIcon icon={faUserPlus} />
             {!closeMenu && <span>Add Employee</span>}
           </a>
         </li>
-        <li title="Meetings">
+        <li title="Meetings" className={isActive("/admin/calendar")}>
           <a href="/admin/calendar">
             <FontAwesomeIcon icon={faCalendar} />
             {!closeMenu && <span>View Meetings Calendar</span>}
           </a>
         </li>
-        <li title="For Approval">
+        <li title="For Approval" className={isActive("/admin/approval-rooms")}>
           <a href="/admin/approval-rooms">
             <FontAwesomeIcon icon={faClipboardCheck} />
             {!closeMenu && <span>For Approval</span>}
           </a>
         </li>
-        <li title={`Notifications (${notifications.length})`}>
+        <li title={`Notifications (${notifications.length})`} className={isActive("/admin/notifications")}>
           <a onClick={toggleNotif}>
             <FontAwesomeIcon icon={faBell} />
             {!closeMenu && <span>Notifications ({notifications.length})</span>}

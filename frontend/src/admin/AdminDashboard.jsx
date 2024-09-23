@@ -206,7 +206,6 @@ const useDashboardData = () => {
   };
 };
 
-
 const chartOptions = {
   responsive: true,
   plugins: {
@@ -214,7 +213,9 @@ const chartOptions = {
       enabled: true,
       callbacks: {
         label: function (context) {
-          return `${context.dataset.label}: ${context.raw}`;
+          const date = context.dataset.label || ''; // Access the label (date) for the tooltip
+          const count = context.raw; // Get the count value for the tooltip
+          return `Date: ${date}, Bookings: ${count}`;
         },
       },
     },
@@ -226,9 +227,9 @@ const chartOptions = {
           size: 16,  // Increased font size for readability
           style: 'bold',
         },
-        color: '#333', // Use a dark color for better contrast
+        color: '#333', // Dark color for better contrast
         usePointStyle: true,
-        padding: 20, // Space out the labels a bit more
+        padding: 20, // More space between labels
       },
       onClick: (e, legendItem, legend) => {
         const index = legendItem.datasetIndex;
@@ -245,6 +246,10 @@ const chartOptions = {
   },
   scales: {
     x: {
+      title: {
+        display: true,
+        text: 'Date', // X-axis label
+      },
       ticks: {
         color: '#555', // Label color for the X-axis
         font: {
@@ -256,6 +261,10 @@ const chartOptions = {
       },
     },
     y: {
+      title: {
+        display: true,
+        text: 'Number of Bookings', // Y-axis label
+      },
       ticks: {
         color: '#555',  // Label color for the Y-axis
         font: {
@@ -266,7 +275,6 @@ const chartOptions = {
     },
   },
 };
-
 
 // Main Dashboard Component
 const Dashboard = ({ sidebarOpen }) => {
@@ -303,22 +311,29 @@ const Dashboard = ({ sidebarOpen }) => {
 
   const bookingTrendsData = useMemo(() => {
     const sortedBookingTrends = [...bookingTrends].sort((a, b) => new Date(a.date) - new Date(b.date));
-
+  
+    // Array of colors to be used for each data point (you can modify or expand this)
+    const colors = ['#3e95cd', '#8e5ea2', '#3cba9f', '#e8c3b9', '#c45850'];
+  
     return {
       labels: sortedBookingTrends.map((trend) => trend.date),
       datasets: [
         {
           label: 'Number of Bookings',
           data: sortedBookingTrends.map((trend) => trend.count),
-          borderColor: '#3e95cd',
-          backgroundColor: 'rgba(62, 149, 205, 0.5)',
+          borderColor: '#3e95cd', // Line color
+          backgroundColor: 'rgba(62, 149, 205, 0.5)', // Line background fill
           fill: true,
           tension: 0.3,
+          // Set individual point colors based on the colors array
+          pointBackgroundColor: sortedBookingTrends.map((_, index) => colors[index % colors.length]),
+          pointBorderColor: sortedBookingTrends.map((_, index) => colors[index % colors.length]),
+          pointRadius: 5, // Adjust point size if needed
         },
       ],
     };
   }, [bookingTrends]);
-
+  
   const bookingStatsData = useMemo(() => ({
     labels: ['Approved', 'Rejected', 'Pending'],
     datasets: [
@@ -345,31 +360,35 @@ const Dashboard = ({ sidebarOpen }) => {
     if (!Array.isArray(departmentStats)) {
       return { labels: [], datasets: [] };
     }
-
+  
     const sortedDepartmentStats = [...departmentStats].sort((a, b) => b.count - a.count);
-
+  
+    // Generate a dataset for each department
+    const datasets = sortedDepartmentStats.map(({ department, count }) => ({
+      label: department,
+      data: [count], 
+      backgroundColor: departmentColorMap[department] || '#000000',
+    }));
+  
     return {
-      labels: sortedDepartmentStats.map(({ department }) => department),
-      datasets: [{
-        label: 'Department Bookings',
-        data: sortedDepartmentStats.map(({ count }) => count),
-        backgroundColor: sortedDepartmentStats.map(({ department }) => departmentColorMap[department] || '#000000'),
-      }],
+      labels: ['Departments'], 
+      datasets,
     };
   }, [departmentStats]);
+  
 
   const usersData = useMemo(() => ({
-    labels: ['Users'], // Single label for the x-axis
+    labels: ['Users'],
     datasets: [
       {
-        label: 'Active Users', // First category label
-        data: [usersStats.active], // Data for Active Users
-        backgroundColor: '#4caf50', // Color for Active Users
+        label: 'Active Users',
+        data: [usersStats.active],
+        backgroundColor: '#4caf50', 
       },
       {
-        label: 'Not Registered', // Second category label
-        data: [usersStats.notRegistered], // Data for Not Registered Users
-        backgroundColor: '#f44336', // Color for Not Registered Users
+        label: 'Not Registered', 
+        data: [usersStats.notRegistered],
+        backgroundColor: '#f44336',
       },
     ],
   }), [usersStats]);
@@ -389,7 +408,7 @@ const Dashboard = ({ sidebarOpen }) => {
 
   const handleExportToExcel = () => {
     const bookingTrendsSheet = bookingTrends.map(item => ({
-      Date: new Date(item.date).toLocaleDateString(), // Format date
+      Date: new Date(item.date).toLocaleDateString(), 
       Count: item.count,
     }));
   
@@ -436,8 +455,8 @@ const Dashboard = ({ sidebarOpen }) => {
     // Set column widths
     const setColumnWidths = (worksheet) => {
       const cols = [
-        { wch: 25 }, // Column width for the first column
-        { wch: 15 }, // Column width for the second column
+        { wch: 25 },
+        { wch: 15 }, 
       ];
       worksheet['!cols'] = cols;
     };

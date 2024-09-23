@@ -100,6 +100,10 @@ button[type="redirect"]:hover {
     margin-right: 0px;
 }
 
+.sidebar ul li.active a {
+  color: #9c0b0b; /* Change text color for active state */
+}
+
 .sidebar-footer {
     margin-top: auto;
     padding: 10px;
@@ -943,25 +947,12 @@ button[type="redirect"]:hover {
 .dpt-legend-item p {
   margin: 0;
 }
-/* Dashboard Layout */
-/* .admin-dashboard {
-  display: flex;
-  height: 100vh;
-} */
-
-/* Main Content */
-/* .admin-dashboard-content {
-  margin-left: var(--sidebar-width);
-  padding: 20px;
-  transition: margin-left 0.3s ease;
-  overflow-y: auto;
-} */
 
 /* General Layout */
 .admin-dashboard {
   display: flex;
   height: 100vh;
-  background-color: #f4f4f4; /* Light background for better contrast */
+  background-color: #f4f4f4; 
 }
 
 .admin-dashboard-content {
@@ -969,8 +960,8 @@ button[type="redirect"]:hover {
   padding: 20px;
   flex: 1;
   transition: margin-left 0.3s ease;
-  overflow-y: auto; /* Enable vertical scrolling */
-  overflow-x: hidden; /* Prevent horizontal overflow */
+  overflow-y: auto; 
+  overflow-x: hidden;
 }
 
 /* Sidebar Styles */
@@ -986,7 +977,6 @@ button[type="redirect"]:hover {
   margin-bottom: 20px;
   color: #333;
   font-weight: 700;
-  border-bottom: 1px solid #000;
   padding-bottom: 10px;
 }
 
@@ -1000,6 +990,11 @@ button[type="redirect"]:hover {
   flex: 1;
   min-width: 200px;
   min-height: 150px;
+}
+
+.user-stat-item {
+  text-align: center;
+  align-content: center;
 }
 
 .stat-item:hover {
@@ -1017,7 +1012,7 @@ button[type="redirect"]:hover {
 
 .stat-item p,
 .user-stat-item p {
-  font-size: 1rem;
+  font-size: 20px;
   margin: 0;
   color: #666;
 }
