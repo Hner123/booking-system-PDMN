@@ -4,7 +4,7 @@ import axios from "axios";
 import "../user/User.css";
 import logo from "../assets/logos/GDSLogo.png";
 import mascot from "../assets/33.gif";
-import WithoutAuthAdmin from "../auth/WithoutAuth";
+import WithoutAuthAdmin from "../auth/WithoutAuthAdmin";
 
 const AdminLogin = () => {
     const [adminUser, setUsername] = useState('');

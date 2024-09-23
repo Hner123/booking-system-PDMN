@@ -193,25 +193,30 @@ const ApprovalDetails = ({ sidebarOpen }) => {
 
                   if (inviteResponse.status === 201) {
                     setBookings(bookings.filter(booking => booking._id !== selectedBooking._id));
-                    // setAcceptModal(false);
+                    setAcceptModal(false);
                   }
 
                 } catch (error) {
                   // console.error("Error sending invites:", error);
                   toast.error("Unexpected error occured. Please try again later.");
+                  setAcceptModal(false);
                 }
               }
             } catch (error) {
               toast.error("Error updating information. Please try again later.");
+              setAcceptModal(false);
             }
           }
         } catch (error) {
           toast.error(error.message);
+          setAcceptModal(false);
         }
       }
     } catch (error) {
       toast.error(error.message);
+      setAcceptModal(false);
     } finally {
+      setAcceptModal(false);
       setLoading(false);
     }
   };
@@ -305,15 +310,19 @@ const ApprovalDetails = ({ sidebarOpen }) => {
               }
             } catch (error) {
               toast.error("Error updating information. Please try again later.");
+              setRejectModal(false);
             }
           }
         } catch (error) {
           toast.error(error.message);
+          setRejectModal(false);
         }
       }
     } catch (error) {
       toast.error(error.message);
+      setRejectModal(false);
     } finally {
+      setRejectModal(false);
       setLoading(false);
     }
   };
