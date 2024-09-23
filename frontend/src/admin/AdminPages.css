@@ -952,7 +952,7 @@ button[type="redirect"]:hover {
 .admin-dashboard {
   display: flex;
   height: 100vh;
-  background-color: #f4f4f4; 
+  background-color: #ffffff; 
 }
 
 .admin-dashboard-content {
@@ -975,7 +975,7 @@ button[type="redirect"]:hover {
   font-size: 2.2rem;
   line-height: 1.2;
   margin-bottom: 20px;
-  color: #333;
+  color: #000000;
   font-weight: 700;
   padding-bottom: 10px;
 }
@@ -1037,6 +1037,7 @@ button[type="redirect"]:hover {
   flex-wrap: wrap;
   gap: 20px;
   flex-direction: column;
+  
 }
 
 /* Charts Container */
@@ -1077,8 +1078,9 @@ button[type="redirect"]:hover {
   gap: 20px;
   width: 100%;
   padding: 20px;
-  background-color: #ffffff;
+  background-color: #fff;
   border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .user-chart-container {
