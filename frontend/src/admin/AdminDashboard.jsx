@@ -342,7 +342,7 @@ const Dashboard = ({ sidebarOpen }) => {
     datasets: [
       {
         data: [bookingStats.approved, bookingStats.rejected, bookingStats.pending],
-        backgroundColor: ['#C0392B', '#D4AC0D', '#E59866'],
+        backgroundColor: ['#555', '#888', '#bbb'],
         hoverOffset: 4,
       },
     ],
