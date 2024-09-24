@@ -1,43 +1,42 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 
-import Header from "./user/utilities/Header.jsx";
-import UserLogin from "./user/UserLogin";
-import UserDashboard from "./user/UserDashboard";
-import Room from "./user/reservation/RoomReservation";
-import ReservationFormsDetails from "./user/reservation/ReservationFormsDetails";
-import Edit from "./user/utilities/EditProfile.jsx";
-import UserList from "./user/utilities/UserList.jsx";
-import Confirmation from "./user/reservation/Confirmation";
+import Header from './user/utilities/Header.jsx';
+import UserLogin from './user/UserLogin';
+import UserDashboard from './user/UserDashboard';
+import Room from './user/reservation/RoomReservation';
+import ReservationFormsDetails from './user/reservation/ReservationFormsDetails';
+import Edit from './user/utilities/EditProfile.jsx';
+import UserList from './user/utilities/UserList.jsx';
+import Confirmation from './user/reservation/Confirmation';
 
-import AdminLogin from "./admin/AdminLogin.jsx";
-import AdminDashboard from "./admin/AdminDashboard.jsx";
-import EmployeeList from "./admin/EmployeeList.jsx";
-import AddEmployee from "./admin/AddEmployee.jsx";
-import ApprovalDetails from "./admin/ApprovalDetails.jsx";
-import Calendar from "./admin/Calendar.jsx";
-import ApprovalPalawan from "./admin/ApprovalPalawan.jsx";
-import ApprovalRooms from "./admin/ApprovalRooms.jsx";
-import NotFoundPage from "./auth/NotFoundPage.jsx";
+import AdminLogin from './admin/AdminLogin.jsx';
+import AdminDashboard from './admin/AdminDashboard.jsx';
+import EmployeeList from './admin/EmployeeList.jsx';
+import AddEmployee from './admin/AddEmployee.jsx';
+import ApprovalDetails from './admin/ApprovalDetails.jsx';
+import Calendar from './admin/Calendar.jsx';
+import ApprovalPalawan from './admin/ApprovalPalawan.jsx';
+import ApprovalRooms from './admin/ApprovalRooms.jsx';
+import NotFoundPage from './auth/NotFoundPage.jsx';
 
-import Sidebar from "./admin/Sidebar.jsx";
+import Sidebar from './admin/Sidebar.jsx'
 
 import "react-toastify/dist/ReactToastify.css";
-import "react-datepicker/dist/react-datepicker.css";
-import "rc-time-picker/assets/index.css";
-import "react-big-calendar/lib/css/react-big-calendar.css";
-import MeetingRoomSchedule from "./tablet/MeetingRoomSchedule.jsx";
+import 'react-datepicker/dist/react-datepicker.css';
+import 'rc-time-picker/assets/index.css';
+import 'react-big-calendar/lib/css/react-big-calendar.css';
+import MeetingRoomSchedule from './tablet/MeetingRoomSchedule.jsx';
 
-import Verify from "./user/utilities/Verify.jsx";
-import ForgotPass from "./user/utilities/ForgotPass.jsx";
-import ResetPass from "./user/utilities/ResetPass.jsx";
+import Verify from './user/utilities/Verify.jsx';
+import ForgotPass from './user/utilities/ForgotPass.jsx';
+import ResetPass from './user/utilities/ResetPass.jsx';
 
-import "./App.css";
+import './App.css';
+
 
 function App() {
-  const isLoggedIn = localStorage.getItem("adminToken");
-
   return (
     <div>
       <ToastContainer />
@@ -101,15 +100,16 @@ function App() {
         <Route
           path="/admin"
           element={
-            isLoggedIn ? <Navigate to="/admin/dashboard" /> : <AdminLogin />
+            <>
+              <AdminLogin />
+            </>
           }
         />
         <Route
           path="/admin/dashboard"
           element={
             <>
-              <Sidebar />
-              <AdminDashboard />
+              <AdminDashboard/>
             </>
           }
         />
@@ -197,8 +197,7 @@ function App() {
             <>
               <ResetPass />
             </>
-          }
-        />
+        } />     
       </Routes>
     </div>
   );
