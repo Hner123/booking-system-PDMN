@@ -980,6 +980,10 @@ button[type="redirect"]:hover {
   padding-bottom: 10px;
 }
 
+.month {
+  font-size: 20px;
+}
+
 .stat-item,
 .user-stat-item {
   background: #fff;
@@ -1122,16 +1126,31 @@ button[type="redirect"]:hover {
     flex-direction: column;
   }
 }
+.export-section {
+  display: flex; /* Enable Flexbox */
+  align-items: center; /* Center items vertically */
+  justify-content: space-between; /* Space items evenly */
+  margin: 20px 0; /* Optional: Add margin for spacing */
+}
 
 /* Export Data Button */
-.export-button {
+.export-btn {
   background-color: #28a745;
   color: white;
   padding: 10px 15px;
   border-radius: 5px;
   transition: background-color 0.3s ease;
+  border: none;
 }
 
-.export-button:hover {
+.export-btn:hover {
   background-color: #218838;
 }
+
+.analytics-month {
+  font-size: 1.5rem; /* Adjust font size as needed */
+  margin: 0; /* Remove margin to keep items aligned */
+  color: #333; /* Text color */
+  font-weight: bold; /* Bold text */
+}
+
