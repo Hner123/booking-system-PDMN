@@ -1127,10 +1127,10 @@ button[type="redirect"]:hover {
   }
 }
 .export-section {
-  display: flex;
-  align-items: center;
-  justify-content: space-between; 
-  margin: 20px 0;
+  display: flex; /* Enable Flexbox */
+  align-items: center; /* Center items vertically */
+  justify-content: space-between; /* Space items evenly */
+  margin: 20px 0; /* Optional: Add margin for spacing */
 }
 
 /* Export Data Button */
@@ -1148,9 +1148,9 @@ button[type="redirect"]:hover {
 }
 
 .analytics-month {
-  font-size: 1.5rem; 
-  margin: 0; 
-  color: #333;
-  font-weight: bold; 
+  font-size: 1.5rem; /* Adjust font size as needed */
+  margin: 0; /* Remove margin to keep items aligned */
+  color: #333; /* Text color */
+  font-weight: bold; /* Bold text */
 }
 
