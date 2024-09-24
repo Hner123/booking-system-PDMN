@@ -224,12 +224,11 @@ const chartOptions = {
       position: 'bottom',
       labels: {
         font: {
-          size: 16,  // Increased font size for readability
-          style: 'bold',
+          size: 16,  
         },
-        color: '#333', // Dark color for better contrast
+        color: '#333', 
         usePointStyle: true,
-        padding: 20, // More space between labels
+        padding: 20,
       },
       onClick: (e, legendItem, legend) => {
         const index = legendItem.datasetIndex;
