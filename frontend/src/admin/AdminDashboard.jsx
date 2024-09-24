@@ -489,7 +489,7 @@ const Dashboard = ({ sidebarOpen }) => {
     <div className={`admin-dashboard ${sidebarOpen ? "sidebar-open" : ""}`}>
     <Sidebar sidebarOpen={sidebarOpen} />
     <div className="admin-dashboard-content">
-      <h1 className="dashboard-title">Booking System Analytics</h1>
+      <h1 className="dashboard-title">Admin Dashboard</h1>
 
       <div className="export-section">
       <h2 className="analytics-month">Analytics for the month of {currentMonth}</h2>
