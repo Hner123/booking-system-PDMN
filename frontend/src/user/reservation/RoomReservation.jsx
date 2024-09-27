@@ -21,7 +21,6 @@ const RoomReservation = () => {
     return moment().startOf("hour").add(hoursToAdd, "hours");
   };
 
-  // State variables
   const [startTime, setStartTime] = useState(initializeHour());
   const [endTime, setEndTime] = useState(initializeHour(1));
   const [startDate, setStartDate] = useState(new Date());
@@ -36,8 +35,6 @@ const RoomReservation = () => {
   const [roomName, setRoomName] = useState("");
   const [loading, setLoading] = useState(false);
 
-
-
   const departmentColors = {
     "Philippine Dragon Media Network": "#C0392B",
     "GDS Capital": "#E74C3C",
@@ -47,15 +44,16 @@ const RoomReservation = () => {
     "Dragon AI": "#1E8449",
     SuperNova: "#E59866",
     ClearPath: "#2874A6",
-    Palawan: "#C0392B", 
-    Boracay: "#2874A6", 
+    Palawan: "#C0392B",
+    Boracay: "#2874A6",
     'Palawan and Boracay': '#F39C12',
-};
-
+  };
 
   useEffect(() => {
     const fetchOrigData = async () => {
       try {
+        setLoading(true);
+
         const reserveToken = localStorage.getItem("reserveToken");
         const token = localStorage.getItem("authToken");
         const headers = {
@@ -69,22 +67,25 @@ const RoomReservation = () => {
         );
         if (response.status === 200) {
           setOrigData(response.data);
-          setRoomName(response.data.roomName); // Ensure roomName is set
+          setRoomName(response.data.roomName);
         }
       } catch (error) {
         console.error("Error fetching book data:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchOrigData();
   }, []);
 
-  // Make sure to use roomName after it's set
   const headerColor = departmentColors[roomName] || "#000";
 
   useEffect(() => {
     const fetchBookData = async () => {
       try {
+        setLoading(true);
+
         const token = localStorage.getItem("authToken");
         const headers = {
           Authorization: `Bearer ${token}`,
@@ -106,13 +107,12 @@ const RoomReservation = () => {
             }
 
             const fetchedEvents = filteredData.map((event) => {
-              // Combine attendees and guests
               let combinedAttendees = [];
 
               if (event.attendees && event.attendees.length > 0) {
                 combinedAttendees = [...event.attendees];
               }
-              
+
               if (event.guest && event.guest.length > 0) {
                 combinedAttendees = [...combinedAttendees, ...event.guest];
               }
@@ -139,6 +139,8 @@ const RoomReservation = () => {
         }
       } catch (error) {
         console.error("Error fetching book data:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -334,7 +336,7 @@ const RoomReservation = () => {
   return (
     <div className="room-reservation-container">
       <ToastContainer />
-      <h1 style={{textAlign: 'Center', margin: '0' }}>
+      <h1 style={{ textAlign: 'Center', margin: '0' }}>
         Reserve{" "}
         {roomName ? (
           <span style={{ color: headerColor }}>{roomName}</span>
@@ -429,7 +431,23 @@ const RoomReservation = () => {
                 onClick={handleReserve}
                 disabled={loading}
               >
-                {loading ? "Reserving..." : "Reserve"}
+                {loading ? (
+                  <div>
+                    <div
+                      className="spinner-grow"
+                      role="status"
+                      style={{
+                        width: "1rem",
+                        height: "1rem",
+                        marginRight: "0.5rem",
+                      }}
+                    >
+                    </div>
+                    <span>Loading...</span>
+                  </div>
+                ) : (
+                  <span>Submit</span>
+                )}
               </button>
             </div>
           </div>

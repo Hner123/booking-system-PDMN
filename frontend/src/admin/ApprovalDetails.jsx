@@ -152,23 +152,23 @@ const ApprovalDetails = ({ sidebarOpen }) => {
           );
 
           if (emailResponse.status === 201) {
+            const date = new Date(updateResponse.data.scheduleDate).toLocaleDateString();
+            const messageContent = `Your reservation <strong>${updateResponse.data.title}</strong> on <strong>${date}</strong> has been approved`;
+            const notifData = {
+              booking: updateResponse.data._id,
+              message: messageContent,
+              sender: "66861570dd3fc08ab2a6557d",
+              senderType: "admin",
+              receiver: updateResponse.data.user._id,
+              receiverType: "user",
+              createdAt: new Date().toISOString(),
+            };
+            
             try {
               const token = localStorage.getItem("adminToken");
               const headers = {
                 Authorization: `Bearer ${token}`,
                 "Content-Type": "application/json",
-              };
-
-              const date = new Date(updateResponse.data.scheduleDate).toLocaleDateString();
-              const messageContent = `Your reservation <strong>${updateResponse.data.title}</strong> on <strong>${date}</strong> has been approved`;
-              const notifData = {
-                booking: updateResponse.data._id,
-                message: messageContent,
-                sender: "66861570dd3fc08ab2a6557d",
-                senderType: "admin",
-                receiver: updateResponse.data.user._id,
-                receiverType: "user",
-                createdAt: new Date().toISOString(),
               };
 
               const notifResponse = await axios.post(
@@ -229,6 +229,7 @@ const ApprovalDetails = ({ sidebarOpen }) => {
       toast.error("Please state your reason.");
       return;
     }
+
     try {
       const token = localStorage.getItem("adminToken");
       const headers = {

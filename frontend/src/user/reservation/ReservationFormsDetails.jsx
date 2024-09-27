@@ -19,6 +19,7 @@ const ReservationFormsDetails = () => {
   const [guestNames, setGuestNames] = useState("");
   const [showDiscardModal, setShowDiscardModal] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [inputFocused, setInputFocused] = useState(false);
 
   const navigate = useNavigate();
@@ -50,9 +51,10 @@ const ReservationFormsDetails = () => {
     }
   };
 
-  // Move fetchUserData function outside of useEffect
   const fetchUserData = async () => {
     try {
+      setLoading(true);
+
       const token = localStorage.getItem("authToken");
       const headers = {
         Authorization: `Bearer ${token}`,
@@ -77,6 +79,8 @@ const ReservationFormsDetails = () => {
       }
     } catch (error) {
       console.error("Error fetching user data:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -103,6 +107,8 @@ const ReservationFormsDetails = () => {
   useEffect(() => {
     const fetchBookData = async () => {
       try {
+        setLoading(true);
+
         const reserveId = localStorage.getItem("reserveToken");
         const token = localStorage.getItem("authToken");
         const headers = {
@@ -120,6 +126,8 @@ const ReservationFormsDetails = () => {
         }
       } catch (error) {
         console.error("Error fetching book data:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -128,7 +136,7 @@ const ReservationFormsDetails = () => {
 
   useEffect(() => {
     if (bookData) {
-      fetchUserData(); // Fetch user data whenever bookData changes
+      fetchUserData();
     }
   }, [bookData]);
 
@@ -141,25 +149,25 @@ const ReservationFormsDetails = () => {
     return inputLength === 0
       ? []
       : userData.filter(
-          (user) =>
-            (
-              user.firstName.toLowerCase() +
-              " " +
-              user.surName.toLowerCase()
-            ).includes(inputValue) && !user.disabled
-        );
+        (user) =>
+          (
+            user.firstName.toLowerCase() +
+            " " +
+            user.surName.toLowerCase()
+          ).includes(inputValue) && !user.disabled
+      );
   };
 
   const onInputFocus = () => {
     setInputFocused(true);
     onSuggestionsFetchRequested({ value: attendeeInput });
   };
-  
+
   const onInputBlur = () => {
     setInputFocused(false);
     // Optionally clear suggestions on blur if needed
   };
- 
+
   const onSuggestionsFetchRequested = ({ value }) => {
     if (inputFocused) {
       setSuggestions(getSuggestions(value));
@@ -207,13 +215,13 @@ const ReservationFormsDetails = () => {
   const removeAttendee = (index) => {
     const removedAttendee = attendees[index];
     const updatedAttendees = attendees.filter((_, i) => i !== index);
-  
+
     setAttendees(updatedAttendees);
     setFormData((prevFormData) => ({
       ...prevFormData,
       attendees: updatedAttendees,
     }));
-  
+
     setUserData(
       userData.map((user) =>
         user.firstName + " " + user.surName === removedAttendee
@@ -231,42 +239,42 @@ const ReservationFormsDetails = () => {
     onBlur: onInputBlur,
     style: { width: "100%" },
   };
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitting(true); // Set submitting to true
-  
+
     if (formData.caps.pax === "") {
       toast.error("Please select number of attendees");
       setSubmitting(false); // Reset submitting state
       return;
     }
-  
+
     const additionalAttendees = guestNames
       .split(",")
       .map((name) => name.trim())
       .filter((name) => name);
-  
+
     const confirmationStatus =
       bookData.confirmation === false && formData.caps.pax === "3-More"
         ? false
         : bookData.confirmation === true && formData.caps.pax === "1-2"
-        ? false
-        : bookData.confirmation === true && formData.caps.pax === "3-More"
-        ? true
-        : false;
-  
+          ? false
+          : bookData.confirmation === true && formData.caps.pax === "3-More"
+            ? true
+            : false;
+
     const approvalStatus =
       bookData.confirmation === false && formData.caps.pax === "3-More"
         ? "Pending"
         : bookData.confirmation === true && formData.caps.pax === "1-2"
-        ? "Pending"
-        : bookData.confirmation === true && formData.caps.pax === "3-More"
-        ? "Approved"
-        : "Pending";
-  
+          ? "Pending"
+          : bookData.confirmation === true && formData.caps.pax === "3-More"
+            ? "Approved"
+            : "Pending";
+
     const archiveStatus = approvalStatus === "Approved";
-  
+
     const updatedReserve = {
       caps: {
         pax: formData.caps.pax,
@@ -282,9 +290,9 @@ const ReservationFormsDetails = () => {
         reason: "",
       },
     };
-  
+
     const totalAttendees = attendees.length + additionalAttendees.length;
-  
+
     if (selectedRoom === "Palawan and Boracay" && totalAttendees < 7) {
       toast.error(
         "For 'Palawan and Boracay', you must have at least 8 attendees."
@@ -292,7 +300,7 @@ const ReservationFormsDetails = () => {
       setSubmitting(false); // Reset submitting state
       return;
     }
-  
+
     if (
       formData.caps.pax === "3-More" &&
       (totalAttendees < 2 || totalAttendees > 7)
@@ -301,13 +309,13 @@ const ReservationFormsDetails = () => {
       setSubmitting(false); // Reset submitting state
       return;
     }
-  
+
     if (formData.caps.pax === "1-2" && totalAttendees !== 1) {
       toast.error("You must have exactly 1 person accompanying you.");
       setSubmitting(false); // Reset submitting state
       return;
     }
-  
+
     try {
       const reserveId = localStorage.getItem("reserveToken");
       const token = localStorage.getItem("authToken");
@@ -315,13 +323,13 @@ const ReservationFormsDetails = () => {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       };
-  
+
       const updateResponse = await axios.patch(
         `https://booking-system-ge1i.onrender.com/api/book/edit/${reserveId}`,
         updatedReserve,
         { headers }
       );
-  
+
       if (updateResponse.status === 200) {
         if (updatedReserve.confirmation) {
           if (attendees.length > 0) {
@@ -336,7 +344,7 @@ const ReservationFormsDetails = () => {
                 {},
                 { headers }
               );
-  
+
               if (inviteResponse.status === 201) {
                 navigate("/confirmation");
               }
@@ -356,7 +364,7 @@ const ReservationFormsDetails = () => {
             roomDescription = "combined Palawan and Boracay rooms";
           }
           const sentAt = new Date().toLocaleString();
-  
+
           const messageContent = `
             <a href="/admin/approval/${selectedRoom}">
               <div style="padding: 5px; border: 1px solid #ddd; border-radius: 5px; background-color: #f9f9f9;">
@@ -372,7 +380,7 @@ const ReservationFormsDetails = () => {
               </div>
             </a>
           `;
-  
+
           const notifData = {
             booking: updateResponse.data._id,
             message: messageContent,
@@ -382,7 +390,7 @@ const ReservationFormsDetails = () => {
             receiverType: "admin",
             createdAt: new Date().toISOString(),
           };
-  
+
           try {
             const token = localStorage.getItem("authToken");
             const headers = {
@@ -394,7 +402,7 @@ const ReservationFormsDetails = () => {
               notifData,
               { headers }
             );
-  
+
             if (notifResponse.status === 201) {
               try {
                 const token = localStorage.getItem("authToken");
@@ -407,7 +415,7 @@ const ReservationFormsDetails = () => {
                   {},
                   { headers }
                 );
-  
+
                 if (pendingResponse.status === 201) {
                   navigate("/confirmation");
                 }
@@ -680,11 +688,27 @@ const ReservationFormsDetails = () => {
                   className="reserve-button"
                   type="submit"
                   style={{ alignItems: "center" }}
-                  disabled={submitting}
+                  disabled={submitting || loading}
                 >
-                  {submitting ? "Booking your reservation..." : "Book"}
-                </button>
+                  {loading ? (
+                    <div>
+                      <div
+                        className="spinner-grow"
+                        role="status"
+                        style={{
+                          width: "1rem",
+                          height: "1rem",
+                          marginRight: "0.5rem",
+                        }}
+                      >
+                      </div>
+                      <span>Loading...</span>
+                    </div>
+                  ) : (
+                    <span>{submitting ? "Booking your reservation..." : "Book"}</span>
+                  )}
 
+                </button>
                 <button
                   className="cancel-button"
                   onClick={handleCancelTime}

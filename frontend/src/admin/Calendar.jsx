@@ -33,8 +33,12 @@ const EventModal = ({ event, onClose, onDelete }) => (
           <p><strong>Booked by:</strong> {event.user}</p>
           <p><strong>Department:</strong> {event.department}</p>
           <p>
-            <strong>Attendees:</strong>
-            {event.attendees?.length > 0 ? event.attendees.join(", ") : "No attendees listed"}
+            <strong>Attendees: </strong>
+            {event.attendees?.length > 0 ? event.attendees.join(", ") : " No attendees listed"}
+          </p>
+          <p>
+            <strong>Guests: </strong>
+            {event.guests?.length > 0 ? event.guests.join(", ") : " No guests listed"}
           </p>
           <button
             onClick={() => onDelete(event.id)}
@@ -46,7 +50,7 @@ const EventModal = ({ event, onClose, onDelete }) => (
           <h3>{event.room}</h3>
           <p><strong>Date:</strong> {moment(event.start).format("MMMM D, YYYY")}</p>
           <p>
-            <strong>Time:</strong>
+            <strong>Time: </strong>
             {moment(event.start).format("h:mm A")} - {moment(event.end).format("h:mm A")}
           </p>
           <p><strong>Status:</strong> {event.status}</p>
@@ -115,6 +119,7 @@ const RoomReservation = () => {
               room: event.roomName,
               user: `${event.user?.firstName} ${event.user?.surName}`,
               attendees: event.attendees,
+              guests: event.guest
             }));
 
           setState((prevState) => ({
