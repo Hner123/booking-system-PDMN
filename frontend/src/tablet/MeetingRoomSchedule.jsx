@@ -31,7 +31,7 @@ const isSameDay = (date1, date2) => {
   );
 };
 
-// Booking fetching logic
+// Booking fetching logic with polling
 const useBooking = () => {
   const [bookings, setBookings] = useState([]);
   const [currentMeeting, setCurrentMeeting] = useState(null);
@@ -53,7 +53,7 @@ const useBooking = () => {
         const filteredBookings = response.data.filter((event) => {
           const eventStart = new Date(event.startTime);
           const eventEnd = new Date(event.endTime);
-          
+
           return (
             ((event.roomName === selectedRoom || event.roomName === "Palawan and Boracay") &&
               event.confirmation &&
@@ -68,8 +68,16 @@ const useBooking = () => {
     }
   }, [selectedRoom, token]);
 
+  // Polling: Fetch bookings every 10 seconds
   useEffect(() => {
-    if (selectedRoom) fetchBookings();
+    if (selectedRoom) {
+      fetchBookings(); // Initial fetch
+      const intervalId = setInterval(() => {
+        fetchBookings();
+      }, 10000); // Fetch every 10 seconds
+
+      return () => clearInterval(intervalId); // Clear interval on component unmount
+    }
   }, [selectedRoom, fetchBookings]);
 
   useEffect(() => {
@@ -233,18 +241,19 @@ const UpcomingMeetings = ({ bookings, currentTime }) => {
         )}
       </div>
       <div className="qr-container">
-        <p className="item-time">Book now:</p>
-        <img src={qrImage} alt="QR Code" />
+        <img className="qr-image" src={qrImage} alt="QR Code" />
       </div>
     </div>
   );
 };
 
-// Single meeting item component
+// Meeting item component
 const MeetingItem = ({ meeting }) => (
   <div className="meeting-item">
-    <h3>{truncateTitle(meeting.title, 25)}</h3>
-    <p className="item-time">{`${formatTime(new Date(meeting.startTime))} - ${formatTime(new Date(meeting.endTime))}`}</p>
+    <p className="item-title">{truncateTitle(meeting.title, 25)}</p>
+    <p className="item-time">
+      {formatTime(new Date(meeting.startTime))} - {formatTime(new Date(meeting.endTime))}
+    </p>
     <p className="item-user">{`${meeting.user?.firstName || "Unknown"} ${meeting.user?.surName || "Unknown"}`}</p>
   </div>
 );
