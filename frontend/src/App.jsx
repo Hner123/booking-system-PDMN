@@ -23,8 +23,6 @@ import NotFoundPage from './auth/NotFoundPage.jsx';
 
 import Sidebar from './admin/Sidebar.jsx'
 
-import 'bootstrap/dist/css/bootstrap.min.css';
-
 import "react-toastify/dist/ReactToastify.css";
 import 'react-datepicker/dist/react-datepicker.css';
 import 'rc-time-picker/assets/index.css';

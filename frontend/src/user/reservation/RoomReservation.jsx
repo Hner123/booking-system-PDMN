@@ -432,19 +432,7 @@ const RoomReservation = () => {
                 disabled={loading}
               >
                 {loading ? (
-                  <div>
-                    <div
-                      className="spinner-grow"
-                      role="status"
-                      style={{
-                        width: "1rem",
-                        height: "1rem",
-                        marginRight: "0.5rem",
-                      }}
-                    >
-                    </div>
-                    <span>Loading...</span>
-                  </div>
+                  <span>Loading...</span>
                 ) : (
                   <span>Submit</span>
                 )}

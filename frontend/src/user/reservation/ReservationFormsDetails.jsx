@@ -6,6 +6,7 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import WithAuthReserve from "../../auth/WithAuthReserve";
 
+
 const ReservationFormsDetails = () => {
   const formRef = useRef();
   const [pax, setPax] = useState("");
@@ -691,23 +692,10 @@ const ReservationFormsDetails = () => {
                   disabled={submitting || loading}
                 >
                   {loading ? (
-                    <div>
-                      <div
-                        className="spinner-grow"
-                        role="status"
-                        style={{
-                          width: "1rem",
-                          height: "1rem",
-                          marginRight: "0.5rem",
-                        }}
-                      >
-                      </div>
-                      <span>Loading...</span>
-                    </div>
+                    <span>Loading...</span>
                   ) : (
                     <span>{submitting ? "Booking your reservation..." : "Book"}</span>
                   )}
-
                 </button>
                 <button
                   className="cancel-button"
