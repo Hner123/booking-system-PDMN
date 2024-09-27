@@ -225,7 +225,7 @@ const chartOptions = {
       labels: {
         font: {
           size: 16,  // Increased font size for readability
-          style: 'bold',
+          weight: 'bold',
         },
         color: '#333', // Dark color for better contrast
         usePointStyle: true,
