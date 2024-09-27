@@ -63,7 +63,7 @@ const ReservationFormsDetails = () => {
       };
 
       const response = await axios.get(
-        `https://pdmnnewshub.ddns.net:8800//api/user/`,
+        `https://pdmnnewshub.ddns.net:8800/api/user/`,
         {
           headers,
         }
@@ -118,7 +118,7 @@ const ReservationFormsDetails = () => {
         };
 
         const response = await axios.get(
-          `https://pdmnnewshub.ddns.net:8800//api/book/${reserveId}`,
+          `https://pdmnnewshub.ddns.net:8800/api/book/${reserveId}`,
           { headers }
         );
         if (response.status === 200) {
@@ -326,7 +326,7 @@ const ReservationFormsDetails = () => {
       };
 
       const updateResponse = await axios.patch(
-        `https://pdmnnewshub.ddns.net:8800//api/book/edit/${reserveId}`,
+        `https://pdmnnewshub.ddns.net:8800/api/book/edit/${reserveId}`,
         updatedReserve,
         { headers }
       );
@@ -341,7 +341,7 @@ const ReservationFormsDetails = () => {
                 "Content-Type": "application/json",
               };
               const inviteResponse = await axios.post(
-                `https://pdmnnewshub.ddns.net:8800//api/email/invite/${reserveId}`,
+                `https://pdmnnewshub.ddns.net:8800/api/email/invite/${reserveId}`,
                 {},
                 { headers }
               );
@@ -399,7 +399,7 @@ const ReservationFormsDetails = () => {
               "Content-Type": "application/json",
             };
             const notifResponse = await axios.post(
-              `https://pdmnnewshub.ddns.net:8800//api/notif/new`,
+              `https://pdmnnewshub.ddns.net:8800/api/notif/new`,
               notifData,
               { headers }
             );
@@ -412,7 +412,7 @@ const ReservationFormsDetails = () => {
                   "Content-Type": "application/json",
                 };
                 const pendingResponse = await axios.post(
-                  `https://pdmnnewshub.ddns.net:8800//api/email/pending/${reserveId}`,
+                  `https://pdmnnewshub.ddns.net:8800/api/email/pending/${reserveId}`,
                   {},
                   { headers }
                 );
@@ -455,7 +455,7 @@ const ReservationFormsDetails = () => {
       };
 
       const updateResponse = await axios.delete(
-        `https://pdmnnewshub.ddns.net:8800//api/book/delete/${reserveId}`,
+        `https://pdmnnewshub.ddns.net:8800/api/book/delete/${reserveId}`,
         { headers }
       );
 

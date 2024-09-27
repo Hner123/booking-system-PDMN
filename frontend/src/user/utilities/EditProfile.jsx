@@ -52,7 +52,7 @@ const EditProfile = () => {
           "Content-Type": "application/json"
         };
         const response = await axios.get(
-          `https://booking-system-ge1i.onrender.com/api/user/${userId}`,
+          `https://pdmnnewshub.ddns.net:8800/api/user/${userId}`,
           { headers }
         );
         if (response.status === 200) {
@@ -85,7 +85,7 @@ const EditProfile = () => {
 
     try {
       const validationResponse = await axios.post(
-        `https://booking-system-ge1i.onrender.com/api/auth/validate`,
+        `https://pdmnnewshub.ddns.net:8800/api/auth/validate`,
         { email: formData.email }
       );
 
@@ -113,7 +113,7 @@ const EditProfile = () => {
       };
 
       const updateResponse = await axios.post(
-        `https://booking-system-ge1i.onrender.com/api/email/changeemail`,
+        `https://pdmnnewshub.ddns.net:8800/api/email/changeemail`,
         sendEmail,
         { headers }
       );
@@ -136,7 +136,7 @@ const EditProfile = () => {
 
     try {
       const validationResponse = await axios.post(
-        `https://booking-system-ge1i.onrender.com/api/auth/check`,
+        `https://pdmnnewshub.ddns.net:8800/api/auth/check`,
         { currPass: formData.currPass, hashedPassword: userData.passWord }
       );
 
@@ -178,7 +178,7 @@ const EditProfile = () => {
       };
 
       const updateResponse = await axios.patch(
-        `https://booking-system-ge1i.onrender.com/api/user/edit/${userId}`,
+        `https://pdmnnewshub.ddns.net:8800/api/user/edit/${userId}`,
         updatedUser,
         { headers }
       );

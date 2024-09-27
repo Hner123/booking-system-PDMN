@@ -18,7 +18,7 @@ const UserList = () => {
           "Content-Type": "application/json",
         };
 
-        const response = await axios.get("https://booking-system-ge1i.onrender.com/api/user/", {
+        const response = await axios.get("https://pdmnnewshub.ddns.net:8800/api/user/", {
           headers,
         });
         if (response.status === 200) {

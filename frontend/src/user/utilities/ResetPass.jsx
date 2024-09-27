@@ -31,7 +31,7 @@ const ResetPassword = () => {
       };
 
       await axios.patch(
-        `https://booking-system-ge1i.onrender.com/api/auth/resetpass/${userId}`,
+        `https://pdmnnewshub.ddns.net:8800/api/auth/resetpass/${userId}`,
         { passWord },
         { headers }
       );

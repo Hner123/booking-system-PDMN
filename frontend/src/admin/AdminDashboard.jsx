@@ -45,7 +45,7 @@ const useDashboardData = () => {
           "Content-Type": "application/json",
         };
 
-        const response = await axios.get(`https://pdmnnewshub.ddns.net:8800//api/book/`, { headers });
+        const response = await axios.get(`https://pdmnnewshub.ddns.net:8800/api/book/`, { headers });
 
         if (response.status === 200) {
           setRoomUsage({
@@ -173,7 +173,7 @@ const useDashboardData = () => {
           "Content-Type": "application/json",
         };
 
-        const response = await axios.get(`https://pdmnnewshub.ddns.net:8800//api/user/`, { headers });
+        const response = await axios.get(`https://pdmnnewshub.ddns.net:8800/api/user/`, { headers });
 
         if (response.status === 200) {
           setUsersStats({

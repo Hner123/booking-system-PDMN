@@ -9,7 +9,7 @@ import Modal from "./Modal";
 import io from "socket.io-client";
 import { FaTrash } from "react-icons/fa";
 
-const ENDPOINT = "https://booking-system-ge1i.onrender.com";
+const ENDPOINT = "https://pdmnnewshub.ddns.net:8800";
 let socket;
 
 const Header = () => {
@@ -51,7 +51,7 @@ const Header = () => {
           "Content-Type": "application/json",
         };
         const response = await axios.get(
-          `https://booking-system-ge1i.onrender.com/api/user/${userId}`,
+          `https://pdmnnewshub.ddns.net:8800/api/user/${userId}`,
           { headers }
         );
         if (response.status === 200) setUserData(response.data);
@@ -74,7 +74,7 @@ const Header = () => {
       };
   
       const response = await axios.get(
-        "https://booking-system-ge1i.onrender.com/api/notif",
+        "https://pdmnnewshub.ddns.net:8800/api/notif",
         { headers }
       );
   
@@ -177,7 +177,7 @@ const Header = () => {
         "Content-Type": "application/json",
       };
       await axios.delete(
-        `https://booking-system-ge1i.onrender.com/api/notif/delete/${notifId}`,
+        `https://pdmnnewshub.ddns.net:8800/api/notif/delete/${notifId}`,
         { headers }
       );
       setNotifications((prev) => prev.filter((notif) => notif._id !== notifId));

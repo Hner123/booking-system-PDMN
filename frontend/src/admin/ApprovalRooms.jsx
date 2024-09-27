@@ -68,7 +68,7 @@ const ApprovalRoom = ({ sidebarOpen }) => {
           "Content-Type": "application/json",
         };
 
-        const response = await axios.get(`https://pdmnnewshub.ddns.net:8800//api/book/`, {
+        const response = await axios.get(`https://pdmnnewshub.ddns.net:8800/api/book/`, {
           headers,
         });
 

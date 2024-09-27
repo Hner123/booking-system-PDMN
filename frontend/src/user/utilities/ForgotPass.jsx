@@ -23,7 +23,7 @@ const ForgotPass = () => {
         };
 
         const response = await axios.get(
-          `https://booking-system-ge1i.onrender.com/api/user/${userId}`,
+          `https://pdmnnewshub.ddns.net:8800/api/user/${userId}`,
           { headers }
         );
 
@@ -48,7 +48,7 @@ const ForgotPass = () => {
   const sendEmail = async (email) => {
     try {
       const response = await axios.post(
-        'https://booking-system-ge1i.onrender.com/api/email/forgotpass',
+        'https://pdmnnewshub.ddns.net:8800/api/email/forgotpass',
         { email }
       );
 
@@ -75,7 +75,7 @@ const ForgotPass = () => {
         toast.error('Please enter your email address.');
       } else {
         const response = await axios.post(
-          'https://booking-system-ge1i.onrender.com/api/email/forgotpass', 
+          'https://pdmnnewshub.ddns.net:8800/api/email/forgotpass', 
           { email }
         );
 

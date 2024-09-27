@@ -16,7 +16,7 @@ import {
 import logoOpen from "../assets/logos/GDSLogo.png";
 import logoClosed from "../assets/logos/GDSLoog2.png";
 
-const ENDPOINT = "https://pdmnnewshub.ddns.net:8800/";
+const ENDPOINT = "https://pdmnnewshub.ddns.net:8800";
 let socket;
 
 const Sidebar = () => {
@@ -63,7 +63,7 @@ const Sidebar = () => {
         };
 
         const userResponse = await axios.get(
-          `https://pdmnnewshub.ddns.net:8800//api/admin/${adminId}`,
+          `https://pdmnnewshub.ddns.net:8800/api/admin/${adminId}`,
           { headers }
         );
         if (userResponse.status === 200) {
@@ -71,7 +71,7 @@ const Sidebar = () => {
         }
 
         const notifResponse = await axios.get(
-          "https://pdmnnewshub.ddns.net:8800//api/notif",
+          "https://pdmnnewshub.ddns.net:8800/api/notif",
           { headers }
         );
 

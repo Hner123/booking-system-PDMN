@@ -25,7 +25,7 @@ const Verify = () => {
         };
 
         await axios.patch(
-          `https://booking-system-ge1i.onrender.com/api/user/edit/${userId}`,
+          `https://pdmnnewshub.ddns.net:8800/api/user/edit/${userId}`,
           { email: newEmail },
           { headers }
         );

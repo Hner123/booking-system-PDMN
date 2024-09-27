@@ -23,7 +23,7 @@ const WithoutAuthAdmin = (WrappedComponent) => {
               const { _id } = decodedToken;
 
               const responseUser = await axios.get(
-                `https://pdmnnewshub.ddns.net:8800//api/admin/`,
+                `https://pdmnnewshub.ddns.net:8800/api/admin/`,
                 { headers }
               );
 

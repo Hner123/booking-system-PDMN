@@ -41,7 +41,7 @@ const EmployeeList = () => {
           "Content-Type": "application/json",
         };
 
-        const response = await axios.get("https://pdmnnewshub.ddns.net:8800//api/user/", { headers });
+        const response = await axios.get("https://pdmnnewshub.ddns.net:8800/api/user/", { headers });
         if (response.status === 200) {
           setUsers(response.data);
           setSortedUsers(response.data);
@@ -70,7 +70,7 @@ const EmployeeList = () => {
       };
 
       const response = await axios.delete(
-        `https://pdmnnewshub.ddns.net:8800//api/user/delete/${userId}`,
+        `https://pdmnnewshub.ddns.net:8800/api/user/delete/${userId}`,
         { headers }
       );
 
@@ -105,7 +105,7 @@ const EmployeeList = () => {
       };
 
       const response = await axios.patch(
-        `https://pdmnnewshub.ddns.net:8800//api/user/edit/${userId}`,
+        `https://pdmnnewshub.ddns.net:8800/api/user/edit/${userId}`,
         { department: selectedDept },
         { headers }
       );

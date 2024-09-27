@@ -68,7 +68,7 @@ const Dashboard = () => {
         };
 
         const response = await axios.get(
-          `https://pdmnnewshub.ddns.net:8800//api/user/${userId}`,
+          `https://pdmnnewshub.ddns.net:8800/api/user/${userId}`,
           { headers }
         );
         if (response.status === 200) {
@@ -94,7 +94,7 @@ const Dashboard = () => {
           "Content-Type": "application/json",
         };
 
-        const response = await axios.get(`https://pdmnnewshub.ddns.net:8800//api/book/`,
+        const response = await axios.get(`https://pdmnnewshub.ddns.net:8800/api/book/`,
           { headers }
         );
         if (response.status === 200) {
@@ -236,7 +236,7 @@ const Dashboard = () => {
       };
 
       const updateResponse = await axios.delete(
-        `https://pdmnnewshub.ddns.net:8800//api/book/delete/${meetingToDelete.id}`,
+        `https://pdmnnewshub.ddns.net:8800/api/book/delete/${meetingToDelete.id}`,
         { headers }
       );
 
@@ -362,7 +362,7 @@ const Dashboard = () => {
 
     try {
       const validationResponse = await axios.post(
-        `https://pdmnnewshub.ddns.net:8800//api/auth/validate`,
+        `https://pdmnnewshub.ddns.net:8800/api/auth/validate`,
         {
           email: formData.email,
         }
@@ -397,7 +397,7 @@ const Dashboard = () => {
       };
 
       const updateResponse = await axios.patch(
-        `https://pdmnnewshub.ddns.net:8800//api/user/edit/${userId}`,
+        `https://pdmnnewshub.ddns.net:8800/api/user/edit/${userId}`,
         updatedUser,
         { headers }
       );
@@ -431,7 +431,7 @@ const Dashboard = () => {
       };
 
       const updateResponse = await axios.post(
-        `https://pdmnnewshub.ddns.net:8800//api/book/create`,
+        `https://pdmnnewshub.ddns.net:8800/api/book/create`,
         reserveRoom,
         { headers }
       );
