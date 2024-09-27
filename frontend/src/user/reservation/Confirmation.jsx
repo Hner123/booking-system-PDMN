@@ -25,7 +25,7 @@ const BookingConfirmation = () => {
         };
 
         const response = await axios.get(
-          `https://booking-system-ge1i.onrender.com/api/book/${reserveId}`,
+          `https://pdmnnewshub.ddns.net:8800//api/book/${reserveId}`,
           { headers }
         );
         if (response.status === 200) {

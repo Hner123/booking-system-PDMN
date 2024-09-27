@@ -52,7 +52,7 @@ const AddEmployee = () => {
 
     try {
       const validationResponse = await axios.post(
-        `https://booking-system-ge1i.onrender.com/api/auth/validate`,
+        `https://pdmnnewshub.ddns.net:8800//api/auth/validate`,
         { userName: formData.userName }
       );
 
@@ -76,7 +76,7 @@ const AddEmployee = () => {
       };
 
       const createResponse = await axios.post(
-        `https://booking-system-ge1i.onrender.com/api/user/create`,
+        `https://pdmnnewshub.ddns.net:8800//api/user/create`,
         formData,
         { headers }
       );

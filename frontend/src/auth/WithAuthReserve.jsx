@@ -21,7 +21,7 @@ const WithAuthReserve = (WrappedComponent) => {
           };
 
           const [responseUser] = await Promise.all([
-            axios.get(`https://booking-system-ge1i.onrender.com/api/user/`, { headers }),
+            axios.get(`https://pdmnnewshub.ddns.net:8800//api/user/`, { headers }),
           ]);
 
           if (responseUser.status === 200) {

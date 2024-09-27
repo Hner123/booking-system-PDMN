@@ -41,7 +41,7 @@ const useBooking = () => {
 
   const fetchBookings = useCallback(async () => {
     try {
-      const response = await axios.get(`https://booking-system-ge1i.onrender.com/api/book/`, {
+      const response = await axios.get(`https://pdmnnewshub.ddns.net:8800//api/book/`, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",

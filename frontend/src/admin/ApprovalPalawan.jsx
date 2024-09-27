@@ -39,7 +39,7 @@ const ApprovalPalawan = () => {
           "Content-Type": "application/json",
         };
 
-        const response = await axios.get(`https://booking-system-ge1i.onrender.com/api/book/`, {
+        const response = await axios.get(`https://pdmnnewshub.ddns.net:8800//api/book/`, {
           headers,
         });
 
@@ -114,7 +114,7 @@ const ApprovalPalawan = () => {
       };
   
       const updateResponse = await axios.patch(
-        `https://booking-system-ge1i.onrender.com/api/book/edit/${selectedBooking._id}`,
+        `https://pdmnnewshub.ddns.net:8800//api/book/edit/${selectedBooking._id}`,
         updatedReserve,
         { headers }
       );
@@ -127,7 +127,7 @@ const ApprovalPalawan = () => {
           };
   
           const emailResponse = await axios.post(
-            `https://booking-system-ge1i.onrender.com/api/email/approval`,
+            `https://pdmnnewshub.ddns.net:8800//api/email/approval`,
             emailData,
             { headers }
           );
@@ -147,7 +147,7 @@ const ApprovalPalawan = () => {
   
             try {
               const notifResponse = await axios.post(
-                `https://booking-system-ge1i.onrender.com/api/notif/new`,
+                `https://pdmnnewshub.ddns.net:8800//api/notif/new`,
                 notifData,
                 { headers }
               );
@@ -200,7 +200,7 @@ const ApprovalPalawan = () => {
       };
   
       const updateResponse = await axios.patch(
-        `https://booking-system-ge1i.onrender.com/api/book/edit/${selectedBooking._id}`,
+        `https://pdmnnewshub.ddns.net:8800//api/book/edit/${selectedBooking._id}`,
         updatedReserve,
         { headers }
       );
@@ -213,7 +213,7 @@ const ApprovalPalawan = () => {
           };
   
           const emailResponse = await axios.post(
-            `https://booking-system-ge1i.onrender.com/api/email/approval`,
+            `https://pdmnnewshub.ddns.net:8800//api/email/approval`,
             emailData,
             { headers }
           );
@@ -233,7 +233,7 @@ const ApprovalPalawan = () => {
   
             try {
               const notifResponse = await axios.post(
-                `https://booking-system-ge1i.onrender.com/api/notif/new`,
+                `https://pdmnnewshub.ddns.net:8800//api/notif/new`,
                 notifData,
                 { headers }
               );
