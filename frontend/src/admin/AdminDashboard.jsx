@@ -289,6 +289,9 @@ const Dashboard = ({ sidebarOpen }) => {
     error,
   } = useDashboardData();
 
+    // Get the current month in a formatted string (e.g., "September")
+    const currentMonth = new Date().toLocaleString('default', { month: 'long' });
+
   const [layout, setLayout] = useState({
     roomUsage: true,
     bookingTrends: true,
@@ -468,10 +471,15 @@ const Dashboard = ({ sidebarOpen }) => {
     setColumnWidths(wsUsersStats);
     setColumnWidths(wsAdditionalStats);
   
-    // Generate a timestamp for the filename
-    const timestamp = new Date().toISOString().replace(/[-:.]/g, "_").slice(0, 19);
-    const filename = `dashboard_stats_${timestamp}.xlsx`;
+    const date = new Date();
+    const formattedDate = `${date.getFullYear()}${String(date.getMonth() + 1).padStart(2, '0')}${String(date.getDate()).padStart(2, '0')}`;
+    
+    // Get the current month in the desired format (e.g., September)
+    const currentMonth = date.toLocaleString('default', { month: 'long' });
   
+    // Create the filename with the new format
+    const filename = `gdsBookingSystem_${currentMonth}_${formattedDate}.xlsx`; // Updated filename format
+    
     // Write file
     XLSX.writeFile(wb, filename);
     toast.success('Excel file has been exported with all stats.');
@@ -483,6 +491,12 @@ const Dashboard = ({ sidebarOpen }) => {
     <div className="admin-dashboard-content">
       <h1 className="dashboard-title">Booking System Analytics</h1>
 
+      <div className="export-section">
+      <h2 className="analytics-month">Analytics for the month of {currentMonth}</h2>
+        <button onClick={handleExportToExcel} className="export-btn">
+          Export to Excel
+        </button>
+      </div>
       <StatsOverview bookingStats={bookingStats} />
       <AdditionalStats additionalStats={additionalStats} />
 
@@ -531,11 +545,7 @@ const Dashboard = ({ sidebarOpen }) => {
         )}
         <UserOverview usersStats={usersStats} />
       </div>
-      <div className="export-section">
-        <button onClick={handleExportToExcel} className="export-btn">
-          Export to Excel
-        </button>
-      </div>
+
     </div>
   </div>
 );
