@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const UserModel = require("../models/UserModel");
 const AdminModel = require("../models/AdminModel");
-const ReserveModel = require("../models/ReserveModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const requireAuth = require("../utils/requireAuth");
@@ -9,6 +8,7 @@ const requireAuth = require("../utils/requireAuth");
 const ResetPassword = async (req, res) => {
   try {
     const { id } = req.params;
+    const { passWord } = req.body;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(404).json({ message: "Invalid ID" });
@@ -16,14 +16,23 @@ const ResetPassword = async (req, res) => {
 
     const user = await UserModel.findById(id);
 
-    if (user) {
-      const { passWord } = req.body;
-      user.passWord = passWord;
-      await user.save();
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (passWord && passWord !== user.passWord) {
+      const hashPassWord = await bcrypt.hash(passWord, 13);
+      
+      await UserModel.findByIdAndUpdate(
+        id,
+        { passWord: hashPassWord },
+        { new: true }
+      );
+
       return res.status(200).json({ message: "Password reset successfully" });
     }
 
-    res.status(404).json({ message: "User not found" });
+    res.status(400).json({ message: "No new password provided or same as the current password" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

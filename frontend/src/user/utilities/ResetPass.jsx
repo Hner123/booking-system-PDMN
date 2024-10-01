@@ -35,7 +35,11 @@ const ResetPassword = () => {
         { passWord },
         { headers }
       );
-      toast.success("Password updated successfully!");
+      toast.success("Password updated successfully!", {
+        autoClose: 1000,
+        pauseOnFocusLoss: false,
+        onClose: () => navigate("/"),
+      });
       setIsButtonDisabled(true);
     } catch (error) {
       if (error.response && error.response.status === 404) {
