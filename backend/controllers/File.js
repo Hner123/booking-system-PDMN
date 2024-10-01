@@ -700,18 +700,25 @@ const DeletePrevMonth = async () => {
 };
 
 cron.schedule('0 23 28-31 * *', async () => {
+  console.log('Cron: Job started');
   const today = new Date();
   const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+  console.log(`Cron: Today: ${today.getDate()}, Last Day of Month: ${lastDayOfMonth}`);
+
   if (today.getDate() === lastDayOfMonth) {
+    console.log('Cron: Executing end-of-month tasks');
     try {
       await Promise.all([
         SendAdminAttachment(),
         SendAllAttachment()
       ]);
-      
-      await DeletePrevMonth();
+
+      // console.log('Cron: Calling DeletePrevMonth...');
+      // await DeletePrevMonth();
     } catch (error) {
-      console.error("Error in end-of-month tasks:", error);
+      console.error("Cron: Error in end-of-month tasks:", error.stack || error.message || error);
+    } finally {
+      console.log('Cron: End of job execution');
     }
   }
 });

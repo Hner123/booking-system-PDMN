@@ -101,7 +101,7 @@ const RoomReservation = () => {
         };
 
         const response = await axios.get(
-          "https://booking-system-ge1i.onrender.com/api/book/",
+          "https://pdmnnewshub.ddns.net:8800/api/book/",
           { headers }
         );
 
@@ -156,7 +156,7 @@ const RoomReservation = () => {
       };
 
       const response = await axios.delete(
-        `https://booking-system-ge1i.onrender.com/api/book/delete/${eventId}`,
+        `https://pdmnnewshub.ddns.net:8800/api/book/delete/${eventId}`,
         { headers }
       );
 
