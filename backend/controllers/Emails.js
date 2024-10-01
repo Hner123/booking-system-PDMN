@@ -20,7 +20,7 @@ const ForgotPass = async (req, res) => {
 
     if (user) {
       const passToken = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
-        expiresIn: "30m",
+        expiresIn: "5m",
       });
       const name = user.firstName + " " + user.surName;
       const passId = user._id;
@@ -83,7 +83,7 @@ const ChangeEmail = async (req, res) => {
 
     if (user) {
       const emailToken = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
-        expiresIn: "30m",
+        expiresIn: "5m",
       });
       const name = user.firstName + " " + user.surName;
       const emailId = user._id;
