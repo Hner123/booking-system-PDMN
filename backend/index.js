@@ -15,15 +15,14 @@ const routes = {
   NotifRoutes: require("./routes/NotifRoutes"),
   EmailsRoutes: require("./routes/EmailsRoutes"),
   FileRoutes: require("./routes/FileRoutes"),
+  StatsRoutes: require("./routes/StatsRoutes")
 };
 
 const app = express();
 dotenv.config();
 
-// Connect to the database
 ConnectDB();
 
-// PFX certificate setup
 const pfxPath = path.join(__dirname, 'cert', '21tJ9tHUVUCrWVF8lM8ypg-main-11a461e6f3331c293bce4defe5f129cdff58531c-temp.pfx');
 const passphrase = 'QTAyUtiCdLhaaDK9o1VpTNKS8tOlHS1w/FbGpIhP118=';
 const options = {
@@ -31,10 +30,8 @@ const options = {
   passphrase: passphrase,
 };
 
-// Create HTTPS server
 const server = https.createServer(options, app);
 
-// Middleware
 app.use(express.json());
 app.use(
   cors({
@@ -55,7 +52,6 @@ app.use((req, res, next) => {
   next();
 });
 
-// API Routes
 app.use("/api/user", routes.UserRoutes);
 app.use("/api/admin", routes.AdminRoutes);
 app.use("/api/book", routes.ReserveRoutes);
@@ -63,12 +59,11 @@ app.use("/api/auth", routes.ValidateRoutes);
 app.use("/api/notif", routes.NotifRoutes);
 app.use("/api/email", routes.EmailsRoutes);
 app.use("/api/file", routes.FileRoutes);
+app.use("/api/stats", routes.StatsRoutes);
 
-// Initialize Socket.io
 const io = initializeSocket(server);
 app.set("socketio", io);
 
-// Start the server
 server.listen(process.env.PORT, () =>
   console.log(`Server started on port ${process.env.PORT}`)
 );
