@@ -456,6 +456,16 @@ const Dashboard = ({ sidebarOpen }) => {
     setSelectedFile(value);
     console.log("Selected Date:", value);
   };
+
+  const formatSelectedFile = (file) => {
+    // Check if the file contains a hyphen and split accordingly
+    const parts = file.includes('-') ? file.split('-') : file.split(' ');
+    const month = parts[0].trim(); // Get the month part
+    const year = parts[1] ? parts[1].trim() : ''; // Get the year part, ensuring it exists
+  
+    // Capitalize the month and construct the final string
+    return `${month.charAt(0).toUpperCase() + month.slice(1)} ${year}`;
+  };
   
   return (
     <div className={`admin-dashboard ${sidebarOpen ? "sidebar-open" : ""}`}>
@@ -464,7 +474,7 @@ const Dashboard = ({ sidebarOpen }) => {
         <h1 className="dashboard-title">Booking System Analytics</h1>
 
         <div className="export-section">
-          <h2 className="analytics-month">Analytics for the month of {currentMonth}</h2>
+          <h2 className="analytics-month"> Analytics for the {selectedFile !== 'reset' && selectedFile !== "" ? `month of ${formatSelectedFile(selectedFile)}` : `month of ${currentMonth}`}</h2>
           <select value={selectedFile} onChange={handleStatChange} className="export-dropdown">
             <option value="" disabled>
               Select Date
