@@ -5,7 +5,7 @@ const requireAuth = require("../utils/requireAuth");
 const {
   SendAdminAttachment,
   SendAllAttachment,
-  SendUserAttachment
+  SendUserAttachment,
 } = require("../controllers/File");
 
 router.get('/attachment-admin', SendAdminAttachment);

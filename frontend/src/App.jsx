@@ -35,7 +35,6 @@ import ResetPass from './user/utilities/ResetPass.jsx';
 
 import './App.css';
 
-
 function App() {
   return (
     <div>

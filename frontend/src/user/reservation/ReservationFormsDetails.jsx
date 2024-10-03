@@ -6,7 +6,6 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import WithAuthReserve from "../../auth/WithAuthReserve";
 
-
 const ReservationFormsDetails = () => {
   const formRef = useRef();
   const [pax, setPax] = useState("");
@@ -54,7 +53,6 @@ const ReservationFormsDetails = () => {
 
   const fetchUserData = async () => {
     try {
-      setLoading(true);
 
       const token = localStorage.getItem("authToken");
       const headers = {
@@ -80,8 +78,6 @@ const ReservationFormsDetails = () => {
       }
     } catch (error) {
       console.error("Error fetching user data:", error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -525,7 +521,7 @@ const ReservationFormsDetails = () => {
                   onChange={handleChange}
                   placeholder="Enter meeting title"
                   required
-                  disabled={submitting}
+                  disabled={submitting || loading}
                   maxLength={116}
                 />
               </div>
@@ -546,7 +542,7 @@ const ReservationFormsDetails = () => {
                       checked={formData.caps.pax === "1-2"}
                       onChange={handlePaxChange}
                       disabled={
-                        submitting ||
+                        submitting || loading ||
                         (selectedRoom !== "Boracay" &&
                           selectedRoom !== "Palawan")
                       }
@@ -563,7 +559,7 @@ const ReservationFormsDetails = () => {
                       checked={formData.caps.pax === "3-More"}
                       onChange={handlePaxChange}
                       disabled={
-                        submitting || // Disable button while submitting
+                        submitting || loading || // Disable button while submitting
                         (selectedRoom !== "Boracay" &&
                           selectedRoom !== "Palawan") // Disable if room is neither Boracay nor Palawan
                       }
@@ -582,7 +578,7 @@ const ReservationFormsDetails = () => {
                         onChange={handlePaxChange}
                         style={{ width: "auto" }}
                         required
-                        disabled={submitting}
+                        disabled={submitting || loading}
                       />
                       <label htmlFor="pax-8-more">8 or more attendees</label>
                     </div>
@@ -605,7 +601,7 @@ const ReservationFormsDetails = () => {
                     onChange={handleChange}
                     placeholder="Enter reason"
                     required={pax === "1-2"}
-                    disabled={submitting}
+                    disabled={submitting || loading}
                   />
                 </div>
               )}
@@ -627,21 +623,21 @@ const ReservationFormsDetails = () => {
                     suggestionsList: "suggestions-list",
                     suggestion: "suggestion-chip",
                   }}
-                  disabled={submitting}
+                  disabled={submitting || loading}
                 />
                 <div className="attendees-row">
                   {attendees.map((attendee, index) => (
                     <div
                       key={index}
                       className="attendee-chip"
-                      disabled={submitting}
+                      disabled={submitting || loading}
                     >
                       <span className="attendee-text">{attendee}</span>
                       <button
                         type="button"
                         className="remove-button"
                         onClick={() => removeAttendee(index)}
-                        disabled={submitting}
+                        disabled={submitting || loading}
                       >
                         ×
                       </button>
@@ -656,7 +652,7 @@ const ReservationFormsDetails = () => {
                       checked={showGuestInput}
                       onChange={() => setShowGuestInput(!showGuestInput)}
                       style={{ width: "auto", marginRight: "10px" }}
-                      disabled={submitting}
+                      disabled={submitting || loading}
                     />
                     <label className="checkbox-label">
                       Do you have any Guest/s?

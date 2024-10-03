@@ -8,11 +8,12 @@ import { toast } from 'react-toastify';
 import * as XLSX from 'xlsx';
 import WithAuthAdmin from '../auth/WithAuthAdmin'
 
-const useDashboardData = () => {
+const useDashboardData = (selectedFile, currentMonth) => {
+  const [pastStats, setPastStats] = useState([]);
   const [roomUsage, setRoomUsage] = useState({
     Palawan: 0,
     Boracay: 0,
-    'Palawan and Boracay': 0
+    'Palawan and Boracay': 0,
   });
   const [bookingStats, setBookingStats] = useState({
     total: 0,
@@ -31,138 +32,180 @@ const useDashboardData = () => {
   const [usersStats, setUsersStats] = useState({
     total: 0,
     active: 0,
-    notRegistered: 0
+    notRegistered: 0,
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   useEffect(() => {
-    const fetchBookings = async () => {
+    const fetchJsonFiles = async () => {
       try {
-        const token = localStorage.getItem("adminToken");
-        const headers = {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        };
-
-        const response = await axios.get(`https://pdmnnewshub.ddns.net:8800/api/book/`, { headers });
-
-        if (response.status === 200) {
-          setRoomUsage({
-            Palawan: response.data.filter(item => item.roomName === "Palawan").length,
-            Boracay: response.data.filter(item => item.roomName === "Boracay").length,
-            'Palawan and Boracay': response.data.filter(item => item.roomName === "Palawan and Boracay").length
-          })
-
-          setBookingStats({
-            total: response.data.length,
-            approved: response.data.filter(item => item.approval.status === "Approved").length,
-            rejected: response.data.filter(item => item.approval.status === "Rejected").length,
-            pending: response.data.filter(item => item.approval.status === "Pending" && item.title !== "").length,
-          });
-
-          const currentYear = new Date().getFullYear();
-          const currentMonth = new Date().getMonth();
-
-          const approvedBookings = response.data.filter(item => {
-            const bookingDate = new Date(item.scheduleDate);
-            return item.approval.status === "Approved" &&
-              bookingDate.getFullYear() === currentYear &&
-              bookingDate.getMonth() === currentMonth;
-          });
-
-          const bookingsByDate = approvedBookings.reduce((acc, item) => {
-            const bookingDate = new Date(item.scheduleDate).toISOString().split('T')[0];
-
-            const existingDate = acc.find(entry => entry.date === bookingDate);
-            if (existingDate) {
-              existingDate.count += 1;
-              // existingDate.data.push(item);
-            } else {
-              acc.push({ date: bookingDate, count: 1 });
-            }
-
-            return acc;
-          }, []);
-
-          const bookingsByDepartment = approvedBookings.reduce((acc, item) => {
-            const department = item.user?.department;
-
-            if (department) {
-              const existingDepartment = acc.find(entry => entry.department === department);
-
-              if (existingDepartment) {
-                existingDepartment.count += 1;
-              } else {
-                acc.push({ department, count: 1 }); // Initialize with data array
-              }
-            }
-
-            return acc;
-          }, []);
-
-          setBookingTrends(bookingsByDate);
-          setDepartmentStats(bookingsByDepartment);
-
-          const stats = approvedBookings.reduce((acc, item) => {
-            const username = item.user?.userName;
-            const department = item.user?.department;
-            const room = item.roomName;
-            const time = new Date(item.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-            if (username) {
-              acc.employees[username] = (acc.employees[username] || 0) + 1;
-              acc.employeeNames[username] = `${item.user.firstName} ${item.user.surName}`;
-            }
-
-            if (department) {
-              acc.departments[department] = (acc.departments[department] || 0) + 1;
-            }
-
-            if (room) {
-              acc.rooms[room] = (acc.rooms[room] || 0) + 1;
-            }
-
-            if (time) {
-              acc.times[time] = (acc.times[time] || 0) + 1;
-            }
-
-            return acc;
-          }, { employees: {}, employeeNames: {}, departments: {}, rooms: {}, times: {} });
-
-          const getMostFrequent = (data) => {
-            return Object.keys(data).reduce((mostFrequent, currentKey) => (
-              (data[mostFrequent] > data[currentKey] ? mostFrequent : currentKey)
-            ), '');
-          };
-
-          const mostFrequentEmployeeKey = getMostFrequent(stats.employees);
-          const mostFrequentDepartmentKey = getMostFrequent(stats.departments);
-          const mostBookedRoomKey = getMostFrequent(stats.rooms);
-          const mostBookedTimeKey = getMostFrequent(stats.times);
-
-          const fullName = stats.employeeNames[mostFrequentEmployeeKey] || 'N/A';
-
-          setAdditionalStats(prevStats => ({
-            ...prevStats,
-            mostFrequentEmployee: fullName,
-            mostFrequentDepartment: mostFrequentDepartmentKey || 'N/A',
-            mostBookedRoom: mostBookedRoomKey || 'N/A',
-            mostBookedTime: mostBookedTimeKey || 'N/A',
-          }));
-
-        } else {
-          console.error("Response status is not OK");
-        }
-      } catch (error) {
-        console.error("Error fetching booking data:", error);
-      } finally {
-        setLoading(false);
+        const response = await axios.get('https://pdmnnewshub.ddns.net:8800/api/stats/getList');
+        setPastStats(response.data.jsonFiles);
+      } catch (err) {
+        setError(err.message);
       }
     };
 
-    fetchBookings();
+    fetchJsonFiles();
   }, []);
+
+  useEffect(() => {
+    if (selectedFile && selectedFile !== "reset") {
+      const fetchData = async () => {
+        try {
+          const response = await axios.post('https://pdmnnewshub.ddns.net:8800/api/stats/get', { url: selectedFile });
+          console.log(response.data[0])
+          setRoomUsage({
+            Palawan: response.data[0].usage.palawan,
+            Boracay: response.data[0].usage.boracay,
+            'Palawan and Boracay': response.data[0].usage.both,
+          });
+          setBookingStats({
+            total: response.data[0].status.total,
+            approved: response.data[0].status.approved,
+            rejected: response.data[0].status.rejected,
+            pending: response.data[0].status.pending,
+          });
+          setBookingTrends(response.data[0].date);
+          setAdditionalStats({
+            mostFrequentDepartment: response.data[0].additional.mostFrequentDepartment,
+            mostFrequentEmployee: response.data[0].additional.mostFrequentEmployee,
+            mostBookedTime: response.data[0].additional.mostBookedTime,
+            mostBookedRoom: response.data[0].additional.mostBookedRoom,
+          });
+          setDepartmentStats(response.data[0].dept);
+          setUsersStats({
+            total: response.data[0].userStat.total,
+            active: response.data[0].userStat.active,
+            notRegistered: response.data[0].userStat.notRegistered
+          });
+        } catch (err) {
+          console.error("Error fetching booking data:", err);
+        }
+      };
+
+      fetchData();
+    } else {
+      fetchBookings();
+    }
+  }, [selectedFile]);
+
+  const fetchBookings = async () => {
+    try {
+      const token = localStorage.getItem("adminToken");
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      };
+
+      const response = await axios.get(`https://pdmnnewshub.ddns.net:8800/api/book/`, { headers });
+
+      const date = new Date();
+      const startOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
+      const endOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+
+      const reservations = response.data.filter((reservation) => {
+        const scheduleDate = new Date(reservation.scheduleDate);
+        return scheduleDate >= startOfMonth && scheduleDate <= endOfMonth;
+      });
+
+      setRoomUsage({
+        Palawan: reservations.filter(item => item.roomName === "Palawan").length,
+        Boracay: reservations.filter(item => item.roomName === "Boracay").length,
+        'Palawan and Boracay': reservations.filter(item => item.roomName === "Palawan and Boracay").length,
+      });
+
+      setBookingStats({
+        total: reservations.length,
+        approved: reservations.filter(item => item.approval.status === "Approved").length,
+        rejected: reservations.filter(item => item.approval.status === "Declined").length,
+        pending: reservations.filter(item => item.approval.status === "Pending" && item.title !== "").length,
+      });
+
+      const approvedBookings = reservations.filter(item => {
+        const bookingDate = new Date(item.scheduleDate);
+        return item.approval.status === "Approved" && bookingDate.getMonth() === date.getMonth() && bookingDate.getFullYear() === date.getFullYear();
+      });
+
+      const bookingsByDate = approvedBookings.reduce((acc, item) => {
+        const bookingDate = new Date(item.scheduleDate).toISOString().split('T')[0];
+        const existingDate = acc.find(entry => entry.date === bookingDate);
+        if (existingDate) {
+          existingDate.count += 1;
+        } else {
+          acc.push({ date: bookingDate, count: 1 });
+        }
+        return acc;
+      }, []);
+
+      const bookingsByDepartment = approvedBookings.reduce((acc, item) => {
+        const department = item.user?.department;
+        if (department) {
+          const existingDepartment = acc.find(entry => entry.department === department);
+          if (existingDepartment) {
+            existingDepartment.count += 1;
+          } else {
+            acc.push({ department, count: 1 });
+          }
+        }
+        return acc;
+      }, []);
+
+      setBookingTrends(bookingsByDate);
+      setDepartmentStats(bookingsByDepartment);
+
+      const stats = approvedBookings.reduce((acc, item) => {
+        const username = item.user?.userName;
+        const department = item.user?.department;
+        const room = item.roomName;
+        const time = new Date(item.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+        if (username) {
+          acc.employees[username] = (acc.employees[username] || 0) + 1;
+          acc.employeeNames[username] = `${item.user.firstName} ${item.user.surName}`;
+        }
+
+        if (department) {
+          acc.departments[department] = (acc.departments[department] || 0) + 1;
+        }
+
+        if (room) {
+          acc.rooms[room] = (acc.rooms[room] || 0) + 1;
+        }
+
+        if (time) {
+          acc.times[time] = (acc.times[time] || 0) + 1;
+        }
+
+        return acc;
+      }, { employees: {}, employeeNames: {}, departments: {}, rooms: {}, times: {} });
+
+      const getMostFrequent = (data) => {
+        return Object.keys(data).reduce((mostFrequent, currentKey) => (
+          (data[mostFrequent] > data[currentKey] ? mostFrequent : currentKey)
+        ), '');
+      };
+
+      const mostFrequentEmployeeKey = getMostFrequent(stats.employees);
+      const mostFrequentDepartmentKey = getMostFrequent(stats.departments);
+      const mostBookedRoomKey = getMostFrequent(stats.rooms);
+      const mostBookedTimeKey = getMostFrequent(stats.times);
+
+      const fullName = stats.employeeNames[mostFrequentEmployeeKey] || 'N/A';
+
+      setAdditionalStats(prevStats => ({
+        ...prevStats,
+        mostFrequentEmployee: fullName,
+        mostFrequentDepartment: mostFrequentDepartmentKey || 'N/A',
+        mostBookedRoom: mostBookedRoomKey || 'N/A',
+        mostBookedTime: mostBookedTimeKey || 'N/A',
+      }));
+
+    } catch (error) {
+      console.error("Error fetching booking data:", error);
+    }
+  };
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -179,15 +222,13 @@ const useDashboardData = () => {
           setUsersStats({
             total: response.data.length,
             active: response.data.filter(item => item.resetPass === true).length,
-            notRegistered: response.data.filter(item => item.resetPass === false).length
-          })
+            notRegistered: response.data.filter(item => item.resetPass === false).length,
+          });
         } else {
           console.error("Response status is not OK");
         }
       } catch (error) {
-        console.error("Error fetching booking data:", error);
-      } finally {
-        setLoading(false);
+        console.error("Error fetching user data:", error);
       }
     };
 
@@ -195,6 +236,7 @@ const useDashboardData = () => {
   }, []);
 
   return {
+    pastStats,
     roomUsage,
     bookingStats,
     bookingTrends,
@@ -225,7 +267,6 @@ const chartOptions = {
       labels: {
         font: {
           size: 16,  // Increased font size for readability
-          weight: 'bold',
         },
         color: '#333', // Dark color for better contrast
         usePointStyle: true,
@@ -248,7 +289,7 @@ const chartOptions = {
     x: {
       title: {
         display: true,
-        text: 'Date', // X-axis label
+        text: '', // X-axis label
       },
       ticks: {
         color: '#555', // Label color for the X-axis
@@ -278,7 +319,10 @@ const chartOptions = {
 
 // Main Dashboard Component
 const Dashboard = ({ sidebarOpen }) => {
+  const [selectedFile, setSelectedFile] = useState('');
+  const currentMonth = new Date().toLocaleString('default', { month: 'long', year: 'numeric'});
   const {
+    pastStats,
     roomUsage,
     bookingStats,
     bookingTrends,
@@ -287,10 +331,10 @@ const Dashboard = ({ sidebarOpen }) => {
     usersStats,
     loading,
     error,
-  } = useDashboardData();
-
-    // Get the current month in a formatted string (e.g., "September")
-    const currentMonth = new Date().toLocaleString('default', { month: 'long' });
+  } = useDashboardData(
+    selectedFile, 
+    currentMonth
+  );
 
   const [layout, setLayout] = useState({
     roomUsage: true,
@@ -314,10 +358,10 @@ const Dashboard = ({ sidebarOpen }) => {
 
   const bookingTrendsData = useMemo(() => {
     const sortedBookingTrends = [...bookingTrends].sort((a, b) => new Date(a.date) - new Date(b.date));
-  
+
     // Array of colors to be used for each data point (you can modify or expand this)
     const colors = ['#3e95cd', '#8e5ea2', '#3cba9f', '#e8c3b9', '#c45850'];
-  
+
     return {
       labels: sortedBookingTrends.map((trend) => trend.date),
       datasets: [
@@ -336,7 +380,7 @@ const Dashboard = ({ sidebarOpen }) => {
       ],
     };
   }, [bookingTrends]);
-  
+
   const bookingStatsData = useMemo(() => ({
     labels: ['Approved', 'Rejected', 'Pending'],
     datasets: [
@@ -363,22 +407,21 @@ const Dashboard = ({ sidebarOpen }) => {
     if (!Array.isArray(departmentStats)) {
       return { labels: [], datasets: [] };
     }
-  
+
     const sortedDepartmentStats = [...departmentStats].sort((a, b) => b.count - a.count);
-  
-    // Generate a dataset for each department
+
     const datasets = sortedDepartmentStats.map(({ department, count }) => ({
       label: department,
-      data: [count], 
+      data: [count],
       backgroundColor: departmentColorMap[department] || '#000000',
     }));
-  
+
     return {
-      labels: ['Departments'], 
+      labels: ['Departments'],
       datasets,
     };
   }, [departmentStats]);
-  
+
 
   const usersData = useMemo(() => ({
     labels: ['Users'],
@@ -386,10 +429,10 @@ const Dashboard = ({ sidebarOpen }) => {
       {
         label: 'Active Users',
         data: [usersStats.active],
-        backgroundColor: '#4caf50', 
+        backgroundColor: '#4caf50',
       },
       {
-        label: 'Not Registered', 
+        label: 'Not Registered',
         data: [usersStats.notRegistered],
         backgroundColor: '#f44336',
       },
@@ -408,147 +451,86 @@ const Dashboard = ({ sidebarOpen }) => {
   if (loading) return <div className="loading-message">Loading...</div>;
   if (error) return <div className="error-message">{error}</div>;
 
-
-  const handleExportToExcel = () => {
-    const bookingTrendsSheet = bookingTrends.map(item => ({
-      Date: new Date(item.date).toLocaleDateString(), 
-      Count: item.count,
-    }));
-  
-    const roomUsageSheet = [
-      { Room: 'Palawan', Usage: roomUsage.Palawan },
-      { Room: 'Boracay', Usage: roomUsage.Boracay },
-      { Room: 'Palawan and Boracay', Usage: roomUsage['Palawan and Boracay'] },
-    ];
-  
-    const departmentStatsSheet = departmentStats.map(item => ({
-      Department: item.department,
-      Bookings: item.count,
-    }));
-  
-    const usersStatsSheet = [
-      { Stat: 'Total Users', Count: usersStats.total },
-      { Stat: 'Active Users', Count: usersStats.active },
-      { Stat: 'Not Registered Users', Count: usersStats.notRegistered },
-    ];
-  
-    const additionalStatsSheet = [
-      { Stat: 'Most Frequent Employee', Value: additionalStats.mostFrequentEmployee },
-      { Stat: 'Most Frequent Department', Value: additionalStats.mostFrequentDepartment },
-      { Stat: 'Most Booked Room', Value: additionalStats.mostBookedRoom },
-      { Stat: 'Most Booked Time', Value: additionalStats.mostBookedTime },
-    ];
-  
-    const wb = XLSX.utils.book_new();
-  
-    // Create sheets
-    const wsBookingTrends = XLSX.utils.json_to_sheet(bookingTrendsSheet);
-    const wsRoomUsage = XLSX.utils.json_to_sheet(roomUsageSheet);
-    const wsDepartmentStats = XLSX.utils.json_to_sheet(departmentStatsSheet);
-    const wsUsersStats = XLSX.utils.json_to_sheet(usersStatsSheet);
-    const wsAdditionalStats = XLSX.utils.json_to_sheet(additionalStatsSheet);
-  
-    // Append sheets to workbook
-    XLSX.utils.book_append_sheet(wb, wsBookingTrends, 'Booking Trends');
-    XLSX.utils.book_append_sheet(wb, wsRoomUsage, 'Room Usage');
-    XLSX.utils.book_append_sheet(wb, wsDepartmentStats, 'Department Stats');
-    XLSX.utils.book_append_sheet(wb, wsUsersStats, 'Users Stats');
-    XLSX.utils.book_append_sheet(wb, wsAdditionalStats, 'Additional Stats');
-  
-    // Set column widths
-    const setColumnWidths = (worksheet) => {
-      const cols = [
-        { wch: 25 },
-        { wch: 15 }, 
-      ];
-      worksheet['!cols'] = cols;
-    };
-  
-    // Apply column widths to each sheet
-    setColumnWidths(wsBookingTrends);
-    setColumnWidths(wsRoomUsage);
-    setColumnWidths(wsDepartmentStats);
-    setColumnWidths(wsUsersStats);
-    setColumnWidths(wsAdditionalStats);
-  
-    const date = new Date();
-    const formattedDate = `${date.getFullYear()}${String(date.getMonth() + 1).padStart(2, '0')}${String(date.getDate()).padStart(2, '0')}`;
-    
-    // Get the current month in the desired format (e.g., September)
-    const currentMonth = date.toLocaleString('default', { month: 'long' });
-  
-    // Create the filename with the new format
-    const filename = `gdsBookingSystem_${currentMonth}_${formattedDate}.xlsx`; // Updated filename format
-    
-    // Write file
-    XLSX.writeFile(wb, filename);
-    toast.success('Excel file has been exported with all stats.');
+  const handleStatChange = (event) => {
+    const value = event.target.value;
+    setSelectedFile(value);
+    console.log("Selected Date:", value);
   };
   
   return (
     <div className={`admin-dashboard ${sidebarOpen ? "sidebar-open" : ""}`}>
-    <Sidebar sidebarOpen={sidebarOpen} />
-    <div className="admin-dashboard-content">
-      <h1 className="dashboard-title">Booking System Analytics</h1>
+      <Sidebar sidebarOpen={sidebarOpen} />
+      <div className="admin-dashboard-content">
+        <h1 className="dashboard-title">Booking System Analytics</h1>
 
-      <div className="export-section">
-      <h2 className="analytics-month">Analytics for the month of {currentMonth}</h2>
-        <button onClick={handleExportToExcel} className="export-btn">
-          Export to Excel
-        </button>
-      </div>
-      <StatsOverview bookingStats={bookingStats} />
-      <AdditionalStats additionalStats={additionalStats} />
-
-      {/* Chart Containers */}
-      <div className="flex-container">
-        <div className="charts-container">
-          {layout.roomUsage && (
-            <ChartContainer
-              title="Room Usage Overview"
-              chart={<Pie data={roomUsageData} options={chartOptions} />}
-            />
-          )}
-          {layout.bookingTrends && (
-            <ChartContainer
-              title="Booking Trends Over Time"
-              chart={
-                <Line
-                  data={bookingTrendsData}
-                  options={{ ...chartOptions, onClick: handleChartClick }}
-                />
-              }
-            />
-          )}
+        <div className="export-section">
+          <h2 className="analytics-month">Analytics for the month of {currentMonth}</h2>
+          <select value={selectedFile} onChange={handleStatChange} className="export-dropdown">
+            <option value="" disabled>
+              Select Date
+            </option>
+            <option value="reset">
+              {currentMonth}
+            </option>
+            {pastStats.map((file, index) => (
+              <option key={index} value={file}>
+                {file.replace('-', ' ')}
+              </option>
+            ))}
+          </select>
         </div>
-        <div className="charts-container">
-          {layout.departmentStats && (
-            <ChartContainer
-              title="Department Statistics"
-              chart={<Bar data={departmentStatsData} options={chartOptions} />}
-            />
-          )}
-          {layout.bookingStats && (
-            <ChartContainer
-              title="Booking Status Distribution"
-              chart={<Pie data={bookingStatsData} options={chartOptions} />}
-            />
-          )}
-        </div>
-      </div>
-      <div className="user-charts-container">
-        {layout.usersData && (
-          <UserChartContainer
-            title="User Statistics"
-            chart={<Bar data={usersData} options={chartOptions} />}
-          />
-        )}
-        <UserOverview usersStats={usersStats} />
-      </div>
+        <StatsOverview bookingStats={bookingStats} />
+        <AdditionalStats additionalStats={additionalStats} />
 
+        {/* Chart Containers */}
+        <div className="flex-container">
+          <div className="charts-container">
+            {layout.roomUsage && (
+              <ChartContainer
+                title="Room Usage Overview"
+                chart={<Pie data={roomUsageData} options={chartOptions} />}
+              />
+            )}
+            {layout.bookingTrends && (
+              <ChartContainer
+                title="Booking Trends Over Time"
+                chart={
+                  <Line
+                    data={bookingTrendsData}
+                    options={{ ...chartOptions, onClick: handleChartClick }}
+                  />
+                }
+              />
+            )}
+          </div>
+          <div className="charts-container">
+            {layout.departmentStats && (
+              <ChartContainer
+                title="Department Statistics"
+                chart={<Bar data={departmentStatsData} options={chartOptions} />}
+              />
+            )}
+            {layout.bookingStats && (
+              <ChartContainer
+                title="Booking Status Distribution"
+                chart={<Pie data={bookingStatsData} options={chartOptions} />}
+              />
+            )}
+          </div>
+        </div>
+        <div className="user-charts-container">
+          {layout.usersData && (
+            <UserChartContainer
+              title="User Statistics"
+              chart={<Bar data={usersData} options={chartOptions} />}
+            />
+          )}
+          <UserOverview usersStats={usersStats} />
+        </div>
+
+      </div>
     </div>
-  </div>
-);
+  );
 };
 
 const StatsOverview = ({ bookingStats }) => (
@@ -564,22 +546,22 @@ const StatsOverview = ({ bookingStats }) => (
   </div>
 );
 
-const UserOverview = ({usersStats}) => (
-  
+const UserOverview = ({ usersStats }) => (
+
   <div className="user-stats">
-      <div className="user-stat-item">
-        <h2>All Users</h2>
-        <p>{usersStats.total}</p>
-      </div>
-      <div className="user-stat-item">
-        <h2>Registered Users</h2>
-        <p>{usersStats.active}</p>
-      </div>
-      <div className="user-stat-item">
-        <h2>Not Registered Users</h2>
-        <p>{usersStats.notRegistered}</p>
-      </div>
+    <div className="user-stat-item">
+      <h2>All Users</h2>
+      <p>{usersStats.total}</p>
     </div>
+    <div className="user-stat-item">
+      <h2>Registered Users</h2>
+      <p>{usersStats.active}</p>
+    </div>
+    <div className="user-stat-item">
+      <h2>Not Registered Users</h2>
+      <p>{usersStats.notRegistered}</p>
+    </div>
+  </div>
 );
 
 const AdditionalStats = ({ additionalStats }) => (

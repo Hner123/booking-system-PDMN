@@ -2,6 +2,7 @@ const PDFDocument = require("pdfkit");
 const mongoose = require("mongoose");
 const mailer = require("nodemailer");
 const ReserveModel = require("../models/ReserveModel");
+const NotifModel = require("../models/NotifModel")
 const UserModel = require("../models/UserModel");
 const cron = require('node-cron');
 
@@ -305,7 +306,7 @@ const SendAdminAttachment = async (req, res) => {
   try {
     const date = new Date();
     const startOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
-    const endOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+    const endOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0, 23, 59, 59);
 
     const reservations = await ReserveModel.find({
       scheduleDate: { $gte: startOfMonth, $lt: endOfMonth },
@@ -417,7 +418,7 @@ const SendAllAttachment = async () => {
 
     const date = new Date();
     const startOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
-    const endOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+    const endOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0, 23, 59, 59);
 
     const adminEmails = "pdmnpcdatadrmonitoring@gmail.com";
 
@@ -607,7 +608,7 @@ const SendUserAttachment = async (req, res) => {
 
       const date = new Date();
       const startOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
-      const endOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0, 23, 59, 59, 999);
+      const endOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0, 23, 59, 59);
 
       const htmlContent = `
         <!DOCTYPE html>
@@ -682,14 +683,14 @@ const SendUserAttachment = async (req, res) => {
 const DeletePrevMonth = async () => {
   const date = new Date();
   const startOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
-  const endOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+  const endOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0, 23, 59, 59);
 
   try {
     await ReserveModel.deleteMany({
       scheduleDate: { $gte: startOfMonth, $lt: endOfMonth },
     });
 
-    await NotificationModel.deleteMany({
+    await NotifModel.deleteMany({
       createdAt: { $gte: startOfMonth, $lt: endOfMonth },
     });
 
