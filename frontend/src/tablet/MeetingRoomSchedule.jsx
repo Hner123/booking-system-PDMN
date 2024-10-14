@@ -5,7 +5,8 @@ import bgPalawan from "../assets/palawan2.jpg";
 import bgBoracay from "../assets/boracay2.jpg";
 import qrImage from '../assets/qr.png';
 
-// Helper functions
+const API = import.meta.env.VITE_REACT_APP_API;
+
 const formatTime = (date) => date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 const formatDate = (date) => date.toLocaleDateString("en-GB", {
   weekday: "long",
@@ -41,7 +42,7 @@ const useBooking = () => {
 
   const fetchBookings = useCallback(async () => {
     try {
-      const response = await axios.get(`https://pdmnnewshub.ddns.net:8800/api/book/`, {
+      const response = await axios.get(`${API}/api/book/`, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",

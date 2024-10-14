@@ -6,6 +6,8 @@ import './AdminPages.css';
 import { toast } from 'react-toastify';
 import WithAuthAdmin from '../auth/WithAuthAdmin';
 
+const API = import.meta.env.VITE_REACT_APP_API;
+
 const ApprovalDetails = ({ sidebarOpen }) => {
   const { roomName } = useParams();
   const [bookings, setBookings] = useState([]);
@@ -30,7 +32,7 @@ const ApprovalDetails = ({ sidebarOpen }) => {
           "Content-Type": "application/json",
         };
 
-        const response = await axios.get(`https://pdmnnewshub.ddns.net:8800/api/book/`, { headers });
+        const response = await axios.get(`${API}/api/book/`, { headers });
 
         if (response.status === 200) {
           const filteredData = response.data.filter(
@@ -127,7 +129,7 @@ const ApprovalDetails = ({ sidebarOpen }) => {
       };
 
       const updateResponse = await axios.patch(
-        `https://pdmnnewshub.ddns.net:8800/api/book/edit/${selectedBooking._id}`,
+        `${API}/api/book/edit/${selectedBooking._id}`,
         updatedReserve,
         { headers }
       );
@@ -146,7 +148,7 @@ const ApprovalDetails = ({ sidebarOpen }) => {
           };
 
           const emailResponse = await axios.post(
-            `https://pdmnnewshub.ddns.net:8800/api/email/approval`,
+            `${API}/api/email/approval`,
             emailData,
             { headers }
           );
@@ -172,7 +174,7 @@ const ApprovalDetails = ({ sidebarOpen }) => {
               };
 
               const notifResponse = await axios.post(
-                `https://pdmnnewshub.ddns.net:8800/api/notif/new`,
+                `${API}/api/notif/new`,
                 notifData,
                 { headers }
               );
@@ -186,7 +188,7 @@ const ApprovalDetails = ({ sidebarOpen }) => {
                   };
 
                   const inviteResponse = await axios.post(
-                    `https://pdmnnewshub.ddns.net:8800/api/email/invite/${selectedBooking._id}`,
+                    `${API}/api/email/invite/${selectedBooking._id}`,
                     {},
                     { headers }
                   );
@@ -248,7 +250,7 @@ const ApprovalDetails = ({ sidebarOpen }) => {
       };
 
       const updateResponse = await axios.patch(
-        `https://pdmnnewshub.ddns.net:8800/api/book/edit/${selectedBooking._id}`,
+        `${API}/api/book/edit/${selectedBooking._id}`,
         updatedReserve,
         { headers }
       );
@@ -267,7 +269,7 @@ const ApprovalDetails = ({ sidebarOpen }) => {
           };
 
           const emailResponse = await axios.post(
-            `https://pdmnnewshub.ddns.net:8800/api/email/approval`,
+            `${API}/api/email/approval`,
             emailData,
             { headers }
           );
@@ -293,7 +295,7 @@ const ApprovalDetails = ({ sidebarOpen }) => {
               };
 
               const notifResponse = await axios.post(
-                `https://pdmnnewshub.ddns.net:8800/api/notif/new`,
+                `${API}/api/notif/new`,
                 notifData,
                 { headers }
               );

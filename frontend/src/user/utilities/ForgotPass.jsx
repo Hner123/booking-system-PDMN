@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 
+const API = import.meta.env.VITE_REACT_APP_API;
+
 const ForgotPass = () => {
   const [email, setEmail] = useState('');
   const [timer, setTimer] = useState(null);
@@ -23,7 +25,7 @@ const ForgotPass = () => {
         };
 
         const response = await axios.get(
-          `https://pdmnnewshub.ddns.net:8800/api/user/${userId}`,
+          `${API}/api/user/${userId}`,
           { headers }
         );
 
@@ -48,7 +50,7 @@ const ForgotPass = () => {
   const sendEmail = async (email) => {
     try {
       const response = await axios.post(
-        'https://pdmnnewshub.ddns.net:8800/api/email/forgotpass',
+        `${API}/api/email/forgotpass`,
         { email }
       );
 
@@ -75,7 +77,7 @@ const ForgotPass = () => {
         toast.error('Please enter your email address.');
       } else {
         const response = await axios.post(
-          'https://pdmnnewshub.ddns.net:8800/api/email/forgotpass', 
+          `${API}/api/email/forgotpass`, 
           { email }
         );
 

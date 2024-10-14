@@ -11,6 +11,8 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import WithAuth from "../auth/WithAuth";
 
+const API = import.meta.env.VITE_REACT_APP_API;
+
 const roomImages = {
   Palawan: palawanImage,
   Boracay: boracayImage,
@@ -30,7 +32,6 @@ const Dashboard = () => {
 
   const formRef = useRef();
   const userId = localStorage.getItem("userId") || null;
-
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -68,7 +69,7 @@ const Dashboard = () => {
         };
 
         const response = await axios.get(
-          `https://pdmnnewshub.ddns.net:8800/api/user/${userId}`,
+          `${API}/api/user/${userId}`,
           { headers }
         );
         if (response.status === 200) {
@@ -94,7 +95,7 @@ const Dashboard = () => {
           "Content-Type": "application/json",
         };
 
-        const response = await axios.get(`https://pdmnnewshub.ddns.net:8800/api/book/`,
+        const response = await axios.get(`${API}/api/book/`,
           { headers }
         );
         if (response.status === 200) {
@@ -236,7 +237,7 @@ const Dashboard = () => {
       };
 
       const updateResponse = await axios.delete(
-        `https://pdmnnewshub.ddns.net:8800/api/book/delete/${meetingToDelete.id}`,
+        `${API}/api/book/delete/${meetingToDelete.id}`,
         { headers }
       );
 
@@ -362,7 +363,7 @@ const Dashboard = () => {
 
     try {
       const validationResponse = await axios.post(
-        `https://pdmnnewshub.ddns.net:8800/api/auth/validate`,
+        `${API}/api/auth/validate`,
         {
           email: formData.email,
         }
@@ -397,7 +398,7 @@ const Dashboard = () => {
       };
 
       const updateResponse = await axios.patch(
-        `https://pdmnnewshub.ddns.net:8800/api/user/edit/${userId}`,
+        `${API}/api/user/edit/${userId}`,
         updatedUser,
         { headers }
       );
@@ -431,7 +432,7 @@ const Dashboard = () => {
       };
 
       const updateResponse = await axios.post(
-        `https://pdmnnewshub.ddns.net:8800/api/book/create`,
+        `${API}/api/book/create`,
         reserveRoom,
         { headers }
       );

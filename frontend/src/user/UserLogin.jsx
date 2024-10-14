@@ -6,6 +6,8 @@ import logo from "../assets/logos/GDSLogo.png";
 import mascot from "../assets/33.gif";
 import WithoutAuth from "../auth/WithoutAuth";
 
+const API = import.meta.env.VITE_REACT_APP_API;
+
 const UserLogin = () => {
   const [userName, setUsername] = useState("");
   const [passWord, setPassword] = useState("");
@@ -23,7 +25,7 @@ const UserLogin = () => {
       const trimmedPassWord = passWord.trim();
 
       const response = await axios.post(
-        "https://pdmnnewshub.ddns.net:8800/api/auth/login/user",
+        `${API}/api/auth/login/user`,
         {
           userName: trimmedUserName,
           passWord: trimmedPassWord,

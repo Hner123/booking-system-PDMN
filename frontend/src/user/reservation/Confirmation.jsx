@@ -5,6 +5,8 @@ import axios from "axios";
 import { ToastContainer } from "react-toastify";
 import WithAuthReserve from "../../auth/WithAuthReserve";
 
+const API = import.meta.env.VITE_REACT_APP_API;
+
 const BookingConfirmation = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedMeeting, setSelectedMeeting] = useState({
@@ -25,7 +27,7 @@ const BookingConfirmation = () => {
         };
 
         const response = await axios.get(
-          `https://pdmnnewshub.ddns.net:8800/api/book/${reserveId}`,
+          `${API}/api/book/${reserveId}`,
           { headers }
         );
         if (response.status === 200) {

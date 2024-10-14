@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import "./EditProfile.css";
-import { useNavigate } from "react-router-dom";
 import WithAuth from "../../auth/WithAuth";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
+
+const API = import.meta.env.VITE_REACT_APP_API;
 
 const EditProfile = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -52,7 +53,7 @@ const EditProfile = () => {
           "Content-Type": "application/json"
         };
         const response = await axios.get(
-          `https://pdmnnewshub.ddns.net:8800/api/user/${userId}`,
+          `${API}/api/user/${userId}`,
           { headers }
         );
         if (response.status === 200) {
@@ -85,7 +86,7 @@ const EditProfile = () => {
 
     try {
       const validationResponse = await axios.post(
-        `https://pdmnnewshub.ddns.net:8800/api/auth/validate`,
+        `${API}/api/auth/validate`,
         { email: formData.email }
       );
 
@@ -113,7 +114,7 @@ const EditProfile = () => {
       };
 
       const updateResponse = await axios.post(
-        `https://pdmnnewshub.ddns.net:8800/api/email/changeemail`,
+        `${API}/api/email/changeemail`,
         sendEmail,
         { headers }
       );
@@ -136,7 +137,7 @@ const EditProfile = () => {
 
     try {
       const validationResponse = await axios.post(
-        `https://pdmnnewshub.ddns.net:8800/api/auth/check`,
+        `${API}/api/auth/check`,
         { currPass: formData.currPass, hashedPassword: userData.passWord }
       );
 
@@ -178,7 +179,7 @@ const EditProfile = () => {
       };
 
       const updateResponse = await axios.patch(
-        `https://pdmnnewshub.ddns.net:8800/api/user/edit/${userId}`,
+        `${API}/api/user/edit/${userId}`,
         updatedUser,
         { headers }
       );

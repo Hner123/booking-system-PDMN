@@ -9,6 +9,8 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import WithAuthAdmin from "../auth/WithAuthAdmin";
 
+const API = import.meta.env.VITE_REACT_APP_API;
+
 // Sub-components for better structure
 const Tabs = ({ activeTab, onTabClick }) => (
   <div className="tabs">
@@ -101,7 +103,7 @@ const RoomReservation = () => {
         };
 
         const response = await axios.get(
-          "https://pdmnnewshub.ddns.net:8800/api/book/",
+          `${API}/api/book/`,
           { headers }
         );
 
@@ -156,7 +158,7 @@ const RoomReservation = () => {
       };
 
       const response = await axios.delete(
-        `https://pdmnnewshub.ddns.net:8800/api/book/delete/${eventId}`,
+        `${API}/api/book/delete/${eventId}`,
         { headers }
       );
 

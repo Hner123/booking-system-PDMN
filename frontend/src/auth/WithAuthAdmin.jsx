@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
+const API = import.meta.env.VITE_REACT_APP_API;
+
 const WithAuthAdmin = (WrappedComponent) => {
   const WithAuthWrapper = (props) => {
     const navigate = useNavigate();
@@ -26,7 +28,7 @@ const WithAuthAdmin = (WrappedComponent) => {
           };
 
           const responseUser = await axios.get(
-            `https://pdmnnewshub.ddns.net:8800/api/admin/`,
+            `${API}/api/admin/`,
             { headers }
           );
 

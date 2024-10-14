@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios'; 
 
+const API = import.meta.env.VITE_REACT_APP_API;
+
 const WithAuthReserve = (WrappedComponent) => {
   const WrapperComponent = (props) => {
     const navigate = useNavigate();
-
-    const [userData, setUserData] = useState();
 
     const userId = localStorage.getItem("userId");
     const token = localStorage.getItem("authToken");
@@ -21,7 +21,7 @@ const WithAuthReserve = (WrappedComponent) => {
           };
 
           const [responseUser] = await Promise.all([
-            axios.get(`https://pdmnnewshub.ddns.net:8800/api/user/`, { headers }),
+            axios.get(`${API}/api/user/`, { headers }),
           ]);
 
           if (responseUser.status === 200) {

@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Loader from "../assets/7.gif";
 
+const API = import.meta.env.VITE_REACT_APP_API;
+
 const WithoutAuth = (WrappedComponent) => {
   const WrapperComponent = (props) => {
     const navigate = useNavigate();
@@ -23,7 +25,7 @@ const WithoutAuth = (WrappedComponent) => {
               const { _id } = decodedToken;
 
               const responseUser = await axios.get(
-                `https://pdmnnewshub.ddns.net:8800/api/user/`,
+                `${API}/api/user/`,
                 { headers }
               );
 

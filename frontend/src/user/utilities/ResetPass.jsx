@@ -4,6 +4,8 @@ import NotFoundAuth from '../../auth/NotFoundAuthReset';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 
+const API = import.meta.env.VITE_REACT_APP_API;
+
 const ResetPassword = () => {
   const { userId } = useParams();
   const { search } = useLocation();
@@ -31,7 +33,7 @@ const ResetPassword = () => {
       };
 
       await axios.patch(
-        `https://pdmnnewshub.ddns.net:8800/api/auth/resetpass/${userId}`,
+        `${API}/api/auth/resetpass/${userId}`,
         { passWord },
         { headers }
       );
