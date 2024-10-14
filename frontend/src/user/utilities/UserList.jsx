@@ -4,6 +4,8 @@ import PropTypes from "prop-types";
 import "./UserList.css";
 import WithAuth from "../../auth/WithAuth";
 
+const API = import.meta.env.VITE_REACT_APP_API;
+
 const UserList = () => {
   const [users, setUsers] = useState({});
   const [loading, setLoading] = useState(true);
@@ -18,7 +20,7 @@ const UserList = () => {
           "Content-Type": "application/json",
         };
 
-        const response = await axios.get("https://pdmnnewshub.ddns.net:8800/api/user/", {
+        const response = await axios.get(`${API}/api/user/`, {
           headers,
         });
         if (response.status === 200) {

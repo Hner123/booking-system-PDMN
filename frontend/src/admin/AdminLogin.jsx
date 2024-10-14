@@ -6,6 +6,8 @@ import logo from "../assets/logos/GDSLogo.png";
 import mascot from "../assets/33.gif";
 import WithoutAuthAdmin from "../auth/WithoutAuthAdmin";
 
+const API = import.meta.env.VITE_REACT_APP_API;
+
 const AdminLogin = () => {
     const [adminUser, setUsername] = useState('');
     const [adminPass, setPassword] = useState('');
@@ -22,7 +24,7 @@ const AdminLogin = () => {
             const trimmedPassWord = adminPass.trim();
 
             const response = await axios.post(
-                "https://pdmnnewshub.ddns.net:8800/api/auth/login/admin",
+                `${API}/api/auth/login/admin`,
                 {
                     adminUser: trimmedUserName,
                     adminPass: trimmedPassWord,

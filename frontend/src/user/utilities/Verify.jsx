@@ -6,6 +6,8 @@ import { ToastContainer, toast } from 'react-toastify';
 import NotFoundAuth from '../../auth/NotFoundAuthReset';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 
+const API = import.meta.env.VITE_REACT_APP_API;
+
 const Verify = () => {
   const navigate = useNavigate();
   const { userId } = useParams();
@@ -25,7 +27,7 @@ const Verify = () => {
         };
 
         await axios.patch(
-          `https://pdmnnewshub.ddns.net:8800/api/user/edit/${userId}`,
+          `${API}/api/user/edit/${userId}`,
           { email: newEmail },
           { headers }
         );
