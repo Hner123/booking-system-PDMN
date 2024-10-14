@@ -63,7 +63,7 @@ const ReservationFormsDetails = () => {
       };
 
       const response = await axios.get(
-        `${API}/api/user/`,
+        `https://pdmnnewshub.ddns.net:8800/api/user/`,
         {
           headers,
         }
@@ -116,7 +116,7 @@ const ReservationFormsDetails = () => {
         };
 
         const response = await axios.get(
-          `${API}/api/book/${reserveId}`,
+          `https://pdmnnewshub.ddns.net:8800/api/book/${reserveId}`,
           { headers }
         );
         if (response.status === 200) {
@@ -324,7 +324,7 @@ const ReservationFormsDetails = () => {
       };
 
       const updateResponse = await axios.patch(
-        `${API}/api/book/edit/${reserveId}`,
+        `https://pdmnnewshub.ddns.net:8800/api/book/edit/${reserveId}`,
         updatedReserve,
         { headers }
       );
@@ -339,7 +339,7 @@ const ReservationFormsDetails = () => {
                 "Content-Type": "application/json",
               };
               const inviteResponse = await axios.post(
-                `${API}/api/email/invite/${reserveId}`,
+                `https://pdmnnewshub.ddns.net:8800/api/email/invite/${reserveId}`,
                 {},
                 { headers }
               );
@@ -397,7 +397,7 @@ const ReservationFormsDetails = () => {
               "Content-Type": "application/json",
             };
             const notifResponse = await axios.post(
-              `${API}/api/notif/new`,
+              `https://pdmnnewshub.ddns.net:8800/api/notif/new`,
               notifData,
               { headers }
             );
@@ -410,7 +410,7 @@ const ReservationFormsDetails = () => {
                   "Content-Type": "application/json",
                 };
                 const pendingResponse = await axios.post(
-                  `${API}/api/email/pending/${reserveId}`,
+                  `https://pdmnnewshub.ddns.net:8800/api/email/pending/${reserveId}`,
                   {},
                   { headers }
                 );
@@ -453,7 +453,7 @@ const ReservationFormsDetails = () => {
       };
 
       const updateResponse = await axios.delete(
-        `${API}/api/book/delete/${reserveId}`,
+        `https://pdmnnewshub.ddns.net:8800/api/book/delete/${reserveId}`,
         { headers }
       );
 

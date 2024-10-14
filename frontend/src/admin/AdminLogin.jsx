@@ -24,7 +24,7 @@ const AdminLogin = () => {
             const trimmedPassWord = adminPass.trim();
 
             const response = await axios.post(
-                `${API}/api/auth/login/admin`,
+                `https://pdmnnewshub.ddns.net:8800/api/auth/login/admin`,
                 {
                     adminUser: trimmedUserName,
                     adminPass: trimmedPassWord,

@@ -103,7 +103,7 @@ const RoomReservation = () => {
         };
 
         const response = await axios.get(
-          `${API}/api/book/`,
+          `https://pdmnnewshub.ddns.net:8800/api/book/`,
           { headers }
         );
 
@@ -158,7 +158,7 @@ const RoomReservation = () => {
       };
 
       const response = await axios.delete(
-        `${API}/api/book/delete/${eventId}`,
+        `https://pdmnnewshub.ddns.net:8800/api/book/delete/${eventId}`,
         { headers }
       );
 

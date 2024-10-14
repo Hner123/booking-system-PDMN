@@ -25,7 +25,7 @@ const WithoutAuth = (WrappedComponent) => {
               const { _id } = decodedToken;
 
               const responseUser = await axios.get(
-                `${API}/api/user/`,
+                `https://pdmnnewshub.ddns.net:8800/api/user/`,
                 { headers }
               );
 

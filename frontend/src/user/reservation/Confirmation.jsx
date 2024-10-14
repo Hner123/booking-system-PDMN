@@ -27,7 +27,7 @@ const BookingConfirmation = () => {
         };
 
         const response = await axios.get(
-          `${API}/api/book/${reserveId}`,
+          `https://pdmnnewshub.ddns.net:8800/api/book/${reserveId}`,
           { headers }
         );
         if (response.status === 200) {

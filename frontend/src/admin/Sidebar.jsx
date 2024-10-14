@@ -64,7 +64,7 @@ const Sidebar = () => {
         };
 
         const userResponse = await axios.get(
-          `${API}/api/admin/${adminId}`,
+          `https://pdmnnewshub.ddns.net:8800/api/admin/${adminId}`,
           { headers }
         );
         if (userResponse.status === 200) {
@@ -72,7 +72,7 @@ const Sidebar = () => {
         }
 
         const notifResponse = await axios.get(
-          `${API}/api/notif`,
+          `https://pdmnnewshub.ddns.net:8800/api/notif`,
           { headers }
         );
 
