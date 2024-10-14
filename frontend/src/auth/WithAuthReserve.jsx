@@ -7,6 +7,8 @@ const API = import.meta.env.VITE_REACT_APP_API;
 const WithAuthReserve = (WrappedComponent) => {
   const WrapperComponent = (props) => {
     const navigate = useNavigate();
+    
+    const [userData, setUserData] = useState();
 
     const userId = localStorage.getItem("userId");
     const token = localStorage.getItem("authToken");
