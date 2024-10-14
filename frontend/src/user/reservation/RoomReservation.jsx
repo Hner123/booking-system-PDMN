@@ -64,7 +64,7 @@ const RoomReservation = () => {
         };
 
         const response = await axios.get(
-          `https://pdmnnewshub.ddns.net:8800/api/book/${reserveToken}`,
+          `${API}/api/book/${reserveToken}`,
           { headers }
         );
         if (response.status === 200) {
@@ -94,7 +94,7 @@ const RoomReservation = () => {
           "Content-Type": "application/json",
         };
 
-        const response = await axios.get(`https://pdmnnewshub.ddns.net:8800/api/book/`, {
+        const response = await axios.get(`${API}/api/book/`, {
           headers,
         });
 
@@ -249,7 +249,7 @@ const RoomReservation = () => {
       };
 
       const updateResponse = await axios.patch(
-        `https://pdmnnewshub.ddns.net:8800/api/book/edit/${reserveId}`,
+        `${API}/api/book/edit/${reserveId}`,
         reserveData,
         { headers }
       );
@@ -280,7 +280,7 @@ const RoomReservation = () => {
       };
 
       const updateResponse = await axios.delete(
-        `https://pdmnnewshub.ddns.net:8800/api/book/delete/${reserveId}`,
+        `${API}/api/book/delete/${reserveId}`,
         { headers }
       );
 

@@ -25,7 +25,7 @@ const UserLogin = () => {
       const trimmedPassWord = passWord.trim();
 
       const response = await axios.post(
-        `https://pdmnnewshub.ddns.net:8800/api/auth/login/user`,
+        `${API}/api/auth/login/user`,
         {
           userName: trimmedUserName,
           passWord: trimmedPassWord,

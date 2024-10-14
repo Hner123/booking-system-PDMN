@@ -28,7 +28,7 @@ const WithAuth = (WrappedComponent) => {
             "Content-Type": "application/json",
           };
 
-          const responseUser = await axios.get(`https://pdmnnewshub.ddns.net:8800/api/user/`, { headers });
+          const responseUser = await axios.get(`${API}/api/user/`, { headers });
 
           if (responseUser.status === 200) {
             const user = responseUser.data.find(user => user._id === userId);

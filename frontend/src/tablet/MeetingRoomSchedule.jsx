@@ -42,7 +42,7 @@ const useBooking = () => {
 
   const fetchBookings = useCallback(async () => {
     try {
-      const response = await axios.get(`https://pdmnnewshub.ddns.net:8800/api/book/`, {
+      const response = await axios.get(`${API}/api/book/`, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",

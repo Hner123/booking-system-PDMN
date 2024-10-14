@@ -54,7 +54,7 @@ const AddEmployee = () => {
 
     try {
       const validationResponse = await axios.post(
-        `https://pdmnnewshub.ddns.net:8800/api/auth/validate`,
+        `${API}/api/auth/validate`,
         { userName: formData.userName }
       );
 
@@ -78,7 +78,7 @@ const AddEmployee = () => {
       };
 
       const createResponse = await axios.post(
-        `https://pdmnnewshub.ddns.net:8800/api/user/create`,
+        `${API}/api/user/create`,
         formData,
         { headers }
       );

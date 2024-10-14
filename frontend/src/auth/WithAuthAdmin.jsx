@@ -28,7 +28,7 @@ const WithAuthAdmin = (WrappedComponent) => {
           };
 
           const responseUser = await axios.get(
-            `https://pdmnnewshub.ddns.net:8800/api/admin/`,
+            `${API}/api/admin/`,
             { headers }
           );
 

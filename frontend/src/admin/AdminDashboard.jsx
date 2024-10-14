@@ -41,7 +41,7 @@ const useDashboardData = (selectedFile, currentMonth) => {
   useEffect(() => {
     const fetchJsonFiles = async () => {
       try {
-        const response = await axios.get(`https://pdmnnewshub.ddns.net:8800/api/stats/getList`);
+        const response = await axios.get(`${API}/api/stats/getList`);
         setPastStats(response.data.jsonFiles);
       } catch (err) {
         setError(err.message);
@@ -55,7 +55,7 @@ const useDashboardData = (selectedFile, currentMonth) => {
     if (selectedFile && selectedFile !== "reset") {
       const fetchData = async () => {
         try {
-          const response = await axios.post(`https://pdmnnewshub.ddns.net:8800/api/stats/get`, { url: selectedFile });
+          const response = await axios.post(`${API}/api/stats/get`, { url: selectedFile });
           console.log(response.data[0])
           setRoomUsage({
             Palawan: response.data[0].usage.palawan,
@@ -100,7 +100,7 @@ const useDashboardData = (selectedFile, currentMonth) => {
         "Content-Type": "application/json",
       };
 
-      const response = await axios.get(`https://pdmnnewshub.ddns.net:8800/api/book/`, { headers });
+      const response = await axios.get(`${API}/api/book/`, { headers });
 
       const date = new Date();
       const startOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
@@ -217,7 +217,7 @@ const useDashboardData = (selectedFile, currentMonth) => {
           "Content-Type": "application/json",
         };
 
-        const response = await axios.get(`https://pdmnnewshub.ddns.net:8800/api/user/`, { headers });
+        const response = await axios.get(`${API}/api/user/`, { headers });
 
         if (response.status === 200) {
           setUsersStats({
