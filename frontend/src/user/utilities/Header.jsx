@@ -43,6 +43,7 @@ const Header = () => {
 
   useEffect(() => {
     const fetchUserData = async () => {
+
       try {
         const userId = localStorage.getItem("userId");
         const token = localStorage.getItem("authToken");

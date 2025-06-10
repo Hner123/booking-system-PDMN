@@ -6,7 +6,7 @@ import logo from "../assets/logos/GDSLogo.png";
 import mascot from "../assets/33.gif";
 import WithoutAuthAdmin from "../auth/WithoutAuthAdmin";
 
-const API = import.meta.env.VITE_REACT_APP_API;
+const API = "http://localhost:3001";
 
 const AdminLogin = () => {
     const [adminUser, setUsername] = useState('');
@@ -19,6 +19,8 @@ const AdminLogin = () => {
         e.preventDefault();
         setLoading(true); // Start loading
         setError(""); // Clear previous errors
+
+   
         try {
             const trimmedUserName = adminUser.trim();
             const trimmedPassWord = adminPass.trim();
@@ -43,7 +45,7 @@ const AdminLogin = () => {
         } catch (error) {
             setError(error.response.data.message);
         } finally {
-            setLoading(false); // Stop loading
+            setLoading(false); // Stop loadingj
         }
     };
 

@@ -23,8 +23,8 @@ dotenv.config();
 
 ConnectDB();
 
-const pfxPath = path.join(__dirname, 'cert', '21tJ9tHUVUCrWVF8lM8ypg-main-11a461e6f3331c293bce4defe5f129cdff58531c-temp.pfx');
-const passphrase = 'QTAyUtiCdLhaaDK9o1VpTNKS8tOlHS1w/FbGpIhP118=';
+const pfxPath = path.join(__dirname, 'cert', 'NAubTKxP1kiYRtRTaVOxSA-main-11a461e6f3331c293bce4defe5f129cdff58531c-temp.pfx');
+const passphrase = 'RLvuFfNc8MXoFLI5NzjlQUp3LK/UEUHM3klWa6FrfbI=';
 const options = {
   pfx: fs.readFileSync(pfxPath),
   passphrase: passphrase,
