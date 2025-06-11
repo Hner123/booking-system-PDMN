@@ -1,0 +1,143 @@
+[
+  {
+    "usage": {
+      "palawan": 79,
+      "boracay": 83,
+      "both": 0
+    },
+    "status": {
+      "total": 162,
+      "approved": 160,
+      "rejected": 2,
+      "pending": 0
+    },
+    "date": [
+      {
+        "date": "2024-11-04",
+        "count": 7
+      },
+      {
+        "date": "2024-11-05",
+        "count": 6
+      },
+      {
+        "date": "2024-11-06",
+        "count": 9
+      },
+      {
+        "date": "2024-11-11",
+        "count": 9
+      },
+      {
+        "date": "2024-11-07",
+        "count": 10
+      },
+      {
+        "date": "2024-11-08",
+        "count": 8
+      },
+      {
+        "date": "2024-11-12",
+        "count": 4
+      },
+      {
+        "date": "2024-11-13",
+        "count": 14
+      },
+      {
+        "date": "2024-11-14",
+        "count": 10
+      },
+      {
+        "date": "2024-11-15",
+        "count": 13
+      },
+      {
+        "date": "2024-11-18",
+        "count": 8
+      },
+      {
+        "date": "2024-11-19",
+        "count": 5
+      },
+      {
+        "date": "2024-11-20",
+        "count": 9
+      },
+      {
+        "date": "2024-11-22",
+        "count": 7
+      },
+      {
+        "date": "2024-11-21",
+        "count": 4
+      },
+      {
+        "date": "2024-11-25",
+        "count": 9
+      },
+      {
+        "date": "2024-11-26",
+        "count": 5
+      },
+      {
+        "date": "2024-11-27",
+        "count": 9
+      },
+      {
+        "date": "2024-11-28",
+        "count": 8
+      },
+      {
+        "date": "2024-11-29",
+        "count": 6
+      }
+    ],
+    "dept": [
+      {
+        "department": "GDS Capital",
+        "count": 1
+      },
+      {
+        "department": "Philippine Dragon Media Network",
+        "count": 80
+      },
+      {
+        "department": "ClearPath",
+        "count": 3
+      },
+      {
+        "department": "STARLIGHT",
+        "count": 42
+      },
+      {
+        "department": "Dragon AI",
+        "count": 18
+      },
+      {
+        "department": "FEILONG Legal",
+        "count": 1
+      },
+      {
+        "department": "SuperNova",
+        "count": 9
+      },
+      {
+        "department": "GDS Travel Agency",
+        "count": 1
+      }
+    ],
+    "additional": {
+      "mostFrequentEmployee": "El Marie Latras",
+      "mostFrequentDepartment": "Philippine Dragon Media Network",
+      "mostBookedRoom": "Boracay",
+      "mostBookedTime": "02:00 PM"
+    },
+    "userStat": {
+      "total": 105,
+      "active": 64,
+      "notRegistered": 41
+    },
+    "month": "November 2024"
+  }
+]

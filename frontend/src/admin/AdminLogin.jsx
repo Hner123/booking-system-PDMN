@@ -20,7 +20,6 @@ const AdminLogin = () => {
         setLoading(true); // Start loading
         setError(""); // Clear previous errors
 
-   
         try {
             const trimmedUserName = adminUser.trim();
             const trimmedPassWord = adminPass.trim();
@@ -33,13 +32,15 @@ const AdminLogin = () => {
                 }
             );
 
+           
+
             if (response.status === 200) {
                 const { authToken } = response.data;
                 const { _id } = response.data.user;
 
                 localStorage.setItem("adminToken", authToken);
                 localStorage.setItem("adminId", _id);
-
+                 console.log("execute ito", _id);
                 navigate('/admin/dashboard');
             }
         } catch (error) {

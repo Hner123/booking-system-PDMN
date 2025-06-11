@@ -1,0 +1,115 @@
+[
+  {
+    "usage": {
+      "palawan": 32,
+      "boracay": 31,
+      "both": 0
+    },
+    "status": {
+      "total": 63,
+      "approved": 63,
+      "rejected": 0,
+      "pending": 0
+    },
+    "date": [
+      {
+        "date": "2024-12-02",
+        "count": 8
+      },
+      {
+        "date": "2024-12-03",
+        "count": 6
+      },
+      {
+        "date": "2024-12-04",
+        "count": 6
+      },
+      {
+        "date": "2024-12-05",
+        "count": 5
+      },
+      {
+        "date": "2024-12-06",
+        "count": 5
+      },
+      {
+        "date": "2024-12-12",
+        "count": 1
+      },
+      {
+        "date": "2024-12-09",
+        "count": 5
+      },
+      {
+        "date": "2024-12-11",
+        "count": 3
+      },
+      {
+        "date": "2024-12-10",
+        "count": 3
+      },
+      {
+        "date": "2024-12-16",
+        "count": 3
+      },
+      {
+        "date": "2024-12-17",
+        "count": 2
+      },
+      {
+        "date": "2024-12-18",
+        "count": 3
+      },
+      {
+        "date": "2024-12-19",
+        "count": 6
+      },
+      {
+        "date": "2024-12-23",
+        "count": 1
+      },
+      {
+        "date": "2024-12-20",
+        "count": 6
+      }
+    ],
+    "dept": [
+      {
+        "department": "STARLIGHT",
+        "count": 18
+      },
+      {
+        "department": "Philippine Dragon Media Network",
+        "count": 25
+      },
+      {
+        "department": "FEILONG Legal",
+        "count": 4
+      },
+      {
+        "department": "SuperNova",
+        "count": 11
+      },
+      {
+        "department": "Dragon AI",
+        "count": 4
+      },
+      {
+        "department": "GDS Capital",
+        "count": 1
+      }
+    ],
+    "additional": {
+      "mostFrequentEmployee": "El Marie Latras",
+      "mostFrequentDepartment": "Philippine Dragon Media Network",
+      "mostBookedRoom": "Palawan",
+      "mostBookedTime": "02:00 PM"
+    },
+    "userStat": {
+      "total": 106,
+      "active": 66,
+      "notRegistered": 40
+    },
+    "month": "December 2024"
+  }
+]

@@ -1,0 +1,131 @@
+[
+  {
+    "usage": {
+      "palawan": 45,
+      "boracay": 49,
+      "both": 0
+    },
+    "status": {
+      "total": 94,
+      "approved": 93,
+      "rejected": 0,
+      "pending": 1
+    },
+    "date": [
+      {
+        "date": "2025-02-03",
+        "count": 6
+      },
+      {
+        "date": "2025-02-04",
+        "count": 5
+      },
+      {
+        "date": "2025-02-05",
+        "count": 5
+      },
+      {
+        "date": "2025-02-06",
+        "count": 8
+      },
+      {
+        "date": "2025-02-07",
+        "count": 7
+      },
+      {
+        "date": "2025-02-10",
+        "count": 4
+      },
+      {
+        "date": "2025-02-12",
+        "count": 7
+      },
+      {
+        "date": "2025-02-11",
+        "count": 6
+      },
+      {
+        "date": "2025-02-13",
+        "count": 3
+      },
+      {
+        "date": "2025-02-14",
+        "count": 12
+      },
+      {
+        "date": "2025-02-17",
+        "count": 5
+      },
+      {
+        "date": "2025-02-20",
+        "count": 2
+      },
+      {
+        "date": "2025-02-21",
+        "count": 6
+      },
+      {
+        "date": "2025-02-24",
+        "count": 5
+      },
+      {
+        "date": "2025-02-25",
+        "count": 3
+      },
+      {
+        "date": "2025-02-26",
+        "count": 5
+      },
+      {
+        "date": "2025-02-27",
+        "count": 4
+      }
+    ],
+    "dept": [
+      {
+        "department": "Philippine Dragon Media Network",
+        "count": 52
+      },
+      {
+        "department": "FEILONG Legal",
+        "count": 3
+      },
+      {
+        "department": "Dragon AI",
+        "count": 5
+      },
+      {
+        "department": "STARLIGHT",
+        "count": 17
+      },
+      {
+        "department": "SuperNova",
+        "count": 12
+      },
+      {
+        "department": "ClearPath",
+        "count": 1
+      },
+      {
+        "department": "GDS Capital",
+        "count": 1
+      },
+      {
+        "department": "GDS Travel Agency",
+        "count": 1
+      }
+    ],
+    "additional": {
+      "mostFrequentEmployee": "El Marie Latras",
+      "mostFrequentDepartment": "Philippine Dragon Media Network",
+      "mostBookedRoom": "Boracay",
+      "mostBookedTime": "02:00 PM"
+    },
+    "userStat": {
+      "total": 110,
+      "active": 70,
+      "notRegistered": 40
+    },
+    "month": "February 2025"
+  }
+]

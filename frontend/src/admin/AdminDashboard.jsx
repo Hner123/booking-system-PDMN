@@ -7,7 +7,7 @@ import './AdminPages.css';
 import { toast } from 'react-toastify';
 import WithAuthAdmin from '../auth/WithAuthAdmin'
 
-const API = import.meta.env.VITE_REACT_APP_API;
+const API = import.meta.env.VITE_REACT_APP_API || "http://localhost:3001";
 
 const useDashboardData = (selectedFile, currentMonth) => {
   const [pastStats, setPastStats] = useState([]);

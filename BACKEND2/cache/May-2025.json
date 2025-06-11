@@ -1,0 +1,135 @@
+[
+  {
+    "usage": {
+      "palawan": 64,
+      "boracay": 48,
+      "both": 0
+    },
+    "status": {
+      "total": 112,
+      "approved": 112,
+      "rejected": 0,
+      "pending": 0
+    },
+    "date": [
+      {
+        "date": "2025-05-05",
+        "count": 7
+      },
+      {
+        "date": "2025-05-02",
+        "count": 10
+      },
+      {
+        "date": "2025-05-06",
+        "count": 7
+      },
+      {
+        "date": "2025-05-07",
+        "count": 4
+      },
+      {
+        "date": "2025-05-08",
+        "count": 4
+      },
+      {
+        "date": "2025-05-09",
+        "count": 8
+      },
+      {
+        "date": "2025-05-13",
+        "count": 4
+      },
+      {
+        "date": "2025-05-14",
+        "count": 6
+      },
+      {
+        "date": "2025-05-15",
+        "count": 11
+      },
+      {
+        "date": "2025-05-20",
+        "count": 7
+      },
+      {
+        "date": "2025-05-16",
+        "count": 4
+      },
+      {
+        "date": "2025-05-19",
+        "count": 4
+      },
+      {
+        "date": "2025-05-21",
+        "count": 2
+      },
+      {
+        "date": "2025-05-22",
+        "count": 4
+      },
+      {
+        "date": "2025-05-28",
+        "count": 3
+      },
+      {
+        "date": "2025-05-23",
+        "count": 6
+      },
+      {
+        "date": "2025-05-27",
+        "count": 6
+      },
+      {
+        "date": "2025-05-26",
+        "count": 3
+      },
+      {
+        "date": "2025-05-29",
+        "count": 7
+      },
+      {
+        "date": "2025-05-30",
+        "count": 5
+      }
+    ],
+    "dept": [
+      {
+        "department": "FEILONG Legal",
+        "count": 5
+      },
+      {
+        "department": "STARLIGHT",
+        "count": 15
+      },
+      {
+        "department": "Philippine Dragon Media Network",
+        "count": 36
+      },
+      {
+        "department": "GDS Travel Agency",
+        "count": 6
+      },
+      {
+        "department": "Dragon AI",
+        "count": 13
+      },
+      {
+        "department": "SuperNova",
+        "count": 8
+      }
+    ],
+    "additional": {
+      "mostFrequentEmployee": "Jen Germata",
+      "mostFrequentDepartment": "Philippine Dragon Media Network",
+      "mostBookedRoom": "Palawan",
+      "mostBookedTime": "02:00 PM"
+    },
+    "userStat": {
+      "total": 126,
+      "active": 85,
+      "notRegistered": 41
+    },
+    "month": "May 2025"
+  }
+]

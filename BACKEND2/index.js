@@ -3,13 +3,17 @@ import cors from "cors";
 import { createServer } from "http";
 import { Server as IOServer } from "socket.io";
 import ValidateRoutes from "./routes/ValidateRoutes.js"; // ← Fixed: default import
+import ListJsonFiles from "./routes/StatsRoutes.js"
+import dotenv from 'dotenv';
 
+dotenv.config();
 const app = express();
 app.use(cors()); // ← Enable CORS for all routes
 app.use(express.json());
 
 // Use routes - Fixed
 app.use("/api/auth", ValidateRoutes);
+app.use("/api/stats", ListJsonFiles);
 
 // Create the raw HTTP server…
 const httpServer = createServer(app);

@@ -32,7 +32,7 @@ export const LoginAdmin = async (req, res) => {
           _id: admin.id, // Use _id to match frontend expectation
           adminUser: admin.adminUser 
         }, 
-        JWT_SECRET, 
+        process.env.JWT_SECRET, 
         { expiresIn: "1h" }
       );
 
