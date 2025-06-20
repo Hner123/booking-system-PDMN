@@ -11,7 +11,7 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import WithAuth from "../auth/WithAuth";
 
-const API = import.meta.env.VITE_REACT_APP_API;
+const API = import.meta.env.VITE_REACT_APP_API || "http://localhost:3001";
 
 const roomImages = {
   Palawan: palawanImage,
@@ -55,7 +55,8 @@ const Dashboard = () => {
     const { name, value } = event.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: (name === "firstName" || name === "surName") ? capitalize(value) : value,
+      [name]:
+        name === "firstName" || name === "surName" ? capitalize(value) : value,
     }));
   };
 
@@ -68,10 +69,9 @@ const Dashboard = () => {
           "Content-Type": "application/json",
         };
 
-        const response = await axios.get(
-          `${API}/api/user/${userId}`,
-          { headers }
-        );
+        const response = await axios.get(`${API}/api/user/${userId}`, {
+          headers,
+        });
         if (response.status === 200) {
           setUsers(response.data);
           if (response.data.resetPass === false) {
@@ -95,9 +95,7 @@ const Dashboard = () => {
           "Content-Type": "application/json",
         };
 
-        const response = await axios.get(`${API}/api/book/`,
-          { headers }
-        );
+        const response = await axios.get(`${API}/api/book/`, { headers });
         if (response.status === 200) {
           setBookData(response.data);
         }
@@ -112,7 +110,7 @@ const Dashboard = () => {
   useEffect(() => {
     const now = new Date();
     const name = `${userData.firstName} ${userData.surName}`;
-  
+
     const initialReservations = bookData
       .filter(
         (book) =>
@@ -125,7 +123,11 @@ const Dashboard = () => {
         id: book._id,
         title: book.title,
         status: book.approval.status,
-        date: new Date(book.scheduleDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
+        date: new Date(book.scheduleDate).toLocaleDateString("en-US", {
+          month: "long",
+          day: "numeric",
+          year: "numeric",
+        }),
         time: `${new Date(book.startTime).toLocaleTimeString([], {
           hour: "2-digit",
           minute: "2-digit",
@@ -152,9 +154,9 @@ const Dashboard = () => {
         // If dates are equal, sort by startTime
         return a.startTime.getTime() - b.startTime.getTime();
       });
-  
+
     setReservations(initialReservations);
-  
+
     const initialOtherMeetings = bookData
       .filter(
         (book) =>
@@ -169,7 +171,11 @@ const Dashboard = () => {
         id: book._id,
         title: book.title,
         status: book.approval.status,
-        date: new Date(book.scheduleDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
+        date: new Date(book.scheduleDate).toLocaleDateString("en-US", {
+          month: "long",
+          day: "numeric",
+          year: "numeric",
+        }),
         time: `${new Date(book.startTime).toLocaleTimeString([], {
           hour: "2-digit",
           minute: "2-digit",
@@ -196,7 +202,7 @@ const Dashboard = () => {
         // If dates are equal, sort by startTime
         return a.startTime.getTime() - b.startTime.getTime();
       });
-  
+
     setOtherMeetings(initialOtherMeetings);
   }, [bookData]);
 
@@ -283,7 +289,8 @@ const Dashboard = () => {
         accessor: "actions",
         Cell: ({ row }) => {
           const { status } = row.original;
-          const buttonText = status === "Declined" ? "Delete Reservation" : "Cancel Reservation";
+          const buttonText =
+            status === "Declined" ? "Delete Reservation" : "Cancel Reservation";
           return (
             <>
               <button
@@ -305,7 +312,6 @@ const Dashboard = () => {
     ],
     []
   );
-  
 
   const otherMeetingsColumns = React.useMemo(
     () => [
@@ -362,12 +368,9 @@ const Dashboard = () => {
     }
 
     try {
-      const validationResponse = await axios.post(
-        `${API}/api/auth/validate`,
-        {
-          email: formData.email,
-        }
-      );
+      const validationResponse = await axios.post(`${API}/api/auth/validate`, {
+        email: formData.email,
+      });
 
       if (validationResponse.data.email.exists) {
         toast.error("Email is already registered");
@@ -377,7 +380,7 @@ const Dashboard = () => {
       toast.error("Failed to validate email");
       return;
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
 
     const updatedUser = {
@@ -411,7 +414,7 @@ const Dashboard = () => {
     } catch (error) {
       console.error("Error during patch:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   };
 

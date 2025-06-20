@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useParams } from 'react-router-dom';
-import Sidebar from './Sidebar';
-import './AdminPages.css';
-import { toast } from 'react-toastify';
-import WithAuthAdmin from '../auth/WithAuthAdmin';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useParams } from "react-router-dom";
+import Sidebar from "./Sidebar";
+import "./AdminPages.css";
+import { toast } from "react-toastify";
+import WithAuthAdmin from "../auth/WithAuthAdmin";
 
-const API = import.meta.env.VITE_REACT_APP_API;
+const API = "http://localhost:3001";
 
 const ApprovalDetails = ({ sidebarOpen }) => {
   const { roomName } = useParams();
@@ -36,7 +36,10 @@ const ApprovalDetails = ({ sidebarOpen }) => {
 
         if (response.status === 200) {
           const filteredData = response.data.filter(
-            (booking) => booking.roomName === roomName && booking.confirmation === false && booking.approval.archive === false
+            (booking) =>
+              booking.roomName === roomName &&
+              booking.confirmation === false &&
+              booking.approval.archive === false
           );
           setBookings(filteredData);
         } else {
@@ -144,7 +147,7 @@ const ApprovalDetails = ({ sidebarOpen }) => {
 
           const emailData = {
             _id: selectedBooking._id,
-            email: selectedBooking.user.email
+            email: selectedBooking.user.email,
           };
 
           const emailResponse = await axios.post(
@@ -154,7 +157,9 @@ const ApprovalDetails = ({ sidebarOpen }) => {
           );
 
           if (emailResponse.status === 201) {
-            const date = new Date(updateResponse.data.scheduleDate).toLocaleDateString();
+            const date = new Date(
+              updateResponse.data.scheduleDate
+            ).toLocaleDateString();
             const messageContent = `Your reservation <strong>${updateResponse.data.title}</strong> on <strong>${date}</strong> has been approved`;
             const notifData = {
               booking: updateResponse.data._id,
@@ -165,7 +170,7 @@ const ApprovalDetails = ({ sidebarOpen }) => {
               receiverType: "user",
               createdAt: new Date().toISOString(),
             };
-            
+
             try {
               const token = localStorage.getItem("adminToken");
               const headers = {
@@ -194,18 +199,25 @@ const ApprovalDetails = ({ sidebarOpen }) => {
                   );
 
                   if (inviteResponse.status === 201) {
-                    setBookings(bookings.filter(booking => booking._id !== selectedBooking._id));
+                    setBookings(
+                      bookings.filter(
+                        (booking) => booking._id !== selectedBooking._id
+                      )
+                    );
                     setAcceptModal(false);
                   }
-
                 } catch (error) {
                   // console.error("Error sending invites:", error);
-                  toast.error("Unexpected error occured. Please try again later.");
+                  toast.error(
+                    "Unexpected error occured. Please try again later."
+                  );
                   setAcceptModal(false);
                 }
               }
             } catch (error) {
-              toast.error("Error updating information. Please try again later.");
+              toast.error(
+                "Error updating information. Please try again later."
+              );
               setAcceptModal(false);
             }
           }
@@ -265,7 +277,7 @@ const ApprovalDetails = ({ sidebarOpen }) => {
 
           const emailData = {
             _id: selectedBooking._id,
-            email: selectedBooking.user.email
+            email: selectedBooking.user.email,
           };
 
           const emailResponse = await axios.post(
@@ -275,7 +287,9 @@ const ApprovalDetails = ({ sidebarOpen }) => {
           );
 
           if (emailResponse.status === 201) {
-            const date = new Date(updateResponse.data.user.scheduleDate).toLocaleDateString();
+            const date = new Date(
+              updateResponse.data.user.scheduleDate
+            ).toLocaleDateString();
             const messageContent = `Your reservation ${updateResponse.data.title} on ${date} has been rejected`;
             const notifData = {
               booking: updateResponse.data._id,
@@ -301,7 +315,11 @@ const ApprovalDetails = ({ sidebarOpen }) => {
               );
 
               if (notifResponse.status === 201) {
-                setBookings(bookings.filter(booking => booking._id !== selectedBooking._id));
+                setBookings(
+                  bookings.filter(
+                    (booking) => booking._id !== selectedBooking._id
+                  )
+                );
                 setFormData({
                   approval: {
                     archive: false,
@@ -312,7 +330,9 @@ const ApprovalDetails = ({ sidebarOpen }) => {
                 setRejectModal(false);
               }
             } catch (error) {
-              toast.error("Error updating information. Please try again later.");
+              toast.error(
+                "Error updating information. Please try again later."
+              );
               setRejectModal(false);
             }
           }
@@ -332,13 +352,17 @@ const ApprovalDetails = ({ sidebarOpen }) => {
 
   return (
     <div
-      className={`reason-room-page ${sidebarOpen ? "sidebar-open" : "sidebar-closed"
-        }`}
+      className={`reason-room-page ${
+        sidebarOpen ? "sidebar-open" : "sidebar-closed"
+      }`}
     >
       <Sidebar sidebarOpen={sidebarOpen} />
 
-      <h1 style={{ marginBottom: '0' }}>{roomName} Approval Page</h1>
-      <p style={{ margin: '0' }} className='note'><strong>Note: </strong>Bookings are sorted by priority, with the earliest booking displayed first, from left to right.</p>
+      <h1 style={{ marginBottom: "0" }}>{roomName} Approval Page</h1>
+      <p style={{ margin: "0" }} className="note">
+        <strong>Note: </strong>Bookings are sorted by priority, with the
+        earliest booking displayed first, from left to right.
+      </p>
       <div className="reason-room-content">
         {bookings.length === 0 ? (
           <p>No pending approvals.</p>
@@ -347,7 +371,7 @@ const ApprovalDetails = ({ sidebarOpen }) => {
             <div key={booking._id} className="booking-details">
               <h2>{booking.title}</h2>
               <p>
-                <strong>Date:{" "}</strong>
+                <strong>Date: </strong>
                 {new Date(booking.startTime).toLocaleDateString("en-US", {
                   year: "numeric",
                   month: "long",
@@ -355,24 +379,28 @@ const ApprovalDetails = ({ sidebarOpen }) => {
                 })}{" "}
               </p>
               <p>
-                <strong>Time:{" "}</strong>
-
+                <strong>Time: </strong>
                 {new Date(booking.startTime).toLocaleTimeString([], {
                   hour: "2-digit",
                   minute: "2-digit",
                 })}{" "}
                 -{" "}
-
                 {new Date(booking.endTime).toLocaleTimeString([], {
                   hour: "2-digit",
                   minute: "2-digit",
                 })}
               </p>
               <p>
-              <strong>Reserved By: </strong>{booking.user ? `${booking.user.firstName} ${booking.user.surName}` : "Unknown"}
+                <strong>Reserved By: </strong>
+                {booking.user
+                  ? `${booking.user.firstName} ${booking.user.surName}`
+                  : "Unknown"}
               </p>
               {booking.attendees && booking.attendees.length > 0 && (
-                <p><strong>Members: </strong>{booking.attendees.join(", ")}</p>
+                <p>
+                  <strong>Members: </strong>
+                  {booking.attendees.join(", ")}
+                </p>
               )}
               {booking.guest && booking.guest.length > 0 && (
                 <p>Guests: {booking.guest.join(", ")}</p>
@@ -395,7 +423,12 @@ const ApprovalDetails = ({ sidebarOpen }) => {
                 )} */}
               </p>
               <div className="approval-actions">
-                <button onClick={() => handleApprove(booking)} disabled={loading}>Approve</button>
+                <button
+                  onClick={() => handleApprove(booking)}
+                  disabled={loading}
+                >
+                  Approve
+                </button>
                 <button onClick={() => handleReject(booking)}>Reject</button>
               </div>
             </div>
@@ -408,7 +441,9 @@ const ApprovalDetails = ({ sidebarOpen }) => {
             <h2>Approve Booking</h2>
             <p>Are you sure you want to approve this booking?</p>
             <div className="modal-actions">
-              <button onClick={handleApproveConfirm} disabled={loading}>{loading ? "Please Wait..." : "Yes"}</button>
+              <button onClick={handleApproveConfirm} disabled={loading}>
+                {loading ? "Please Wait..." : "Yes"}
+              </button>
               <button onClick={cancelApprove}>No</button>
             </div>
           </div>
@@ -426,7 +461,9 @@ const ApprovalDetails = ({ sidebarOpen }) => {
               placeholder="Enter reason for rejection"
             />
             <div className="modal-actions">
-              <button onClick={handleRejectConfirm}>{loading ? "Please Wait..." : "Submit"}</button>
+              <button onClick={handleRejectConfirm}>
+                {loading ? "Please Wait..." : "Submit"}
+              </button>
               <button onClick={cancelReject}>Cancel</button>
             </div>
           </div>

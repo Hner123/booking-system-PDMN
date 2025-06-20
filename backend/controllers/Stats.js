@@ -64,7 +64,7 @@ const SaveData = async (req, res) => {
   const monthName = getCurrentMonthName();
   const cacheFilePath = path.join(
     __dirname,
-    "../cache", 
+    "../cache",
     extractFileNameFromUrl(`${monthName}`)
   );
 
@@ -134,36 +134,52 @@ const SaveData = async (req, res) => {
       return acc;
     }, []);
 
-    const stats = approvedBookings.reduce((acc, item) => {
-      const username = item.user?.userName;
-      const department = item.user?.department;
-      const room = item.roomName;
-      const time = new Date(item.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const stats = approvedBookings.reduce(
+      (acc, item) => {
+        const username = item.user?.userName;
+        const department = item.user?.department;
+        const room = item.roomName;
+        const time = new Date(item.startTime).toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
 
-      if (username) {
-        acc.employees[username] = (acc.employees[username] || 0) + 1;
-        acc.employeeNames[username] = `${item.user.firstName} ${item.user.surName}`;
+        if (username) {
+          acc.employees[username] = (acc.employees[username] || 0) + 1;
+          acc.employeeNames[
+            username
+          ] = `${item.user.firstName} ${item.user.surName}`;
+        }
+
+        if (department) {
+          acc.departments[department] = (acc.departments[department] || 0) + 1;
+        }
+
+        if (room) {
+          acc.rooms[room] = (acc.rooms[room] || 0) + 1;
+        }
+
+        if (time) {
+          acc.times[time] = (acc.times[time] || 0) + 1;
+        }
+
+        return acc;
+      },
+      {
+        employees: {},
+        employeeNames: {},
+        departments: {},
+        rooms: {},
+        times: {},
       }
-
-      if (department) {
-        acc.departments[department] = (acc.departments[department] || 0) + 1;
-      }
-
-      if (room) {
-        acc.rooms[room] = (acc.rooms[room] || 0) + 1;
-      }
-
-      if (time) {
-        acc.times[time] = (acc.times[time] || 0) + 1;
-      }
-
-      return acc;
-    }, { employees: {}, employeeNames: {}, departments: {}, rooms: {}, times: {} });
+    );
 
     const getMostFrequent = (data) => {
-      return Object.keys(data).reduce((mostFrequent, currentKey) => (
-        (data[mostFrequent] > data[currentKey] ? mostFrequent : currentKey)
-      ), '');
+      return Object.keys(data).reduce(
+        (mostFrequent, currentKey) =>
+          data[mostFrequent] > data[currentKey] ? mostFrequent : currentKey,
+        ""
+      );
     };
 
     const mostFrequentEmployeeKey = getMostFrequent(stats.employees);
@@ -171,34 +187,44 @@ const SaveData = async (req, res) => {
     const mostBookedRoomKey = getMostFrequent(stats.rooms);
     const mostBookedTimeKey = getMostFrequent(stats.times);
 
-    const fullName = stats.employeeNames[mostFrequentEmployeeKey] || 'N/A';
+    const fullName = stats.employeeNames[mostFrequentEmployeeKey] || "N/A";
 
     const user = await UserModel.find({});
 
     const article = {
       usage: {
-        palawan: reservations.filter((item) => item.roomName === "Palawan").length,
-        boracay: reservations.filter((item) => item.roomName === "Boracay").length,
-        both: reservations.filter((item) => item.roomName === "Palawan and Boracay").length,
+        palawan: reservations.filter((item) => item.roomName === "Palawan")
+          .length,
+        boracay: reservations.filter((item) => item.roomName === "Boracay")
+          .length,
+        both: reservations.filter(
+          (item) => item.roomName === "Palawan and Boracay"
+        ).length,
       },
       status: {
         total: reservations.length,
-        approved: reservations.filter((item) => item.approval.status === "Approved").length,
-        rejected: reservations.filter((item) => item.approval.status === "Declined").length,
-        pending: reservations.filter((item) => item.approval.status === "Pending" && item.title !== "").length,
+        approved: reservations.filter(
+          (item) => item.approval.status === "Approved"
+        ).length,
+        rejected: reservations.filter(
+          (item) => item.approval.status === "Declined"
+        ).length,
+        pending: reservations.filter(
+          (item) => item.approval.status === "Pending" && item.title !== ""
+        ).length,
       },
-      date: bookingsByDate, 
+      date: bookingsByDate,
       dept: bookingsByDepartment,
       additional: {
         mostFrequentEmployee: fullName,
-        mostFrequentDepartment: mostFrequentDepartmentKey || 'N/A',
-        mostBookedRoom: mostBookedRoomKey || 'N/A',
-        mostBookedTime: mostBookedTimeKey || 'N/A',
+        mostFrequentDepartment: mostFrequentDepartmentKey || "N/A",
+        mostBookedRoom: mostBookedRoomKey || "N/A",
+        mostBookedTime: mostBookedTimeKey || "N/A",
       },
       userStat: {
         total: user.length,
-        active: user.filter(item => item.resetPass === true).length,
-        notRegistered: user.filter(item => item.resetPass === false).length
+        active: user.filter((item) => item.resetPass === true).length,
+        notRegistered: user.filter((item) => item.resetPass === false).length,
       },
       month: monthName,
     };
@@ -242,8 +268,8 @@ const ListJsonFiles = (req, res) => {
     const files = fs.readdirSync(cacheDir);
 
     const jsonFiles = files
-      .filter(file => file.endsWith('.json'))
-      .map(file => file.slice(0, -5));
+      .filter((file) => file.endsWith(".json"))
+      .map((file) => file.slice(0, -5));
 
     res.json({ jsonFiles });
   } catch (error) {
@@ -252,9 +278,13 @@ const ListJsonFiles = (req, res) => {
   }
 };
 
-cron.schedule('0 23 28-31 * *', () => {
+cron.schedule("0 23 28-31 * *", () => {
   const today = new Date();
-  const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+  const lastDayOfMonth = new Date(
+    today.getFullYear(),
+    today.getMonth() + 1,
+    0
+  ).getDate();
 
   if (today.getDate() === lastDayOfMonth) {
     SaveData()
@@ -270,5 +300,5 @@ cron.schedule('0 23 28-31 * *', () => {
 module.exports = {
   SaveData,
   GetCacheFile,
-  ListJsonFiles
+  ListJsonFiles,
 };

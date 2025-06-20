@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const API = import.meta.env.VITE_REACT_APP_API;
+const API = import.meta.env.VITE_REACT_APP_API || "http://localhost:3001";
 
 const WithAuthAdmin = (WrappedComponent) => {
   const WithAuthWrapper = (props) => {
@@ -27,15 +27,15 @@ const WithAuthAdmin = (WrappedComponent) => {
             "Content-Type": "application/json",
           };
 
-          const responseUser = await axios.get(
-            `${API}/api/admin/`,
-            { headers }
-          );
+          const responseUser = await axios.get(`${API}/api/admin/`, {
+            headers,
+          });
 
           if (responseUser.status === 200) {
             const admin = responseUser.data.find(
-              (user) => user._id === adminId
+              (user) => user._id === parseInt(adminId)
             );
+
             if (admin) {
               setUserData(admin);
             } else {
@@ -94,8 +94,13 @@ const WithAuthAdmin = (WrappedComponent) => {
     // if (isLoading) {
     //   return <div>Loading...</div>;
     // }
-    
-    return <>  <WrappedComponent {...props} /></>;
+
+    return (
+      <>
+        {" "}
+        <WrappedComponent {...props} />
+      </>
+    );
   };
 
   return WithAuthWrapper;

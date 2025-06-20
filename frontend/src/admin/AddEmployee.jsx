@@ -9,7 +9,7 @@ import WithAuthAdmin from "../auth/WithAuthAdmin";
 import Sidebar from "./Sidebar";
 import "./AdminPages.css";
 
-const API = import.meta.env.VITE_REACT_APP_API;
+const API = "http://localhost:3001";
 
 const AddEmployee = () => {
   const [formData, setFormData] = useState({
@@ -53,10 +53,9 @@ const AddEmployee = () => {
     setLoading(true);
 
     try {
-      const validationResponse = await axios.post(
-        `${API}/api/auth/validate`,
-        { userName: formData.userName }
-      );
+      const validationResponse = await axios.post(`${API}/api/auth/validate`, {
+        userName: formData.userName,
+      });
 
       if (validationResponse.data.userName.exists) {
         toast.error("Username is already registered");
@@ -85,7 +84,9 @@ const AddEmployee = () => {
 
       if (createResponse.status === 201) {
         const successMessage = `Employee <strong>${formData.userName}</strong> has been added successfully!`;
-        toast.success(`Employee ${formData.userName} has been added successfully!`);
+        toast.success(
+          `Employee ${formData.userName} has been added successfully!`
+        );
         setStatusMessages((prevMessages) => [
           ...prevMessages,
           { message: successMessage, isError: false },

@@ -15,7 +15,7 @@ const routes = {
   NotifRoutes: require("./routes/NotifRoutes"),
   EmailsRoutes: require("./routes/EmailsRoutes"),
   FileRoutes: require("./routes/FileRoutes"),
-  StatsRoutes: require("./routes/StatsRoutes")
+  StatsRoutes: require("./routes/StatsRoutes"),
 };
 
 const app = express();
@@ -23,8 +23,12 @@ dotenv.config();
 
 ConnectDB();
 
-const pfxPath = path.join(__dirname, 'cert', 'NAubTKxP1kiYRtRTaVOxSA-main-11a461e6f3331c293bce4defe5f129cdff58531c-temp.pfx');
-const passphrase = 'RLvuFfNc8MXoFLI5NzjlQUp3LK/UEUHM3klWa6FrfbI=';
+const pfxPath = path.join(
+  __dirname,
+  "cert",
+  "NAubTKxP1kiYRtRTaVOxSA-main-11a461e6f3331c293bce4defe5f129cdff58531c-temp.pfx"
+);
+const passphrase = "RLvuFfNc8MXoFLI5NzjlQUp3LK/UEUHM3klWa6FrfbI=";
 const options = {
   pfx: fs.readFileSync(pfxPath),
   passphrase: passphrase,

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Loader from "../assets/7.gif";
 
-const API = import.meta.env.VITE_REACT_APP_API;
+const API = import.meta.env.VITE_REACT_APP_API || "http://localhost:3001";
 
 const WithoutAuth = (WrappedComponent) => {
   const WrapperComponent = (props) => {
@@ -24,10 +24,9 @@ const WithoutAuth = (WrappedComponent) => {
             if (decodedToken) {
               const { _id } = decodedToken;
 
-              const responseUser = await axios.get(
-                `${API}/api/user/`,
-                { headers }
-              );
+              const responseUser = await axios.get(`${API}/api/user/`, {
+                headers,
+              });
 
               if (responseUser.status === 200) {
                 const foundUser = responseUser.data.find(
@@ -71,7 +70,12 @@ const WithoutAuth = (WrappedComponent) => {
         </div>
       );
     }
-    return <> {console.clear()} <WrappedComponent {...props} /></>;
+    return (
+      <>
+        {" "}
+        {console.clear()} <WrappedComponent {...props} />
+      </>
+    );
   };
 
   return WrapperComponent;

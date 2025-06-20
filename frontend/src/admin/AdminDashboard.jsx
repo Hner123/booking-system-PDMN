@@ -1,20 +1,21 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import axios from 'axios';
-import { Bar, Line, Pie } from 'react-chartjs-2';
-import 'chart.js/auto';
-import Sidebar from './Sidebar';
-import './AdminPages.css';
-import { toast } from 'react-toastify';
-import WithAuthAdmin from '../auth/WithAuthAdmin'
+import React, { useState, useEffect, useMemo } from "react";
+import axios from "axios";
+import { Bar, Line, Pie } from "react-chartjs-2";
+import "chart.js/auto";
+import Sidebar from "./Sidebar";
+import "./AdminPages.css";
+import { toast } from "react-toastify";
+import WithAuthAdmin from "../auth/WithAuthAdmin";
+import WithoutAuthAdmin from "../auth/WithoutAuthAdmin";
 
-const API = import.meta.env.VITE_REACT_APP_API || "http://localhost:3001";
+const API = "http://localhost:3001";
 
 const useDashboardData = (selectedFile, currentMonth) => {
   const [pastStats, setPastStats] = useState([]);
   const [roomUsage, setRoomUsage] = useState({
     Palawan: 0,
     Boracay: 0,
-    'Palawan and Boracay': 0,
+    "Palawan and Boracay": 0,
   });
   const [bookingStats, setBookingStats] = useState({
     total: 0,
@@ -24,10 +25,10 @@ const useDashboardData = (selectedFile, currentMonth) => {
   });
   const [bookingTrends, setBookingTrends] = useState([]);
   const [additionalStats, setAdditionalStats] = useState({
-    mostFrequentDepartment: '',
-    mostFrequentEmployee: '',
-    mostBookedTime: '',
-    mostBookedRoom: '',
+    mostFrequentDepartment: "",
+    mostFrequentEmployee: "",
+    mostBookedTime: "",
+    mostBookedRoom: "",
   });
   const [departmentStats, setDepartmentStats] = useState({});
   const [usersStats, setUsersStats] = useState({
@@ -36,7 +37,7 @@ const useDashboardData = (selectedFile, currentMonth) => {
     notRegistered: 0,
   });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchJsonFiles = async () => {
@@ -55,12 +56,14 @@ const useDashboardData = (selectedFile, currentMonth) => {
     if (selectedFile && selectedFile !== "reset") {
       const fetchData = async () => {
         try {
-          const response = await axios.post(`${API}/api/stats/get`, { url: selectedFile });
-          console.log(response.data[0])
+          const response = await axios.post(`${API}/api/stats/get`, {
+            url: selectedFile,
+          });
+          console.log(response.data[0]);
           setRoomUsage({
             Palawan: response.data[0].usage.palawan,
             Boracay: response.data[0].usage.boracay,
-            'Palawan and Boracay': response.data[0].usage.both,
+            "Palawan and Boracay": response.data[0].usage.both,
           });
           setBookingStats({
             total: response.data[0].status.total,
@@ -70,8 +73,10 @@ const useDashboardData = (selectedFile, currentMonth) => {
           });
           setBookingTrends(response.data[0].date);
           setAdditionalStats({
-            mostFrequentDepartment: response.data[0].additional.mostFrequentDepartment,
-            mostFrequentEmployee: response.data[0].additional.mostFrequentEmployee,
+            mostFrequentDepartment:
+              response.data[0].additional.mostFrequentDepartment,
+            mostFrequentEmployee:
+              response.data[0].additional.mostFrequentEmployee,
             mostBookedTime: response.data[0].additional.mostBookedTime,
             mostBookedRoom: response.data[0].additional.mostBookedRoom,
           });
@@ -79,7 +84,7 @@ const useDashboardData = (selectedFile, currentMonth) => {
           setUsersStats({
             total: response.data[0].userStat.total,
             active: response.data[0].userStat.active,
-            notRegistered: response.data[0].userStat.notRegistered
+            notRegistered: response.data[0].userStat.notRegistered,
           });
         } catch (err) {
           console.error("Error fetching booking data:", err);
@@ -112,26 +117,42 @@ const useDashboardData = (selectedFile, currentMonth) => {
       });
 
       setRoomUsage({
-        Palawan: reservations.filter(item => item.roomName === "Palawan").length,
-        Boracay: reservations.filter(item => item.roomName === "Boracay").length,
-        'Palawan and Boracay': reservations.filter(item => item.roomName === "Palawan and Boracay").length,
+        Palawan: reservations.filter((item) => item.roomName === "Palawan")
+          .length,
+        Boracay: reservations.filter((item) => item.roomName === "Boracay")
+          .length,
+        "Palawan and Boracay": reservations.filter(
+          (item) => item.roomName === "Palawan and Boracay"
+        ).length,
       });
 
       setBookingStats({
         total: reservations.length,
-        approved: reservations.filter(item => item.approval.status === "Approved").length,
-        rejected: reservations.filter(item => item.approval.status === "Declined").length,
-        pending: reservations.filter(item => item.approval.status === "Pending" && item.title !== "").length,
+        approved: reservations.filter(
+          (item) => item.approval.status === "Approved"
+        ).length,
+        rejected: reservations.filter(
+          (item) => item.approval.status === "Declined"
+        ).length,
+        pending: reservations.filter(
+          (item) => item.approval.status === "Pending" && item.title !== ""
+        ).length,
       });
 
-      const approvedBookings = reservations.filter(item => {
+      const approvedBookings = reservations.filter((item) => {
         const bookingDate = new Date(item.scheduleDate);
-        return item.approval.status === "Approved" && bookingDate.getMonth() === date.getMonth() && bookingDate.getFullYear() === date.getFullYear();
+        return (
+          item.approval.status === "Approved" &&
+          bookingDate.getMonth() === date.getMonth() &&
+          bookingDate.getFullYear() === date.getFullYear()
+        );
       });
 
       const bookingsByDate = approvedBookings.reduce((acc, item) => {
-        const bookingDate = new Date(item.scheduleDate).toISOString().split('T')[0];
-        const existingDate = acc.find(entry => entry.date === bookingDate);
+        const bookingDate = new Date(item.scheduleDate)
+          .toISOString()
+          .split("T")[0];
+        const existingDate = acc.find((entry) => entry.date === bookingDate);
         if (existingDate) {
           existingDate.count += 1;
         } else {
@@ -143,7 +164,9 @@ const useDashboardData = (selectedFile, currentMonth) => {
       const bookingsByDepartment = approvedBookings.reduce((acc, item) => {
         const department = item.user?.department;
         if (department) {
-          const existingDepartment = acc.find(entry => entry.department === department);
+          const existingDepartment = acc.find(
+            (entry) => entry.department === department
+          );
           if (existingDepartment) {
             existingDepartment.count += 1;
           } else {
@@ -156,36 +179,53 @@ const useDashboardData = (selectedFile, currentMonth) => {
       setBookingTrends(bookingsByDate);
       setDepartmentStats(bookingsByDepartment);
 
-      const stats = approvedBookings.reduce((acc, item) => {
-        const username = item.user?.userName;
-        const department = item.user?.department;
-        const room = item.roomName;
-        const time = new Date(item.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const stats = approvedBookings.reduce(
+        (acc, item) => {
+          const username = item.user?.userName;
+          const department = item.user?.department;
+          const room = item.roomName;
+          const time = new Date(item.startTime).toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          });
 
-        if (username) {
-          acc.employees[username] = (acc.employees[username] || 0) + 1;
-          acc.employeeNames[username] = `${item.user.firstName} ${item.user.surName}`;
+          if (username) {
+            acc.employees[username] = (acc.employees[username] || 0) + 1;
+            acc.employeeNames[
+              username
+            ] = `${item.user.firstName} ${item.user.surName}`;
+          }
+
+          if (department) {
+            acc.departments[department] =
+              (acc.departments[department] || 0) + 1;
+          }
+
+          if (room) {
+            acc.rooms[room] = (acc.rooms[room] || 0) + 1;
+          }
+
+          if (time) {
+            acc.times[time] = (acc.times[time] || 0) + 1;
+          }
+
+          return acc;
+        },
+        {
+          employees: {},
+          employeeNames: {},
+          departments: {},
+          rooms: {},
+          times: {},
         }
-
-        if (department) {
-          acc.departments[department] = (acc.departments[department] || 0) + 1;
-        }
-
-        if (room) {
-          acc.rooms[room] = (acc.rooms[room] || 0) + 1;
-        }
-
-        if (time) {
-          acc.times[time] = (acc.times[time] || 0) + 1;
-        }
-
-        return acc;
-      }, { employees: {}, employeeNames: {}, departments: {}, rooms: {}, times: {} });
+      );
 
       const getMostFrequent = (data) => {
-        return Object.keys(data).reduce((mostFrequent, currentKey) => (
-          (data[mostFrequent] > data[currentKey] ? mostFrequent : currentKey)
-        ), '');
+        return Object.keys(data).reduce(
+          (mostFrequent, currentKey) =>
+            data[mostFrequent] > data[currentKey] ? mostFrequent : currentKey,
+          ""
+        );
       };
 
       const mostFrequentEmployeeKey = getMostFrequent(stats.employees);
@@ -193,16 +233,15 @@ const useDashboardData = (selectedFile, currentMonth) => {
       const mostBookedRoomKey = getMostFrequent(stats.rooms);
       const mostBookedTimeKey = getMostFrequent(stats.times);
 
-      const fullName = stats.employeeNames[mostFrequentEmployeeKey] || 'N/A';
+      const fullName = stats.employeeNames[mostFrequentEmployeeKey] || "N/A";
 
-      setAdditionalStats(prevStats => ({
+      setAdditionalStats((prevStats) => ({
         ...prevStats,
         mostFrequentEmployee: fullName,
-        mostFrequentDepartment: mostFrequentDepartmentKey || 'N/A',
-        mostBookedRoom: mostBookedRoomKey || 'N/A',
-        mostBookedTime: mostBookedTimeKey || 'N/A',
+        mostFrequentDepartment: mostFrequentDepartmentKey || "N/A",
+        mostBookedRoom: mostBookedRoomKey || "N/A",
+        mostBookedTime: mostBookedTimeKey || "N/A",
       }));
-
     } catch (error) {
       console.error("Error fetching booking data:", error);
     }
@@ -222,8 +261,10 @@ const useDashboardData = (selectedFile, currentMonth) => {
         if (response.status === 200) {
           setUsersStats({
             total: response.data.length,
-            active: response.data.filter(item => item.resetPass === true).length,
-            notRegistered: response.data.filter(item => item.resetPass === false).length,
+            active: response.data.filter((item) => item.resetPass === 0).length,
+            notRegistered: response.data.filter(
+              (item) => item.resetPass === false
+            ).length,
           });
         } else {
           console.error("Response status is not OK");
@@ -256,7 +297,7 @@ const chartOptions = {
       enabled: true,
       callbacks: {
         label: function (context) {
-          const date = context.dataset.label || ''; // Access the label (date) for the tooltip
+          const date = context.dataset.label || ""; // Access the label (date) for the tooltip
           const count = context.raw; // Get the count value for the tooltip
           return `Date: ${date}, Bookings: ${count}`;
         },
@@ -264,12 +305,12 @@ const chartOptions = {
     },
     legend: {
       display: true,
-      position: 'bottom',
+      position: "bottom",
       labels: {
         font: {
-          size: 16,  // Increased font size for readability
+          size: 16, // Increased font size for readability
         },
-        color: '#333', // Dark color for better contrast
+        color: "#333", // Dark color for better contrast
         usePointStyle: true,
         padding: 20, // More space between labels
       },
@@ -284,18 +325,18 @@ const chartOptions = {
   },
   animation: {
     duration: 1200,
-    easing: 'easeInOutQuart',
+    easing: "easeInOutQuart",
   },
   scales: {
     x: {
       title: {
         display: true,
-        text: '', // X-axis label
+        text: "", // X-axis label
       },
       ticks: {
-        color: '#555', // Label color for the X-axis
+        color: "#555", // Label color for the X-axis
         font: {
-          size: 14,  // Slightly larger font size for ticks
+          size: 14, // Slightly larger font size for ticks
         },
         autoSkip: true,
         maxRotation: 0,
@@ -305,12 +346,12 @@ const chartOptions = {
     y: {
       title: {
         display: true,
-        text: 'Number of Bookings', // Y-axis label
+        text: "Number of Bookings", // Y-axis label
       },
       ticks: {
-        color: '#555',  // Label color for the Y-axis
+        color: "#555", // Label color for the Y-axis
         font: {
-          size: 14,  // Larger font size for ticks
+          size: 14, // Larger font size for ticks
         },
       },
       beginAtZero: true,
@@ -320,8 +361,11 @@ const chartOptions = {
 
 // Main Dashboard Component
 const Dashboard = ({ sidebarOpen }) => {
-  const [selectedFile, setSelectedFile] = useState('');
-  const currentMonth = new Date().toLocaleString('default', { month: 'long', year: 'numeric'});
+  const [selectedFile, setSelectedFile] = useState("");
+  const currentMonth = new Date().toLocaleString("default", {
+    month: "long",
+    year: "numeric",
+  });
   const {
     pastStats,
     roomUsage,
@@ -332,10 +376,7 @@ const Dashboard = ({ sidebarOpen }) => {
     usersStats,
     loading,
     error,
-  } = useDashboardData(
-    selectedFile, 
-    currentMonth
-  );
+  } = useDashboardData(selectedFile, currentMonth);
 
   const [layout, setLayout] = useState({
     roomUsage: true,
@@ -345,63 +386,83 @@ const Dashboard = ({ sidebarOpen }) => {
     usersData: true,
   });
 
-  const roomUsageData = useMemo(() => ({
-    labels: ['Palawan', 'Boracay', 'Palawan and Boracay'],
-    datasets: [
-      {
-        label: 'Room Usage',
-        data: [roomUsage['Palawan'] || 0, roomUsage['Boracay'] || 0, roomUsage['Palawan and Boracay'] || 0],
-        backgroundColor: ['#42a5f5', '#66bb6a', '#ff7043'],
-        hoverBackgroundColor: ['#2196f3', '#43a047', '#f4511e'],
-      },
-    ],
-  }), [roomUsage]);
+  const roomUsageData = useMemo(
+    () => ({
+      labels: ["Palawan", "Boracay", "Palawan and Boracay"],
+      datasets: [
+        {
+          label: "Room Usage",
+          data: [
+            roomUsage["Palawan"] || 0,
+            roomUsage["Boracay"] || 0,
+            roomUsage["Palawan and Boracay"] || 0,
+          ],
+          backgroundColor: ["#42a5f5", "#66bb6a", "#ff7043"],
+          hoverBackgroundColor: ["#2196f3", "#43a047", "#f4511e"],
+        },
+      ],
+    }),
+    [roomUsage]
+  );
 
   const bookingTrendsData = useMemo(() => {
-    const sortedBookingTrends = [...bookingTrends].sort((a, b) => new Date(a.date) - new Date(b.date));
+    const sortedBookingTrends = [...bookingTrends].sort(
+      (a, b) => new Date(a.date) - new Date(b.date)
+    );
 
     // Array of colors to be used for each data point (you can modify or expand this)
-    const colors = ['#3e95cd', '#8e5ea2', '#3cba9f', '#e8c3b9', '#c45850'];
+    const colors = ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850"];
 
     return {
       labels: sortedBookingTrends.map((trend) => trend.date),
       datasets: [
         {
-          label: 'Number of Bookings',
+          label: "Number of Bookings",
           data: sortedBookingTrends.map((trend) => trend.count),
-          borderColor: '#3e95cd', // Line color
-          backgroundColor: 'rgba(62, 149, 205, 0.5)', // Line background fill
+          borderColor: "#3e95cd", // Line color
+          backgroundColor: "rgba(62, 149, 205, 0.5)", // Line background fill
           fill: true,
           tension: 0.3,
           // Set individual point colors based on the colors array
-          pointBackgroundColor: sortedBookingTrends.map((_, index) => colors[index % colors.length]),
-          pointBorderColor: sortedBookingTrends.map((_, index) => colors[index % colors.length]),
+          pointBackgroundColor: sortedBookingTrends.map(
+            (_, index) => colors[index % colors.length]
+          ),
+          pointBorderColor: sortedBookingTrends.map(
+            (_, index) => colors[index % colors.length]
+          ),
           pointRadius: 5, // Adjust point size if needed
         },
       ],
     };
   }, [bookingTrends]);
 
-  const bookingStatsData = useMemo(() => ({
-    labels: ['Approved', 'Rejected', 'Pending'],
-    datasets: [
-      {
-        data: [bookingStats.approved, bookingStats.rejected, bookingStats.pending],
-        backgroundColor: ['#555', '#888', '#bbb'],
-        hoverOffset: 4,
-      },
-    ],
-  }), [bookingStats]);
+  const bookingStatsData = useMemo(
+    () => ({
+      labels: ["Approved", "Rejected", "Pending"],
+      datasets: [
+        {
+          data: [
+            bookingStats.approved,
+            bookingStats.rejected,
+            bookingStats.pending,
+          ],
+          backgroundColor: ["#555", "#888", "#bbb"],
+          hoverOffset: 4,
+        },
+      ],
+    }),
+    [bookingStats]
+  );
 
   const departmentColorMap = {
-    "Philippine Dragon Media Network": '#C0392B',
-    "GDS Capital": '#E74C3C',
-    "GDS Travel Agency": '#F39C12',
-    "FEILONG Legal": '#D4AC0D',
-    "STARLIGHT": '#F7DC6F',
-    "Dragon AI": '#E59866',
-    "SuperNova": '#2874A6',
-    "ClearPath": '#1E8449',
+    "Philippine Dragon Media Network": "#C0392B",
+    "GDS Capital": "#E74C3C",
+    "GDS Travel Agency": "#F39C12",
+    "FEILONG Legal": "#D4AC0D",
+    STARLIGHT: "#F7DC6F",
+    "Dragon AI": "#E59866",
+    SuperNova: "#2874A6",
+    ClearPath: "#1E8449",
   };
 
   const departmentStatsData = useMemo(() => {
@@ -409,36 +470,40 @@ const Dashboard = ({ sidebarOpen }) => {
       return { labels: [], datasets: [] };
     }
 
-    const sortedDepartmentStats = [...departmentStats].sort((a, b) => b.count - a.count);
+    const sortedDepartmentStats = [...departmentStats].sort(
+      (a, b) => b.count - a.count
+    );
 
     const datasets = sortedDepartmentStats.map(({ department, count }) => ({
       label: department,
       data: [count],
-      backgroundColor: departmentColorMap[department] || '#000000',
+      backgroundColor: departmentColorMap[department] || "#000000",
     }));
 
     return {
-      labels: ['Departments'],
+      labels: ["Departments"],
       datasets,
     };
   }, [departmentStats]);
 
-
-  const usersData = useMemo(() => ({
-    labels: ['Users'],
-    datasets: [
-      {
-        label: 'Active Users',
-        data: [usersStats.active],
-        backgroundColor: '#4caf50',
-      },
-      {
-        label: 'Not Registered',
-        data: [usersStats.notRegistered],
-        backgroundColor: '#f44336',
-      },
-    ],
-  }), [usersStats]);
+  const usersData = useMemo(
+    () => ({
+      labels: ["Users"],
+      datasets: [
+        {
+          label: "Active Users",
+          data: [usersStats.active],
+          backgroundColor: "#4caf50",
+        },
+        {
+          label: "Not Registered",
+          data: [usersStats.notRegistered],
+          backgroundColor: "#f44336",
+        },
+      ],
+    }),
+    [usersStats]
+  );
 
   const handleChartClick = (event, elements) => {
     if (elements.length && bookingTrends.length) {
@@ -460,14 +525,14 @@ const Dashboard = ({ sidebarOpen }) => {
 
   const formatSelectedFile = (file) => {
     // Check if the file contains a hyphen and split accordingly
-    const parts = file.includes('-') ? file.split('-') : file.split(' ');
+    const parts = file.includes("-") ? file.split("-") : file.split(" ");
     const month = parts[0].trim(); // Get the month part
-    const year = parts[1] ? parts[1].trim() : ''; // Get the year part, ensuring it exists
-  
+    const year = parts[1] ? parts[1].trim() : ""; // Get the year part, ensuring it exists
+
     // Capitalize the month and construct the final string
     return `${month.charAt(0).toUpperCase() + month.slice(1)} ${year}`;
   };
-  
+
   return (
     <div className={`admin-dashboard ${sidebarOpen ? "sidebar-open" : ""}`}>
       <Sidebar sidebarOpen={sidebarOpen} />
@@ -475,17 +540,25 @@ const Dashboard = ({ sidebarOpen }) => {
         <h1 className="dashboard-title">Booking System Analytics</h1>
 
         <div className="export-section">
-          <h2 className="analytics-month"> Analytics for the {selectedFile !== 'reset' && selectedFile !== "" ? `month of ${formatSelectedFile(selectedFile)}` : `month of ${currentMonth}`}</h2>
-          <select value={selectedFile} onChange={handleStatChange} className="export-dropdown">
+          <h2 className="analytics-month">
+            {" "}
+            Analytics for the{" "}
+            {selectedFile !== "reset" && selectedFile !== ""
+              ? `month of ${formatSelectedFile(selectedFile)}`
+              : `month of ${currentMonth}`}
+          </h2>
+          <select
+            value={selectedFile}
+            onChange={handleStatChange}
+            className="export-dropdown"
+          >
             <option value="" disabled>
               Select Date
             </option>
-            <option value="reset">
-              {currentMonth}
-            </option>
+            <option value="reset">{currentMonth}</option>
             {pastStats.map((file, index) => (
               <option key={index} value={file}>
-                {file.replace('-', ' ')}
+                {file.replace("-", " ")}
               </option>
             ))}
           </select>
@@ -518,7 +591,9 @@ const Dashboard = ({ sidebarOpen }) => {
             {layout.departmentStats && (
               <ChartContainer
                 title="Department Statistics"
-                chart={<Bar data={departmentStatsData} options={chartOptions} />}
+                chart={
+                  <Bar data={departmentStatsData} options={chartOptions} />
+                }
               />
             )}
             {layout.bookingStats && (
@@ -538,16 +613,15 @@ const Dashboard = ({ sidebarOpen }) => {
           )}
           <UserOverview usersStats={usersStats} />
         </div>
-
       </div>
     </div>
   );
 };
 
 const StatsOverview = ({ bookingStats }) => (
-  <div className='db-overview'>
+  <div className="db-overview">
     <div className="stats-overview grid-container">
-      {['Total', 'Approved', 'Rejected', 'Pending'].map((type) => (
+      {["Total", "Approved", "Rejected", "Pending"].map((type) => (
         <div key={type} className="stat-item">
           <h2>{type} Bookings</h2>
           <p>{bookingStats[type.toLowerCase()]}</p>
@@ -558,7 +632,6 @@ const StatsOverview = ({ bookingStats }) => (
 );
 
 const UserOverview = ({ usersStats }) => (
-
   <div className="user-stats">
     <div className="user-stat-item">
       <h2>All Users</h2>
@@ -601,6 +674,7 @@ const UserChartContainer = ({ title, chart }) => (
 );
 
 // Utility Function
-const formatStatTitle = (title) => title.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase());
+const formatStatTitle = (title) =>
+  title.replace(/([A-Z])/g, " $1").replace(/^./, (str) => str.toUpperCase());
 
 export default WithAuthAdmin(Dashboard);

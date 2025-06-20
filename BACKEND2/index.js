@@ -3,8 +3,12 @@ import cors from "cors";
 import { createServer } from "http";
 import { Server as IOServer } from "socket.io";
 import ValidateRoutes from "./routes/ValidateRoutes.js"; // ← Fixed: default import
-import ListJsonFiles from "./routes/StatsRoutes.js"
-import dotenv from 'dotenv';
+import ListJsonFiles from "./routes/StatsRoutes.js";
+import userRoutes from "./routes/UserRoutes.js";
+import adminRoutes from "./routes/AdminRoutes.js";
+import NotifRoutes from "./routes/NotifRoutes.js";
+import ReserveRoutes from "./routes/ReserveRoutes.js";
+import dotenv from "dotenv";
 
 dotenv.config();
 const app = express();
@@ -14,6 +18,10 @@ app.use(express.json());
 // Use routes - Fixed
 app.use("/api/auth", ValidateRoutes);
 app.use("/api/stats", ListJsonFiles);
+app.use("/api/user", userRoutes);
+app.use("/api/admin", adminRoutes);
+app.use("/api/notif", NotifRoutes);
+app.use("/api/book", ReserveRoutes);
 
 // Create the raw HTTP server…
 const httpServer = createServer(app);
@@ -23,9 +31,12 @@ const io = new IOServer(httpServer, {
   cors: { origin: "*" }, // allow your React app to connect
 });
 
+// Make io available to routes (important!)
+app.set("socketio", io);
+
 // When a client connects, log it
 io.on("connection", (socket) => {
-  console.log("⚡️ Client connected:", socket.id);
+  // console.log("⚡️ Client connected:", socket.id);
 });
 
 const PORT = process.env.PORT || 3001;

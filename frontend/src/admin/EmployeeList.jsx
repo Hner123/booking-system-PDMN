@@ -1,23 +1,23 @@
-import React, { useState, useEffect, useRef } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import Sidebar from './Sidebar';
-import './AdminPages.css';
-import { toast } from 'react-toastify';
-import WithAuthAdmin from '../auth/WithAuthAdmin';
+import React, { useState, useEffect, useRef } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import Sidebar from "./Sidebar";
+import "./AdminPages.css";
+import { toast } from "react-toastify";
+import WithAuthAdmin from "../auth/WithAuthAdmin";
 
-const API = import.meta.env.VITE_REACT_APP_API;
+const API = "http://localhost:3001";
 
 const EmployeeList = () => {
   const navigate = useNavigate();
   const [showDropdown, setShowDropdown] = useState(false);
   const [users, setUsers] = useState([]);
   const [sortedUsers, setSortedUsers] = useState([]);
-  const [filterCriteria, setFilterCriteria] = useState('all'); // Combined state for filtering and sorting
-  const [sortCriteria, setSortCriteria] = useState(''); // To hold department sorting
+  const [filterCriteria, setFilterCriteria] = useState("all"); // Combined state for filtering and sorting
+  const [sortCriteria, setSortCriteria] = useState(""); // To hold department sorting
   const [editDeptModal, setEditDeptModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
-  const [selectedDept, setSelectedDept] = useState('');
+  const [selectedDept, setSelectedDept] = useState("");
   const [departments, setDepartments] = useState([
     "GDS Capital",
     "Philippine Dragon Media Network",
@@ -71,14 +71,17 @@ const EmployeeList = () => {
         "Content-Type": "application/json",
       };
 
-      const response = await axios.delete(
-        `${API}/api/user/delete/${userId}`,
-        { headers }
-      );
+      const response = await axios.delete(`${API}/api/user/delete/${userId}`, {
+        headers,
+      });
 
       if (response.status === 200) {
-        setUsers(prevUsers => prevUsers.filter(user => user._id !== userId));
-        setSortedUsers(prevSortedUsers => prevSortedUsers.filter(user => user._id !== userId));
+        setUsers((prevUsers) =>
+          prevUsers.filter((user) => user._id !== userId)
+        );
+        setSortedUsers((prevSortedUsers) =>
+          prevSortedUsers.filter((user) => user._id !== userId)
+        );
         toast.success("User deleted successfully.");
       }
     } catch (error) {
@@ -88,10 +91,10 @@ const EmployeeList = () => {
   };
 
   const handleEditDeptClick = (userId) => {
-    const user = users.find(user => user._id === userId);
+    const user = users.find((user) => user._id === userId);
     if (user) {
       setSelectedUser(user);
-      setSelectedDept(user.department || '');
+      setSelectedDept(user.department || "");
       setEditDeptModal(true);
     }
   };
@@ -113,12 +116,16 @@ const EmployeeList = () => {
       );
 
       if (response.status === 201) {
-        setUsers(prevUsers => prevUsers.map(user =>
-          user._id === userId ? { ...user, department: selectedDept } : user
-        ));
-        setSortedUsers(prevSortedUsers => prevSortedUsers.map(user =>
-          user._id === userId ? { ...user, department: selectedDept } : user
-        ));
+        setUsers((prevUsers) =>
+          prevUsers.map((user) =>
+            user._id === userId ? { ...user, department: selectedDept } : user
+          )
+        );
+        setSortedUsers((prevSortedUsers) =>
+          prevSortedUsers.map((user) =>
+            user._id === userId ? { ...user, department: selectedDept } : user
+          )
+        );
         toast.success("Department updated successfully.");
         setEditDeptModal(false);
       }
@@ -132,15 +139,17 @@ const EmployeeList = () => {
     let filteredUsers = [...users];
 
     // Apply filtering by registration status
-    if (filterCriteria === 'registered') {
-      filteredUsers = filteredUsers.filter(user => user.resetPass);
-    } else if (filterCriteria === 'notRegistered') {
-      filteredUsers = filteredUsers.filter(user => !user.resetPass);
+    if (filterCriteria === "registered") {
+      filteredUsers = filteredUsers.filter((user) => user.resetPass);
+    } else if (filterCriteria === "notRegistered") {
+      filteredUsers = filteredUsers.filter((user) => !user.resetPass);
     }
 
     // Apply sorting by department if selected
     if (sortCriteria) {
-      filteredUsers = filteredUsers.filter(user => user.department === sortCriteria);
+      filteredUsers = filteredUsers.filter(
+        (user) => user.department === sortCriteria
+      );
     }
 
     // Sort users so that those without names come last
@@ -163,13 +172,15 @@ const EmployeeList = () => {
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const isUserRegistered = (user) => {
-    return Boolean(user.userName && user.userName.trim() !== '') && 
-           Boolean(user.department && user.department.trim() !== '');
+    return (
+      Boolean(user.userName && user.userName.trim() !== "") &&
+      Boolean(user.department && user.department.trim() !== "")
+    );
   };
 
   return (
@@ -322,7 +333,7 @@ const EmployeeList = () => {
           </tbody>
         </table>
       </div>
-            {editDeptModal && selectedUser && (
+      {editDeptModal && selectedUser && (
         <div className="edit-dept-modal">
           <div className="modal-content">
             <h2>Edit Department</h2>

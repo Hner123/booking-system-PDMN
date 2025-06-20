@@ -106,7 +106,6 @@ const DeleteAdmin = async (req, res) => {
   }
 };
 
-
 const CreateAdminWithAuth = (req, res) => {
   requireAuth(req, res, async () => {
     await CreateAdmin(req, res);

@@ -11,13 +11,13 @@ import {
   faBars,
   faClipboardCheck,
   faCalendar,
-  faChartSimple
+  faChartSimple,
 } from "@fortawesome/free-solid-svg-icons";
 import logoOpen from "../assets/logos/GDSLogo.png";
 import logoClosed from "../assets/logos/GDSLoog2.png";
 
-const API = import.meta.env.VITE_REACT_APP_API;
-const ENDPOINT = import.meta.env.VITE_REACT_APP_API;
+const API = import.meta.env.VITE_REACT_APP_API || "http://localhost:3001";
+const ENDPOINT = import.meta.env.VITE_REACT_APP_API || "http://localhost:3001";
 let socket;
 
 const Sidebar = () => {
@@ -41,9 +41,7 @@ const Sidebar = () => {
     socket.on("newNotification", (newNotification) => {
       if (newNotification.receiver._id === adminId) {
         setNotifications((prevNotifications) =>
-          [...prevNotifications, newNotification].filter(
-            (notif) => !notif.done
-          )
+          [...prevNotifications, newNotification].filter((notif) => !notif.done)
         );
       }
     });
@@ -63,22 +61,18 @@ const Sidebar = () => {
           "Content-Type": "application/json",
         };
 
-        const userResponse = await axios.get(
-          `${API}/api/admin/${adminId}`,
-          { headers }
-        );
+        const userResponse = await axios.get(`${API}/api/admin/${adminId}`, {
+          headers,
+        });
         if (userResponse.status === 200) {
           setUserData(userResponse.data);
         }
 
-        const notifResponse = await axios.get(
-          `${API}/api/notif`,
-          { headers }
-        );
+        const notifResponse = await axios.get(`${API}/api/notif`, { headers });
 
         const userNotifications = notifResponse.data
-          .filter(notif => notif.receiver && notif.receiver._id === adminId)
-          .filter(notif => !notif.done)
+          .filter((notif) => notif.receiver && notif.receiver._id === adminId)
+          .filter((notif) => !notif.done)
           .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
         setNotifications(userNotifications);
@@ -123,7 +117,7 @@ const Sidebar = () => {
   const toggleCloseMenu = () => setCloseMenu((prevState) => !prevState);
   const toggleNotif = () => setNotif((prevState) => !prevState);
 
-  const isActive = (path) => location.pathname === path ? 'active' : '';
+  const isActive = (path) => (location.pathname === path ? "active" : "");
 
   return (
     <div className={`sidebar ${closeMenu ? "closed" : "open"}`}>
@@ -166,7 +160,10 @@ const Sidebar = () => {
             {!closeMenu && <span>For Approval</span>}
           </a>
         </li>
-        <li title={`Notifications (${notifications.length})`} className={isActive("/admin/notifications")}>
+        <li
+          title={`Notifications (${notifications.length})`}
+          className={isActive("/admin/notifications")}
+        >
           <a onClick={toggleNotif}>
             <FontAwesomeIcon icon={faBell} />
             {!closeMenu && <span>Notifications ({notifications.length})</span>}

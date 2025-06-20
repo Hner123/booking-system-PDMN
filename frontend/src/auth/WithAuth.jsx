@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from 'axios'; 
+import axios from "axios";
 import Loader from "../assets/7.gif";
 
-const API = import.meta.env.VITE_REACT_APP_API;
+const API = import.meta.env.VITE_REACT_APP_API || "http://localhost:3001";
 
 const WithAuth = (WrappedComponent) => {
   const WithAuthWrapper = (props) => {
@@ -31,7 +31,7 @@ const WithAuth = (WrappedComponent) => {
           const responseUser = await axios.get(`${API}/api/user/`, { headers });
 
           if (responseUser.status === 200) {
-            const user = responseUser.data.find(user => user._id === userId);
+            const user = responseUser.data.find((user) => user._id === userId);
             if (user) {
               setUserData(user);
             } else {
@@ -89,13 +89,25 @@ const WithAuth = (WrappedComponent) => {
 
     if (isLoading) {
       return (
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-          <img src={Loader} style={{ width: '200px' }} alt="Loading..." />
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh",
+          }}
+        >
+          <img src={Loader} style={{ width: "200px" }} alt="Loading..." />
         </div>
       );
     }
-    
-    return <>  <WrappedComponent {...props} /></>;
+
+    return (
+      <>
+        {" "}
+        <WrappedComponent {...props} />
+      </>
+    );
   };
 
   return WithAuthWrapper;

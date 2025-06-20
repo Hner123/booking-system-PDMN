@@ -3,7 +3,7 @@ const ReserveModel = require("../models/ReserveModel");
 const NotifModel = require("../models/NotifModel");
 const UserModel = require("../models/UserModel");
 const requireAuth = require("../utils/requireAuth");
-const cron = require('node-cron');
+const cron = require("node-cron");
 
 const GetAllReserve = async (req, res) => {
   try {
@@ -33,7 +33,6 @@ const GetSpecificReserve = async (req, res) => {
     return res.status(500).json({ message: err.message });
   }
 };
-
 
 const CreateReserve = async (req, res) => {
   try {
@@ -125,7 +124,7 @@ const DeleteReserve = async (req, res) => {
       return res.status(404).json({ message: "Reservation not found" });
     }
 
-    await NotifModel.deleteMany({ 'booking': id });
+    await NotifModel.deleteMany({ booking: id });
 
     const result = await ReserveModel.findByIdAndDelete(id);
 
@@ -138,19 +137,18 @@ const DeleteReserve = async (req, res) => {
 const deleteInvalidReservations = async () => {
   try {
     const invalidReservations = await ReserveModel.find({
-      $or: [
-        { title: "" },
-        { scheduleDate: null },
-      ]
+      $or: [{ title: "" }, { scheduleDate: null }],
     });
 
-    const invalidReserveIds = invalidReservations.map(reservation => reservation._id);
+    const invalidReserveIds = invalidReservations.map(
+      (reservation) => reservation._id
+    );
 
     const result = await ReserveModel.deleteMany({
-      _id: { $in: invalidReserveIds }
+      _id: { $in: invalidReserveIds },
     });
 
-    await NotifModel.deleteMany({ 'booking': { $in: invalidReserveIds } });
+    await NotifModel.deleteMany({ booking: { $in: invalidReserveIds } });
 
     console.log(`Deleted ${result.deletedCount} invalid reservations.`);
   } catch (err) {
@@ -158,8 +156,8 @@ const deleteInvalidReservations = async () => {
   }
 };
 
-cron.schedule('0 8,20 * * *', () => {
-  console.log('Running deleteInvalidReservations at', new Date());
+cron.schedule("0 8,20 * * *", () => {
+  console.log("Running deleteInvalidReservations at", new Date());
   deleteInvalidReservations();
 });
 
@@ -185,24 +183,26 @@ const GetEmails = async (req, res) => {
     const checkUserExistenceAndEmail = async (firstName, surName) => {
       try {
         const user = await UserModel.findOne({
-          firstName: { $regex: new RegExp(`^${firstName}$`, 'i') },
-          surName: { $regex: new RegExp(`^${surName}$`, 'i') }
+          firstName: { $regex: new RegExp(`^${firstName}$`, "i") },
+          surName: { $regex: new RegExp(`^${surName}$`, "i") },
         });
         if (user) {
           return user.email || null;
         }
       } catch (err) {
-        console.error(`Error querying the database for "${firstName} ${surName}": ${err.message}`);
+        console.error(
+          `Error querying the database for "${firstName} ${surName}": ${err.message}`
+        );
       }
       return null;
     };
 
     // Create a list of email promises
-    const emailPromises = attendees.map(async attendeeName => {
-      const nameParts = attendeeName.split(' ');
+    const emailPromises = attendees.map(async (attendeeName) => {
+      const nameParts = attendeeName.split(" ");
       for (let i = 1; i < nameParts.length; i++) {
-        const firstName = nameParts.slice(0, i).join(' ');
-        const surName = nameParts.slice(i).join(' ');
+        const firstName = nameParts.slice(0, i).join(" ");
+        const surName = nameParts.slice(i).join(" ");
         const email = await checkUserExistenceAndEmail(firstName, surName);
         if (email) {
           return email;
@@ -214,7 +214,7 @@ const GetEmails = async (req, res) => {
     const emailResults = await Promise.all(emailPromises);
 
     // Filter out null values and join the emails with commas
-    const emails = emailResults.filter(email => email !== null).join(',');
+    const emails = emailResults.filter((email) => email !== null).join(",");
 
     // Return the emails as a comma-separated string
     res.status(200).json(emails);
@@ -252,7 +252,7 @@ const DeleteReserveWithAuth = (req, res) => {
 
 module.exports = {
   GetEmails,
-  
+
   CreateReserve,
   GetAllReserve,
   GetSpecificReserve,

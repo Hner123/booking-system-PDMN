@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from 'axios'; 
+import axios from "axios";
 
-const API = import.meta.env.VITE_REACT_APP_API;
+const API = import.meta.env.VITE_REACT_APP_API || "http://localhost:3001";
 
 const WithAuthReserve = (WrappedComponent) => {
   const WrapperComponent = (props) => {
     const navigate = useNavigate();
-    
+
     const [userData, setUserData] = useState();
 
     const userId = localStorage.getItem("userId");
     const token = localStorage.getItem("authToken");
-    const reserveToken = localStorage.getItem("reserveToken")
+    const reserveToken = localStorage.getItem("reserveToken");
 
     useEffect(() => {
       const fetchUser = async () => {
@@ -27,9 +27,7 @@ const WithAuthReserve = (WrappedComponent) => {
           ]);
 
           if (responseUser.status === 200) {
-            const combinedUsers = [
-              ...responseUser.data,
-            ];
+            const combinedUsers = [...responseUser.data];
             const user = combinedUsers.find((user) => user._id === userId);
             setUserData(user);
           } else {
@@ -49,7 +47,7 @@ const WithAuthReserve = (WrappedComponent) => {
         return;
       }
 
-      if(!reserveToken) {
+      if (!reserveToken) {
         navigate("/dashboard");
         return;
       }
@@ -59,13 +57,12 @@ const WithAuthReserve = (WrappedComponent) => {
       } else {
         const decodedToken = decodeToken(token);
         const isExpired = isTokenExpired(decodedToken.exp);
-  
+
         if (isExpired) {
           localStorage.clear();
           navigate("/");
-        } 
+        }
       }
-
     }, [userId, navigate]);
 
     const decodeToken = (token) => {
@@ -82,7 +79,12 @@ const WithAuthReserve = (WrappedComponent) => {
       return currentTime > exp;
     };
 
-    return <>  <WrappedComponent {...props} /></>;
+    return (
+      <>
+        {" "}
+        <WrappedComponent {...props} />
+      </>
+    );
   };
 
   return WrapperComponent;

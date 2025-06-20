@@ -8,8 +8,8 @@ import axios from "axios";
 import Modal from "./Modal";
 import io from "socket.io-client";
 
-const API = import.meta.env.VITE_REACT_APP_API;
-const ENDPOINT = import.meta.env.VITE_REACT_APP_API;
+const API = import.meta.env.VITE_REACT_APP_API || "http://localhost:3001";
+const ENDPOINT = import.meta.env.VITE_REACT_APP_API || "http://localhost:3001";
 let socket;
 
 const Header = () => {
@@ -43,7 +43,6 @@ const Header = () => {
 
   useEffect(() => {
     const fetchUserData = async () => {
-
       try {
         const userId = localStorage.getItem("userId");
         const token = localStorage.getItem("authToken");
@@ -51,10 +50,9 @@ const Header = () => {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         };
-        const response = await axios.get(
-          `${API}/api/user/${userId}`,
-          { headers }
-        );
+        const response = await axios.get(`${API}/api/user/${userId}`, {
+          headers,
+        });
         if (response.status === 200) setUserData(response.data);
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -73,22 +71,19 @@ const Header = () => {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       };
-  
-      const response = await axios.get(
-        `${API}/api/notif`,
-        { headers }
-      );
-  
+
+      const response = await axios.get(`${API}/api/notif`, { headers });
+
       // response.data.forEach((notif, index) => {
       //   if (!notif.receiver || !notif.receiver._id) {
       //     console.log(`Notification at index ${index} has missing receiver or _id`, notif);
       //   }
       // });
-  
+
       const userNotifications = response.data.filter(
         (notif) => notif.receiver && notif.receiver._id === userId
       );
-  
+
       setNotifications(userNotifications);
     } catch (error) {
       console.error("Error fetching notifications:", error);
@@ -135,26 +130,32 @@ const Header = () => {
 
   useEffect(() => {
     const currentPath = location.pathname;
-    const excludedPaths = ['/reserve', '/reserveform', '/confirmation'];
-  
-    if (prevLocation === '/confirmation' && !excludedPaths.includes(currentPath)) {
+    const excludedPaths = ["/reserve", "/reserveform", "/confirmation"];
+
+    if (
+      prevLocation === "/confirmation" &&
+      !excludedPaths.includes(currentPath)
+    ) {
       localStorage.removeItem("reserveToken");
     }
-  
-    if ((prevLocation === '/reserve' || prevLocation === '/reserveform') && !excludedPaths.includes(currentPath)) {
+
+    if (
+      (prevLocation === "/reserve" || prevLocation === "/reserveform") &&
+      !excludedPaths.includes(currentPath)
+    ) {
       if (reserve) {
         setNextLocation(currentPath);
         setShowModal(true);
       }
     }
-  
+
     if (excludedPaths.includes(currentPath)) {
       setPrevLocation(currentPath);
     } else if (prevLocation && !excludedPaths.includes(prevLocation)) {
       setPrevLocation(prevLocation);
     }
   }, [location, reserve, showModal, prevLocation]);
-  
+
   const handleConfirm = () => {
     setShowModal(false);
     setPrevLocation(nextLocation);
@@ -177,10 +178,7 @@ const Header = () => {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       };
-      await axios.delete(
-        `${API}/api/notif/delete/${notifId}`,
-        { headers }
-      );
+      await axios.delete(`${API}/api/notif/delete/${notifId}`, { headers });
       setNotifications((prev) => prev.filter((notif) => notif._id !== notifId));
     } catch (error) {
       console.error("Error deleting notification:", error);

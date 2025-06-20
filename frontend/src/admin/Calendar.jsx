@@ -9,7 +9,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import WithAuthAdmin from "../auth/WithAuthAdmin";
 
-const API = import.meta.env.VITE_REACT_APP_API;
+const API = "http://localhost:3001";
 
 // Sub-components for better structure
 const Tabs = ({ activeTab, onTabClick }) => (
@@ -32,33 +32,46 @@ const EventModal = ({ event, onClose, onDelete }) => (
       <h2>{event.title}</h2>
       <div className="modal-columns">
         <div className="left-content">
-          <p><strong>Booked by:</strong> {event.user}</p>
-          <p><strong>Department:</strong> {event.department}</p>
+          <p>
+            <strong>Booked by:</strong> {event.user}
+          </p>
+          <p>
+            <strong>Department:</strong> {event.department}
+          </p>
           <p>
             <strong>Attendees: </strong>
-            {event.attendees?.length > 0 ? event.attendees.join(", ") : " No attendees listed"}
+            {event.attendees?.length > 0
+              ? event.attendees.join(", ")
+              : " No attendees listed"}
           </p>
           <p>
             <strong>Guests: </strong>
-            {event.guests?.length > 0 ? event.guests.join(", ") : " No guests listed"}
+            {event.guests?.length > 0
+              ? event.guests.join(", ")
+              : " No guests listed"}
           </p>
-          <button
-            onClick={() => onDelete(event.id)}
-            className="cancel-button">
+          <button onClick={() => onDelete(event.id)} className="cancel-button">
             Delete
           </button>
         </div>
         <div className="right-content">
           <h3>{event.room}</h3>
-          <p><strong>Date:</strong> {moment(event.start).format("MMMM D, YYYY")}</p>
+          <p>
+            <strong>Date:</strong> {moment(event.start).format("MMMM D, YYYY")}
+          </p>
           <p>
             <strong>Time: </strong>
-            {moment(event.start).format("h:mm A")} - {moment(event.end).format("h:mm A")}
+            {moment(event.start).format("h:mm A")} -{" "}
+            {moment(event.end).format("h:mm A")}
           </p>
-          <p><strong>Status:</strong> {event.status}</p>
+          <p>
+            <strong>Status:</strong> {event.status}
+          </p>
         </div>
       </div>
-      <button className="close-btn" onClick={onClose}>&times;</button>
+      <button className="close-btn" onClick={onClose}>
+        &times;
+      </button>
     </div>
   </div>
 );
@@ -102,10 +115,7 @@ const RoomReservation = () => {
           "Content-Type": "application/json",
         };
 
-        const response = await axios.get(
-          `${API}/api/book/`,
-          { headers }
-        );
+        const response = await axios.get(`${API}/api/book/`, { headers });
 
         if (response.status === 200) {
           const fetchedEvents = response.data
@@ -121,7 +131,7 @@ const RoomReservation = () => {
               room: event.roomName,
               user: `${event.user?.firstName} ${event.user?.surName}`,
               attendees: event.attendees,
-              guests: event.guest
+              guests: event.guest,
             }));
 
           setState((prevState) => ({
@@ -157,10 +167,9 @@ const RoomReservation = () => {
         "Content-Type": "application/json",
       };
 
-      const response = await axios.delete(
-        `${API}/api/book/delete/${eventId}`,
-        { headers }
-      );
+      const response = await axios.delete(`${API}/api/book/delete/${eventId}`, {
+        headers,
+      });
 
       if (response.status === 200) {
         // Remove the deleted event from the state
@@ -192,8 +201,9 @@ const RoomReservation = () => {
 
   return (
     <div
-      className={`room-reservation admin-page ${state.sidebarOpen ? "sidebar-open" : "sidebar-closed"
-        }`}
+      className={`room-reservation admin-page ${
+        state.sidebarOpen ? "sidebar-open" : "sidebar-closed"
+      }`}
     >
       <Sidebar sidebarOpen={state.sidebarOpen} />
       <div className="admin-content">
@@ -233,7 +243,8 @@ const RoomReservation = () => {
                       backgroundColor = "purple"; // Default color for other rooms
                     }
                   } else {
-                    backgroundColor = departmentColors[event.department] || "#45813"; // Default department color
+                    backgroundColor =
+                      departmentColors[event.department] || "#45813"; // Default department color
                   }
 
                   return {
@@ -247,7 +258,6 @@ const RoomReservation = () => {
                     },
                   };
                 }}
-
                 components={{
                   event: ({ event }) => (
                     <div
@@ -265,10 +275,10 @@ const RoomReservation = () => {
                             ? event.room === "Palawan"
                               ? "#C0392B"
                               : event.room === "Boracay"
-                                ? "#F39C12"
-                                : event.room === "Palawan and Boracay"
-                                  ? "#2874A6" // Color for events where the room is "Palawan and Boracay"
-                                  : "#E74C3C" // Fallback color in case none of the conditions match
+                              ? "#F39C12"
+                              : event.room === "Palawan and Boracay"
+                              ? "#2874A6" // Color for events where the room is "Palawan and Boracay"
+                              : "#E74C3C" // Fallback color in case none of the conditions match
                             : departmentColors[event.department] || "#45813", // Default color for other tabs
                         color: "#fff",
                         display: "flex",
@@ -346,7 +356,9 @@ const RoomReservation = () => {
         {state.expandedEvent && (
           <EventModal
             event={state.expandedEvent}
-            onClose={() => setState((prevState) => ({ ...prevState, expandedEvent: null }))}
+            onClose={() =>
+              setState((prevState) => ({ ...prevState, expandedEvent: null }))
+            }
             onDelete={handleDeleteEvent} // Pass the delete function to the modal
           />
         )}
