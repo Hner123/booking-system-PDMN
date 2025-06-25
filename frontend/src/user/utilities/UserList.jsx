@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import "./UserList.css";
 import WithAuth from "../../auth/WithAuth";
 
-const API = import.meta.env.VITE_REACT_APP_API;
+const API = import.meta.env.VITE_REACT_APP_API || "http://localhost:3001";
 
 const UserList = () => {
   const [users, setUsers] = useState({});
@@ -39,10 +39,13 @@ const UserList = () => {
           setUsers(groupedUsers);
 
           // Initialize the visibleDepartments state to make all departments visible by default
-          const initialVisibility = Object.keys(groupedUsers).reduce((acc, dept) => {
-            acc[dept] = true; // All departments are visible by default
-            return acc;
-          }, {});
+          const initialVisibility = Object.keys(groupedUsers).reduce(
+            (acc, dept) => {
+              acc[dept] = true; // All departments are visible by default
+              return acc;
+            },
+            {}
+          );
           setVisibleDepartments(initialVisibility);
         }
       } catch (error) {
@@ -73,19 +76,23 @@ const UserList = () => {
       {Object.keys(users).length > 0 ? (
         sortedDepartments.map((department) => {
           // Filter users with missing firstName or surName
-          const filteredUsers = users[department].filter(user => user.firstName && user.surName);
+          const filteredUsers = users[department].filter(
+            (user) => user.firstName && user.surName
+          );
 
           return filteredUsers.length > 0 ? (
             <div
               key={department}
-              className={`department-section ${formatDepartmentName(department)}`}
+              className={`department-section ${formatDepartmentName(
+                department
+              )}`}
             >
               <h3>
                 <button
                   className="toggle-button"
                   onClick={() => handleToggle(department)}
                 >
-                  {visibleDepartments[department] ? '-' : '+'} {department}
+                  {visibleDepartments[department] ? "-" : "+"} {department}
                 </button>
               </h3>
               {visibleDepartments[department] && (

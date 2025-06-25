@@ -16,6 +16,7 @@ const WithAuth = (WrappedComponent) => {
     const token = localStorage.getItem("authToken");
 
     useEffect(() => {
+      console.log("TEST");
       const fetchUser = async () => {
         if (!userId || !token) {
           navigate("/");
@@ -31,7 +32,9 @@ const WithAuth = (WrappedComponent) => {
           const responseUser = await axios.get(`${API}/api/user/`, { headers });
 
           if (responseUser.status === 200) {
-            const user = responseUser.data.find((user) => user._id === userId);
+            const user = responseUser.data.find(
+              (user) => user._id === parseInt(userId)
+            );
             if (user) {
               setUserData(user);
             } else {

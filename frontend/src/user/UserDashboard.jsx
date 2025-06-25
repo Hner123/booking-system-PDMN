@@ -74,7 +74,7 @@ const Dashboard = () => {
         });
         if (response.status === 200) {
           setUsers(response.data);
-          if (response.data.resetPass === false) {
+          if (response.data.resetPass === 0) {
             setFirstLogin(true);
           }
         }
@@ -442,7 +442,10 @@ const Dashboard = () => {
 
       if (updateResponse.status === 201) {
         toast.success(`Reserved Room: ${room}`);
-        localStorage.setItem("reserveToken", updateResponse.data.result._id);
+        localStorage.setItem(
+          "reserveToken",
+          updateResponse.data.result.booking._id
+        );
         navigate("/reserve");
       }
     } catch (error) {

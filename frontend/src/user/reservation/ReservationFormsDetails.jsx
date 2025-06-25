@@ -6,7 +6,7 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import WithAuthReserve from "../../auth/WithAuthReserve";
 
-const API = import.meta.env.VITE_REACT_APP_API;
+const API = import.meta.env.VITE_REACT_APP_API || "http://localhost:3001";
 
 const ReservationFormsDetails = () => {
   const formRef = useRef();
@@ -55,19 +55,15 @@ const ReservationFormsDetails = () => {
 
   const fetchUserData = async () => {
     try {
-
       const token = localStorage.getItem("authToken");
       const headers = {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       };
 
-      const response = await axios.get(
-        `${API}/api/user/`,
-        {
-          headers,
-        }
-      );
+      const response = await axios.get(`${API}/api/user/`, {
+        headers,
+      });
       if (response.status === 200) {
         const users = response.data.filter(
           (user) => user._id !== bookData.user._id
@@ -115,11 +111,11 @@ const ReservationFormsDetails = () => {
           "Content-Type": "application/json",
         };
 
-        const response = await axios.get(
-          `${API}/api/book/${reserveId}`,
-          { headers }
-        );
+        const response = await axios.get(`${API}/api/book/${reserveId}`, {
+          headers,
+        });
         if (response.status === 200) {
+          console.log("TANAWA RAYA:", response.data);
           setBookData(response.data);
           setSelectedRoom(response.data.roomName);
         }
@@ -148,13 +144,13 @@ const ReservationFormsDetails = () => {
     return inputLength === 0
       ? []
       : userData.filter(
-        (user) =>
-          (
-            user.firstName.toLowerCase() +
-            " " +
-            user.surName.toLowerCase()
-          ).includes(inputValue) && !user.disabled
-      );
+          (user) =>
+            (
+              user.firstName.toLowerCase() +
+              " " +
+              user.surName.toLowerCase()
+            ).includes(inputValue) && !user.disabled
+        );
   };
 
   const onInputFocus = () => {
@@ -258,19 +254,19 @@ const ReservationFormsDetails = () => {
       bookData.confirmation === false && formData.caps.pax === "3-More"
         ? false
         : bookData.confirmation === true && formData.caps.pax === "1-2"
-          ? false
-          : bookData.confirmation === true && formData.caps.pax === "3-More"
-            ? true
-            : false;
+        ? false
+        : bookData.confirmation === true && formData.caps.pax === "3-More"
+        ? true
+        : false;
 
     const approvalStatus =
       bookData.confirmation === false && formData.caps.pax === "3-More"
         ? "Pending"
         : bookData.confirmation === true && formData.caps.pax === "1-2"
-          ? "Pending"
-          : bookData.confirmation === true && formData.caps.pax === "3-More"
-            ? "Approved"
-            : "Pending";
+        ? "Pending"
+        : bookData.confirmation === true && formData.caps.pax === "3-More"
+        ? "Approved"
+        : "Pending";
 
     const archiveStatus = approvalStatus === "Approved";
 
@@ -324,7 +320,7 @@ const ReservationFormsDetails = () => {
       };
 
       const updateResponse = await axios.patch(
-        `${API}/api/book/edit/${reserveId}`,
+        `${API}/api/book/edit2/${reserveId}`,
         updatedReserve,
         { headers }
       );
@@ -419,7 +415,9 @@ const ReservationFormsDetails = () => {
                   navigate("/confirmation");
                 }
               } catch (error) {
-                toast.error("Unexpected error occurred. Please try again later.");
+                toast.error(
+                  "Unexpected error occurred. Please try again later."
+                );
               }
             }
           } catch (error) {
@@ -544,7 +542,8 @@ const ReservationFormsDetails = () => {
                       checked={formData.caps.pax === "1-2"}
                       onChange={handlePaxChange}
                       disabled={
-                        submitting || loading ||
+                        submitting ||
+                        loading ||
                         (selectedRoom !== "Boracay" &&
                           selectedRoom !== "Palawan")
                       }
@@ -561,7 +560,8 @@ const ReservationFormsDetails = () => {
                       checked={formData.caps.pax === "3-More"}
                       onChange={handlePaxChange}
                       disabled={
-                        submitting || loading || // Disable button while submitting
+                        submitting ||
+                        loading || // Disable button while submitting
                         (selectedRoom !== "Boracay" &&
                           selectedRoom !== "Palawan") // Disable if room is neither Boracay nor Palawan
                       }
@@ -692,7 +692,9 @@ const ReservationFormsDetails = () => {
                   {loading ? (
                     <span>Loading...</span>
                   ) : (
-                    <span>{submitting ? "Booking your reservation..." : "Book"}</span>
+                    <span>
+                      {submitting ? "Booking your reservation..." : "Book"}
+                    </span>
                   )}
                 </button>
                 <button

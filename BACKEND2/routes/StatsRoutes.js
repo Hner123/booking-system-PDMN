@@ -1,9 +1,10 @@
 import express from "express";
 
-import {ListJsonFiles } from "../controllers/Stats.js"
+import { ListJsonFiles, GetCacheFile } from "../controllers/Stats.js";
 
 const router = express.Router();
 
 router.get("/getList", ListJsonFiles);
+router.post("/get", GetCacheFile);
 
 export default router;

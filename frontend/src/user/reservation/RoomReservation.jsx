@@ -13,7 +13,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "../../user/reservation/CustomBigCalendar.scss";
 import WithAuthReserve from "../../auth/WithAuthReserve";
 
-const API = import.meta.env.VITE_REACT_APP_API;
+const API = import.meta.env.VITE_REACT_APP_API || "http://localhost:3001";
 
 const RoomReservation = () => {
   const localizer = momentLocalizer(moment);
@@ -48,7 +48,7 @@ const RoomReservation = () => {
     ClearPath: "#2874A6",
     Palawan: "#C0392B",
     Boracay: "#2874A6",
-    'Palawan and Boracay': '#F39C12',
+    "Palawan and Boracay": "#F39C12",
   };
 
   useEffect(() => {
@@ -63,10 +63,9 @@ const RoomReservation = () => {
           "Content-Type": "application/json",
         };
 
-        const response = await axios.get(
-          `${API}/api/book/${reserveToken}`,
-          { headers }
-        );
+        const response = await axios.get(`${API}/api/book/${reserveToken}`, {
+          headers,
+        });
         if (response.status === 200) {
           setOrigData(response.data);
           setRoomName(response.data.roomName);
@@ -104,7 +103,10 @@ const RoomReservation = () => {
 
             if (origData.roomName !== "Palawan and Boracay") {
               filteredData = response.data.filter(
-                (event) => event.roomName === origData.roomName && event.approval.status !== "Declined" || event.roomName === "Palawan and Boracay"
+                (event) =>
+                  (event.roomName === origData.roomName &&
+                    event.approval.status !== "Declined") ||
+                  event.roomName === "Palawan and Boracay"
               );
             }
 
@@ -164,13 +166,13 @@ const RoomReservation = () => {
       hour: startTime.hour(),
       minute: startTime.minute(),
       second: 0,
-      millisecond: 0
+      millisecond: 0,
     });
     const end = moment(startDate).set({
       hour: endTime.hour(),
       minute: endTime.minute(),
       second: 0,
-      millisecond: 0
+      millisecond: 0,
     });
 
     const durationHours = moment.duration(end.diff(start)).asHours();
@@ -183,24 +185,28 @@ const RoomReservation = () => {
     const overlap = events.some((event) => {
       const eventStart = moment(event.start).set({
         second: 0,
-        millisecond: 0
+        millisecond: 0,
       });
       const eventEnd = moment(event.end).set({
         second: 0,
-        millisecond: 0
+        millisecond: 0,
       });
 
       return start.isBefore(eventEnd) && end.isAfter(eventStart);
     });
 
     if (overlap) {
-      setFeedbackMessage("The selected time slot overlaps with an existing reservation. Please choose a different time.");
+      setFeedbackMessage(
+        "The selected time slot overlaps with an existing reservation. Please choose a different time."
+      );
       setLoading(false);
       return;
     }
 
     if (durationHours > 1 && !agenda) {
-      setFeedbackMessage("Your meeting exceeds 1 hour. Please provide your reason below.");
+      setFeedbackMessage(
+        "Your meeting exceeds 1 hour. Please provide your reason below."
+      );
       setShowAgendaForm(true);
       setLoading(false);
       return;
@@ -221,7 +227,8 @@ const RoomReservation = () => {
     setShowAgendaForm(false);
     setAgenda("");
 
-    let confirmationStatus = !agenda && origData.roomName !== "Palawan and Boracay";
+    let confirmationStatus =
+      !agenda && origData.roomName !== "Palawan and Boracay";
 
     const reserveData = {
       scheduleDate: moment(startDate).format("YYYY-MM-DD"),
@@ -338,7 +345,7 @@ const RoomReservation = () => {
   return (
     <div className="room-reservation-container">
       <ToastContainer />
-      <h1 style={{ textAlign: 'Center', margin: '0' }}>
+      <h1 style={{ textAlign: "Center", margin: "0" }}>
         Reserve{" "}
         {roomName ? (
           <span style={{ color: headerColor }}>{roomName}</span>
@@ -433,11 +440,7 @@ const RoomReservation = () => {
                 onClick={handleReserve}
                 disabled={loading}
               >
-                {loading ? (
-                  <span>Loading...</span>
-                ) : (
-                  <span>Submit</span>
-                )}
+                {loading ? <span>Loading...</span> : <span>Submit</span>}
               </button>
             </div>
           </div>

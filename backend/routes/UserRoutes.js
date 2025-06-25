@@ -14,10 +14,10 @@ const {
   GetAllUsersWithAuth,
   GetSpecificUserWithAuth,
   EditUserWithAuth,
-  DeleteUserWithAuth
+  DeleteUserWithAuth,
 } = require("../controllers/UserController.js");
 
-router.use(requireAuth); 
+router.use(requireAuth);
 router.post("/create", CreateUserWithAuth);
 router.get("/", GetAllUsersWithAuth);
 router.get("/:id", GetSpecificUserWithAuth);

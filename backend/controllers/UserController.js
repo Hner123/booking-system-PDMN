@@ -48,7 +48,7 @@ const CreateUser = async (req, res) => {
       department: user.department,
       resetPass: false,
     });
-    
+
     res.status(201).json({ result });
   } catch (err) {
     res.status(500).json({ message: err.message });

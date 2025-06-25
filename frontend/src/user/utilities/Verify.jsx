@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import './OtherPages.css';
-import GIF from '../../assets/32.gif';
-import axios from 'axios';
-import { ToastContainer, toast } from 'react-toastify';
-import NotFoundAuth from '../../auth/NotFoundAuthReset';
-import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import "./OtherPages.css";
+import GIF from "../../assets/32.gif";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import NotFoundAuth from "../../auth/NotFoundAuthReset";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 
-const API = import.meta.env.VITE_REACT_APP_API;
+const API = import.meta.env.VITE_REACT_APP_API || "http://localhost:3001";
 
 const Verify = () => {
   const navigate = useNavigate();
@@ -23,7 +23,7 @@ const Verify = () => {
       try {
         const headers = {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         };
 
         await axios.patch(
@@ -31,14 +31,13 @@ const Verify = () => {
           { email: newEmail },
           { headers }
         );
-        
       } catch (error) {
         toast.error("Failed to update email.");
       } finally {
         setLoading(false);
       }
     };
-    
+    console.log(userId, token, newEmail);
     if (userId && token && newEmail) {
       handleVerify();
     } else {
@@ -49,7 +48,7 @@ const Verify = () => {
   }, [userId, token, newEmail]);
 
   const handleBackToLogin = () => {
-    navigate('/dashboard');
+    navigate("/dashboard");
   };
 
   return (
@@ -73,6 +72,6 @@ const Verify = () => {
       <ToastContainer />
     </div>
   );
-}
+};
 
 export default NotFoundAuth(Verify);

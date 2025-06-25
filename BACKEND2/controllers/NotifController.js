@@ -194,3 +194,46 @@ export const GetAllNotifications = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+export const CreateNotification = async (req, res) => {
+  try {
+    const notif = req.body;
+
+    // Debug: Log the received data
+    console.log("Received notification data:", notif);
+    console.log("booking:", notif.booking);
+    console.log("message:", notif.message);
+    console.log("sender:", notif.sender);
+    console.log("receiver:", notif.receiver);
+
+    // Validate required fields
+    if (!notif.booking || !notif.message || !notif.sender || !notif.receiver) {
+      return res.status(400).json({
+        message: "Missing required fields",
+        received: {
+          booking: notif.booking,
+          message: notif.message,
+          sender: notif.sender,
+          receiver: notif.receiver,
+        },
+      });
+    }
+
+    // Insert notification
+    const [result] = await pool.execute(
+      "INSERT INTO notifs (booking_id, message, sender_id, senderType, receiver_id, receiverType, read_) VALUES (?, ?, ?, ?, ?, ?, ?)",
+      [notif.booking, notif.message, notif.sender, notif.senderType, notif.receiver, notif.receiverType, 0]
+    );
+
+    const insertedId = result.insertId;
+
+    const [savedResult] = await pool.execute("SELECT * FROM notifs WHERE _id = ?", [insertedId]);
+
+    const io = req.app.get("socketio");
+    io.to(notif.receiver).emit("newNotification", savedResult[0]);
+
+    res.status(201).json(savedResult[0]);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};

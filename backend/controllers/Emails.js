@@ -25,7 +25,8 @@ const ForgotPass = async (req, res) => {
       const name = user.firstName + " " + user.surName;
       const passId = user._id;
 
-      const companyLogoUrl = "https://drive.google.com/uc?id=108JoeqEjPR7HKfbNjXdV30wvvy9oDk_B";
+      const companyLogoUrl =
+        "https://drive.google.com/uc?id=108JoeqEjPR7HKfbNjXdV30wvvy9oDk_B";
 
       const resetPassLink = `https://gdsbooking.netlify.app/reset-pass/${passId}?token=${passToken}`;
 
@@ -89,7 +90,8 @@ const ChangeEmail = async (req, res) => {
       const emailId = user._id;
       const newEmail = email;
 
-      const companyLogoUrl = "https://drive.google.com/uc?id=108JoeqEjPR7HKfbNjXdV30wvvy9oDk_B";
+      const companyLogoUrl =
+        "https://drive.google.com/uc?id=108JoeqEjPR7HKfbNjXdV30wvvy9oDk_B";
 
       const verificationLink = `https://gdsbooking.netlify.app/verify-success/${emailId}?token=${emailToken}?email=${newEmail}`;
 
@@ -223,7 +225,8 @@ const PendingApproval = async (req, res) => {
 
       if (roomName === "Palawan and Boracay") {
         if (duration > 1 && booking.caps.pax === "8-More") {
-          reason = "Reservation is for more than 1 hour and requires both rooms.";
+          reason =
+            "Reservation is for more than 1 hour and requires both rooms.";
           if (booking.agenda) {
             reason += ` ${booking.agenda}.`;
           }
@@ -277,11 +280,29 @@ const PendingApproval = async (req, res) => {
       const date = new Date(reservation.scheduleDate).toLocaleDateString();
       const startTime = new Date(reservation.startTime);
       const endTime = new Date(reservation.endTime);
-      const time = `${startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Manila' })} to ${endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Manila' })}`;
+      const time = `${startTime.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+        timeZone: "Asia/Manila",
+      })} to ${endTime.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+        timeZone: "Asia/Manila",
+      })}`;
       const reason = calculateReason(reservation);
-      const email = ["mw@flw.ph", "erika@flw.ph", "demry@flw.ph", "valloso@flw.ph", "pdmnpcdatadrmonitoring@gmail.com", "abagjeanne@flw.ph", "jdesena@flw.ph", "ellaneb@flw.ph"];
+      const email = [
+        "mw@flw.ph",
+        "erika@flw.ph",
+        "demry@flw.ph",
+        "valloso@flw.ph",
+        "pdmnpcdatadrmonitoring@gmail.com",
+        "abagjeanne@flw.ph",
+        "jdesena@flw.ph",
+        "ellaneb@flw.ph",
+      ];
 
-      const companyLogoUrl = "https://drive.google.com/uc?id=108JoeqEjPR7HKfbNjXdV30wvvy9oDk_B";
+      const companyLogoUrl =
+        "https://drive.google.com/uc?id=108JoeqEjPR7HKfbNjXdV30wvvy9oDk_B";
 
       const htmlContent = `
         <!DOCTYPE html>
@@ -344,30 +365,32 @@ const SendInvite = async (req, res) => {
     if (reservation.attendees.length === 0) {
       return res.status(200).json({
         ...reservation.toObject(),
-        attendees: []
+        attendees: [],
       });
     }
 
     const checkUserExistenceAndEmail = async (firstName, surName) => {
       try {
         const user = await UserModel.findOne({
-          firstName: { $regex: new RegExp(`^${firstName}$`, 'i') },
-          surName: { $regex: new RegExp(`^${surName}$`, 'i') }
+          firstName: { $regex: new RegExp(`^${firstName}$`, "i") },
+          surName: { $regex: new RegExp(`^${surName}$`, "i") },
         });
         if (user) {
           return user.email || null;
         }
       } catch (err) {
-        console.error(`Error querying the database for "${firstName} ${surName}": ${err.message}`);
+        console.error(
+          `Error querying the database for "${firstName} ${surName}": ${err.message}`
+        );
       }
       return null;
     };
 
-    const emailPromises = reservation.attendees.map(async attendeeName => {
-      const nameParts = attendeeName.split(' ');
+    const emailPromises = reservation.attendees.map(async (attendeeName) => {
+      const nameParts = attendeeName.split(" ");
       for (let i = 1; i < nameParts.length; i++) {
-        const firstName = nameParts.slice(0, i).join(' ');
-        const surName = nameParts.slice(i).join(' ');
+        const firstName = nameParts.slice(0, i).join(" ");
+        const surName = nameParts.slice(i).join(" ");
         const email = await checkUserExistenceAndEmail(firstName, surName);
         if (email) {
           return { name: attendeeName, email };
@@ -378,13 +401,22 @@ const SendInvite = async (req, res) => {
 
     const emailResults = await Promise.all(emailPromises);
 
-    const validEmails = emailResults.filter(result => result.email !== null);
+    const validEmails = emailResults.filter((result) => result.email !== null);
 
     const title = reservation.title;
     const room = reservation.roomName;
     const date = new Date(reservation.scheduleDate).toLocaleDateString();
-    const companyLogoUrl = "https://drive.google.com/uc?id=108JoeqEjPR7HKfbNjXdV30wvvy9oDk_B";
-    const time = `${new Date(reservation.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Manila' })} to ${new Date(reservation.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Manila' })}`;
+    const companyLogoUrl =
+      "https://drive.google.com/uc?id=108JoeqEjPR7HKfbNjXdV30wvvy9oDk_B";
+    const time = `${new Date(reservation.startTime).toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+      timeZone: "Asia/Manila",
+    })} to ${new Date(reservation.endTime).toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+      timeZone: "Asia/Manila",
+    })}`;
 
     for (const { name, email } of validEmails) {
       let htmlContent = `
@@ -421,7 +453,7 @@ const SendInvite = async (req, res) => {
 
     res.status(201).json({
       message: "Invitation emails have been sent to all attendees",
-      validEmails
+      validEmails,
     });
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -446,7 +478,7 @@ const PendingApprovalWithAuth = (req, res) => {
 
 module.exports = {
   ForgotPass,
-  
+
   ChangeEmail,
   Approval,
   SendInvite,
@@ -454,5 +486,5 @@ module.exports = {
 
   ApprovalWithAuth,
   SendInviteWithAuth,
-  PendingApprovalWithAuth
+  PendingApprovalWithAuth,
 };

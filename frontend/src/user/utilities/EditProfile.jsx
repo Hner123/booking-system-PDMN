@@ -5,7 +5,7 @@ import WithAuth from "../../auth/WithAuth";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 
-const API = import.meta.env.VITE_REACT_APP_API;
+const API = import.meta.env.VITE_REACT_APP_API || "http://localhost:3001";
 
 const EditProfile = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -19,7 +19,7 @@ const EditProfile = () => {
     department: "",
     currPass: "",
     passWord: "",
-    retype: ""
+    retype: "",
   });
   const [disabled, setDisabled] = useState(false);
   const [disabled2, setDisabled2] = useState(false);
@@ -38,7 +38,7 @@ const EditProfile = () => {
       ...prevFormData,
       currPass: "",
       passWord: "",
-      retype: ""
+      retype: "",
     }));
   };
 
@@ -50,12 +50,11 @@ const EditProfile = () => {
         const token = localStorage.getItem("authToken");
         const headers = {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         };
-        const response = await axios.get(
-          `${API}/api/user/${userId}`,
-          { headers }
-        );
+        const response = await axios.get(`${API}/api/user/${userId}`, {
+          headers,
+        });
         if (response.status === 200) {
           setUserData(response.data);
           setFormData({
@@ -63,14 +62,14 @@ const EditProfile = () => {
             department: response.data.department || "",
             currPass: "",
             passWord: "",
-            retype: ""
+            retype: "",
           });
         }
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
     };
-  
+
     fetchUser();
   }, [userId]);
 
@@ -85,10 +84,9 @@ const EditProfile = () => {
     }
 
     try {
-      const validationResponse = await axios.post(
-        `${API}/api/auth/validate`,
-        { email: formData.email }
-      );
+      const validationResponse = await axios.post(`${API}/api/auth/validate`, {
+        email: formData.email,
+      });
 
       if (validationResponse.data.email.exists) {
         toast.error("This email is already registered.");
@@ -103,14 +101,14 @@ const EditProfile = () => {
 
     const sendEmail = {
       _id: userData._id,
-      email: formData.email
+      email: formData.email,
     };
 
     try {
       const token = localStorage.getItem("authToken");
       const headers = {
         Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       };
 
       const updateResponse = await axios.post(
@@ -120,7 +118,7 @@ const EditProfile = () => {
       );
 
       if (updateResponse.status === 201) {
-        const { message  } = updateResponse.data;
+        const { message } = updateResponse.data;
         setEmailEditable(false);
         toast.success(message);
       }
@@ -136,10 +134,10 @@ const EditProfile = () => {
     setDisabled2(true);
 
     try {
-      const validationResponse = await axios.post(
-        `${API}/api/auth/check`,
-        { currPass: formData.currPass, hashedPassword: userData.passWord }
-      );
+      const validationResponse = await axios.post(`${API}/api/auth/check`, {
+        currPass: formData.currPass,
+        hashedPassword: userData.passWord,
+      });
 
       if (validationResponse.data.isMatch) {
         toast.error("Current password is incorrect.");
@@ -152,7 +150,9 @@ const EditProfile = () => {
         setDisabled2(false);
         return;
       } else if (formData.currPass === formData.passWord) {
-        toast.error("New password must be different from the current password.");
+        toast.error(
+          "New password must be different from the current password."
+        );
         setDisabled2(false);
         return;
       }
@@ -162,7 +162,6 @@ const EditProfile = () => {
         setDisabled2(false);
         return;
       }
-
     } catch (error) {
       toast.error("Failed to validate password.");
       setDisabled2(false);
@@ -175,7 +174,7 @@ const EditProfile = () => {
       const token = localStorage.getItem("authToken");
       const headers = {
         Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       };
 
       const updateResponse = await axios.patch(
@@ -191,7 +190,7 @@ const EditProfile = () => {
           department: response.data.department || "",
           currPass: "",
           passWord: "",
-          retype: ""
+          retype: "",
         });
         setPasswordEditable(false);
         toast.success("Password changed successfully.");
@@ -218,9 +217,16 @@ const EditProfile = () => {
         {userData && (
           <div className="upload">
             <div className="profile-details">
-              <p className="name"><strong>{`${userData.firstName} ${userData.surName}`}</strong> @{userData.userName}</p>
-              <p><strong>Department:</strong> {userData.department}</p>
-              <p><strong>Email:</strong> {userData.email}</p>
+              <p className="name">
+                <strong>{`${userData.firstName} ${userData.surName}`}</strong> @
+                {userData.userName}
+              </p>
+              <p>
+                <strong>Department:</strong> {userData.department}
+              </p>
+              <p>
+                <strong>Email:</strong> {userData.email}
+              </p>
             </div>
           </div>
         )}
@@ -246,13 +252,17 @@ const EditProfile = () => {
                   <button
                     type="submit"
                     disabled={disabled}
-                    className={`save_email ${disabled ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-700 text-white"}`}
+                    className={`save_email ${
+                      disabled
+                        ? "bg-gray-400 cursor-not-allowed"
+                        : "bg-blue-500 hover:bg-blue-700 text-white"
+                    }`}
                   >
                     Verify Email
                   </button>
                   <button
                     type="button"
-                    onClick={(cancelEmailEdit)}
+                    onClick={cancelEmailEdit}
                     className="edit_email"
                   >
                     Cancel
@@ -293,7 +303,7 @@ const EditProfile = () => {
                 </button>
               </div>
               {passwordEditable && (
-                <p style={{ textAlign: 'left', marginTop: '10px' }}>
+                <p style={{ textAlign: "left", marginTop: "10px" }}>
                   <a href="/forgot-pass">Forgot password?</a>
                 </p>
               )}
@@ -302,13 +312,17 @@ const EditProfile = () => {
                   <button
                     type="submit"
                     disabled={disabled2}
-                    className={`save_passworduser ${disabled2 ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-700 text-white"}`}
+                    className={`save_passworduser ${
+                      disabled2
+                        ? "bg-gray-400 cursor-not-allowed"
+                        : "bg-blue-500 hover:bg-blue-700 text-white"
+                    }`}
                   >
                     Save
                   </button>
                   <button
                     type="button"
-                    onClick={(cancelPassEdit)}
+                    onClick={cancelPassEdit}
                     className="edit_email"
                   >
                     Cancel

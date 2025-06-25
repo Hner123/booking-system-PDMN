@@ -38,26 +38,28 @@
 // }
 
 // export default ApprovalRoom;
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import Sidebar from './Sidebar';
-import './AdminPages.css';
-import roomBgPalawan from '../assets/palawan2.jpg';
-import roomBgBoracay from '../assets/boracay.jpg';
-import roomBgBoth from '../assets/both.jpg';
-import WithAuthAdmin from '../auth/WithAuthAdmin';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import Sidebar from "./Sidebar";
+import "./AdminPages.css";
+import roomBgPalawan from "../assets/palawan2.jpg";
+import roomBgBoracay from "../assets/boracay.jpg";
+import roomBgBoth from "../assets/both.jpg";
+import WithAuthAdmin from "../auth/WithAuthAdmin";
 
 const ApprovalRoom = ({ sidebarOpen }) => {
   const navigate = useNavigate();
   const [bookData, setBookData] = useState([]);
   const [roomsWithApprovals, setRoomsWithApprovals] = useState([]);
-  
+
   const Rooms = [
     { name: "Palawan", bgImage: roomBgPalawan, pendingApprovals: 0 },
     { name: "Boracay", bgImage: roomBgBoracay, pendingApprovals: 0 },
     { name: "Palawan and Boracay", bgImage: roomBgBoth, pendingApprovals: 0 },
   ];
+
+  const API = "http://localhost:3001";
 
   useEffect(() => {
     const fetchBookData = async () => {
@@ -68,13 +70,14 @@ const ApprovalRoom = ({ sidebarOpen }) => {
           "Content-Type": "application/json",
         };
 
-        const response = await axios.get(`https://pdmnnewshub.ddns.net:8800/api/book/`, {
+        const response = await axios.get(`${API}/api/book/`, {
           headers,
         });
 
         if (response.status === 200) {
           const filteredData = response.data.filter(
-            (event) => event.confirmation === false && event.approval.archive === false
+            (event) =>
+              event.confirmation === false && event.approval.archive === false
           );
           setBookData(filteredData);
         } else {
@@ -90,9 +93,9 @@ const ApprovalRoom = ({ sidebarOpen }) => {
 
   useEffect(() => {
     const updatePendingApprovals = () => {
-      const updatedRooms = Rooms.map(room => {
+      const updatedRooms = Rooms.map((room) => {
         const count = bookData.filter(
-          event => event.roomName === room.name
+          (event) => event.roomName === room.name
         ).length;
         return { ...room, pendingApprovals: count };
       });
@@ -108,7 +111,11 @@ const ApprovalRoom = ({ sidebarOpen }) => {
   };
 
   return (
-    <div className={`approval-room-page ${sidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}>
+    <div
+      className={`approval-room-page ${
+        sidebarOpen ? "sidebar-open" : "sidebar-closed"
+      }`}
+    >
       <Sidebar />
       <div className="approval-room-content">
         <h1>Select Room</h1>
@@ -119,9 +126,7 @@ const ApprovalRoom = ({ sidebarOpen }) => {
               className="room-item"
               style={{ backgroundImage: `url(${room.bgImage})` }}
             >
-              <div className="approval-badge">
-                {room.pendingApprovals}
-              </div>
+              <div className="approval-badge">{room.pendingApprovals}</div>
               <h2>{room.name}</h2>
               <button onClick={() => approvalHandling(room.name)}>
                 Select Room
@@ -131,8 +136,8 @@ const ApprovalRoom = ({ sidebarOpen }) => {
         </div>
         <div className="pending-approvals-list">
           {roomsWithApprovals
-            .filter(room => room.pendingApprovals > 0)
-            .map(room => (
+            .filter((room) => room.pendingApprovals > 0)
+            .map((room) => (
               <div key={room.name} className="pending-approvals-info">
                 {room.pendingApprovals > 1
                   ? `${room.pendingApprovals} Pending Approvals for ${room.name}`

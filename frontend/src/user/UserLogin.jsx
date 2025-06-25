@@ -6,7 +6,7 @@ import logo from "../assets/logos/GDSLogo.png";
 import mascot from "../assets/33.gif";
 import WithoutAuth from "../auth/WithoutAuth";
 
-const API = import.meta.env.VITE_REACT_APP_API;
+const API = import.meta.env.VITE_REACT_APP_API || "http://localhost:3001";
 
 const UserLogin = () => {
   const [userName, setUsername] = useState("");
@@ -24,13 +24,10 @@ const UserLogin = () => {
       const trimmedUserName = userName.trim();
       const trimmedPassWord = passWord.trim();
 
-      const response = await axios.post(
-        `${API}/api/auth/login/user`,
-        {
-          userName: trimmedUserName,
-          passWord: trimmedPassWord,
-        }
-      );
+      const response = await axios.post(`${API}/api/auth/login/user`, {
+        userName: trimmedUserName,
+        passWord: trimmedPassWord,
+      });
 
       if (response.status === 200) {
         const { authToken } = response.data;
@@ -44,7 +41,9 @@ const UserLogin = () => {
         setError("Login failed, please try again.");
       }
     } catch (error) {
-      setError(error.response?.data?.message || "An error occurred, please try again.");
+      setError(
+        error.response?.data?.message || "An error occurred, please try again."
+      );
     } finally {
       setLoading(false); // Stop loading
     }
@@ -79,10 +78,18 @@ const UserLogin = () => {
             placeholder="Enter your password"
             disabled={loading} // Disable input when loading
           />
-          <button type="submit" disabled={loading} className={loading ? "loading" : ""}>
+          <button
+            type="submit"
+            disabled={loading}
+            className={loading ? "loading" : ""}
+          >
             {loading ? "Logging In..." : "Log In"}
           </button>
-          <button type="redirect" disabled={loading} className={loading ? "loading" : ""}>
+          <button
+            type="redirect"
+            disabled={loading}
+            className={loading ? "loading" : ""}
+          >
             <Link to="/forgot-pass">Forgot password?</Link>
           </button>
         </form>

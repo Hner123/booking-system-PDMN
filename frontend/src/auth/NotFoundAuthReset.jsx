@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const NotFoundAuth = (WrappedComponent) => {
   const NotFoundAuthWrapper = (props) => {
@@ -11,26 +11,23 @@ const NotFoundAuth = (WrappedComponent) => {
 
     useEffect(() => {
       if (!token) {
-        navigate('/page-not-found');
-
+        navigate("/page-not-found");
       } else {
         const decodedToken = decodeToken(token);
         const isExpired = isTokenExpired(decodedToken.exp);
 
         if (isExpired) {
-          localStorage.removeItem('resetToken');
-          navigate('/page-not-found');
-
+          localStorage.removeItem("resetToken");
+          navigate("/page-not-found");
         } else {
           setIsLoading(false);
-
         }
       }
     }, []);
 
     const decodeToken = (token) => {
       try {
-        return JSON.parse(atob(token.split('.')[1]));
+        return JSON.parse(atob(token.split(".")[1]));
       } catch (error) {
         return null;
       }
@@ -41,7 +38,12 @@ const NotFoundAuth = (WrappedComponent) => {
       return currentTime > exp;
     };
 
-    return <> {console.clear()} <WrappedComponent {...props} /></>;
+    return (
+      <>
+        {" "}
+        {console.clear()} <WrappedComponent {...props} />
+      </>
+    );
   };
 
   return NotFoundAuthWrapper;

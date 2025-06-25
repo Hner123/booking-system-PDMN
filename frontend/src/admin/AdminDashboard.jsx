@@ -148,6 +148,7 @@ const useDashboardData = (selectedFile, currentMonth) => {
         );
       });
 
+      console.log("approvedBookings:", approvedBookings);
       const bookingsByDate = approvedBookings.reduce((acc, item) => {
         const bookingDate = new Date(item.scheduleDate)
           .toISOString()
@@ -175,6 +176,8 @@ const useDashboardData = (selectedFile, currentMonth) => {
         }
         return acc;
       }, []);
+
+      console.log("RAYA", bookingsByDepartment);
 
       setBookingTrends(bookingsByDate);
       setDepartmentStats(bookingsByDepartment);
@@ -220,6 +223,7 @@ const useDashboardData = (selectedFile, currentMonth) => {
         }
       );
 
+      console.log("CHECK TO2:", stats);
       const getMostFrequent = (data) => {
         return Object.keys(data).reduce(
           (mostFrequent, currentKey) =>
@@ -232,6 +236,8 @@ const useDashboardData = (selectedFile, currentMonth) => {
       const mostFrequentDepartmentKey = getMostFrequent(stats.departments);
       const mostBookedRoomKey = getMostFrequent(stats.rooms);
       const mostBookedTimeKey = getMostFrequent(stats.times);
+
+      console.log("CHECK TO3:", mostFrequentEmployeeKey);
 
       const fullName = stats.employeeNames[mostFrequentEmployeeKey] || "N/A";
 
@@ -261,10 +267,9 @@ const useDashboardData = (selectedFile, currentMonth) => {
         if (response.status === 200) {
           setUsersStats({
             total: response.data.length,
-            active: response.data.filter((item) => item.resetPass === 0).length,
-            notRegistered: response.data.filter(
-              (item) => item.resetPass === false
-            ).length,
+            active: response.data.filter((item) => item.resetPass === 1).length,
+            notRegistered: response.data.filter((item) => item.resetPass === 0)
+              .length,
           });
         } else {
           console.error("Response status is not OK");
