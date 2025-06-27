@@ -107,7 +107,7 @@ export const CreateReserve = async (req, res) => {
     const [result] = await pool.execute("INSERT INTO booking (roomName, user, confirmation) VALUES (?, ?, ?)", [
       reserve.roomName,
       reserve.user,
-      1,
+      0,
     ]);
 
     const insertedId = result.insertId;
@@ -148,11 +148,24 @@ export const GetSpecificReserve = async (req, res) => {
     const [result] = await pool.execute("SELECT * FROM booking WHERE _id = ?", [id]);
     const [user] = await pool.execute("SELECT * FROM users WHERE _id = ?", [result[0].user]);
 
+    // GET CAPS
+    const [caps] = await pool.execute("SELECT * FROM caps WHERE booking_id = ?", [id]);
+
+    // GET APPROVAL
+    const [approval] = await pool.execute("SELECT * FROM approval WHERE booking_id = ?", [id]);
+    // GET ATTENDES
+    const [attendees] = await pool.execute("SELECT * FROM attendees WHERE booking_id = ?", [id]);
+    // GET GUEST
+    const [guest] = await pool.execute("SELECT * FROM guest WHERE booking_id = ?", [id]);
+
     if (result.length === 0) {
       return res.status(404).json({ message: "Reservation not found" });
     }
 
     const finalResult = {
+      _id: id,
+      caps: caps[0],
+      approval: approval[0],
       roomName: result[0].roomName,
       title: result[0].title,
       agenda: result[0].agenda,
@@ -160,6 +173,9 @@ export const GetSpecificReserve = async (req, res) => {
       startTime: result[0].startTime,
       endTime: result[0].endTime,
       user: user[0],
+      attendees: attendees,
+      guest: guest,
+      confirmation: result[0].confirmation === 1 ? true : false,
     };
 
     return res.status(200).json(finalResult);
@@ -288,6 +304,7 @@ export const EditReserveFinal = async (req, res) => {
     const [updatedResult] = await pool.execute("SELECT * FROM booking WHERE _id = ?", [id]);
 
     const output = {
+      _id: updatedResult[0]._id,
       caps: {
         pax: reserve.caps.pax || "",
         reason: reserve.caps.reason || "",
@@ -304,6 +321,139 @@ export const EditReserveFinal = async (req, res) => {
     };
 
     res.status(200).json(output);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+};
+
+export const EditApproved = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const reserve = req.body;
+
+    // Check if booking exists
+    const [result] = await pool.execute("SELECT * FROM booking WHERE _id = ?", [id]);
+    if (result.length === 0) {
+      return res.status(404).json({ message: "Reservation not found" });
+    }
+
+    // UPDATE booking confirmation
+    const [resultBookingConfirmation] = await pool.execute("UPDATE booking SET confirmation = ? WHERE _id = ?", [
+      true,
+      id,
+    ]);
+
+    // UPDATE APPROVAL
+    const [resultApproval] = await pool.execute("UPDATE approval SET archive = ?, status = ? WHERE booking_id = ?", [
+      reserve.approval.archive,
+      reserve.approval.status,
+      id,
+    ]);
+
+    if (resultApproval.changedRows > 0) {
+      // Get updated record
+      const [updatedResult] = await pool.execute("SELECT * FROM booking WHERE _id = ?", [id]);
+      // FETCH CAPS
+      const [[caps]] = await pool.execute("SELECT * FROM caps WHERE booking_id = ?", [id]);
+      // FETCH Approval
+      const [[approval]] = await pool.execute("SELECT * FROM approval WHERE booking_id = ?", [id]);
+      // FETCH attendees
+      const [attendees] = await pool.execute("SELECT * FROM attendees WHERE booking_id = ?", [id]);
+      // FETCH guest
+      const [guest] = await pool.execute("SELECT * FROM guest WHERE booking_id = ?", [id]);
+
+      // Get user using the user field from booking, not the booking id
+      const [user] = await pool.execute("SELECT * FROM users WHERE _id = ?", [updatedResult[0].user]);
+
+      const output = {
+        caps: caps,
+        approval: {
+          archive: approval.archive === 1 ? true : false,
+          status: approval.status,
+          reason: approval.reason,
+        },
+        _id: updatedResult[0]._id,
+        roomName: updatedResult[0].roomName,
+        title: updatedResult[0].title,
+        agenda: updatedResult[0].agenda,
+        scheduleDate: updatedResult[0].scheduleDate,
+        startTime: updatedResult[0].startTime,
+        endTime: updatedResult[0].endTime,
+        user: user[0],
+        attendees: attendees.map((attendee) => attendee.attendees),
+        guest: guest.map((gues) => gues.guest),
+        confirmation: updatedResult[0].confirmation === 1 ? true : false,
+      };
+
+      res.status(200).json(output);
+    } else {
+      // Handle case where no changes were made
+      res.status(200).json({ message: "No changes made to the reservation" });
+    }
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+};
+
+export const EditReject = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const reserve = req.body;
+
+    // Check if booking exists
+    const [result] = await pool.execute("SELECT * FROM booking WHERE _id = ?", [id]);
+    if (result.length === 0) {
+      return res.status(404).json({ message: "Reservation not found" });
+    }
+
+    // Update the booking - use 'id' from params, not 'reserve.id'
+    const [resultApproval] = await pool.execute("UPDATE approval SET reason = ?, status = ? WHERE booking_id = ?", [
+      reserve.approval.reason,
+      reserve.approval.status,
+      id,
+    ]);
+
+    if (resultApproval.changedRows > 0) {
+      // Get updated record
+      const [updatedResult] = await pool.execute("SELECT * FROM booking WHERE _id = ?", [id]);
+
+      // Get user using the user field from booking, not the booking id
+      const [user] = await pool.execute("SELECT * FROM users WHERE _id = ?", [updatedResult[0].user]);
+
+      // FETCH CAPS
+      const [[caps]] = await pool.execute("SELECT * FROM caps WHERE booking_id = ?", [id]);
+      // FETCH Approval
+      const [[approval]] = await pool.execute("SELECT * FROM approval WHERE booking_id = ?", [id]);
+      // FETCH attendees
+      const [attendees] = await pool.execute("SELECT * FROM attendees WHERE booking_id = ?", [id]);
+      // FETCH guest
+      const [guest] = await pool.execute("SELECT * FROM guest WHERE booking_id = ?", [id]);
+
+      const output = {
+        caps: caps,
+        approval: {
+          archive: approval.archive === 1 ? true : false,
+          status: approval.status,
+          reason: approval.reason,
+        },
+        _id: updatedResult[0]._id,
+        roomName: updatedResult[0].roomName,
+        title: updatedResult[0].title,
+        agenda: updatedResult[0].agenda,
+        scheduleDate: updatedResult[0].scheduleDate,
+        startTime: updatedResult[0].startTime,
+        endTime: updatedResult[0].endTime,
+        user: user[0],
+        attendees: attendees.map((attendee) => attendee.attendees), // Ensure this is correct
+        guest: guest.map((gues) => gues.guest), // Ensure this is correct
+        confirmation: updatedResult[0].confirmation === 1 ? true : false,
+      };
+
+      res.status(200).json(output);
+    } else {
+      // Handle case where no changes were made
+      res.status(200).json({ message: "No changes made to the reservation" });
+    }
   } catch (err) {
     res.status(400).json({ message: err.message });
   }

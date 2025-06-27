@@ -5,7 +5,7 @@ import axios from "axios";
 import { ToastContainer } from "react-toastify";
 import WithAuthReserve from "../../auth/WithAuthReserve";
 
-const API = import.meta.env.VITE_REACT_APP_API;
+const API = import.meta.env.VITE_REACT_APP_API || "http://localhost:3001";
 
 const BookingConfirmation = () => {
   const [showModal, setShowModal] = useState(false);
@@ -26,12 +26,12 @@ const BookingConfirmation = () => {
           "Content-Type": "application/json",
         };
 
-        const response = await axios.get(
-          `${API}/api/book/${reserveId}`,
-          { headers }
-        );
+        const response = await axios.get(`${API}/api/book/${reserveId}`, {
+          headers,
+        });
         if (response.status === 200) {
           setBookData(response.data);
+          console.log("CHECK ITO:", response.data);
         }
       } catch (error) {
         console.error("Error fetching book data:", error);

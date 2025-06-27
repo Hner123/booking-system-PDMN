@@ -114,7 +114,7 @@ const Dashboard = () => {
     const initialReservations = bookData
       .filter(
         (book) =>
-          book.user?._id === userId &&
+          book.user?._id === parseInt(userId) &&
           book.title &&
           book.scheduleDate !== null &&
           book.startTime !== null
@@ -160,7 +160,7 @@ const Dashboard = () => {
     const initialOtherMeetings = bookData
       .filter(
         (book) =>
-          book.user?._id !== userId &&
+          book.user?._id !== parseInt(userId) &&
           book.title &&
           book.attendees.includes(name) &&
           book.scheduleDate !== null &&

@@ -38,8 +38,8 @@ const ApprovalDetails = ({ sidebarOpen }) => {
           const filteredData = response.data.filter(
             (booking) =>
               booking.roomName === roomName &&
-              booking.confirmation === false &&
-              booking.approval.archive === false
+              booking.confirmation === 0 &&
+              booking.approval.archive === 0
           );
           setBookings(filteredData);
         } else {
@@ -131,8 +131,10 @@ const ApprovalDetails = ({ sidebarOpen }) => {
         },
       };
 
+      console.log("CHECK", updatedReserve);
+
       const updateResponse = await axios.patch(
-        `${API}/api/book/edit/${selectedBooking._id}`,
+        `${API}/api/book/edit3/${selectedBooking._id}`,
         updatedReserve,
         { headers }
       );
@@ -157,10 +159,13 @@ const ApprovalDetails = ({ sidebarOpen }) => {
           );
 
           if (emailResponse.status === 201) {
+            console.log("TEST", updateResponse);
             const date = new Date(
               updateResponse.data.scheduleDate
             ).toLocaleDateString();
+
             const messageContent = `Your reservation <strong>${updateResponse.data.title}</strong> on <strong>${date}</strong> has been approved`;
+
             const notifData = {
               booking: updateResponse.data._id,
               message: messageContent,
@@ -262,7 +267,7 @@ const ApprovalDetails = ({ sidebarOpen }) => {
       };
 
       const updateResponse = await axios.patch(
-        `${API}/api/book/edit/${selectedBooking._id}`,
+        `${API}/api/book/editReject/${selectedBooking._id}`,
         updatedReserve,
         { headers }
       );

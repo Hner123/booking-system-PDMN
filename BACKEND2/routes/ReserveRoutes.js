@@ -6,6 +6,8 @@ import {
   DeleteReserve,
   EditReserve,
   EditReserveFinal,
+  EditApproved,
+  EditReject,
 } from "../controllers/ReserveController.js";
 import { verifyAdminToken } from "../middleware/authMiddleware.js"; // Add auth middleware
 
@@ -18,5 +20,7 @@ router.get("/:id", verifyAdminToken, GetSpecificReserve);
 router.delete("/delete/:id", verifyAdminToken, DeleteReserve);
 router.patch("/edit/:id", verifyAdminToken, EditReserve);
 router.patch("/edit2/:id", verifyAdminToken, EditReserveFinal);
+router.patch("/edit3/:id", verifyAdminToken, EditApproved);
+router.patch("/editReject/:id", verifyAdminToken, EditReject);
 
 export default router;

@@ -199,12 +199,12 @@ export const CreateNotification = async (req, res) => {
   try {
     const notif = req.body;
 
-    // Debug: Log the received data
-    console.log("Received notification data:", notif);
-    console.log("booking:", notif.booking);
-    console.log("message:", notif.message);
-    console.log("sender:", notif.sender);
-    console.log("receiver:", notif.receiver);
+    // FOR DEBUGING ITO
+    // console.log("Received notification data:", notif);
+    // console.log("booking:", notif.booking);
+    // console.log("message:", notif.message);
+    // console.log("sender:", notif.sender);
+    // console.log("receiver:", notif.receiver);
 
     // Validate required fields
     if (!notif.booking || !notif.message || !notif.sender || !notif.receiver) {

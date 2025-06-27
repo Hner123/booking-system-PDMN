@@ -76,8 +76,7 @@ const ApprovalRoom = ({ sidebarOpen }) => {
 
         if (response.status === 200) {
           const filteredData = response.data.filter(
-            (event) =>
-              event.confirmation === false && event.approval.archive === false
+            (event) => event.confirmation === 0 && event.approval.archive === 0
           );
           setBookData(filteredData);
         } else {
